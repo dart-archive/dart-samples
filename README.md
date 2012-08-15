@@ -11,7 +11,7 @@ the language for structured web programming.
 Things We Want to Port First
 ----------------------------
 
- * tutorials/file/dndfiles: DONE!
+ * tutorials/file/dndfiles
  * tutorials/dnd/basics
  * tutorials/appcache/beginner
  * tutorials/file/filesystem
