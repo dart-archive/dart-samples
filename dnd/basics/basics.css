@@ -1,0 +1,82 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+*/
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.column {
+  background-color: #ccc;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  border: 2px solid #666;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px #000;
+  -ms-box-shadow: inset 0 0 3px #000;
+  box-shadow: inset 0 0 3px #000;
+  cursor: move;
+  height: 150px;
+  float: left;
+  margin-right: 5px;
+  text-align: center;
+  -webkit-transition: -webkit-transform 0.2s ease-out;
+  -moz-transition: -moz-transform 0.2s ease-out;
+  -ms-transition: -moz-transform 0.2s ease-out;
+  transition: transform 0.2s ease-out;
+  width: 150px;
+}
+
+.column header {
+  background: -moz-linear-gradient(left center,
+      rgb(0, 0, 0), rgb(79, 79, 79), rgb(21, 21, 21));
+  background: -webkit-linear-gradient(linear, left top, right top,
+      color-stop(0, rgb(0, 0, 0)),
+      color-stop(0.5, rgb(79, 79, 79)),
+      color-stop(1, rgb(21, 21, 21)));
+  background: -webkit-linear-gradient(left center,
+      rgb(0, 0, 0), rgb(79, 79, 79), rgb(21, 21, 21));
+  background: -ms-linear-gradient(left center,
+      rgb(0, 0, 0), rgb(79, 79, 79), rgb(21, 21, 21));
+  border-bottom: 1px solid #ddd;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -ms-border-radius-topleft: 10px;
+  border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -ms-border-radius-topright: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: 5px;
+  color: #fff;
+  padding: 5px;
+  text-shadow: #000 0 1px;
+}
+
+.column.over {
+  border: 2px dashed #000;
+}
+
+.column.moving {
+  opacity: 0.25;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
