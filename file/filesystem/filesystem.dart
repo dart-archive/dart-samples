@@ -14,17 +14,13 @@
 
 class FileSystemExample {
   DOMFileSystem _filesystem;
-  List<Element> _buttons;
   Element _fileList;
   
   FileSystemExample() {
-    _buttons = queryAll('#example-list-fs button');
     _fileList = query('#example-list-fs-ul');
-    if (_buttons.length >= 3) {
-      _buttons[0].on.click.add((e) => _addFiles(), false);
-      _buttons[1].on.click.add((e) => _listFiles(), false);
-      _buttons[2].on.click.add((e) => _removeFiles(), false);
-    } 
+    query('#add-button').on.click.add((e) => _addFiles(), false);
+    query('#list-button').on.click.add((e) => _listFiles(), false);
+    query('#remove-button').on.click.add((e) => _removeFiles(), false);
     _initFileSystem();
   }
   
