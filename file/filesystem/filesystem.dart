@@ -14,18 +14,20 @@
 
 class FileSystemExample {
   DOMFileSystem _filesystem;
-  List<Element> _buttons;
   Element _fileList;
   
   FileSystemExample() {
-    _buttons = queryAll('#example-list-fs button');
     _fileList = query('#example-list-fs-ul');
-    if (_buttons.length >= 3) {
-      _buttons[0].on.click.add((e) => _addFiles(), false);
-      _buttons[1].on.click.add((e) => _listFiles(), false);
-      _buttons[2].on.click.add((e) => _removeFiles(), false);
-    } 
-    _initFileSystem();
+    window.webkitRequestFileSystem(Window.TEMPORARY, 1024 * 1024,
+        _requestFileSystemCallback, _handleError);
+  }
+  
+  bool _requestFileSystemCallback(DOMFileSystem filesystem) {
+    _filesystem = filesystem;
+    query('#add-button').on.click.add((e) => _addFiles(), false);
+    query('#list-button').on.click.add((e) => _listFiles(), false);
+    query('#remove-button').on.click.add((e) => _removeFiles(), false);
+    return true;
   }
   
   bool _handleError(FileError e) {
@@ -54,17 +56,7 @@ class FileSystemExample {
     return true;
   }
   
-  void _initFileSystem() {
-    window.webkitRequestFileSystem(Window.TEMPORARY, 1024 * 1024,
-      (filesystem) => _filesystem = filesystem,
-      _handleError);
-  }
-  
   void _addFiles() {
-    if (_filesystem == null) {
-      return;
-    }
-
     _filesystem.root.getFile('log.txt', {"create": true}, null, _handleError);
     _filesystem.root.getFile('song.mp3', {"create": true}, null, _handleError);
     _filesystem.root.getDirectory('mypictures', {"create": true}, null, _handleError);
@@ -72,10 +64,6 @@ class FileSystemExample {
   }
   
   void _listFiles() {
-    if (_filesystem == null) {
-      return;
-    }
-
     var dirReader = _filesystem.root.createReader();
     dirReader.readEntries((entries) {
       if (entries.length == 0) {
@@ -97,10 +85,6 @@ class FileSystemExample {
   }
   
   void _removeFiles() {
-    if (_filesystem == null) {
-      return;
-    }
-
     var dirReader = _filesystem.root.createReader();
     dirReader.readEntries((entries) {
       for (var i = 0, entry; (entry = entries.item(i)) != null; i++) {
