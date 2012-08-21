@@ -2,6 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the COPYING file.
 
+// This is a port of "Native HTML5 Drag and Drop" to Dart.
+// See: http://www.html5rocks.com/en/tutorials/dnd/basics/
+
+
 #import('dart:html');
 
 class Basics {
