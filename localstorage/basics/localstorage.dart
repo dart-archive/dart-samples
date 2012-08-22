@@ -10,7 +10,7 @@ void main() {
   Element output = query('#username-output');
   Storage localStorage = window.localStorage;
   
-  // local storage is a Map, supporting string keys and values
+  // Local storage is a Map, supporting string keys and values.
   String savedUsername = localStorage['username'];
   
   if (savedUsername != null) {
