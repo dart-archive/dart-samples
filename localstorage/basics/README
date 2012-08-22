@@ -1,0 +1,17 @@
+Local Storage is a simple key/value storage interface
+for Strings. Use Dart's local storage interface as a
+Map.
+
+See also:
+
+* http://api.dartlang.org/docs/continuous/dart_html/Storage.html
+* https://developer.mozilla.org/en-US/docs/DOM/Storage
+* http://diveintohtml5.info/storage.html
+
+Note, local storage, though widely supported, is a
+synchronous API. Because it involves IO, this interface
+should not be used for high throughput operations.
+You might consider IndexedDB as an alternative.
+
+For simple string keys and values, and as a replacement
+for cookies, local storage is useful.
