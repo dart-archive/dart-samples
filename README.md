@@ -13,7 +13,6 @@ Things We Want to Port First
  * dnd/basics: DONE
  * appcache/beginner
  * file/filesystem: DONE
- * flexbox/quick: HTML5 Rocks is itself out of date
  * getusermedia/intro: This API is not standardized yet
  * video/basics: Blocked on http://code.google.com/p/dart/issues/detail?id=4628
  * developertools/sourcemaps
