@@ -4,10 +4,6 @@
 
 // This is a port of "Exploring the FileSystem APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
-//
-// XXX: This code is currently blocked on:
-// http://code.google.com/p/dart/issues/detail?id=4549&thanks=4549&ts=1345139622
-// It works in Dartium, but not in dart2js.
 
 #import('dart:html');
 #import('dart:web');
