@@ -9,19 +9,24 @@ the language for structured web programming.
 Things We Want to Port First
 ----------------------------
 
- * tutorials/file/dndfiles
- * tutorials/dnd/basics: DONE
- * tutorials/appcache/beginner
- * tutorials/file/filesystem: DONE
- * tutorials/flexbox/quick: HTML5 Rocks is itself out of date
- * tutorials/getusermedia/intro: This API is not standardized yet
- * tutorials/video/basics: Blocked on http://code.google.com/p/dart/issues/detail?id=4628
- * tutorials/developertools/sourcemaps
- * tutorials/forms/html5forms
- * tutorials/workers/basics
- * tutorials/canvas/performance
- * tutorials/webaudio/intro
- * tutorials/file/xhr2
- * tutorials/websockets/basics
- * tutorials/notifications/quick
- * tutorials/indexeddb/todo
+ * file/dndfiles
+ * dnd/basics: DONE
+ * appcache/beginner
+ * file/filesystem: DONE
+ * flexbox/quick: HTML5 Rocks is itself out of date
+ * getusermedia/intro: This API is not standardized yet
+ * video/basics: Blocked on http://code.google.com/p/dart/issues/detail?id=4628
+ * developertools/sourcemaps
+ * forms/html5forms
+ * workers/basics
+ * canvas/performance
+ * webaudio/intro
+ * file/xhr2
+ * websockets/basics
+ * notifications/quick
+ * indexeddb/todo
+
+Things That Didn't Come from HTML5 Rocks
+----------------------------------------
+
+ * localstorage/basics: DONE
