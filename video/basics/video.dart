@@ -7,6 +7,8 @@
 
 // XXX: This is currently broken because VideoElement.on does not have all events.
 // See: http://code.google.com/p/dart/issues/detail?id=4628
+//
+// XXX: Once the above is fixed, switch from setInterval to requestAnimationFrame.
 
 #import('dart:html');
 
@@ -23,7 +25,7 @@ class VideoExample {
     var offsets = <int>[];
     var inertias = <num>[];
     var inertia = -2.0;
-    int interval = null;
+    int interval;
     
     _videoDom = query('#video-canvas-fancy');
     _canvasCopy = query('#canvas-copy-fancy');
@@ -45,8 +47,8 @@ class VideoExample {
     _canvasCopy.width = _canvasDraw.width = _videoDom.videoWidth;
     _canvasCopy.height = _videoDom.videoHeight;
     _canvasDraw.height = _videoDom.videoHeight + _outPadding;
-    _ctxCopy = _canvasCopy.getContext('2d');
-    _ctxDraw = _canvasDraw.getContext('2d');
+    _ctxCopy = _canvasCopy.context2d;
+    _ctxDraw = _canvasDraw.context2d;
   }
   
   void _onPlay() {
