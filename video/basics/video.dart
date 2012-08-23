@@ -54,6 +54,7 @@ class VideoExample {
   void _onPlay() {
     _processEffectFrame();
     if (interval == null) {
+      // XXX: Switch to requestAnimationFrame.
       interval = window.setInterval(_processEffectFrame, 33);
     }
   }
