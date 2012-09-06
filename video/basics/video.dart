@@ -5,10 +5,13 @@
 // This is a port of "HTML5 VIDEO" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/video/basics/
 
-// XXX: This is currently broken because VideoElement.on does not have all events.
-// See: http://code.google.com/p/dart/issues/detail?id=4628
+// XXX: Switch from setInterval to requestAnimationFrame.
 //
-// XXX: Once the above is fixed, switch from setInterval to requestAnimationFrame.
+// Note, the sound is very choppy when using dart2js and running on Google
+// Chrome (version 21 or 22). However, the sound is not choppy when running
+// under Dartium (version 23). It's not a bug in this code since the JavaScript
+// code has the same problem.
+// See also: http://code.google.com/p/chromium/issues/detail?id=141747#c15
 
 #import('dart:html');
 
@@ -16,31 +19,33 @@ class VideoExample {
   VideoElement _videoDom;
   CanvasElement _canvasCopy;
   CanvasElement _canvasDraw;
-  var _ctxCopy, _ctxDraw;
+  List<num> _offsets;
+  List<num> _inertias;
+  CanvasRenderingContext2D _ctxCopy, _ctxDraw;
+  int _interval;
   
   const _outPadding = 100;
   const _slices = 4;
   
   VideoExample() {
-    var offsets = <int>[];
-    var inertias = <num>[];
     var inertia = -2.0;
-    int interval;
-    
+
     _videoDom = query('#video-canvas-fancy');
     _canvasCopy = query('#canvas-copy-fancy');
     _canvasDraw = query('#canvas-draw-fancy');
+    _offsets = <num>[];
+    _inertias = <num>[];    
 
     for (var i = 0; i < _slices; i++) {
-      offsets.add(0);
-      inertias.add(inertia);
+      _offsets.add(0);
+      _inertias.add(inertia);
       inertia += 0.4;
     }
 
-    _videoDom.on.canPlay.add((e) => _onCanPlay, false);
-    _videoDom.on.play.add((e) => _onPlay, false);
-    _videoDom.on.pause.add((e) => _clearInterval, false);
-    _videoDom.on.ended.add((e) => _clearInterval, false);
+    _videoDom.on.canPlay.add((e) => _onCanPlay(), false);
+    _videoDom.on.play.add((e) => _onPlay(), false);
+    _videoDom.on.pause.add((e) => _clearInterval(), false);
+    _videoDom.on.ended.add((e) => _clearInterval(), false);
   }
   
   void _onCanPlay() {
@@ -53,9 +58,9 @@ class VideoExample {
   
   void _onPlay() {
     _processEffectFrame();
-    if (interval == null) {
+    if (_interval == null) {
       // XXX: Switch to requestAnimationFrame.
-      interval = window.setInterval(_processEffectFrame, 33);
+      _interval = window.setInterval(_processEffectFrame, 33);
     }
   }
   
@@ -69,14 +74,14 @@ class VideoExample {
       var sw = sliceWidth;
       var sh = _videoDom.videoHeight;
       var dx = sx;
-      var dy = offsets[i] + sy + _outPadding;
+      var dy = _offsets[i] + sy + _outPadding;
       var dw = sw;
       var dh = sh;
       _ctxDraw.drawImage(_canvasCopy, sx, sy, sw, sh, dx, dy, dw, dh);
-      if ((offsets[i] + inertias[i]).abs() < _outPadding) {
-        offsets[i] += inertias[i];
+      if ((_offsets[i] + _inertias[i]).abs() < _outPadding) {
+        _offsets[i] += _inertias[i];
       } else {
-        inertias[i] = -inertias[i];
+        _inertias[i] = -_inertias[i];
       }
     }
   }
