@@ -14,7 +14,7 @@ Things We Want to Port First
  * appcache/beginner
  * file/filesystem: DONE
  * getusermedia/intro: This API is not standardized yet
- * video/basics: Blocked on http://code.google.com/p/dart/issues/detail?id=4628
+ * video/basics: DONE
  * developertools/sourcemaps
  * forms/html5forms
  * workers/basics
