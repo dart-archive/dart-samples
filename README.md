@@ -24,6 +24,7 @@ Things We Want to Port First
  * websockets/basics
  * notifications/quick
  * indexeddb/todo
+ * speed/animations: DONE
 
 Things That Didn't Come from HTML5 Rocks
 ----------------------------------------
