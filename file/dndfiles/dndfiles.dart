@@ -9,18 +9,22 @@
 #import('dart:web');
 
 class DndFiles {
+  FormElement _readForm;
+  InputElement _fileInput;
   Element _dropZone;
   OutputElement _output;
 
   DndFiles() {
     _output = document.query('#list');
+    _readForm = document.query('#read');
+    _fileInput = document.query('#files');
+    _fileInput.on.change.add((e) => _onFileInputChange());
 
-    // Begin listening to the drop zone for dnd events.
     _dropZone = document.query('#drop-zone');
     _dropZone.on.dragOver.add(_onDragOver);
     _dropZone.on.dragEnter.add((e) => _dropZone.classes.add('hover'));
     _dropZone.on.dragLeave.add((e) => _dropZone.classes.remove('hover'));
-    _dropZone.on.drop.add(_onFilesSelected);
+    _dropZone.on.drop.add(_onDrop);
   }
 
   void _onDragOver(MouseEvent event) {
@@ -29,18 +33,40 @@ class DndFiles {
     event.dataTransfer.dropEffect = 'copy';
   }
 
-  void _onFilesSelected(MouseEvent event) {
+  void _onDrop(MouseEvent event) {
     event.stopPropagation();
     event.preventDefault();
     _dropZone.classes.remove('hover');
+    _readForm.reset();
+    _onFilesSelected(event.dataTransfer.files);
+  }
 
-    // Retrieve the list of files and output some of the properties for each.
-    var files = event.dataTransfer.files;
+  void _onFileInputChange() {
+    _onFilesSelected(_fileInput.files);
+  }
+
+  void _onFilesSelected(FileList files) {
     _output.nodes.clear();
     var list = new Element.tag('ul');
     for (var file in files) {
       var item = new Element.tag('li');
-      item.innerHTML = new StringBuffer('<strong>')
+      // If the file is an image, read and display its thumbnail.
+      if (file.type.startsWith('image')) {
+        var thumbHolder = new Element.tag('span');
+        var reader = new FileReader();
+        reader.on.load.add((e) {
+          var thumbnail = new ImageElement(reader.result);
+          thumbnail.classes.add('thumb');
+          thumbnail.title = htmlEscape(file.name);
+          thumbHolder.nodes.add(thumbnail);
+        });
+        reader.readAsDataURL(file);
+        item.nodes.add(thumbHolder);
+      }
+
+      // For all file types, display some properties.
+      var properties = new Element.tag('span');
+      properties.innerHTML = new StringBuffer('<strong>')
           .add(htmlEscape(file.name))
           .add('</strong> (')
           .add(file.type != null ? htmlEscape(file.type) : 'n/a')
@@ -54,6 +80,7 @@ class DndFiles {
           //     file.lastModifiedDate.toLocal().toString() :
           //     'n/a')
           .toString();
+      item.nodes.add(properties);
       list.nodes.add(item);
     }
     _output.nodes.add(list);

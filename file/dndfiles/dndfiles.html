@@ -13,7 +13,10 @@
     <link rel="stylesheet" href="dndfiles.css">
   </head>
   <body>
-    <h3>Using Drag and Drop for Selecting</h3>
+    <h3>Using Form Input, Drag and Drop, and Reading Files</h3>
+    <form id="read">
+      <input type="file" id="files" name="files[]" multiple />
+    </form>
     <div id="drop-zone">Drop files here</div>
     <output id="list"></output>
     <script type="application/dart" src="dndfiles.dart"></script>
