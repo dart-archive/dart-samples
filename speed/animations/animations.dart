@@ -44,16 +44,16 @@ class AnimationExample {
     var halfWindowHeight = window.innerHeight * 0.5;
     var offset = 0;
     
-    for (var m = 0; m < _movers.length; m++) {
-      Element mover = _movers[m];
-      _moverTops[m] = mover.$dom_offsetTop;
+    for (var i = 0; i < _movers.length; i++) {
+      Element mover = _movers[i];
+      _moverTops[i] = mover.$dom_offsetTop;
     }
     
     // Using separate for loops is a subtle browser optimization. See the
     // tutorial.
-    for (var m = 0; m < _movers.length; m++) {
-      Element mover = _movers[m];
-      if (_lastScrollY > _moverTops[m] - halfWindowHeight) {
+    for (var i = 0; i < _movers.length; i++) {
+      Element mover = _movers[i];
+      if (_lastScrollY > _moverTops[i] - halfWindowHeight) {
         mover.classes.add('left');
       } else {
         mover.classes.remove('left');
