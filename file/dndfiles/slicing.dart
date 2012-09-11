@@ -9,18 +9,18 @@
 #import('dart:math');
 
 class Slicing {
-  InputElement _filesEl;
-  Element _contentEl;
-  Element _byteRangeEl;
+  InputElement _fileInput;
+  Element _content;
+  Element _byteRange;
 
   Slicing() {
-    _contentEl = query('#byte-content');
-    _byteRangeEl = query('#byte-range');
+    _content = query('#byte-content');
+    _byteRange = query('#byte-range');
 
-    _filesEl = query('#files');
-    _filesEl.on.change.add((e) {
-      _contentEl.text = '';
-      _byteRangeEl.text = '';
+    _fileInput = query('#files');
+    _fileInput.on.change.add((e) {
+      _content.text = '';
+      _byteRange.text = '';
     });
 
     var buttons = query('#read-bytes-buttons');
@@ -39,7 +39,7 @@ class Slicing {
   }
 
   void _readBlob([int startByte, int endByte]) {
-    var files = _filesEl.files;
+    var files = _fileInput.files;
     if (files.length == 0) {
       window.alert('Please select a file!');
       return;
@@ -50,8 +50,8 @@ class Slicing {
     var end = endByte != null ? endByte : file.size;
     var reader = new FileReader();
     reader.on.load.add((e) {
-      _contentEl.text = reader.result;
-      _byteRangeEl.text =
+      _content.text = reader.result;
+      _byteRange.text =
           'Read bytes ${start + 1} - ${end + 1} of ${file.size}.';
     });
     var slice = file.slice(start, end);

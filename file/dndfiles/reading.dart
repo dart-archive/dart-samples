@@ -9,21 +9,21 @@
 #import('dart:web');
 
 class Reading {
-  InputElement _filesEl;
-  OutputElement _listEl;
+  InputElement _fileInput;
+  OutputElement _output;
 
   Reading() {
-    _listEl = query('#list');
+    _output = query('#list');
 
     // Listen to the files input element for changes.
-    _filesEl = query('#files');
-    _filesEl.on.change.add((e) => _onFilesSelected());
+    _fileInput = query('#files');
+    _fileInput.on.change.add((e) => _onFilesSelected());
   }
 
   void _onFilesSelected() {
     // Loop through the file list and render image files as thumbnails.
-    _listEl.nodes.clear();
-    var files = _filesEl.files;
+    _output.nodes.clear();
+    var files = _fileInput.files;
     var imageFileCount = 0;
     for (var file in files) {
       if (file.type.startsWith('image')) {
@@ -34,7 +34,7 @@ class Reading {
           thumbnail.title = htmlEscape(file.name);
           var span = new Element.tag('span');
           span.nodes.add(thumbnail);
-          _listEl.nodes.add(span);
+          _output.nodes.add(span);
         });
         reader.readAsDataURL(file);
         imageFileCount++;

@@ -9,29 +9,28 @@
 #import('dart:web');
 
 class FormInput {
-  InputElement _filesEl;
-  OutputElement _listEl;
+  InputElement _fileInput;
+  OutputElement _output;
 
   FormInput() {
-    _listEl = document.query('#list');
+    _output = document.query('#list');
 
     // Listen to the files input element for changes.
-    _filesEl = document.query('#files');
-    _filesEl.on.change.add((e) => onFilesSelected());
+    _fileInput = document.query('#files');
+    _fileInput.on.change.add((e) => onFilesSelected());
   }
 
   void onFilesSelected() {
-    var files = _filesEl.files;
-
-    // files is a FileList of File objects. List some properties.
-    _listEl.nodes.clear();
+    // Retrieve the list of files and output some of the properties for each.
+    var files = _fileInput.files;
+    _output.nodes.clear();
     var list = new Element.tag('ul');
     for (var file in files) {
       var item = new Element.tag('li');
       item.innerHTML = new StringBuffer('<strong>')
           .add(htmlEscape(file.name))
           .add('</strong> (')
-          .add(file.type != null ? file.type : 'n/a')
+          .add(file.type != null ? htmlEscape(file.type) : 'n/a')
           .add(') ')
           .add(file.size)
           .add(' bytes')
@@ -44,7 +43,7 @@ class FormInput {
           .toString();
       list.nodes.add(item);
     }
-    _listEl.nodes.add(list);
+    _output.nodes.add(list);
   }
 }
 

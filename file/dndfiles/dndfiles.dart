@@ -10,12 +10,12 @@
 
 class DndFiles {
   Element _dropZone;
-  OutputElement _listEl;
+  OutputElement _output;
 
   DndFiles() {
-    _listEl = document.query('#list');
+    _output = document.query('#list');
 
-    // Begin listening to the to the drop zone for dnd events.
+    // Begin listening to the drop zone for dnd events.
     _dropZone = document.query('#drop-zone');
     _dropZone.on.dragOver.add(_onDragOver);
     _dropZone.on.dragEnter.add((e) => _dropZone.classes.add('hover'));
@@ -34,16 +34,16 @@ class DndFiles {
     event.preventDefault();
     _dropZone.classes.remove('hover');
 
-    // files is a FileList of File objects. List some properties.
+    // Retrieve the list of files and output some of the properties for each.
     var files = event.dataTransfer.files;
-    _listEl.nodes.clear();
+    _output.nodes.clear();
     var list = new Element.tag('ul');
     for (var file in files) {
       var item = new Element.tag('li');
       item.innerHTML = new StringBuffer('<strong>')
           .add(htmlEscape(file.name))
           .add('</strong> (')
-          .add(file.type != null ? file.type : 'n/a')
+          .add(file.type != null ? htmlEscape(file.type) : 'n/a')
           .add(') ')
           .add(file.size)
           .add(' bytes')
@@ -56,7 +56,7 @@ class DndFiles {
           .toString();
       list.nodes.add(item);
     }
-    _listEl.nodes.add(list);
+    _output.nodes.add(list);
   }
 }
 

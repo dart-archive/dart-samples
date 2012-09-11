@@ -9,18 +9,14 @@
 #import('dart:math');
 
 class Monitoring {
-  InputElement _filesEl;
+  InputElement _fileInput;
   Element _progressBar;
   FileReader _reader;
 
   Monitoring() {
     _progressBar = query('#progress-bar');
-
-    // Listen to the files input element for changes.
-    _filesEl = document.query('#files');
-    _filesEl.on.change.add((e) => _onFilesSelected());
-
-    // Listening for a read cancel event.
+    _fileInput = document.query('#files');
+    _fileInput.on.change.add((e) => _onFilesSelected());
     var cancelButton = query('#cancel-read');
     cancelButton.on.click.add((e) => _onCancel());
   }
@@ -40,7 +36,7 @@ class Monitoring {
     _progressBar.classes.remove('loading');
 
     // Set up handlers and begin reading the file.
-    var file = _filesEl.files[0];
+    var file = _fileInput.files[0];
     _reader = new FileReader();
     _reader.on.error.add((e) => _onError());
     _reader.on.progress.add(_onProgress);
@@ -59,9 +55,7 @@ class Monitoring {
   void _onProgress(ProgressEvent event) {
     if (event.lengthComputable) {
       var percentLoaded = (100 * event.loaded / event.total).round().toInt();
-      if (percentLoaded < 100) {
-        _setProgress(percentLoaded);
-      }
+      _setProgress(percentLoaded);
     }
   }
 
