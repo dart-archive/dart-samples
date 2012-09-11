@@ -1,0 +1,22 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+*/
+
+.mover {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: url(http://1-ps.googleusercontent.com/x/s.html5rocks-hrd.appspot.com/www.html5rocks.com/en/tutorials/speed/animations/particle.png.pagespeed.ce.jWkhaHzlBa.png) center no-repeat;
+  left: 90%;
+  -webkit-transition: left 1.3s ease-out;
+  -moz-transition: left 1.3s ease-out;
+  -ms-transition: left 1.3s ease-out;
+  -o-transition: left 1.3s ease-out;
+  transition: left 1.3s ease-out;
+}
+
+.mover.left {
+  left: 10%;
+}
