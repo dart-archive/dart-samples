@@ -17,7 +17,7 @@ Things We Want to Port First
  * video/basics: DONE
  * developertools/sourcemaps
  * forms/html5forms
- * workers/basics
+ * workers/basics: Blocked on various bugs, including: http://code.google.com/p/dart/issues/detail?id=4689
  * webaudio/intro
  * file/xhr2
  * websockets/basics
@@ -29,3 +29,4 @@ Things That Didn't Come from HTML5 Rocks
 ----------------------------------------
 
  * localstorage/basics: DONE
+ * blog.sethladd.com/2012/07/simple-dart-websocket-demo.html
