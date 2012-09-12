@@ -18,7 +18,6 @@ Things We Want to Port First
  * developertools/sourcemaps
  * forms/html5forms
  * workers/basics
- * canvas/performance
  * webaudio/intro
  * file/xhr2
  * websockets/basics
