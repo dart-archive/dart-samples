@@ -57,7 +57,6 @@ class Slicing {
     var slice = file.slice(start, end);
     reader.readAsBinaryString(slice);
   }
-
 }
 
 void main() {

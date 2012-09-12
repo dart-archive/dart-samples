@@ -50,6 +50,7 @@ class DndFiles {
     var list = new Element.tag('ul');
     for (var file in files) {
       var item = new Element.tag('li');
+
       // If the file is an image, read and display its thumbnail.
       if (file.type.startsWith('image')) {
         var thumbHolder = new Element.tag('span');
