@@ -10,10 +10,8 @@
 //
 //   python -m SimpleHTTPServer
 //
-// TODO(jjinux): It doesn't play audio in Dartium at all. File a bug.
-//
-// TODO(jjinux): Update this bug concerning the AudioContext class in Dart:
-// http://code.google.com/p/dart/issues/detail?id=691
+// TODO(jjinux): This works with dart2js, but not with Dartium.
+// See: http://code.google.com/p/dart/issues/detail?id=5174
 //
 // TODO(jjinux): Once (http://code.google.com/p/dart/issues/detail?id=2023)
 // is fixed, it'll no longer be necessary to pass three arguments to
