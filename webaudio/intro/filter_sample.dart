@@ -81,7 +81,7 @@ class ApplicationContext {
   // An object to track the buffers to load "{name: path}".
   const buffersToLoad = const {
     // There is also example.ogg and example.wav.
-    "techno": "sounds/example.ogg"
+    "example": "sounds/example.ogg"
   };
   
   ApplicationContext() {
@@ -106,6 +106,8 @@ class ApplicationContext {
 }
 
 class FilterSample {
+  const _LOWPASS = 0;
+  const _FREQ = 5000;
   const _FREQ_MUL = 7000;
   const _QUAL_MUL = 30;  
   bool _playing = false;
@@ -114,7 +116,9 @@ class FilterSample {
   BiquadFilterNode _filter;
   
   FilterSample(ApplicationContext this.appCtx) {
-    query("#play-pause-button").on.click.add((e) => _toggle(), false);
+    query("#play-pause-button").on.click.add((Event e) {
+      _toggle();
+    }, false);
     query("#enable-filter-checkbox").on.change.add((Event e) {      
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
@@ -132,12 +136,12 @@ class FilterSample {
   void _play() {
     // Create the source.
     _source = appCtx.audioCtx.createBufferSource();
-    _source.buffer = appCtx.buffers['techno'];
+    _source.buffer = appCtx.buffers['example'];
     
     // Create the filter.
     _filter = appCtx.audioCtx.createBiquadFilter();
-    _filter.type = 0;  // LOWPASS
-    _filter.frequency.value = 5000;
+    _filter.type = _LOWPASS;
+    _filter.frequency.value = _FREQ;
     
     // Connect everything.
     _source.connect(_filter, 0, 0);
