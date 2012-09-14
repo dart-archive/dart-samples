@@ -10,22 +10,14 @@
 //
 //   python -m SimpleHTTPServer
 //
-// TODO(jjinux): This works with dart2js, but not with Dartium.
+// TODO(jjinux): This works in dart2js, but not with Dartium.
 // See: http://code.google.com/p/dart/issues/detail?id=5174
+//      http://code.google.com/p/dart/issues/detail?id=5176
 //
-// TODO(jjinux): Once (http://code.google.com/p/dart/issues/detail?id=2023)
-// is fixed, it'll no longer be necessary to pass three arguments to
+// TODO(jjinux): You shouldn't have to pass three arguments to
 // AudioNode.connect. The last two arguments should default to 0.
-//
-// TODO(jjinux): It's broken in Dartium.
-//
-// TODO(jjinux): There's a bug when you change the quality range.
-//
-// TODO(jjinux): Dart is refusing to give static warnings for this code.
-// See: http://code.google.com/p/dart/issues/detail?id=5168
-// There's another bug in that same thread where I had html_dartium.dart
-// open in a tab. When I upgraded Dart Editor, it resulted in a
-// NullPointerException.
+// We can update this code once they fix that bug.
+// See: http://code.google.com/p/dart/issues/detail?id=2023
 
 #import('dart:html');
 #import('dart:math');
@@ -88,7 +80,8 @@ class ApplicationContext {
 
   // An object to track the buffers to load "{name: path}".
   const buffersToLoad = const {
-    "techno": "sounds/techno.mp3"
+    // There is also example.ogg and example.wav.
+    "techno": "sounds/example.ogg"
   };
   
   ApplicationContext() {
