@@ -189,7 +189,6 @@ class FilterSample {
   }
 
   void _changeQuality(num value) {
-    print("Value is: $value"); // XXX I think I'm getting a string.
     _filter.Q.value = value * _QUAL_MUL;
   }
 }
