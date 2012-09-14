@@ -6,6 +6,7 @@
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
 #import('dart:html');
+#import('package:htmlescape/htmlescape.dart');
 
 class FileSystemExample {
   DOMFileSystem _filesystem;
@@ -92,21 +93,6 @@ class FileSystemExample {
       _fileList.text = 'Directory emptied.';
     }, _handleError);
   }
-}
-
-/**
- * Escapes HTML-special characters of [text] so that the result can be
- * included verbatim in HTML source code, either in an element body or in an
- * attribute value.
- * 
- * In-lined from package:htmlescape/htmlescape.dart.
- */
-String htmlEscape(String text) {
-  return text.replaceAll("&", "&amp;")
-             .replaceAll("<", "&lt;")
-             .replaceAll(">", "&gt;")
-             .replaceAll('"', "&quot;")
-             .replaceAll("'", "&apos;");
 }
 
 void main() {

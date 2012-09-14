@@ -1,0 +1,7 @@
+name: filesystem
+description: >
+ This is a port of "Exploring the FileSystem APIs" to Dart.
+ See: http://www.html5rocks.com/en/tutorials/file/filesystem/
+
+dependencies:
+  htmlescape: { sdk: htmlescape }
