@@ -1,10 +1,26 @@
 dart-html5-samples
 ==================
 
-HTML5 samples in Dart.
+These are HTML5 samples written in Dart.
+
+Most of them were ported from
+[HTML5 Rocks](http://www.html5rocks.com/).
 
 Learn more about [Dart](http://www.dartlang.org),
 the language for structured web programming.
+
+Setup
+-----
+
+	export DART_SDK=.../dart/dart-sdk
+	export PATH=$PATH:$DART_SDK/bin
+	pub install
+
+Developing
+----------
+
+To work on dart-html5-samples, you'll need to set DartEditor >> Preferences >>
+Editor >> Package directory to dart-html5-samples/packages.
 
 Things We Want to Port First
 ----------------------------
@@ -30,3 +46,4 @@ Things That Didn't Come from HTML5 Rocks
 
  * localstorage/basics: DONE
  * blog.sethladd.com/2012/07/simple-dart-websocket-demo.html
+ 

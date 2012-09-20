@@ -3,3 +3,8 @@
 .project
 *.dart.js
 *.dart.js.map
+
+# pub
+/packages
+/pubspec.lock
+/pubspec.yaml

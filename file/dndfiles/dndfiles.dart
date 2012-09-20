@@ -6,7 +6,7 @@
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
 #import('dart:html');
-#import('dart:web');
+#import('package:htmlescape/htmlescape.dart');
 
 class DndFiles {
   FormElement _readForm;
