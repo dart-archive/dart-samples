@@ -22,7 +22,7 @@ outputMsg(String msg) {
 }
 
 void initWebSocket([int retrySeconds = 2]) {
-  bool reconnectScheduled = false;
+  var reconnectScheduled = false;
   
   outputMsg("Connecting to websocket");
   ws = new WebSocket('ws://echo.websocket.org');
