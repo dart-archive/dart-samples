@@ -22,16 +22,16 @@ outputMsg(String msg) {
 }
 
 void initWebSocket([int retrySeconds = 2]) {
-  bool encounteredError = false;
+  bool reconnectScheduled = false;
   
   outputMsg("Connecting to websocket");
   ws = new WebSocket('ws://echo.websocket.org');
   
-  void handleError() {
-    if (!encounteredError) {
+  void scheduleReconnect() {
+    if (!reconnectScheduled) {
       window.setTimeout(() => initWebSocket(retrySeconds * 2), 1000 * retrySeconds);
     }
-    encounteredError = true;    
+    reconnectScheduled = true;    
   }
   
   ws.on.open.add((e) {
@@ -41,12 +41,12 @@ void initWebSocket([int retrySeconds = 2]) {
   
   ws.on.close.add((e) {
     outputMsg('Websocket closed, retrying in $retrySeconds seconds');
-    handleError();
+    scheduleReconnect();
   });
   
   ws.on.error.add((e) {
     outputMsg("Error connecting to ws");
-    handleError();
+    scheduleReconnect();
   });
   
   ws.on.message.add((MessageEvent e) {
