@@ -5,9 +5,7 @@
 // This is a port of "A Simple ToDo List Using HTML5 IndexedDB" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/indexeddb/todo/
 
-
 #import('dart:html');
-
 
 class TodoList {
   static final String _TODOS_DB = "todo";
@@ -19,9 +17,9 @@ class TodoList {
   Element _todoItems;
 
   TodoList() {
-    _todoItems = document.query('#todo-items');
-    _input = document.query('#todo');
-    document.query('input#submit').on.click.add((e) => _onAddTodo());
+    _todoItems = query('#todo-items');
+    _input = query('#todo');
+    query('input#submit').on.click.add((e) => _onAddTodo());
   }
 
   void open() {
@@ -32,8 +30,10 @@ class TodoList {
   }
 
   void _onError(e) {
-    window.console.log('An error occurred: {$e}');
+    // Get the user's attention for the sake of this tutorial. (Of course we
+    // would *never* use window.alert() in real life.)
     window.alert('Oh no! Something went wrong. See the console for details.');
+    window.console.log('An error occurred: {$e}');
   }
 
   void _onDbOpened(IDBDatabase db) {
@@ -109,5 +109,5 @@ class TodoList {
 }
 
 void main() {
-  window.on.load.add((e) => new TodoList().open());
+  new TodoList().open();
 }
