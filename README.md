@@ -31,7 +31,6 @@ Things We Want to Port First
  * file/filesystem: DONE
  * getusermedia/intro: This API is not standardized yet
  * video/basics: DONE
- * developertools/sourcemaps
  * workers/basics: Blocked on various bugs, including: http://code.google.com/p/dart/issues/detail?id=4689
  * webaudio/intro: Partially DONE. See the code for the list of bugs.
  * file/xhr2
