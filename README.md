@@ -22,7 +22,7 @@ Things We Want to Port First
  * file/xhr2
  * websockets/basics
  * notifications/quick
- * indexeddb/todo
+ * indexeddb/todo: DONE
  * speed/animations: DONE
 
 Things That Didn't Come from HTML5 Rocks
