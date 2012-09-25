@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Getting Started with the Web Audio API: Filter Sample</title>
+  </head>
+  <body>
+    <input type="button" value="Play/Pause" id="play-pause-button">
+    Filter on:
+    <input type="checkbox" checked="false" id="enable-filter-checkbox">
+    Frequency:
+    <input type="range" min="0" max="1" step="0.01" value="1" id="frequency-range">
+    Quality:
+    <input type="range" min="0" max="1" step="0.01" value="0" id="quality-range">
+
+    <script type="application/dart" src="filter_sample.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>
