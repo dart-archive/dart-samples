@@ -47,7 +47,10 @@ class BufferLoader {
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
     request.on.load.add((e) => _onLoad(request, url, index));
+    
+    // Don't use alert in real life ;)
     request.on.error.add((e) => window.alert("BufferLoader: XHR error"));
+    
     request.send();    
   } 
   
@@ -55,7 +58,10 @@ class BufferLoader {
     // Asynchronously decode the audio file data in request.response.
     audioCtx.decodeAudioData(request.response, (AudioBuffer buffer) {
       if (buffer == null) {
+        
+        // Don't use alert in real life ;)
         window.alert("Error decoding file data: $url");
+        
         return;
       }
       _bufferList[index] = buffer;
@@ -115,7 +121,7 @@ class FilterSample {
   AudioBufferSourceNode _source;
   BiquadFilterNode _filter;
   
-  FilterSample(ApplicationContext this.appCtx) {
+  FilterSample(this.appCtx) {
     query("#play-pause-button").on.click.add((Event e) {
       _toggle();
     }, false);
@@ -179,14 +185,14 @@ class FilterSample {
   void _changeFrequency(num value) {
     // Clamp the frequency between the minimum value (40 Hz) and half of the
     // sampling rate.
-    num minValue = 40;
-    num maxValue = appCtx.audioCtx.sampleRate / 2;
+    var minValue = 40;
+    var maxValue = appCtx.audioCtx.sampleRate / 2;
     
     // Logarithm (base 2) to compute how many octaves fall in the range.
-    num numberOfOctaves = log(maxValue / minValue) / LN2;
+    var numberOfOctaves = log(maxValue / minValue) / LN2;
     
     // Compute a multiplier from 0 to 1 based on an exponential scale.
-    num multiplier = pow(2, numberOfOctaves * (value - 1.0));
+    var multiplier = pow(2, numberOfOctaves * (value - 1.0));
     
     // Get back to the frequency value between min and max.
     _filter.frequency.value = maxValue * multiplier;
