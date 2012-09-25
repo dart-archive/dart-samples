@@ -106,7 +106,6 @@ class TodoList {
     item.nodes.add(deleteControl);
     _todoItems.nodes.add(item);
   }
-
 }
 
 void main() {
