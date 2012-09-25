@@ -5,6 +5,5 @@
 *.dart.js.map
 
 # pub
-/packages
-/pubspec.lock
-/pubspec.yaml
+packages
+pubspec.lock
