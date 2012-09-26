@@ -35,7 +35,7 @@ Things We Want to Port First
  * webaudio/intro: Partially DONE. See the code for the list of bugs.
  * file/xhr2
  * websockets/basics: DONE
- * notifications/quick
+ * notifications/quick: Partially DONE. See the code for the list of bugs.
  * indexeddb/todo: DONE
  * speed/animations: DONE
 
