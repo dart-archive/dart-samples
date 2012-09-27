@@ -18,12 +18,6 @@ Setup
 	export PATH=$PATH:$DART_SDK/bin
 	pub install
 
-Developing
-----------
-
-To work on dart-html5-samples, you'll need to set DartEditor >> Preferences >>
-Editor >> Package directory to dart-html5-samples/packages.
-
 Contributing
 ------------
 
