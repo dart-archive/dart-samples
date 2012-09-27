@@ -13,7 +13,6 @@
 #import('dart:html');
 #import('dart:isolate');
 
-class NotificationsSample {
   static const PERMISSION_ALLOWED = 0;
   static const ICON_URL = "http://www.blogger.com/img/icon_logo32.gif";
 
@@ -58,7 +57,6 @@ class NotificationsSample {
     
     notification.show();
   }  
-}
 
 void main() {
   new NotificationsSample();  
