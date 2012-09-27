@@ -9,6 +9,7 @@
 // This has been tested under Chrome and Firefox.
 
 #import('dart:html');
+#import('dart:isolate');
 
 WebSocket ws;
 
@@ -29,7 +30,7 @@ void initWebSocket([int retrySeconds = 2]) {
   
   void scheduleReconnect() {
     if (!reconnectScheduled) {
-      window.setTimeout(() => initWebSocket(retrySeconds * 2), 1000 * retrySeconds);
+      new Timer(1000 * retrySeconds, (timer) => initWebSocket(retrySeconds * 2));
     }
     reconnectScheduled = true;    
   }

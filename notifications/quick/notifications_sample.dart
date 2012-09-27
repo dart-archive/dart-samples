@@ -11,6 +11,7 @@
 // See: http://code.google.com/p/dart/issues/detail?id=5462
 
 #import('dart:html');
+#import('dart:isolate');
 
 class NotificationsSample {
   static const PERMISSION_ALLOWED = 0;
@@ -41,7 +42,7 @@ class NotificationsSample {
    * I'm providing that I requested permission ahead of time.
    */
   bool scheduleNotification() {
-    window.setTimeout(showNotification, 1000);
+    new Timer(1000, (timer) => showNotification());
     
     // This is for window.webkitNotifications.requestPermission.
     return false; 
