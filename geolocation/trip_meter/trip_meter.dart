@@ -5,9 +5,13 @@
 // This is a port of "A Simple Trip Meter Using the Geolocation API" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/geolocation/trip_meter/
 
+// TODO(shailen): window.navigator.geolocation.watchPosition raises an exception
+//                in Chromium. No exception is raises when running the script in
+//                Chrome or Safari.
+// See: http://code.google.com/p/dart/issues/detail?id=5548
+
 #import('dart:html');
 #import('dart:math');
-
 
 // Reused code - copyright Moveable Type Scripts
 // http://www.movable-type.co.uk/scripts/latlong.html
@@ -23,11 +27,11 @@ num calculateDistance(num lat1, num lon1, num lat2, num lon2) {
           pow(sin(lonDiff / 2), 2);
 
   var angularDistance = 2 * atan2(sqrt(a), sqrt(1 - a));
-  return  EARTH_RADIUS * angularDistance;
+  return EARTH_RADIUS * angularDistance;
 }
 
 // Don't use alert() in real code ;)
-void alertError(PositionError error){
+void alertError(PositionError error) {
   window.alert("Error occurred. Error code: ${error.code}");
 }
 
@@ -38,7 +42,7 @@ void main(){
     startPosition = position;
     query("#start-lat").text = "${startPosition.coords.latitude}";
     query("#start-lon").text = "${startPosition.coords.longitude}";
-    }, (PositionError error) => alertError(error));
+  }, (error) => alertError(error));
   
   window.navigator.geolocation.watchPosition((Geoposition position) {
     query("#current-lat").text = "${position.coords.latitude}";
@@ -49,5 +53,5 @@ void main(){
         position.coords.latitude,
         position.coords.longitude);
     query("#distance").text = "$distance";
-  }, (PositionError error) => alertError(error));
+  }, (error) => alertError(error));
 }
