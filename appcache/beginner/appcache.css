@@ -1,0 +1,37 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+*/
+
+body {
+  background: #f7f7f7;
+  color: #333;
+}
+
+h1, p {
+  font-family: 'Open Sans', Arial;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+code {
+  color: #b33;
+  font-weight: bold;
+}
+
+#content {
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin: 40px auto;
+  padding: 40px;
+  width: 880px;
+}
