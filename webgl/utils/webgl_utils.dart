@@ -41,7 +41,7 @@ WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shader
 }
 
 WebGLShader createShaderFromScriptElement(WebGLRenderingContext gl, String id) {
-  ScriptElement shaderScript = document.query(id);
+  ScriptElement shaderScript = query(id);
   String shaderSource = shaderScript.text;
   int shaderType;
   if (shaderScript.type == "x-shader/x-vertex") {
