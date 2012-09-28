@@ -13,51 +13,47 @@
 #import('dart:html');
 #import('dart:isolate');
 
-  static const PERMISSION_ALLOWED = 0;
-  static const ICON_URL = "http://www.blogger.com/img/icon_logo32.gif";
+const PERMISSION_ALLOWED = 0;
+const ICON_URL = "http://www.blogger.com/img/icon_logo32.gif";
 
-  NotificationsSample() {
-    query('#say-hello').on.click.add((e) => sayHello(), false);
+/**
+ * When the user clicks the say-hello button, ask for permission to show
+ * notifications. Then, one second later, schedule a notification.
+ */
+void sayHello() {  
+  if (window.webkitNotifications.checkPermission() == PERMISSION_ALLOWED) {
+    scheduleNotification();
+  } else {
+    window.webkitNotifications.requestPermission(scheduleNotification);
   }
+}
+
+/**
+ * Pause for a second, and then show a notification.
+ * 
+ * The reason I'm pausing is because I'm pretending an event is happening
+ * later. Chrome won't let you show a notification that isn't the result of
+ * a user event unless you've requested permission ahead of time. Hence,
+ * I'm providing that I requested permission ahead of time.
+ */
+bool scheduleNotification() {
+  new Timer(1000, (timer) => showNotification());
   
-  /**
-   * When the user clicks the say-hello button, ask for permission to show
-   * notifications. Then, one second later, schedule a notification.
-   */
-  void sayHello() {  
-    if (window.webkitNotifications.checkPermission() == PERMISSION_ALLOWED) {
-      scheduleNotification();
-    } else {
-      window.webkitNotifications.requestPermission(scheduleNotification);
-    }
-  }
+  // This is for window.webkitNotifications.requestPermission.
+  return false; 
+}
+
+void showNotification() {
+  var notification = window.webkitNotifications.createNotification(
+      ICON_URL, "Hello World", "You've been notified!");
   
-  /**
-   * Pause for a second, and then show a notification.
-   * 
-   * The reason I'm pausing is because I'm pretending an event is happening
-   * later. Chrome won't let you show a notification that isn't the result of
-   * a user event unless you've requested permission ahead of time. Hence,
-   * I'm providing that I requested permission ahead of time.
-   */
-  bool scheduleNotification() {
-    new Timer(1000, (timer) => showNotification());
-    
-    // This is for window.webkitNotifications.requestPermission.
-    return false; 
-  }
+  // Use these if you need them.
+  notification.on.display.add((e) => print("notification.on.display"));
+  notification.on.close.add((e) => print("notification.on.close"));
   
-  void showNotification() {
-    var notification = window.webkitNotifications.createNotification(
-        ICON_URL, "Hello World", "You've been notified!");
-    
-    // Use these if you need them.
-    notification.on.display.add((e) => print("notification.on.display"));
-    notification.on.close.add((e) => print("notification.on.close"));
-    
-    notification.show();
-  }  
+  notification.show();
+}  
 
 void main() {
-  new NotificationsSample();  
+  query('#say-hello').on.click.add((e) => sayHello(), false);
 }
