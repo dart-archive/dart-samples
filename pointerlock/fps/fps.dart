@@ -1,7 +1,7 @@
 
 #import('dart:html');
 #import('dart:math', prefix:'Math');
-#import('external/DartVectorMath/vector_math_html.dart');
+#import('package:DartVectorMath/vector_math_html.dart');
 #source('fps_camera.dart');
 #source('fps_controller.dart');
 
