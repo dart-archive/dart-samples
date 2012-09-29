@@ -66,6 +66,6 @@ void render(image) {
   // Set a rectangle the same size as the image. 
   setRectangle(gl, 0, 0, image.width, image.height);
   
-  // Draw te rectangle.
+  // Draw the rectangle.
   gl.drawArrays(WebGLRenderingContext.TRIANGLES, 0, 6);
 }
