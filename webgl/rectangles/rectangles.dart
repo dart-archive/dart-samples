@@ -1,10 +1,11 @@
 #import('dart:html');
 #import('../utils/webgl_utils.dart');
 #import('dart:math');
+
 void main() {
   Random random = new Random();
   // Get a WebGL context
-  var canvas = document.query("canvas");
+  var canvas = query("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGLRenderingContext) {
     print("Failed to load canvas");
@@ -34,7 +35,7 @@ void main() {
   gl.vertexAttribPointer(positionLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
   
   // draw 50 random rectangles in random colors
-  for (var i=0; i<50; ++i) {
+  for (int i=0; i<50; ++i) {
     // Setup a random rectangle
     setRectangle(gl, random.nextInt(300), random.nextInt(300), random.nextInt(300), random.nextInt(300));
     

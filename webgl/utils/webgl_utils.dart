@@ -15,8 +15,10 @@ WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]
   gl.linkProgram(program);
   
   // Check the linked status
-  //var linked = gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS);
-  //debugPrint("linked = ${linked}");
+  var linked = gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS);
+  if (!linked) {
+    throw "Not able to link shader(s) ${shaders}";
+  }
   
   return program;
 }
@@ -33,8 +35,10 @@ WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shader
   
   // Check the compile status
   // NOTE: getShaderParameter maybe borken in minfrog or frog compiler. 
-  //var compiled = gl.getShaderParameter(shader, WebGLRenderingContext.COMPILE_STATUS);
-  //debugPrint("compiled = ${compiled}");
+  var compiled = gl.getShaderParameter(shader, WebGLRenderingContext.COMPILE_STATUS);
+  if (!compiled) {
+    throw "Not able to compile shader $shaderSource";
+  }
   
   return shader;
 }

@@ -4,13 +4,13 @@
 List neffects = new List();
 
 void main() {
-  ImageElement image = document.query('#photo');
+  ImageElement image = query('#photo');
   render(image);
 }
 
 void render(image) {
   // Get a WebGL context
-  var canvas = document.query("canvas");
+  var canvas = query("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGLRenderingContext) {
     print("Failed to load canvas");
@@ -40,7 +40,7 @@ void render(image) {
   gl.enableVertexAttribArray(texCoordLocation);
   gl.vertexAttribPointer(texCoordLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
   
-  createAndSetupTexture() {
+  WebGLTexture createAndSetupTexture() {
     // Create a texture.
     var texture = gl.createTexture();
     gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture);
@@ -278,11 +278,11 @@ void render(image) {
   
   List selects = new List();
   // This is a little brain dead
-  for (var i=0; i<effects.length; ++i) {
+  for (int i=0; i<effects.length; ++i) {
     var select = new Element.tag('select');
     selects.add(select);
-    for (var j=0; j<effects.length; j++) {
-      effects.forEach((var effect) {
+    for (int j=0; j<effects.length; j++) {
+      effects.forEach((effect) {
         OptionElement option = new Element.tag('option');
         option.value = effect["name"];
         if (effect["name"] == "normal") {
@@ -296,13 +296,12 @@ void render(image) {
   
   // Its late and I'm tired. :(
   List sss = selects; // Avoid bug with closure over selects
-  selects.forEach((var s) {
-    
+  selects.forEach((s) {
     ui.nodes.add(s);
-    s.on.change.add((var event) {
+    s.on.change.add((event) {
       neffects.clear();
       int ncount=0;
-      sss.forEach((var select) {
+      sss.forEach((select) {
         if (!(select.name == "normal" && ncount != 0)) {
           neffects.add(select.value);
         }

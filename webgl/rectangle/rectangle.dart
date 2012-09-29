@@ -3,7 +3,7 @@
 
 void main() {
   // Get a WebGL context
-  var canvas = document.query("canvas");
+  var canvas = query("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGLRenderingContext) {
     print("Failed to load canvas");

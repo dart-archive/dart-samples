@@ -1,11 +1,9 @@
 #import('dart:html');
 #import('../utils/webgl_utils.dart');
 
-
 void main() {
   ImageElement image = query('#photo');
   render(image);
-  
 }
 
 void render(image) {

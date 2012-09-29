@@ -32,5 +32,4 @@ void main() {
   
   // draw
   gl.drawArrays(WebGLRenderingContext.TRIANGLES, 0, 6);
-  
 }
