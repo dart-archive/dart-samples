@@ -8,7 +8,6 @@ WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]
   
   // Iterate the shaders list
   if (shaders is List<WebGLShader>) {
-    print("shaders.length = ${shaders.length}");
     shaders.forEach((var shader) => gl.attachShader(program, shader));
   }
   
@@ -72,10 +71,4 @@ void setRectangle(gl, x, y, width, height) {
                   x2, y1,
                   x2, y2];
   gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array.fromList(vertices), WebGLRenderingContext.STATIC_DRAW);
-}
-
-int randomInt(int range) {
-  // XXX: remove method randomInt
-  Math.Random rng = new Math.Random();
-  return rng.nextInt(range);
 }
