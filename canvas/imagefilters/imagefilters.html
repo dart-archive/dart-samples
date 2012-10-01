@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Imagefilters</title>
+    <link rel="stylesheet" href="imagefilters.css">
+  </head>
+  <body>
+    <h1>Imagefilters</h1>
+    
+    <p>Image Filters with Canvas</p>
+    
+    <div id="container">
+      <figure>
+        <img class="orig" src="images/demo_small.png" width="600" height="337">
+        <figcaption>The original test image</figcaption>
+      </figure>
+      
+      <figure>
+        <canvas id="grayscale" width="600" height="337"></canvas>
+        <button name="grayscale">apply grayscale filter</button>
+      </figure>
+      
+      <figure>
+        <canvas id="brightness" width="600" height="337"></canvas>
+        <button name="brightness">apply brighten filter</button>
+      </figure>
+      
+      <figure>
+        <canvas id="threshold" width="600" height="337"></canvas>
+        <button name="threshold">apply threshold filter</button>
+      </figure>
+    </div>
+
+    <script type="application/dart" src="imagefilters.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>
