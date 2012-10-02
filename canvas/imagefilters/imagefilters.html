@@ -9,11 +9,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Imagefilters</title>
+    <title>Image Filters in Dart</title>
     <link rel="stylesheet" href="imagefilters.css">
   </head>
   <body>
-    <h1>Imagefilters</h1>
+    <h1>Image Filters in Dart</h1>
     
     <p>Image Filters with Canvas</p>
     
@@ -46,6 +46,30 @@
       <figure>
         <canvas id="blur" width="600" height="337"></canvas>
         <button name="blur">apply blur filter</button>
+      </figure>
+      
+      <figure>
+        <canvas id="sobel" width="600" height="337"></canvas>
+        <button name="sobel">apply sobel filter</button>
+      </figure>
+      
+      <figure>
+        <canvas id="custom" width="600" height="337"></canvas>
+        <div id="customMatrix">
+          <input type="text" value="1" size="3">
+          <input type="text" value="1" size="3">
+          <input type="text" value="1" size="3">
+          <br>
+          <input type="text" value="1" size="3">
+          <input type="text" value="0.7" size="3">
+          <input type="text" value="-1" size="3">
+          <br>
+          <input type="text" value="-1" size="3">
+          <input type="text" value="-1" size="3">
+          <input type="text" value="-1" size="3">
+          <br>
+        </div>
+        <button name="custom">apply custom filter</button>
       </figure>
       
       

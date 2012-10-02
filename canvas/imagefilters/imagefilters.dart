@@ -16,11 +16,19 @@ class Filters {
     pixels = getPixels(img);
   }
 
+  // Get image pixels from image element.
   ImageData getPixels(ImageElement img) {
     CanvasElement canvas = new CanvasElement(img.width, img.height);
     CanvasRenderingContext2D context = canvas.getContext('2d');
     context.drawImage(img, 0, 0);
     return context.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
+  // Create a temporary canvas to apply the filter to.
+  ImageData createTempCanvas(int width, int height) {
+    CanvasElement tempCanvas = new CanvasElement(width, height);
+    CanvasRenderingContext2D tempContext = tempCanvas.getContext('2d');
+    return tempContext.createImageData(width, height);
   }
 
   // Apply grayscale filter.
@@ -71,10 +79,7 @@ class Filters {
     var width = pixels.width;
     var height = pixels.height;
 
-    //Create a temporary canvas to store the filtered data.
-    CanvasElement tempCanvas = new CanvasElement(width, height);
-    CanvasRenderingContext2D tempContext = tempCanvas.getContext('2d');
-    ImageData output = tempContext.createImageData(width, height);
+    ImageData output = createTempCanvas(width, height);
     var dest = output.data;
 
     //Loop over the image.
@@ -103,21 +108,93 @@ class Filters {
     }
     return output;
   }
+
+// Apply Sobel filter.
+  ImageData sobel(List hWeights, List vWeights) {
+    ImageData grayPixels = grayscale();
+    var vpixels = convolveFloat32(grayPixels, vWeights);
+    var hpixels = convolveFloat32(grayPixels, hWeights);
+
+    ImageData id = createTempCanvas(vpixels.width, vpixels.height);
+
+    for (var i = 0; i < id.data.length; i += 4) {
+      var v = vpixels.data[i].abs();
+      id.data[i] = v.toInt();
+      var h = hpixels.data[i].abs();
+      id.data[i + 1] = h.toInt();
+      id.data[i + 2] = ((v + h) / 4).toInt();
+      id.data[i + 3] = 255;
+    }
+    return id;
+  }
+
+// Apply convolution filter and return data as a double array.
+  ImageDataFloat32 convolveFloat32(ImageData pixels, List weights, [bool opaque = false]) {
+    var alphaFac = opaque ? 1 : 0;
+    var side = (sqrt(weights.length).toInt());
+    var halfSide = (side / 2).toInt();
+
+    var d = pixels.data;
+    var width = pixels.width;
+    var height = pixels.height;
+
+    //Create data structure to store the filtered data of type double.
+    ImageDataFloat32 output =
+        new ImageDataFloat32(new Float32Array(width * height * 4), width, height);
+    var dest = output.data;
+
+    //Loop over the image.
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
+        var r = 0.0, g = 0.0, b = 0.0, a = 0.0;
+        var destOff = (y * width + x) * 4;
+        //Now loop over the filter mask.
+        for (var fy = 0; fy < side; fy++) {
+          for (var fx = 0; fx < side; fx++) {
+            var srcy = min(height - 1, max(0, y + fy - halfSide));
+            var srcx = min(width - 1, max(0, x + fx - halfSide));
+            var srcOff = (srcy * width + srcx) * 4;
+            var weight = weights[(fy * side + fx)];
+            r += d[srcOff] * weight;
+            g += d[srcOff + 1] * weight;
+            b += d[srcOff + 2] * weight;
+            a += d[srcOff + 3] * weight;
+          }
+        }
+        dest[destOff] = r;
+        dest[destOff + 1] = g;
+        dest[destOff + 2] = b;
+        dest[destOff + 3] = (a + alphaFac * (255 - a));
+      }
+    }
+    return output;
+  }
+}
+
+// Create a class to hold image data in a 32 bit float array.
+class ImageDataFloat32 {
+  final Float32Array data;
+  final width, height;
+
+  ImageDataFloat32(this.data, this.width, this.height);
 }
 
 void main() {
 
   final brightAdj = 40;
   final thresholdVal = 128;
-
-  List sharpenMask = new List();
-  List blurMask = new List();
-  sharpenMask = [0, -1,  0,
-                 -1,  5, -1,
-                 0, -1,  0];
-  blurMask = [1/9, 1/9, 1/9,
-              1/9, 1/9, 1/9,
-              1/9, 1/9, 1/9];
+  final sharpenMask = [0, -1, 0,
+                       -1, 5, -1,
+                       0, -1, 0];
+  final blurMask = [1/9, 1/9, 1/9,
+                    1/9, 1/9, 1/9,
+                    1/9, 1/9, 1/9];
+  final hSobelMask = [-1, 0, 1,
+                      -2, 0, 2,
+                      -1, 0, 1];
+  final vSobelMask = [-1,-2,-1,
+                      0, 0, 0,
+                      1, 2, 1];
 
   ImageElement img = query('.orig');
   window.on.load.add((e) => populateImages(img));
@@ -169,6 +246,31 @@ void main() {
     } else {
       ImageData pixels = new Filters(img).convolve(blurMask);
       filterImage('blur', pixels);
+    }
+  });
+
+  // Click listener for sobel.
+  document.query('[name = "sobel"]').on.click.add((e) {
+    if (query('#sobel').previousElementSibling.style.display == 'none') {
+      restoreContent('sobel');
+    } else {
+      ImageData pixels = new Filters(img).sobel(hSobelMask, vSobelMask);
+      filterImage('sobel', pixels);
+    }
+  });
+
+  // Click listener for custom.
+  document.query('[name = "custom"]').on.click.add((e) {
+    if (query('#custom').previousElementSibling.style.display == 'none') {
+      restoreContent('custom');
+    } else {
+      List matrix = document.query('#customMatrix').queryAll('input');
+      List mask = new List();
+      for (var i = 0; i < matrix.length; i++) {
+        mask.add(parseDouble(matrix[i].value));
+      }
+      ImageData pixels = new Filters(img).convolve(mask, true);
+      filterImage('custom', pixels);
     }
   });
 }
