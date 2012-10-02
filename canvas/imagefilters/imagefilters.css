@@ -11,10 +11,14 @@ body {
 p {
   color: #333;
 }
+figure {
+  width: 700px;
+  margin: 50px auto;
+  padding-left: 50px;
+}
 
 #container {
   width: 100%;
-  height: 400px;
   position: relative;
   border: 1px solid #ccc;
   background-color: #fff;
