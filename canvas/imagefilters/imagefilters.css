@@ -1,3 +1,8 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+*/
 
 body {
   background-color: #F8F8F8;
@@ -11,6 +16,7 @@ body {
 p {
   color: #333;
 }
+
 figure {
   width: 700px;
   margin: 50px auto;
@@ -19,13 +25,14 @@ figure {
 
 #container {
   width: 100%;
-  position: relative;
   border: 1px solid #ccc;
   background-color: #fff;
 }
 
-#text {
-  font-size: 24pt;
-  text-align: center;
-  margin-top: 140px;
+.show {
+  display: inline;
+}
+
+.hide {
+  display: none;
 }

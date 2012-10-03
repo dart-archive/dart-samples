@@ -18,7 +18,7 @@ class Filters {
 
   // Get image pixels from image element.
   ImageData getPixels(ImageElement img) {
-    CanvasElement canvas = new CanvasElement(img.width, img.height);
+    var canvas = new CanvasElement(img.width, img.height);
     CanvasRenderingContext2D context = canvas.getContext('2d');
     context.drawImage(img, 0, 0);
     return context.getImageData(0, 0, canvas.width, canvas.height);
@@ -26,7 +26,7 @@ class Filters {
 
   // Create a temporary canvas to apply the filter to.
   ImageData createTempCanvas(int width, int height) {
-    CanvasElement tempCanvas = new CanvasElement(width, height);
+    var tempCanvas = new CanvasElement(width, height);
     CanvasRenderingContext2D tempContext = tempCanvas.getContext('2d');
     return tempContext.createImageData(width, height);
   }
@@ -79,7 +79,7 @@ class Filters {
     var width = pixels.width;
     var height = pixels.height;
 
-    ImageData output = createTempCanvas(width, height);
+    var output = createTempCanvas(width, height);
     var dest = output.data;
 
     //Loop over the image.
@@ -109,13 +109,13 @@ class Filters {
     return output;
   }
 
-// Apply Sobel filter.
+  // Apply Sobel filter.
   ImageData sobel(List hWeights, List vWeights) {
-    ImageData grayPixels = grayscale();
+    var grayPixels = grayscale();
     var vpixels = convolveFloat32(grayPixels, vWeights);
     var hpixels = convolveFloat32(grayPixels, hWeights);
 
-    ImageData id = createTempCanvas(vpixels.width, vpixels.height);
+    var id = createTempCanvas(vpixels.width, vpixels.height);
 
     for (var i = 0; i < id.data.length; i += 4) {
       var v = vpixels.data[i].abs();
@@ -128,7 +128,7 @@ class Filters {
     return id;
   }
 
-// Apply convolution filter and return data as a double array.
+  // Apply convolution filter and return data as a double array.
   ImageDataFloat32 convolveFloat32(ImageData pixels, List weights, [bool opaque = false]) {
     var alphaFac = opaque ? 1 : 0;
     var side = (sqrt(weights.length).toInt());
@@ -139,7 +139,7 @@ class Filters {
     var height = pixels.height;
 
     //Create data structure to store the filtered data of type double.
-    ImageDataFloat32 output =
+    var output =
         new ImageDataFloat32(new Float32Array(width * height * 4), width, height);
     var dest = output.data;
 
@@ -196,115 +196,98 @@ void main() {
                       0, 0, 0,
                       1, 2, 1];
 
-  ImageElement img = query('.orig');
+  var img = query('.orig');
   window.on.load.add((e) => populateImages(img));
 
   // Click listener for grayscale.
-  document.query('[name = "grayscale"]').on.click.add((e) {
-    if (query('#grayscale').previousElementSibling.style.display == 'none') {
-      restoreContent('grayscale');
-    } else {
-      ImageData pixels = new Filters(img).grayscale();
-      filterImage('grayscale', pixels);
-    }
-  });
-
+  query('[name = "grayscale"]').on.click.add(
+      (e) => toggleFilter(img, 'grayscale'));
   // Click listener for brightness.
-  document.query('[name = "brightness"]').on.click.add((e) {
-    if (query('#brightness').previousElementSibling.style.display == 'none') {
-      restoreContent('brightness');
-    } else {
-      ImageData pixels = new Filters(img).brightness(brightAdj);
-      filterImage('brightness', pixels);
-    }
-  });
-
+  query('[name = "brightness"]').on.click.add(
+      (e) => toggleFilter(img, 'brightness', brightAdj));
   // Click listener for threshold.
-  document.query('[name = "threshold"]').on.click.add((e) {
-    if (query('#threshold').previousElementSibling.style.display == 'none') {
-      restoreContent('threshold');
-    } else {
-      ImageData pixels = new Filters(img).threshold(thresholdVal);
-      filterImage('threshold', pixels);
-    }
-  });
-
+  query('[name = "threshold"]').on.click.add(
+      (e) => toggleFilter(img, 'threshold', thresholdVal));
   // Click listener for sharpen.
-  document.query('[name = "sharpen"]').on.click.add((e) {
-    if (query('#sharpen').previousElementSibling.style.display == 'none') {
-      restoreContent('sharpen');
-    } else {
-      ImageData pixels = new Filters(img).convolve(sharpenMask);
-      filterImage('sharpen', pixels);
-    }
-  });
-
+  query('[name = "sharpen"]').on.click.add(
+      (e) => toggleFilter(img, 'sharpen', sharpenMask));
   // Click listener for blur.
-  document.query('[name = "blur"]').on.click.add((e) {
-    if (query('#blur').previousElementSibling.style.display == 'none') {
-      restoreContent('blur');
-    } else {
-      ImageData pixels = new Filters(img).convolve(blurMask);
-      filterImage('blur', pixels);
-    }
-  });
-
+  query('[name = "blur"]').on.click.add(
+      (e) => toggleFilter(img, 'blur', blurMask));
   // Click listener for sobel.
-  document.query('[name = "sobel"]').on.click.add((e) {
-    if (query('#sobel').previousElementSibling.style.display == 'none') {
-      restoreContent('sobel');
-    } else {
-      ImageData pixels = new Filters(img).sobel(hSobelMask, vSobelMask);
-      filterImage('sobel', pixels);
-    }
-  });
-
+  query('[name = "sobel"]').on.click.add(
+      (e) => toggleFilter(img, 'sobel', hSobelMask, vSobelMask));
   // Click listener for custom.
-  document.query('[name = "custom"]').on.click.add((e) {
-    if (query('#custom').previousElementSibling.style.display == 'none') {
-      restoreContent('custom');
-    } else {
-      List matrix = document.query('#customMatrix').queryAll('input');
-      List mask = new List();
-      for (var i = 0; i < matrix.length; i++) {
-        mask.add(parseDouble(matrix[i].value));
-      }
-      ImageData pixels = new Filters(img).convolve(mask, true);
-      filterImage('custom', pixels);
-    }
-  });
+  query('[name = "custom"]').on.click.add(
+      (e) => toggleFilter(img, 'custom'));
 }
 
 // Add copies of the original image to each canvas element.
 void populateImages(ImageElement img) {
   var canvases = queryAll('canvas');
   for(var i = 0; i < canvases.length; i++) {
-    CanvasElement c = canvases[i];
-    c.parent.insertBefore(img.clone(true), c);
-    c.style.display = 'none';
+    var canvas = canvases[i];
+    canvas.parent.insertBefore(img.clone(true), canvas);
+    canvas.classes.add('hide');
   }
 }
 
-// Put the filtered image back to its original (prefiltered) condition.
+// Put the filtered image back to its original (unfiltered) condition.
 void restoreContent(String id) {
-  CanvasElement canvas = query('#$id');
-  var s = canvas.previousElementSibling.style;
-  var b = canvas.parent.query('button');
-  s.display = 'inline';
-  canvas.style.display = 'none';
-  b.innerHTML = 'apply $id filter';
+  var canvas = query('#$id');
+  canvas.classes.remove('show');
+  canvas.classes.add('hide');
+  canvas.previousElementSibling.classes.remove('hide');
+  canvas.previousElementSibling.classes.add('show');
+  canvas.parent.query('button').text = 'apply $id filter';
 }
 
 // Show the filtered image.
 void filterImage(String id, ImageData pixels) {
   CanvasElement canvas = query('#$id');
-  var s = canvas.previousElementSibling.style;
-  var b = canvas.parent.query('button');
   canvas.width = pixels.width;
   canvas.height = pixels.height;
-  CanvasRenderingContext2D context = canvas.getContext('2d');
-  context.putImageData(pixels, 0, 0);
-  s.display = 'none';
-  canvas.style.display = 'inline';
-  b.innerHTML = 'restore original image';
+  canvas.getContext('2d') as CanvasRenderingContext2D
+      ..putImageData(pixels, 0, 0);
+  canvas.previousElementSibling.classes.remove('show');
+  canvas.previousElementSibling.classes.add('hide');
+  canvas.classes.remove('hide');
+  canvas.classes.add('show');
+  canvas.parent.query('button').text = 'remove $id filter';
+}
+
+// Handle applying the filter to the image.
+void toggleFilter (var img, String id, [var maskOrParam1, var maskOrParam2]) {
+  if (query('#$id').previousElementSibling.classes.contains('hide')) {
+    restoreContent(id);
+  } else {
+    switch (id) {
+      case 'grayscale':
+        filterImage('grayscale', new Filters(img).grayscale());
+        break;
+      case 'brightness':
+        filterImage('brightness', new Filters(img).brightness(maskOrParam1));
+        break;
+      case 'threshold':
+        filterImage('threshold', new Filters(img).threshold(maskOrParam1));
+        break;
+      case 'sharpen':
+        filterImage('sharpen', new Filters(img).convolve(maskOrParam1));
+        break;
+      case 'blur':
+        filterImage('blur', new Filters(img).convolve(maskOrParam1));
+        break;
+      case 'sobel':
+        filterImage('sobel', new Filters(img).sobel(maskOrParam1, maskOrParam2));
+        break;
+      case 'custom':
+        List matrix = query('#customMatrix').queryAll('input');
+        var mask = new List();
+        for (var i = 0; i < matrix.length; i++) {
+          mask.add(parseDouble(matrix[i].value));
+        }
+        filterImage('custom', new Filters(img).convolve(mask, true));
+        break;
+    }
+  }
 }
