@@ -201,25 +201,38 @@ void main() {
 
   // Click listener for grayscale.
   query('[name = "grayscale"]').on.click.add(
-      (e) => toggleFilter(img, 'grayscale'));
+      (e) => toggleFilter('grayscale',
+          () => new Filters(img).grayscale()));
   // Click listener for brightness.
   query('[name = "brightness"]').on.click.add(
-      (e) => toggleFilter(img, 'brightness', brightAdj));
+      (e) => toggleFilter('brightness',
+          () => new Filters(img).brightness(brightAdj)));
   // Click listener for threshold.
   query('[name = "threshold"]').on.click.add(
-      (e) => toggleFilter(img, 'threshold', thresholdVal));
+      (e) => toggleFilter('threshold',
+          () => new Filters(img).threshold(thresholdVal)));
   // Click listener for sharpen.
   query('[name = "sharpen"]').on.click.add(
-      (e) => toggleFilter(img, 'sharpen', sharpenMask));
+      (e) => toggleFilter('sharpen',
+          () => new Filters(img).convolve(sharpenMask)));
   // Click listener for blur.
   query('[name = "blur"]').on.click.add(
-      (e) => toggleFilter(img, 'blur', blurMask));
+      (e) => toggleFilter('blur',
+          () => new Filters(img).convolve(blurMask)));
   // Click listener for sobel.
   query('[name = "sobel"]').on.click.add(
-      (e) => toggleFilter(img, 'sobel', hSobelMask, vSobelMask));
+      (e) => toggleFilter('sobel',
+          () => new Filters(img).sobel(hSobelMask, vSobelMask)));
   // Click listener for custom.
   query('[name = "custom"]').on.click.add(
-      (e) => toggleFilter(img, 'custom'));
+      (e) => toggleFilter('custom', () {
+        List matrix = query('#customMatrix').queryAll('input');
+        var mask = new List();
+        for (var i = 0; i < matrix.length; i++) {
+          mask.add(parseDouble(matrix[i].value));
+        }
+        return new Filters(img).convolve(mask, true);
+      }));
 }
 
 // Add copies of the original image to each canvas element.
@@ -257,37 +270,11 @@ void filterImage(String id, ImageData pixels) {
 }
 
 // Handle applying the filter to the image.
-void toggleFilter (var img, String id, [var maskOrParam1, var maskOrParam2]) {
+typedef ImageData ApplyFilter();
+void toggleFilter(String id, ApplyFilter filter) {
   if (query('#$id').previousElementSibling.classes.contains('hide')) {
     restoreContent(id);
   } else {
-    switch (id) {
-      case 'grayscale':
-        filterImage('grayscale', new Filters(img).grayscale());
-        break;
-      case 'brightness':
-        filterImage('brightness', new Filters(img).brightness(maskOrParam1));
-        break;
-      case 'threshold':
-        filterImage('threshold', new Filters(img).threshold(maskOrParam1));
-        break;
-      case 'sharpen':
-        filterImage('sharpen', new Filters(img).convolve(maskOrParam1));
-        break;
-      case 'blur':
-        filterImage('blur', new Filters(img).convolve(maskOrParam1));
-        break;
-      case 'sobel':
-        filterImage('sobel', new Filters(img).sobel(maskOrParam1, maskOrParam2));
-        break;
-      case 'custom':
-        List matrix = query('#customMatrix').queryAll('input');
-        var mask = new List();
-        for (var i = 0; i < matrix.length; i++) {
-          mask.add(parseDouble(matrix[i].value));
-        }
-        filterImage('custom', new Filters(img).convolve(mask, true));
-        break;
-    }
+    filterImage(id, filter());
   }
 }
