@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// This is a port of "A Beginner's Guide to using the Application Cache" to
+// This is a port of "A Beginner's Guide to Using the Application Cache" to
 // Dart. See: http://www.html5rocks.com/en/tutorials/appcache/beginner
 
 #import('dart:html');
@@ -46,8 +46,8 @@ class AppCache {
 
   void onCacheError(Event e) {
     // For the sake of this sample alert the reader that an error has occurred.
-    // Of course we would *never* do this in real life.
-    window.alert('Oh no! A cache error occurred. See console for details.');
+    // Of course we would *never* do it this way in real life.
+    window.alert("Oh no! A cache error occurred: ${e}");
     print('Cache error: ${e}');
   }
 }
