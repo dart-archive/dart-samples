@@ -47,8 +47,8 @@ class AppCache {
   void onCacheError(Event e) {
     // For the sake of this sample alert the reader that an error has occurred.
     // Of course we would *never* do it this way in real life.
-    window.alert('Oh no! A cache error occurred. See console for details.');
-    window.console.log('Cache error: ${e}');
+    window.alert("Oh no! A cache error occurred: ${e}");
+    print('Cache error: ${e}');
   }
 }
 
