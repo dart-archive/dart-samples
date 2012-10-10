@@ -7,6 +7,7 @@
 
 #import('dart:html');
 #import('dart:math');
+#import('dart:isolate');
 
 class Monitoring {
   InputElement _fileInput;
@@ -26,7 +27,7 @@ class Monitoring {
     _progressBar.style.width = '${value}%';
     _progressBar.text = '${value}%';
     if (value == 0 || value == 100) {
-      window.setTimeout(() => _progressBar.classes.remove('loading'), 2000);
+      new Timer(2000, (timer) => _progressBar.classes.remove('loading'));
     }
   }
 

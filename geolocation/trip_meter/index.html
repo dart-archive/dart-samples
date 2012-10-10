@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>TripMeter</title>
+    <link rel="stylesheet" href="trip_meter.css">
+  </head>
+  <body>
+    <div id="tripmeter">
+      <p>
+        Starting Location (lat, lon):<br/>
+        <span id="start-lat">???</span>&deg;, <span id="start-lon">???</span>&deg;
+      </p>
+      <p>
+        Current Location (lat, lon):<br/>
+        <span id="current-lat">???</span>&deg;, <span id="current-lon">???</span>&deg;
+      </p>
+      <p>
+        Distance from starting location:<br>
+        <span id="distance">0</span> km
+      </p>
+    </div>
+    <script type="application/dart" src="trip_meter.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>
