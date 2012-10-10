@@ -1,5 +1,0 @@
-name: dart-html5-samples-fps
-
-dependencies:
-  DartVectorMath:
-    git: https://github.com/johnmccutchan/DartVectorMath.git
