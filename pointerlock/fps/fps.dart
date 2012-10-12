@@ -1,9 +1,20 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+*/
+
+/*
+ * This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+ */
 
 #import('dart:html');
 #import('dart:math', prefix:'Math');
 #import('package:dartvectormath/vector_math_html.dart');
 #source('fps_camera.dart');
 #source('fps_controller.dart');
+
+FpsControllerView view;
 
 class FpsControllerView {
   final String elementId;
@@ -19,6 +30,10 @@ class FpsControllerView {
   Float32Array cameraTransform;
   int numVertices;
   int lastTime;
+
+  /*
+   * [elementId] The dom ID of the canvas element the view should render into
+   */
   FpsControllerView(this.elementId) {
     camera = new Camera();
     controller = new MouseKeyboardCameraController();
@@ -27,219 +42,114 @@ class FpsControllerView {
     cameraTransform = new Float32Array(16);
   }
 
-  void generateVertexBuffer() {
-    vertexBuffer = webGL.createBuffer();
-    List<num> gridData = new List<num>();
-    numVertices = 0;
-    for (var i = 0; i <= 20; i++) {
-      var x = i * 1.0;
-      var y = 0.0;
-      var z0 = 0.0;
-      var z1 = -20.0;
-      var r = 0.0;
-      var g = 1.0;
-      var b = 0.0;
-      var a = 1.0;
-      gridData.add(x);
-      gridData.add(y);
-      gridData.add(z0);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-      gridData.add(x);
-      gridData.add(y);
-      gridData.add(z1);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    for (var i = 0; i <= 20; i++) {
-      var x0 = 0.0;
-      var x1 = 20.0;
-      var y = 0.0;
-      var z = i * -1.0;
-      var r = 0.0;
-      var g = 1.0;
-      var b = 0.0;
-      var a = 1.0;
-      gridData.add(x0);
-      gridData.add(y);
-      gridData.add(z);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-      gridData.add(x1);
-      gridData.add(y);
-      gridData.add(z);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    for (var i = 0; i <= 20; i++) {
-      var x = 20.0;
-      var y0 = 0.0;
-      var y1 = 20.0;
-      var z = i * -1.0;
-      var r = 0.65;
-      var g = 0.17;
-      var b = 0.17;
-      var a = 1.0;
-      gridData.add(x);
-      gridData.add(y0);
-      gridData.add(z);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-
-      numVertices++;
-      gridData.add(x);
-      gridData.add(y1);
-      gridData.add(z);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    for (var i = 0; i <= 20; i++) {
-      var x = 20.0;
-      var y = i * 1.0;
-      var z0 = 0.0;
-      var z1 = -20.0;
-      var r = 0.65;
-      var g = 0.17;
-      var b = 0.17;
-      var a = 1.0;
-      gridData.add(x);
-      gridData.add(y);
-      gridData.add(z0);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-      gridData.add(x);
-      gridData.add(y);
-      gridData.add(z1);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    for (var i = 0; i <= 20; i++) {
-      var x = i * 1.0;
-      var y0 = 0.0;
-      var y1 = 20.0;
-      var z = -20.0;
-      var r = 0.65;
-      var g = 0.6;
-      var b = 0.3;
-      var a = 1.0;
-      gridData.add(x);
-      gridData.add(y0);
-      gridData.add(z);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-
-      numVertices++;
-      gridData.add(x);
-      gridData.add(y1);
-      gridData.add(z);
-
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    for (var i = 0; i <= 20; i++) {
-      var x0 = 0.0;
-      var x1 = 20.0;
-      var y = i * 1.0;
-      var z = -20.0;
-      var r = 0.65;
-      var g = 0.6;
-      var b = 0.3;
-      var a = 1.0;
-      gridData.add(x0);
-      gridData.add(y);
-      gridData.add(z);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-      gridData.add(x1);
-      gridData.add(y);
-      gridData.add(z);
-      gridData.add(r);
-      gridData.add(g);
-      gridData.add(b);
-      gridData.add(a);
-      numVertices++;
-    }
-
-    webGL.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    webGL.bufferData(WebGLRenderingContext.ARRAY_BUFFER,
-                    new Float32Array.fromList(gridData),
-                    WebGLRenderingContext.STATIC_DRAW);
+  void _generateLine(List<num> vertexBuffer, vec3 b, vec3 e, vec4 color) {
+    vertexBuffer.add(b.x);
+    vertexBuffer.add(b.y);
+    vertexBuffer.add(b.z);
+    vertexBuffer.add(color.r);
+    vertexBuffer.add(color.g);
+    vertexBuffer.add(color.b);
+    vertexBuffer.add(color.a);
+    vertexBuffer.add(e.x);
+    vertexBuffer.add(e.y);
+    vertexBuffer.add(e.z);
+    vertexBuffer.add(color.r);
+    vertexBuffer.add(color.g);
+    vertexBuffer.add(color.b);
+    vertexBuffer.add(color.a);
   }
 
-  void setup() {
+  void _generateLines(List<num> vertexBuffer, vec3 b,
+                      vec3 e, vec3 step, color, int num) {
+    vec3 lineStart = new vec3.copy(b);
+    vec3 lineEnd = new vec3.copy(e);
+    for (int i = 0; i < num; i++) {
+      _generateLine(vertexBuffer, lineStart, lineEnd, color);
+      lineStart.add(step);
+      lineEnd.add(step);
+    }
+  }
+
+  void _generateVertexBuffer() {
+    vertexBuffer = webGL.createBuffer();
+    List<num> vertexBufferData = new List<num>();
+
+    var colors = {
+      'red': new vec4.raw(1.0, 0.0, 0.0, 1.0),
+      'green': new vec4.raw(0.0, 1.0, 0.0, 1.0),
+      'blue': new vec4.raw(0.0, 0.0, 1.0, 1.0)
+    };
+
+    /* Bottom */
+    vec3 b = new vec3.raw(0.0, 0.0, -20.0);
+    vec3 e = new vec3.raw(0.0, 0.0, 0.0);
+    vec3 s = new vec3.raw(1.0, 0.0, 0.0);
+    _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
+    b.setComponents(0.0, 0.0, 0.0);
+    e.setComponents(20.0, 0.0, 0.0);
+    s.setComponents(0.0, 0.0, -1.0);
+    _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
+
+    /* Side */
+    b.setComponents(20.0, 0.0, 0.0);
+    e.setComponents(20.0, 20.0, 0.0);
+    s.setComponents(0.0, 0.0, -1.0);
+    _generateLines(vertexBufferData, b, e, s, colors['blue'], 21);
+    b.setComponents(20.0, 0.0, 0.0);
+    e.setComponents(20.0, 0.0, -20.0);
+    s.setComponents(0.0, 1.0, 0.0);
+    _generateLines(vertexBufferData, b, e, s, colors['blue'], 21);
+
+    /* Side */
+    b.setComponents(0.0, 0.0, -20.0);
+    e.setComponents(0.0, 20.0, -20.0);
+    s.setComponents(1.0, 0.0, 0.0);
+    _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
+    b.setComponents(0.0, 0.0, -20.0);
+    e.setComponents(20.0, 0.0, -20.0);
+    s.setComponents(0.0, 1.0, 0.0);
+    _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
+
+    numVertices = vertexBufferData.length~/7;
+    webGL.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
+    webGL.bufferData(WebGLRenderingContext.ARRAY_BUFFER,
+                     new Float32Array.fromList(vertexBufferData),
+                     WebGLRenderingContext.STATIC_DRAW);
+  }
+
+  void initWebGL() {
     if (canvas == null) {
-      return;
+      throw new Exception('canvas not found $elementId can\'t be found');
     }
     canvas.width = 640;
     canvas.height = 480;
     webGL = canvas.getContext("experimental-webgl");
     if (webGL == null) {
-      print('error');
+      throw new Exception('WebGL is not supported');
     }
     vertexShader = webGL.createShader(WebGLRenderingContext.VERTEX_SHADER);
     fragmentShader = webGL.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
     shaderProgram = webGL.createProgram();
 
     webGL.shaderSource(vertexShader, '''
-      precision highp float;
-      attribute vec3 vPosition;
-      attribute vec4 vColor;
-      uniform mat4 cameraTransform;
-      varying vec4 fColor;
-      void main() {
-          fColor = vColor;
-          vec4 vPosition4 = vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
-          gl_Position = cameraTransform*vPosition4;
-      }
+          precision highp float;
+          attribute vec3 vPosition;
+          attribute vec4 vColor;
+          uniform mat4 cameraTransform;
+          varying vec4 fColor;
+          void main() {
+            fColor = vColor;
+            vec4 vPosition4 = vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
+            gl_Position = cameraTransform*vPosition4;
+          }
     ''');
 
     webGL.shaderSource(fragmentShader, '''
-      precision mediump float;
-      varying vec4 fColor;
-      void main() {
-        gl_FragColor = fColor;
-      }
+          precision mediump float;
+          varying vec4 fColor;
+          void main() {
+            gl_FragColor = fColor;
+          }
     ''');
 
     webGL.compileShader(vertexShader);
@@ -248,38 +158,43 @@ class FpsControllerView {
     webGL.attachShader(shaderProgram, fragmentShader);
     webGL.linkProgram(shaderProgram);
 
-    generateVertexBuffer();
+    _generateVertexBuffer();
   }
 
   void clicked(Event event) {
-    if (canvas == null) {
-      return;
-    }
     canvas.webkitRequestPointerLock();
   }
 
+  /* Returns true if the pointer is owned by our canvas element */
+  bool get _pointerLocked() => canvas == document.webkitPointerLockElement;
+
   void pointerLockChange(Event event) {
-    if (canvas == null) {
-      return;
-    }
-    ownMouse = canvas == document.webkitPointerLockElement;
+    // Check if we own the mouse.
+    ownMouse = _pointerLocked;
   }
+
+  static const keyCodeA = 65;
+  static const keyCodeD = 68;
+  static const keyCodeS = 83;
+  static const keyCodeW = 87;
 
   void keydown(KeyboardEvent  event) {
     if (!ownMouse) {
+      // We don't respond to keyboard commands if we don't own the mouse
       return;
     }
+
     switch (event.keyCode) {
-      case 87:
+      case keyCodeW:
         controller.forward = true;
         break;
-      case 65:
+      case keyCodeA:
         controller.strafeLeft = true;
         break;
-      case 68:
+      case keyCodeD:
         controller.strafeRight = true;
         break;
-      case 83:
+      case keyCodeS:
         controller.backward = true;
         break;
     }
@@ -287,19 +202,20 @@ class FpsControllerView {
 
   void keyup(KeyboardEvent event) {
     if (!ownMouse) {
+      // We don't respond to keyboard commands if we don't own the mouse
       return;
     }
     switch (event.keyCode) {
-      case 87:
+      case keyCodeW:
         controller.forward = false;
         break;
-      case 65:
+      case keyCodeA:
         controller.strafeLeft = false;
         break;
-      case 68:
+      case keyCodeD:
         controller.strafeRight = false;
         break;
-      case 83:
+      case keyCodeS:
         controller.backward = false;
         break;
     }
@@ -307,16 +223,15 @@ class FpsControllerView {
 
   void mouseMove(MouseEvent event) {
     if (!ownMouse) {
+      // We don't rotate the view if we don't own the mouse
       return;
     }
     controller.accumDX += event.webkitMovementX;
     controller.accumDY += event.webkitMovementY;
   }
 
-  void install() {
-    if (canvas == null) {
-      return;
-    }
+  /* Subscribe to input events */
+  void bind() {
     document.on.pointerLockChange.add(pointerLockChange);
     canvas.on.click.add(clicked);
     document.on.keyDown.add(keydown);
@@ -324,10 +239,8 @@ class FpsControllerView {
     document.on.mouseMove.add(mouseMove);
   }
 
-  void remove() {
-    if (canvas == null) {
-      return;
-    }
+  /* Unsubscribe from input events */
+  void unbind() {
     document.on.mouseMove.remove(mouseMove);
     document.on.keyDown.remove(keydown);
     document.on.keyUp.remove(keyup);
@@ -336,22 +249,22 @@ class FpsControllerView {
     ownMouse = false;
   }
 
-
   void update(int time) {
     if (lastTime == null) {
+      // This skips the first frame but gives us an origin in time.
       lastTime = time;
       return;
     }
-    num dt = (time - lastTime)/1000.0;
+    var dt = (time - lastTime) / 1000.0;
     lastTime = time;
-    controller.UpdateCamera(dt, camera);
+    controller.updateCamera(dt, camera);
   }
 
   void draw() {
-    webGL.viewport(0, 0, 640, 480);
+    webGL.viewport(0, 0, canvas.width, canvas.height);
     webGL.clearColor(0.0, 0.0, 0.0, 1.0);
     webGL.clearDepth(1.0);
-    webGL.clear(WebGLRenderingContext.COLOR_BUFFER_BIT|
+    webGL.clear(WebGLRenderingContext.COLOR_BUFFER_BIT |
                 WebGLRenderingContext.DEPTH_BUFFER_BIT);
     webGL.disable(WebGLRenderingContext.DEPTH_TEST);
 
@@ -364,35 +277,29 @@ class FpsControllerView {
 
     webGL.useProgram(shaderProgram);
     var cameraTransformUniformIndex = webGL.getUniformLocation(shaderProgram,
-                                                            'cameraTransform');
+                                                              'cameraTransform');
 
-    {
-      mat4 view = camera.lookAtMatrix;
-      mat4 projection = camera.projectionMatrix;
-      mat4 projectionView = projection * view;
-      projectionView.copyIntoArray(cameraTransform, 0);
-    }
+    mat4 view = camera.lookAtMatrix;
+    mat4 projection = camera.projectionMatrix;
+    mat4 projectionView = projection * view;
+    projectionView.copyIntoArray(cameraTransform, 0);
     webGL.uniformMatrix4fv(cameraTransformUniformIndex,
-                            false,
-                            cameraTransform);
+                           false,
+                           cameraTransform);
     webGL.drawArrays(WebGLRenderingContext.LINES, 0, numVertices);
     webGL.flush();
   }
 }
 
-FpsControllerView view;
-
 bool animate(int time) {
-  if (view != null) {
-    view.update(time);
-    view.draw();
-  }
+  view.update(time);
+  view.draw();
   window.requestAnimationFrame(animate);
 }
 
 void main() {
   view = new FpsControllerView('#webGLCanvas');
-  view.setup();
-  view.install();
+  view.initWebGL();
+  view.bind();
   window.requestAnimationFrame(animate);
 }

@@ -1,3 +1,10 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+*/
+
+
 class Camera {
   vec3 eyePosition;
   vec3 upDirection;
@@ -5,41 +12,39 @@ class Camera {
   num zNear;
   num zFar;
   num aspectRatio;
-  num FOV;
-
-  String toString() {
-    return '$eyePosition -> $lookAtPosition';
-  }
+  num fOV;
 
   Camera() {
     eyePosition = new vec3.raw(0.0, 2.0, 2.0);
     lookAtPosition = new vec3.raw(0.0, 2.0, 0.0);
     upDirection = new vec3.raw(0.0, 1.0, 0.0);
 
-    FOV = 0.785398163; // 2*45 degrees
+    fOV = 0.785398163; // 90 degrees
     zNear = 1.0;
     zFar = 1000.0;
     aspectRatio = 1.7777778;
+  }
+
+  String toString() {
+    return '$eyePosition -> $lookAtPosition';
   }
 
   num get yaw() {
     vec3 z = new vec3(0.0, 0.0, 1.0);
     vec3 forward = frontDirection;
     forward.normalize();
-    num d = degrees(acos(forward.dot(z)));
-    return d;
+    return degrees(acos(forward.dot(z)));
   }
 
   num get pitch() {
     vec3 y = new vec3(0.0, 1.0, 0.0);
     vec3 forward = frontDirection;
     forward.normalize();
-    num d = degrees(acos(forward.dot(y)));
-    return d;
+    return degrees(acos(forward.dot(y)));
   }
 
   mat4 get projectionMatrix() {
-    return makePerspective(FOV, aspectRatio, zNear, zFar);
+    return makePerspective(fOV, aspectRatio, zNear, zFar);
   }
 
   mat4 get lookAtMatrix() {
@@ -47,7 +52,7 @@ class Camera {
   }
 
   void copyProjectionMatrixIntoArray(Float32Array pm) {
-    mat4 m = makePerspective(FOV, aspectRatio, zNear, zFar);
+    mat4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
     m.copyIntoArray(pm);
   }
 
@@ -62,7 +67,7 @@ class Camera {
   }
 
   void copyProjectionMatrix(mat4 pm) {
-    mat4 m = makePerspective(FOV, aspectRatio, zNear, zFar);
+    mat4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
     m.copyInto(pm);
   }
 
