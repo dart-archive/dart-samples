@@ -3,3 +3,7 @@ name: dart-html5-samples
 dependencies:
   htmlescape:
     sdk: htmlescape
+
+dependencies:
+  dartvectormath:
+    git: https://github.com/johnmccutchan/DartVectorMath.git
