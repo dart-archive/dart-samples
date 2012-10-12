@@ -45,7 +45,7 @@ class DndFiles {
     _onFilesSelected(_fileInput.files);
   }
 
-  void _onFilesSelected(FileList files) {
+  void _onFilesSelected(List<File> files) {
     _output.nodes.clear();
     var list = new Element.tag('ul');
     for (var file in files) {
