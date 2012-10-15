@@ -129,7 +129,7 @@ class Filters {
   }
 
   // Apply convolution filter and return data as a double array.
-  ImageDataFloat32 convolveFloat32(ImageData pixels, List weights, [bool opaque = false]) {
+  ImageDataFloat32 convolveFloat32(ImageData pixels, List weights, {bool opaque: false}) {
     var alphaFac = opaque ? 1 : 0;
     var side = (sqrt(weights.length).toInt());
     var halfSide = (side / 2).toInt();
