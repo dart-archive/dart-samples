@@ -1,0 +1,57 @@
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the COPYING file.
+
+// This is a port of "A Simple Trip Meter Using the Geolocation API" to Dart.
+// See: http://www.html5rocks.com/en/tutorials/geolocation/trip_meter/
+
+// TODO(shailen): window.navigator.geolocation.watchPosition raises an exception
+//                in Chromium. No exception is raised when running the script in
+//                Chrome or Safari.
+// See: http://code.google.com/p/dart/issues/detail?id=5548
+
+import 'dart:html';
+import 'dart:math';
+
+// Reused code - copyright Moveable Type Scripts
+// http://www.movable-type.co.uk/scripts/latlong.html
+// Under Creative Commons License http://creativecommons.org/licenses/by/3.0/
+num calculateDistance(num lat1, num lon1, num lat2, num lon2) {
+  const EARTH_RADIUS = 6371; // km
+  num latDiff = lat2 - lat1;
+  num lonDiff = lon2 - lon1;
+
+  // a is the square of half the chord length between the points.
+  var a = pow(sin(latDiff / 2), 2) + 
+          pow(cos(lat1), 2) *
+          pow(sin(lonDiff / 2), 2);
+
+  var angularDistance = 2 * atan2(sqrt(a), sqrt(1 - a));
+  return EARTH_RADIUS * angularDistance;
+}
+
+// Don't use alert() in real code ;)
+void alertError(PositionError error) {
+  window.alert("Error occurred. Error code: ${error.code}");
+}
+
+void main(){
+  Geoposition startPosition;
+
+  window.navigator.geolocation.getCurrentPosition((Geoposition position) {
+    startPosition = position;
+    query("#start-lat").text = "${startPosition.coords.latitude}";
+    query("#start-lon").text = "${startPosition.coords.longitude}";
+  }, (error) => alertError(error));
+  
+  window.navigator.geolocation.watchPosition((Geoposition position) {
+    query("#current-lat").text = "${position.coords.latitude}";
+    query("#current-lon").text = "${position.coords.longitude}";
+    num distance = calculateDistance(
+        startPosition.coords.latitude,
+        startPosition.coords.longitude,
+        position.coords.latitude,
+        position.coords.longitude);
+    query("#distance").text = "$distance";
+  }, (error) => alertError(error));
+}
