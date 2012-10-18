@@ -1,9 +1,6 @@
-/*
-  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
-  for details. All rights reserved. Use of this source code is governed by a
-  BSD-style license that can be found in the LICENSE file.
-*/
-
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 class Camera {
   vec3 eyePosition;
@@ -15,8 +12,8 @@ class Camera {
   num fOV;
 
   Camera() {
-    eyePosition = new vec3.raw(0.0, 2.0, 2.0);
-    lookAtPosition = new vec3.raw(0.0, 2.0, 0.0);
+    eyePosition = new vec3.raw(0.0, 2.0, 0.0);
+    lookAtPosition = new vec3.raw(-1.0, 2.0, 1.0);
     upDirection = new vec3.raw(0.0, 1.0, 0.0);
 
     fOV = 0.785398163; // 90 degrees

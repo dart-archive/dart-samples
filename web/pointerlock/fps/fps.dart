@@ -1,16 +1,12 @@
-/*
-  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
-  for details. All rights reserved. Use of this source code is governed by a
-  BSD-style license that can be found in the LICENSE file.
-*/
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-/*
- * This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
- */
+// This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
 #import('dart:html');
 #import('dart:math', prefix:'Math');
-#import('package:dartvectormath/vector_math_html.dart');
+#import('package:vector_math/vector_math_browser.dart');
 #source('fps_camera.dart');
 #source('fps_controller.dart');
 
@@ -31,7 +27,7 @@ class FpsControllerView {
   int numVertices;
   int lastTime;
 
-  /*
+  /**
    * [elementId] The dom ID of the canvas element the view should render into
    */
   FpsControllerView(this.elementId) {
@@ -60,7 +56,7 @@ class FpsControllerView {
   }
 
   void _generateLines(List<num> vertexBuffer, vec3 b,
-                      vec3 e, vec3 step, color, int num) {
+                      vec3 e, vec3 step, vec4 color, int num) {
     vec3 lineStart = new vec3.copy(b);
     vec3 lineEnd = new vec3.copy(e);
     for (int i = 0; i < num; i++) {
@@ -80,7 +76,7 @@ class FpsControllerView {
       'blue': new vec4.raw(0.0, 0.0, 1.0, 1.0)
     };
 
-    /* Bottom */
+    // Bottom
     vec3 b = new vec3.raw(0.0, 0.0, -20.0);
     vec3 e = new vec3.raw(0.0, 0.0, 0.0);
     vec3 s = new vec3.raw(1.0, 0.0, 0.0);
@@ -90,7 +86,7 @@ class FpsControllerView {
     s.setComponents(0.0, 0.0, -1.0);
     _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
 
-    /* Side */
+    // Side
     b.setComponents(20.0, 0.0, 0.0);
     e.setComponents(20.0, 20.0, 0.0);
     s.setComponents(0.0, 0.0, -1.0);
@@ -100,7 +96,7 @@ class FpsControllerView {
     s.setComponents(0.0, 1.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['blue'], 21);
 
-    /* Side */
+    // Side
     b.setComponents(0.0, 0.0, -20.0);
     e.setComponents(0.0, 20.0, -20.0);
     s.setComponents(1.0, 0.0, 0.0);
@@ -132,24 +128,24 @@ class FpsControllerView {
     shaderProgram = webGL.createProgram();
 
     webGL.shaderSource(vertexShader, '''
-          precision highp float;
-          attribute vec3 vPosition;
-          attribute vec4 vColor;
-          uniform mat4 cameraTransform;
-          varying vec4 fColor;
-          void main() {
-            fColor = vColor;
-            vec4 vPosition4 = vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
-            gl_Position = cameraTransform*vPosition4;
-          }
+      precision highp float;
+      attribute vec3 vPosition;
+      attribute vec4 vColor;
+      uniform mat4 cameraTransform;
+      varying vec4 fColor;
+      void main() {
+        fColor = vColor;
+        vec4 vPosition4 = vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
+        gl_Position = cameraTransform*vPosition4;
+      }
     ''');
 
     webGL.shaderSource(fragmentShader, '''
-          precision mediump float;
-          varying vec4 fColor;
-          void main() {
-            gl_FragColor = fColor;
-          }
+      precision mediump float;
+      varying vec4 fColor;
+      void main() {
+        gl_FragColor = fColor;
+      }
     ''');
 
     webGL.compileShader(vertexShader);
@@ -230,23 +226,13 @@ class FpsControllerView {
     controller.accumDY += event.webkitMovementY;
   }
 
-  /* Subscribe to input events */
+  // Subscribe to input events
   void bind() {
     document.on.pointerLockChange.add(pointerLockChange);
     canvas.on.click.add(clicked);
     document.on.keyDown.add(keydown);
     document.on.keyUp.add(keyup);
     document.on.mouseMove.add(mouseMove);
-  }
-
-  /* Unsubscribe from input events */
-  void unbind() {
-    document.on.mouseMove.remove(mouseMove);
-    document.on.keyDown.remove(keydown);
-    document.on.keyUp.remove(keyup);
-    canvas.on.click.remove(clicked);
-    document.on.pointerLockChange.remove(pointerLockChange);
-    ownMouse = false;
   }
 
   void update(int time) {
@@ -277,7 +263,7 @@ class FpsControllerView {
 
     webGL.useProgram(shaderProgram);
     var cameraTransformUniformIndex = webGL.getUniformLocation(shaderProgram,
-                                                              'cameraTransform');
+                                                               'cameraTransform');
 
     mat4 view = camera.lookAtMatrix;
     mat4 projection = camera.projectionMatrix;

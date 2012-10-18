@@ -1,8 +1,6 @@
-/*
-  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
-  for details. All rights reserved. Use of this source code is governed by a
-  BSD-style license that can be found in the LICENSE file.
-*/
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 class MouseKeyboardCameraController {
   bool up = false;
@@ -20,8 +18,7 @@ class MouseKeyboardCameraController {
   int accumDX = 0;
   int accumDY = 0;
 
-  MouseKeyboardCameraController() {
-  }
+  MouseKeyboardCameraController();
 
   void updateCamera(num seconds, Camera cam) {
     _moveFloat(seconds, up, down, cam);
@@ -40,7 +37,8 @@ class MouseKeyboardCameraController {
     }
     return scale;
   }
-  void _moveFloat(num dt, bool positive, bool negative, Camera cam) {
+  
+  void _moveFloat(num dt, bool negative, bool positive, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -52,7 +50,7 @@ class MouseKeyboardCameraController {
     cam.eyePosition.add(upDirection);
   }
 
-  void _moveStrafe(num dt, bool positive, bool negative, Camera cam) {
+  void _moveStrafe(num dt, bool negative, bool positive, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -67,7 +65,7 @@ class MouseKeyboardCameraController {
     cam.eyePosition.add(strafeDirection);
   }
 
-  void _moveForward(num dt, bool positive, bool negative, Camera cam) {
+  void _moveForward(num dt, bool negative, bool positive, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -102,22 +100,12 @@ class MouseKeyboardCameraController {
     num pitchAngle = acos(fDotUp);
     num pitchDegrees = degrees(pitchAngle);
 
-    const num minPitchAngle = 0.785398163;
-    const num maxPitchAngle = 2.35619449;
+    const minPitchAngle = 0.785398163;
+    const maxPitchAngle = 2.35619449;
     num minPitchDegrees = degrees(minPitchAngle);
     num maxPitchDegrees = degrees(maxPitchAngle);
 
-    _rotateEyeAndLook(mousePitchDelta, strafeDirection, cam);
-
-    if (above) {
-      if (pitchAngle > minPitchAngle || mousePitchDelta > 0.0) {
-        _rotateEyeAndLook(mousePitchDelta, strafeDirection, cam);
-      }
-    } else {
-      if (pitchAngle < minPitchAngle || mousePitchDelta < 0.0) {
-        _rotateEyeAndLook(mousePitchDelta, strafeDirection, cam);
-      }
-    }
+    _rotateEyeAndLook(-mousePitchDelta, strafeDirection, cam);
 
     _rotateEyeAndLook(mouseYawDelta, upDirection, cam);
   }
