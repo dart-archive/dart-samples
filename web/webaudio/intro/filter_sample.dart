@@ -154,11 +154,15 @@ class FilterSample {
     _filter.connect(appCtx.audioCtx.destination, 0, 0);
     
     // Play!
+    // TODO(jjinux): This no longer works.
+    // See: http://code.google.com/p/dart/issues/detail?id=5855
     _source.noteOn(0);
     _source.loop = true;
   }
 
   void _stop() {
+    // TODO(jjinux): This no longer works.
+    // See: http://code.google.com/p/dart/issues/detail?id=5855
     _source.noteOff(0);
   }
   
