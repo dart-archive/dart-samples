@@ -5,7 +5,7 @@
 // This is a port of "A Beginner's Guide to Using the Application Cache" to
 // Dart. See: http://www.html5rocks.com/en/tutorials/appcache/beginner
 
-#import('dart:html');
+import 'dart:html';
 
 class AppCache {
   DOMApplicationCache appCache;

@@ -10,8 +10,8 @@
 //                Chrome or Safari.
 // See: http://code.google.com/p/dart/issues/detail?id=5548
 
-#import('dart:html');
-#import('dart:math');
+import 'dart:html';
+import 'dart:math';
 
 // Reused code - copyright Moveable Type Scripts
 // http://www.movable-type.co.uk/scripts/latlong.html
@@ -22,7 +22,7 @@ num calculateDistance(num lat1, num lon1, num lat2, num lon2) {
   num lonDiff = lon2 - lon1;
 
   // a is the square of half the chord length between the points.
-  var a = pow(sin(latDiff / 2), 2) + 
+  var a = pow(sin(latDiff / 2), 2) +
           pow(cos(lat1), 2) *
           pow(sin(lonDiff / 2), 2);
 
@@ -43,7 +43,7 @@ void main(){
     query("#start-lat").text = "${startPosition.coords.latitude}";
     query("#start-lon").text = "${startPosition.coords.longitude}";
   }, (error) => alertError(error));
-  
+
   window.navigator.geolocation.watchPosition((Geoposition position) {
     query("#current-lat").text = "${position.coords.latitude}";
     query("#current-lon").text = "${position.coords.longitude}";

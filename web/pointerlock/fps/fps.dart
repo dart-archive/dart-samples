@@ -4,11 +4,12 @@
 
 // This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
-#import('dart:html');
-#import('dart:math', prefix:'Math');
-#import('package:vector_math/vector_math_browser.dart');
-#source('fps_camera.dart');
-#source('fps_controller.dart');
+library fps;
+import 'dart:html';
+import 'dart:math' as Math;
+import 'package:vector_math/vector_math_browser.dart';
+part 'fps_camera.dart';
+part 'fps_controller.dart';
 
 FpsControllerView view;
 
@@ -162,7 +163,7 @@ class FpsControllerView {
   }
 
   /* Returns true if the pointer is owned by our canvas element */
-  bool get _pointerLocked() => canvas == document.webkitPointerLockElement;
+  bool get _pointerLocked => canvas == document.webkitPointerLockElement;
 
   void pointerLockChange(Event event) {
     // Check if we own the mouse.
