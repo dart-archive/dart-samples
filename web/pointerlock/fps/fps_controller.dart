@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+part of fps;
+
 class MouseKeyboardCameraController {
   bool up = false;
   bool down = false;
@@ -37,7 +39,7 @@ class MouseKeyboardCameraController {
     }
     return scale;
   }
-  
+
   void _moveFloat(num dt, bool negative, bool positive, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {

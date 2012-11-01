@@ -8,8 +8,8 @@
 //
 // This has been tested under Chrome and Firefox.
 
-#import('dart:html');
-#import('dart:isolate');
+import 'dart:html';
+import 'dart:isolate';
 
 WebSocket ws;
 
@@ -24,32 +24,32 @@ outputMsg(String msg) {
 
 void initWebSocket([int retrySeconds = 2]) {
   var reconnectScheduled = false;
-  
+
   outputMsg("Connecting to websocket");
   ws = new WebSocket('ws://echo.websocket.org');
-  
+
   void scheduleReconnect() {
     if (!reconnectScheduled) {
       new Timer(1000 * retrySeconds, (timer) => initWebSocket(retrySeconds * 2));
     }
-    reconnectScheduled = true;    
+    reconnectScheduled = true;
   }
-  
+
   ws.on.open.add((e) {
     outputMsg('Connected');
     ws.send('Hello from Dart!');
   });
-  
+
   ws.on.close.add((e) {
     outputMsg('Websocket closed, retrying in $retrySeconds seconds');
     scheduleReconnect();
   });
-  
+
   ws.on.error.add((e) {
     outputMsg("Error connecting to ws");
     scheduleReconnect();
   });
-  
+
   ws.on.message.add((MessageEvent e) {
     outputMsg('Received message: ${e.data}');
   });

@@ -1,6 +1,7 @@
 // Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+part of fps;
 
 class Camera {
   vec3 eyePosition;
@@ -26,25 +27,25 @@ class Camera {
     return '$eyePosition -> $lookAtPosition';
   }
 
-  num get yaw() {
+  num get yaw {
     vec3 z = new vec3(0.0, 0.0, 1.0);
     vec3 forward = frontDirection;
     forward.normalize();
     return degrees(acos(forward.dot(z)));
   }
 
-  num get pitch() {
+  num get pitch {
     vec3 y = new vec3(0.0, 1.0, 0.0);
     vec3 forward = frontDirection;
     forward.normalize();
     return degrees(acos(forward.dot(y)));
   }
 
-  mat4 get projectionMatrix() {
+  mat4 get projectionMatrix {
     return makePerspective(fOV, aspectRatio, zNear, zFar);
   }
 
-  mat4 get lookAtMatrix() {
+  mat4 get lookAtMatrix {
     return makeLookAt(eyePosition, lookAtPosition, upDirection);
   }
 
@@ -86,5 +87,5 @@ class Camera {
     lookAtPosition.copyInto(lap);
   }
 
-  vec3 get frontDirection() => lookAtPosition - eyePosition;
+  vec3 get frontDirection => lookAtPosition - eyePosition;
 }

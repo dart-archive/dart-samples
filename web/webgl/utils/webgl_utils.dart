@@ -1,45 +1,45 @@
-#library('utils');
-#import('dart:html');
-#import('dart:math', prefix:"Math");
+library utils;
+import 'dart:html';
+import 'dart:math' as Math;
 
 WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]) {
   // Create program
   var program = gl.createProgram();
-  
+
   // Iterate the shaders list
   if (shaders is List<WebGLShader>) {
     shaders.forEach((var shader) => gl.attachShader(program, shader));
   }
-  
+
   // Link the shader to program
   gl.linkProgram(program);
-  
+
   // Check the linked status
   var linked = gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS);
   if (!linked) {
     throw "Not able to link shader(s) ${shaders}";
   }
-  
+
   return program;
 }
 
-WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shaderType) { 
+WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shaderType) {
   // Create the shader object
   var shader = gl.createShader(shaderType);
-  
+
   // Load the shader source
   gl.shaderSource(shader, shaderSource);
-  
+
   // Compile the shader
   gl.compileShader(shader);
-  
+
   // Check the compile status
-  // NOTE: getShaderParameter maybe borken in minfrog or frog compiler. 
+  // NOTE: getShaderParameter maybe borken in minfrog or frog compiler.
   var compiled = gl.getShaderParameter(shader, WebGLRenderingContext.COMPILE_STATUS);
   if (!compiled) {
     throw "Not able to compile shader $shaderSource";
   }
-  
+
   return shader;
 }
 
@@ -54,7 +54,7 @@ WebGLShader createShaderFromScriptElement(WebGLRenderingContext gl, String id) {
   } else {
     throw new Exception('*** Error: unknown shader type');
   }
-  
+
   return loadShader(gl, shaderSource, shaderType);
 }
 
@@ -62,7 +62,7 @@ WebGLRenderingContext getWebGLContext(CanvasElement canvas) {
   return canvas.getContext("experimental-webgl");
 }
 
-// misc functions 
+// misc functions
 void setRectangle(gl, x, y, width, height) {
   var x1 = x;
   var x2 = x + width;

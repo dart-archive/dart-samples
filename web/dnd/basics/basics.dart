@@ -6,7 +6,7 @@
 // See: http://www.html5rocks.com/en/tutorials/dnd/basics/
 
 
-#import('dart:html');
+import 'dart:html';
 
 class Basics {
   Element _dragSourceEl;
