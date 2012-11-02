@@ -13,7 +13,7 @@ class Camera {
 
   Camera() {
     eyePosition = new vec3.raw(0.0, 2.0, 0.0);
-    lookAtPosition = new vec3.raw(-1.0, 2.0, 1.0);
+    lookAtPosition = new vec3.raw(1.0, 2.0, -1.0);
     upDirection = new vec3.raw(0.0, 1.0, 0.0);
 
     fOV = 0.785398163; // 90 degrees

@@ -4,11 +4,11 @@
 
 // This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
-#import('dart:html');
-#import('dart:math', prefix:'Math');
-#import('package:vector_math/vector_math_browser.dart');
-#source('fps_camera.dart');
-#source('fps_controller.dart');
+import 'dart:html';
+import 'dart:math' as Math;
+import 'package:vector_math/vector_math_browser.dart';
+part 'fps_camera.dart';
+part 'fps_controller.dart';
 
 FpsControllerView view;
 
@@ -25,7 +25,7 @@ class FpsControllerView {
   WebGLBuffer vertexBuffer;
   Float32Array cameraTransform;
   int numVertices;
-  int lastTime;
+  double lastTime;
 
   /**
    * [elementId] The dom ID of the canvas element the view should render into
@@ -235,7 +235,7 @@ class FpsControllerView {
     document.on.mouseMove.add(mouseMove);
   }
 
-  void update(int time) {
+  void update(double time) {
     if (lastTime == null) {
       // This skips the first frame but gives us an origin in time.
       lastTime = time;
@@ -277,7 +277,7 @@ class FpsControllerView {
   }
 }
 
-bool animate(int time) {
+void animate(double time) {
   view.update(time);
   view.draw();
   window.requestAnimationFrame(animate);
