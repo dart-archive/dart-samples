@@ -37,7 +37,7 @@ class Terminal {
       'ls': lsCommand,
       'mkdir': mkdirCommand,
       'mv': mvCommand,
-      'cp': mvCommand,
+      'cp': cpCommand,
       'open': openCommand,
       'pwd': pwdCommand,
       'rm': rmCommand,
@@ -49,7 +49,7 @@ class Terminal {
     // Always force text cursor to end of input line.
     window.on.click.add((event) => cmdLine.focus());
     
-    // Always force text cursor to end of input line.
+    // Trick: Always force text cursor to end of input line.
     cmdLine.on.click.add((event) => input.value = input.value);
     
     // Handle up/down key presses for shell history and enter for new command.
@@ -214,10 +214,10 @@ class Terminal {
   }
   
   void setTheme([String theme='default']) {
-    if (theme == 'default') {
+    if (theme == null || theme == 'default') {
       window.localStorage.remove('theme');
       document.body.classes.clear();
-    } else if (theme != null) {
+    } else {
       document.body.classes.add(theme);
       window.localStorage['theme'] = theme;
     }
@@ -425,7 +425,7 @@ class Terminal {
     }
   }
   
-  void mvCommand(String cmd, List<String> args) {
+  void updateFilename(String cmd, List<String> args, Function action) {
     if (args.length != 2) {
       writeOutput('usage: $cmd source target<br>'
                   '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cmd'
@@ -435,19 +435,6 @@ class Terminal {
     
     String src = args[0];
     String dest = args[1];
-    
-    Function runAction = (c, srcDirEntry, destDirEntry, [opt_newName = null]) {
-      String newName = "";
-      if (opt_newName != null) { 
-        newName = opt_newName;
-      }
-      
-      if (c == 'mv') {
-        srcDirEntry.moveTo(destDirEntry); 
-      } else { // c=='cp'
-        srcDirEntry.copyTo(destDirEntry);
-      }
-    };
     
     // Moving to a folder? (e.g. second arg ends in '/').
     if (dest[dest.length - 1] == '/') {
@@ -459,18 +446,26 @@ class Terminal {
             
             cwd.getDirectory(dest, 
                 options: {'create': create}, 
-                successCallback: (DirectoryEntry destDirEntry) => runAction(cmd, srcDirEntry, destDirEntry), 
+                successCallback: (DirectoryEntry destDirEntry) => action(srcDirEntry, destDirEntry), 
                 errorCallback: (FileError error) => errorHandler(error));
           }, 
           errorCallback: (FileError error) => errorHandler(error));
     } else { // Treat src/destination as files.
       cwd.getFile(src, options: {}, 
-          successCallback: (DirectoryEntry srcFileEntry) {
-            srcFileEntry.getParent((DirectoryEntry parentDirEntry) => runAction(cmd, srcFileEntry, parentDirEntry, dest),
+          successCallback: (FileEntry srcFileEntry) {
+            srcFileEntry.getParent((DirectoryEntry parentDirEntry) => action(srcFileEntry, parentDirEntry, dest),
                 (FileError error) => errorHandler(error));
           }, 
           errorCallback: (FileError error) => errorHandler(error));
     }
+  }
+
+  void cpCommand(String cmd, List<String> args) {
+    updateFilename(cmd, args, (srcDirEntry, destDirEntry, [name=""]) => name.isEmpty ? srcDirEntry.copyTo(destDirEntry) : srcDirEntry.copyTo(destDirEntry, name));
+  }
+  
+  void mvCommand(String cmd, List<String> args) {
+    updateFilename(cmd, args, (srcDirEntry, destDirEntry, [name=""]) => name.isEmpty ? srcDirEntry.moveTo(destDirEntry) : srcDirEntry.moveTo(destDirEntry, name));
   }
   
   void openCommand(String cmd, List<String> args) {
