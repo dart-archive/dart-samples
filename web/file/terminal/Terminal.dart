@@ -19,38 +19,36 @@ class Terminal {
   String version = '0.0.1';
   List<String> themes = ['default', 'cream'];
   List<String> history = [];
-  int histpos = 0;
+  int historyPosition = 0;
   Map<String, Function> cmds;
   Function readEntries;
   
-  Terminal(this.cmdLineContainer,this.outputContainer, this.cmdLineInput) {
+  Terminal(this.cmdLineContainer, this.outputContainer, this.cmdLineInput) {
     cmdLine = document.query(cmdLineContainer);
     output = document.query(outputContainer);
     input = document.query(cmdLineInput);
     cmds = {
-                  'clear':clearCommand,
-                  'help':helpCommand,
-                  'version':versionCommand,       
-                  'cat':catCommand,
-                  'cd':cdCommand,
-                  'date':dateCommand,
-                  'ls':lsCommand,
-                  'mkdir':mkdirCommand,
-                  'mv':mvCommand,
-                  'cp':mvCommand,
-                  'open':openCommand,
-                  'pwd':pwdCommand,
-                  'rm':rmCommand,
-                  'rmdir':rmdirCommand,
-                  'theme':themeCommand,
-                  'who':whoCommand
+      'clear': clearCommand,
+      'help': helpCommand,
+      'version': versionCommand,       
+      'cat': catCommand,
+      'cd': cdCommand,
+      'date': dateCommand,
+      'ls': lsCommand,
+      'mkdir': mkdirCommand,
+      'mv': mvCommand,
+      'cp': mvCommand,
+      'open': openCommand,
+      'pwd': pwdCommand,
+      'rm': rmCommand,
+      'rmdir': rmdirCommand,
+      'theme': themeCommand,
+      'who': whoCommand
     };
     
-
-    
-    window.on.click.add((event) => cmdLine.focus());
     // Always force text cursor to end of input line.
-   
+    window.on.click.add((event) => cmdLine.focus());
+    
     // Always force text cursor to end of input line.
     cmdLine.on.click.add((event) => input.value = input.value);
     
@@ -61,89 +59,92 @@ class Terminal {
   
   void historyHandler(KeyboardEvent event) {
     var histtemp = "";
-    // historyHandler
-    if (event.keyCode == 38 || event.keyCode == 40) {
+    int upArrowKey = 38;
+    int downArrowKey = 40;
+    
+    /* keyCode == up-arrow || keyCode == down-arrow */    
+    if (event.keyCode == upArrowKey || event.keyCode == downArrowKey) {
       event.preventDefault();
-      // up or down
-      if (histpos < history.length) {
-        history[histpos] = input.value;
+      
+      // Up or down
+      if (historyPosition < history.length) {
+        history[historyPosition] = input.value;
       } else {
         histtemp = input.value;
       }
     }
     
-    if (event.keyCode == 38) { // up
-      histpos--;
-      if (histpos < 0) {
-        histpos = 0;
+    if (event.keyCode == upArrowKey) { // Up-arrow keyCode
+      historyPosition--;
+      if (historyPosition < 0) {
+        historyPosition = 0;
       }
-    } else if (event.keyCode == 40) { // down
-      histpos++;
-      if (histpos >= history.length) {
-        histpos = history.length - 1;
+    } else if (event.keyCode == downArrowKey) { // Down-arrow keyCode
+      historyPosition++;
+      if (historyPosition >= history.length) {
+        historyPosition = history.length - 1;
       }
     }
     
-    if (event.keyCode == 38 || event.keyCode == 40) {
-      // up or down
-      input.value = history[histpos] != null ? history[histpos]  : histtemp; 
+    /* keyCode == up-arrow || keyCode == down-arrow */  
+    if (event.keyCode == upArrowKey || event.keyCode == downArrowKey) {
+      // Up or down
+      input.value = history[historyPosition] != null ? history[historyPosition]  : histtemp; 
     }
   }
   
   void processNewCommand(KeyboardEvent event) {
-    if (event.keyCode == 9) {
+    int enterKey = 13;
+    int tabKey = 9;
+    
+    if (event.keyCode == tabKey) { // Tab key
       event.preventDefault();
-    } else if (event.keyCode == 13) { // enter
+    } else if (event.keyCode == enterKey) { // Enter key
       
-      if (input.value is String && !input.value.isEmpty) {
+      if (!input.value.isEmpty) {
         history.add(input.value);
-        histpos = history.length;
+        historyPosition = history.length;
       }
       
-      // move the line to output and remove id's
+      // Move the line to output and remove id's.
       DivElement line = input.parent.parent.clone(true);
       line.attributes.remove('id');
-      line.classes.add('line');
-      InputElement c = line.query(cmdLineInput);
-      c.attributes.remove('id');
-      c.autofocus = false;
-      c.readOnly = true;
+      line.classes.add('line');   
+      InputElement cmdInput = line.query(cmdLineInput);
+      cmdInput.attributes.remove('id');
+      cmdInput.autofocus = false;
+      cmdInput.readOnly = true;
       output.elements.add(line);
       String cmdline = input.value;
       input.value = ""; // clear input
       
-      // Parse out command, args, and trim off whitespace
+      // Parse out command, args, and trim off whitespace.
       List<String> args;
-      String cmd="";
-      if (cmdline is String) {
+      String cmd = "";
+      if (!cmdline.isEmpty) {
         cmdline.trim();
         args = cmdline.split(' ');
-        cmd = args[0].toLowerCase();
+        cmd = args[0]; 
         args.removeRange(0, 1);
       }
       
-      // function look up
+      // Function look up
       if (cmds[cmd] is Function) {
-        cmds[cmd](cmd,args);
+        cmds[cmd](cmd, args);
       } else {
-        writeOutput('${cmd}: command not found');
+        writeOutput('$cmd: command not found');
       }
       
       window.scrollTo(0, window.innerHeight);  
     }
   }
     
-  void initFS(bool persistent, int size) {
-    writeOutput('<div>Welcome to ${document.title}'
-                '! (v${version})</div>');
+  void initializeFilesystem(bool persistent, int size) {
+    writeOutput('<div>Welcome to ${document.title}! (v$version)</div>');
     writeOutput(new Date.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
-    
     var type = persistent ? LocalWindow.PERSISTENT : LocalWindow.TEMPORARY;
-    window.webkitRequestFileSystem(type, 
-        size, 
-        filesystemCallback, 
-        errorHandler);
+    window.webkitRequestFileSystem(type, size, filesystemCallback, errorHandler);
   }
   
   void filesystemCallback(DOMFileSystem filesystem) {
@@ -153,14 +154,14 @@ class Terminal {
     // Attempt to create a folder to test if we can. 
     cwd.getDirectory('testquotaforfsfolder', 
         options: {'create': true},
-        successCallback:  (DirectoryEntry dirEntry){
+        successCallback: (DirectoryEntry dirEntry) {
           dirEntry.remove(() {}); // If successfully created, just delete it.          
         },
         errorCallback: (error) {
           if (error.code == FileError.QUOTA_EXCEEDED_ERR) {
-            writeOutput('ERROR: Write access to the FileSystem is unavailable. '
-                   'Are you running Google Chrome with ' 
-                   '--unlimited-quota-for-files?');
+            writeOutput('ERROR: Write access to the filesystem is '
+                        'unavailable. Are you running Google Chrome with ' 
+                        '--unlimited-quota-for-files?');
           } else {
             errorHandler(error);
           }
@@ -189,36 +190,36 @@ class Terminal {
         msg = 'TYPE_MISMATCH_ERR';
         break;
       default:
-        msg = 'Unknown Error';
+        msg = 'FileError = ${error.code}: Error not handled';
         break;
     };
-    writeOutput('<div>Error: $msg </div>');
+    writeOutput('<div>Error: $msg</div>');
   }
   
   void invalidOpForEntryType(FileError error, String cmd, String dest) {
-    if (error.code == FileError.NOT_FOUND_ERR) {
-      writeOutput('$cmd: $dest: No such file or directory<br>');
-    } else if (error.code == FileError.INVALID_STATE_ERR) {
-      writeOutput('$cmd: $dest: Not a directory<br>');
-    } else if (error.code == FileError.INVALID_MODIFICATION_ERR) {
-      writeOutput('$cmd: $dest: File already exists<br>');
-    } else {
-      errorHandler(error);
+    switch (error.code) {
+      case FileError.NOT_FOUND_ERR:
+        writeOutput('$cmd: $dest: No such file or directory<br>');
+        break;
+      case FileError.INVALID_STATE_ERR:
+        writeOutput('$cmd: $dest: Not a directory<br>');
+        break;
+      case FileError.INVALID_MODIFICATION_ERR:
+        writeOutput('$cmd: $dest: File already exists<br>');
+        break;
+      default:
+        errorHandler(error);
+        break;
     }
   }
   
   void setTheme([String theme='default']) {
-    var currentUrl = window.location.pathname;
-    
     if (theme == 'default') {
-      // history.replaceState({}, '', currentUrl);
       window.localStorage.remove('theme');
       document.body.classes.clear();
-      return;
     } else if (theme != null) {
       document.body.classes.add(theme);
       window.localStorage['theme'] = theme;
-      //history.replaceState({}, '', currentUrl + '#theme=' + theme);
     }
   }
   
@@ -228,11 +229,12 @@ class Terminal {
           options: {'create': true, 'exclusive': true}, 
           successCallback: (FileEntry fileEntry) {
             fileEntry.createWriter((FileWriter fileWriter) {
-              fileWriter.on.error.add((e)=>errorHandler(e));
+              fileWriter.on.error.add(errorHandler);
               fileWriter.write(file);
             }, (error) => errorHandler(error));
           }, 
-          errorCallback: (error) => errorHandler(error));
+          errorCallback: errorHandler);
+          //errorCallback: (error) => errorHandler(error));
     });
   }
   
@@ -246,7 +248,7 @@ class Terminal {
         successCallback: (FileEntry fileEntry) {
           fileEntry.file((file) {
             var reader = new FileReader();
-            reader.on.loadEnd.add((ProgressEvent event)=>callback(reader.result));
+            reader.on.loadEnd.add((ProgressEvent event) => callback(reader.result));
             reader.readAsText(file);
           }, (error) => errorHandler(error));
         }, 
@@ -263,39 +265,31 @@ class Terminal {
   
   void clearCommand(String cmd, List<String> args) {
     output.innerHTML = '';
-    input.value = '';
   }
   
   void helpCommand(String cmd, List<String> args) {
     StringBuffer sb = new StringBuffer();
     sb.add('<div class="ls-files">');
-    cmds.keys.forEach((key) => sb.add('${key}<br>'));
+    cmds.keys.forEach((key) => sb.add('$key<br>'));
     sb.add('</div>');
     sb.add('<p>Add files by dragging them from your desktop.</p>');
     writeOutput(sb.toString());
   }
   
   void versionCommand(String cmd, List<String> args) {
-    writeOutput("${version}");
+    writeOutput("$version");
   }
   
   void catCommand(String cmd, List<String> args) {
     if (args.length >= 1) {
-      var fileName = args[0];      
-      if (fileName is String) {
-        read(cmd, fileName, (result) {
-          writeOutput('<pre> ${result} </pre>');
-        });
-      } else {
-        writeOutput('usage: ${cmd} filename');
-      }
+      var fileName = args[0];
+      read(cmd, fileName, (result) => writeOutput('<pre>$result</pre>'));
     } else {
-      writeOutput('usage: ${cmd} filename');
+      writeOutput('usage: $cmd filename');
     }
   }
   
   void cdCommand(String cmd, List<String> args) {
-    args = args == null ? [""] : args;
     StringBuffer sb = new StringBuffer();
     sb.addAll(args);
     var dest = sb.toString();
@@ -306,7 +300,7 @@ class Terminal {
     
     cwd.getDirectory(dest, 
         options: {}, 
-        successCallback: (DirectoryEntry dirEntry){ 
+        successCallback: (DirectoryEntry dirEntry) { 
           cwd = dirEntry;
           writeOutput('<div>${dirEntry.fullPath}</div>');
         },
@@ -423,7 +417,7 @@ class Terminal {
       } else {
         cwd.getDirectory(dirName, 
             options: {'create': true, 'exclusive': true}, 
-            successCallback: (_){},
+            successCallback: (_) {},
             errorCallback: (FileError error) {
               invalidOpForEntryType(error, cmd, dirName);
             });
@@ -459,7 +453,7 @@ class Terminal {
     if (dest[dest.length - 1] == '/') {
       cwd.getDirectory(src, 
           options: {}, 
-          successCallback: (DirectoryEntry srcDirEntry){
+          successCallback: (DirectoryEntry srcDirEntry) {
             // Create blacklist for dirs we can't re-create.
             var create = ['.', './', '..', '../', '/'].indexOf(dest) != -1 ? false : true;
             
@@ -531,7 +525,7 @@ class Terminal {
           successCallback: (fileEntry) {
             fileEntry.remove(() {}, (error) => errorHandler(error)); 
           }, 
-          errorCallback: (error){
+          errorCallback: (error) {
             if (recursive && error.code == FileError.TYPE_MISMATCH_ERR) {
               cwd.getDirectory(fileName, 
                   options:{}, 
@@ -551,7 +545,7 @@ class Terminal {
       cwd.getDirectory(dirName, 
           options: {}, 
           successCallback: (dirEntry) {
-            dirEntry.remove((){}, (error) {
+            dirEntry.remove(() {}, (error) {
               if (error.code == FileError.INVALID_MODIFICATION_ERR) {
                 writeOutput('$cmd: $dirName: Directory not empty<br>');
               } else {
@@ -568,7 +562,7 @@ class Terminal {
     sb.addAll(args);
     var theme = sb.toString();
     if (theme.isEmpty) {
-      writeOutput('usage: $cmd ${themes}');
+      writeOutput('usage: $cmd $themes');
     } else {
       if (themes.contains(theme)) {
         setTheme(theme);

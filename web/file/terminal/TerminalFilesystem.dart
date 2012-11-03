@@ -15,7 +15,7 @@ class TerminalFilesystem {
 
   void run() {
     term = new Terminal('#input-line', '#output', '#cmdline');
-    term.initFS(false, 1024 * 1024);
+    term.initializeFilesystem(false, 1024 * 1024);
     
     if (!window.location.hash.isEmpty) {
       var theme = window.location.hash.substring(1, window.location.hash.length).split('=')[1];
