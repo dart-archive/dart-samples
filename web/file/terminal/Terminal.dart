@@ -231,7 +231,7 @@ class Terminal {
             fileEntry.createWriter((FileWriter fileWriter) {
               fileWriter.on.error.add(errorHandler);
               fileWriter.write(file);
-            }, (error) => errorHandler(error));
+            }, errorHandler);
           }, 
           errorCallback: errorHandler);
           //errorCallback: (error) => errorHandler(error));
@@ -250,7 +250,7 @@ class Terminal {
             var reader = new FileReader();
             reader.on.loadEnd.add((ProgressEvent event) => callback(reader.result));
             reader.readAsText(file);
-          }, (error) => errorHandler(error));
+          }, errorHandler);
         }, 
         errorCallback: (error) {
           if (error.code == FileError.INVALID_STATE_ERR) {
@@ -367,7 +367,7 @@ class Terminal {
               entries.addAll(results);
               readEntries();
             }
-          }, (error) => errorHandler(error));
+          }, errorHandler);
     };
     
     readEntries();
@@ -386,7 +386,7 @@ class Terminal {
               folders.removeAt(0);
               createDir(dirEntry, folders);
           }
-        }, errorCallback: (error) => errorHandler(error));
+        }, errorCallback: errorHandler);
   }
   
   void mkdirCommand(String cmd, List<String> args) {
@@ -447,16 +447,16 @@ class Terminal {
             cwd.getDirectory(dest, 
                 options: {'create': create}, 
                 successCallback: (DirectoryEntry destDirEntry) => action(srcDirEntry, destDirEntry), 
-                errorCallback: (FileError error) => errorHandler(error));
+                errorCallback: errorHandler);
           }, 
-          errorCallback: (FileError error) => errorHandler(error));
+          errorCallback: errorHandler);
     } else { // Treat src/destination as files.
       cwd.getFile(src, options: {}, 
           successCallback: (FileEntry srcFileEntry) {
             srcFileEntry.getParent((DirectoryEntry parentDirEntry) => action(srcFileEntry, parentDirEntry, dest),
-                (FileError error) => errorHandler(error));
+                errorHandler);
           }, 
-          errorCallback: (FileError error) => errorHandler(error));
+          errorCallback: errorHandler);
     }
   }
 
@@ -518,14 +518,14 @@ class Terminal {
     args.forEach((fileName) {
       cwd.getFile(fileName, options: {}, 
           successCallback: (fileEntry) {
-            fileEntry.remove(() {}, (error) => errorHandler(error)); 
+            fileEntry.remove(() {}, errorHandler); 
           }, 
           errorCallback: (error) {
             if (recursive && error.code == FileError.TYPE_MISMATCH_ERR) {
               cwd.getDirectory(fileName, 
                   options:{}, 
-                  successCallback: (DirectoryEntry dirEntry) => dirEntry.removeRecursively(() {}, (error) => errorHandler(error)), 
-                  errorCallback: (error) => errorHandler(error));
+                  successCallback: (DirectoryEntry dirEntry) => dirEntry.removeRecursively(() {}, errorHandler), 
+                  errorCallback: errorHandler);
             } else if (error.code == FileError.INVALID_STATE_ERR) {
               writeOutput('$cmd: $fileName: is a directory<br>');
             } else {
