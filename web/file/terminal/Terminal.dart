@@ -123,7 +123,7 @@ class Terminal {
       String cmd = "";
       if (!cmdline.isEmpty) {
         cmdline.trim();
-        args = cmdline.split(' ');
+        args = htmlEscape(cmdline).split(' ');
         cmd = args[0]; 
         args.removeRange(0, 1);
       }
