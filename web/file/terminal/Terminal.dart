@@ -27,24 +27,6 @@ class Terminal {
     cmdLine = document.query(cmdLineContainer);
     output = document.query(outputContainer);
     input = document.query(cmdLineInput);
-    cmds = {
-      'clear': clearCommand,
-      'help': helpCommand,
-      'version': versionCommand,       
-      'cat': catCommand,
-      'cd': cdCommand,
-      'date': dateCommand,
-      'ls': lsCommand,
-      'mkdir': mkdirCommand,
-      'mv': mvCommand,
-      'cp': cpCommand,
-      'open': openCommand,
-      'pwd': pwdCommand,
-      'rm': rmCommand,
-      'rmdir': rmdirCommand,
-      'theme': themeCommand,
-      'who': whoCommand
-    };
     
     // Always force text cursor to end of input line.
     window.on.click.add((event) => cmdLine.focus());
@@ -140,6 +122,25 @@ class Terminal {
   }
     
   void initializeFilesystem(bool persistent, int size) {
+    cmds = {
+      'clear': clearCommand,
+      'help': helpCommand,
+      'version': versionCommand,       
+      'cat': catCommand,
+      'cd': cdCommand,
+      'date': dateCommand,
+      'ls': lsCommand,
+      'mkdir': mkdirCommand,
+      'mv': mvCommand,
+      'cp': cpCommand,
+      'open': openCommand,
+      'pwd': pwdCommand,
+      'rm': rmCommand,
+      'rmdir': rmdirCommand,
+      'theme': themeCommand,
+      'who': whoCommand
+    };
+    
     writeOutput('<div>Welcome to ${document.title}! (v$version)</div>');
     writeOutput(new Date.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
@@ -147,10 +148,28 @@ class Terminal {
     window.webkitRequestFileSystem(type, size, filesystemCallback, errorHandler);
   }
   
+  void filesystemNotInitialized(String cmd, List<String> args) {
+    writeOutput('<div>$cmd: not available since filesystem was not initialized</div>');
+  }
+  
   void filesystemCallback(DOMFileSystem filesystem) {
     fs = filesystem;
-    cwd = fs.root;
     
+    if (fs is DOMFileSystem) {
+      cwd = fs.root;
+    } else {         
+      cmds['cat'] = filesystemNotInitialized;
+      cmds['cd'] = filesystemNotInitialized;
+      cmds['ls'] = filesystemNotInitialized;
+      cmds['mkdir'] = filesystemNotInitialized;
+      cmds['mv'] = filesystemNotInitialized;
+      cmds['cp'] = filesystemNotInitialized;
+      cmds['open'] = filesystemNotInitialized;
+      cmds['pwd'] = filesystemNotInitialized;
+      cmds['rm'] = filesystemNotInitialized;
+      cmds['rmdir'] = filesystemNotInitialized;
+    }
+
     // Attempt to create a folder to test if we can. 
     cwd.getDirectory('testquotaforfsfolder', 
         options: {'create': true},
@@ -238,11 +257,7 @@ class Terminal {
     });
   }
   
-  void read(String cmd, String path, var callback) {
-    if (fs == null) {
-      return;
-    }
-    
+  void read(String cmd, String path, var callback) {    
     cwd.getFile(path, 
         options: {}, 
         successCallback: (FileEntry fileEntry) {
@@ -347,10 +362,6 @@ class Terminal {
         writeOutput(html.toString());
       }
     };
-    
-    if (fs == null) {
-      return;
-    }
     
     // Read contents of current working directory. According to spec, need to
     // keep calling readEntries() until length of result array is 0. We're
@@ -483,11 +494,7 @@ class Terminal {
     });
   }
   
-  void open(String cmd, String path, successCallback) {
-    if (fs == null) {
-      return;
-    }
-    
+  void open(String cmd, String path, successCallback) {    
     cwd.getFile(path, 
         options: {}, 
         successCallback: successCallback, 
