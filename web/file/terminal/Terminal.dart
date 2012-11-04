@@ -253,7 +253,6 @@ class Terminal {
             }, errorHandler);
           }, 
           errorCallback: errorHandler);
-          //errorCallback: (error) => errorHandler(error));
     });
   }
   
