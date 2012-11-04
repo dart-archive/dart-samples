@@ -305,10 +305,7 @@ class Terminal {
   }
   
   void cdCommand(String cmd, List<String> args) {
-    StringBuffer sb = new StringBuffer();
-    sb.addAll(args);
-    var dest = sb.toString();
-    
+    var dest = Strings.join(args, ' ').trim();    
     if (dest.isEmpty) {
       dest = '/';
     }
@@ -480,10 +477,7 @@ class Terminal {
   }
   
   void openCommand(String cmd, List<String> args) {
-    StringBuffer sb = new StringBuffer();
-    sb.addAll(args);
-    var fileName = sb.toString();
-    
+    var fileName = Strings.join(args, ' ').trim();
     if (fileName.isEmpty) {
       writeOutput('usage: $cmd filename');
       return;
@@ -560,9 +554,7 @@ class Terminal {
   }
   
   void themeCommand(String cmd, List<String> args) {
-    StringBuffer sb = new StringBuffer();
-    sb.addAll(args);
-    var theme = sb.toString();
+    var theme = Strings.join(args, ' ').trim();
     if (theme.isEmpty) {
       writeOutput('usage: $cmd $themes');
     } else {
