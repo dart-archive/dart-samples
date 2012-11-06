@@ -361,8 +361,8 @@ class Terminal {
     // guarenteed the same entry won't be returned again.
     List<Entry> entries = [];
     DirectoryReader reader = cwd.createReader();
-    Function readEntries;
-    readEntries = () {
+    
+    void readEntries() {
       reader.readEntries(
           (List<Entry> results) {
             if (results.length == 0) {
