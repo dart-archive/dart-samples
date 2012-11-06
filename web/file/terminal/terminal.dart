@@ -542,7 +542,7 @@ class Terminal {
   }
   
   void pwdCommand(String cmd, List<String> args) {
-    writeOutput(cwd.fullPath);
+    writeOutput(htmlEscape(cwd.fullPath));
   }
   
   void rmCommand(String cmd, List<String> args) {
