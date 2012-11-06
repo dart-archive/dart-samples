@@ -6,8 +6,8 @@
 // See: http://www.html5rocks.com/en/tutorials/canvas/imagefilters/
 
 
-#import('dart:html');
-#import('dart:math');
+import 'dart:html';
+import 'dart:math';
 
 class Filters {
   ImageData pixels;
@@ -229,7 +229,7 @@ void main() {
         List matrix = query('#customMatrix').queryAll('input');
         var mask = new List();
         for (var i = 0; i < matrix.length; i++) {
-          mask.add(parseDouble(matrix[i].value));
+          mask.add(double.parse(matrix[i].value));
         }
         return new Filters(img).convolve(mask, true);
       }));

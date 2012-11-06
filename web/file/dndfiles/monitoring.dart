@@ -5,9 +5,9 @@
 // This is a port of "Reading Files in JavaScript Using the File APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
-#import('dart:html');
-#import('dart:math');
-#import('dart:isolate');
+import 'dart:html';
+import 'dart:math';
+import 'dart:isolate';
 
 class Monitoring {
   InputElement _fileInput;
