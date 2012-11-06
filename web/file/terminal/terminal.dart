@@ -78,9 +78,9 @@ class Terminal {
     int enterKey = 13;
     int tabKey = 9;
     
-    if (event.keyCode == tabKey) { // Tab key
+    if (event.keyCode == tabKey) {
       event.preventDefault();
-    } else if (event.keyCode == enterKey) { // Enter key
+    } else if (event.keyCode == enterKey) {
       
       if (!input.value.isEmpty) {
         history.add(input.value);
