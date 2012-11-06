@@ -2,22 +2,22 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the COPYING file.
 
-// This is a port of "High DPI Canvas" to Dart. 
+// This is a port of "High DPI Canvas" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/canvas/hidpi/
 
-#import('dart:html');
+import 'dart:html';
 
 void drawImage(CanvasElement canvas, ImageElement image, [bool auto=true,
     srcX=0,    srcY=0,    srcW=null, srcH=null,
     desX=null, desY=null, desW=null, desH=null]) {
-  
+
   if (srcW == null) srcW = image.naturalWidth;
   if (srcH == null) srcH = image.naturalHeight;
   if (desX == null) desX = srcX;
   if (desY == null) desY = srcY;
   if (desW == null) desW = srcW;
   if (desH == null) desH = srcH;
- 
+
   CanvasRenderingContext2D context = canvas.getContext("2d");
 
   num devicePixelRatio = window.devicePixelRatio;
@@ -28,15 +28,15 @@ void drawImage(CanvasElement canvas, ImageElement image, [bool auto=true,
     num oldWidth = canvas.width;
     num oldHeight = canvas.height;
 
-    canvas.width = (oldWidth * ratio).round();    
+    canvas.width = (oldWidth * ratio).round();
     canvas.height = (oldHeight * ratio).round();
-    
+
     canvas.style.width = "${oldWidth}px";
     canvas.style.height = "${oldHeight}px";
-    
+
     context.scale(ratio, ratio);
   }
-  
+
   context.drawImage(image, srcX, srcY, srcW, srcH, desX, desY, desW, desH);
 }
 

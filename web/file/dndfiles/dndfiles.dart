@@ -5,8 +5,8 @@
 // This is a port of "Reading Files in JavaScript Using the File APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
-#import('dart:html');
-#import('package:htmlescape/htmlescape.dart');
+import 'dart:html';
+import 'package:htmlescape/htmlescape.dart';
 
 class DndFiles {
   FormElement _readForm;

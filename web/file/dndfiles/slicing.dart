@@ -5,8 +5,8 @@
 // This is a port of "Reading Files in JavaScript Using the File APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
-#import('dart:html');
-#import('dart:math');
+import 'dart:html';
+import 'dart:math';
 
 class Slicing {
   InputElement _fileInput;
@@ -33,8 +33,8 @@ class Slicing {
       var start = clicked.attributes['data-startbyte'];
       var end = clicked.attributes['data-endbyte'];
       _readBlob(
-          start != null ? parseInt(start) : null,
-          end != null ? parseInt(end) : null);
+          start != null ? int.parse(start) : null,
+          end != null ? int.parse(end) : null);
     }
   }
 
