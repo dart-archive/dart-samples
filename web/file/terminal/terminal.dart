@@ -341,7 +341,7 @@ class Terminal {
   
   
   void lsCommand(String cmd, List<String> args) {
-    Function success = (List<Entry> entry) {
+    void displayFiles(List<Entry> entry) {
       if (entry.length != 0) {
         
         StringBuffer html = formatColumns(entry);
@@ -366,7 +366,7 @@ class Terminal {
       reader.readEntries(
           (List<Entry> results) {
             if (results.length == 0) {
-              success(entries);
+              displayFiles(entries);
             } else {
               entries.addAll(results);
               readEntries();
