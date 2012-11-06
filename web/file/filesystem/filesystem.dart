@@ -5,19 +5,19 @@
 // This is a port of "Exploring the FileSystem APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
-#import('dart:html');
-#import('package:htmlescape/htmlescape.dart');
+import 'dart:html';
+import 'package:htmlescape/htmlescape.dart';
 
 class FileSystemExample {
   DOMFileSystem _filesystem;
   Element _fileList;
-  
+
   FileSystemExample() {
     _fileList = query('#example-list-fs-ul');
     window.webkitRequestFileSystem(Window.TEMPORARY, 1024 * 1024,
         _requestFileSystemCallback, _handleError);
   }
-  
+
   bool _requestFileSystemCallback(DOMFileSystem filesystem) {
     _filesystem = filesystem;
     query('#add-button').on.click.add((e) => _addFiles(), false);
@@ -25,7 +25,7 @@ class FileSystemExample {
     query('#remove-button').on.click.add((e) => _removeFiles(), false);
     return true;
   }
-  
+
   bool _handleError(FileError e) {
     var msg = '';
     switch (e.code) {
@@ -51,14 +51,14 @@ class FileSystemExample {
     query("#example-list-fs-ul").text = "Error: $msg";
     return true;
   }
-  
+
   void _addFiles() {
     _filesystem.root.getFile('log.txt', {"create": true}, null, _handleError);
     _filesystem.root.getFile('song.mp3', {"create": true}, null, _handleError);
     _filesystem.root.getDirectory('mypictures', {"create": true}, null, _handleError);
     _fileList.text = 'Files created.';
   }
-  
+
   void _listFiles() {
     var dirReader = _filesystem.root.createReader();
     dirReader.readEntries((entries) {
@@ -72,14 +72,14 @@ class FileSystemExample {
       for (var i = 0, entry; (entry = entries.item(i)) != null; i++) {
         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                                       '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
-        var li = new Element.tag("li"); 
+        var li = new Element.tag("li");
         li.innerHTML = "$img<span>${htmlEscape(entry.name)}</span>";
         fragment.nodes.add(li);
       }
       _fileList.nodes.add(fragment);
     }, _handleError);
   }
-  
+
   void _removeFiles() {
     var dirReader = _filesystem.root.createReader();
     dirReader.readEntries((entries) {
