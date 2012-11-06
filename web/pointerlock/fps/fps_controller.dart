@@ -37,8 +37,8 @@ class MouseKeyboardCameraController {
     }
     return scale;
   }
-  
-  void _moveFloat(num dt, bool negative, bool positive, Camera cam) {
+
+  void _moveFloat(num dt, bool positive, bool negative, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -50,7 +50,7 @@ class MouseKeyboardCameraController {
     cam.eyePosition.add(upDirection);
   }
 
-  void _moveStrafe(num dt, bool negative, bool positive, Camera cam) {
+  void _moveStrafe(num dt, bool positive, bool negative, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -65,7 +65,7 @@ class MouseKeyboardCameraController {
     cam.eyePosition.add(strafeDirection);
   }
 
-  void _moveForward(num dt, bool negative, bool positive, Camera cam) {
+  void _moveForward(num dt, bool positive, bool negative, Camera cam) {
     var scale = _velocityScale(positive, negative);
     if (scale == 0.0) {
       return;
@@ -105,7 +105,7 @@ class MouseKeyboardCameraController {
     num minPitchDegrees = degrees(minPitchAngle);
     num maxPitchDegrees = degrees(maxPitchAngle);
 
-    _rotateEyeAndLook(-mousePitchDelta, strafeDirection, cam);
+    _rotateEyeAndLook(mousePitchDelta, strafeDirection, cam);
 
     _rotateEyeAndLook(mouseYawDelta, upDirection, cam);
   }
