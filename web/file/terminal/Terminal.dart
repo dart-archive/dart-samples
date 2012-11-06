@@ -21,7 +21,6 @@ class Terminal {
   List<String> history = [];
   int historyPosition = 0;
   Map<String, Function> cmds;
-  Function readEntries;
   
   Terminal(this.cmdLineContainer, this.outputContainer, this.cmdLineInput) {
     cmdLine = document.query(cmdLineContainer);
@@ -313,7 +312,7 @@ class Terminal {
         options: {}, 
         successCallback: (DirectoryEntry dirEntry) { 
           cwd = dirEntry;
-          writeOutput('<div>${dirEntry.fullPath}</div>');
+          writeOutput('<div>${htmlEscape(dirEntry.fullPath)}</div>');
         },
         errorCallback: (FileError error) {
           invalidOpForEntryType(error, cmd, dest);
@@ -326,34 +325,32 @@ class Terminal {
   
   StringBuffer formatColumns(List<Entry> entries) {
     var maxName = entries[0].name;
-    for (int i = 0; i<entries.length; i++) {
-      if (entries[i].name.length > maxName.length) {
-        maxName = entries[i].name;
+    entries.forEach((entry) {
+      if (entry.name.length > maxName.length) {
+        maxName = entry.name;
       }
-    }
+    });
     
     // If we have 3 or less entires, shorten the output container's height.
-    // 15 is the pixel height with a monospace font-size of 12px;
-    var height = entries.length <= 3 ? 'height: ${(entries.length * 15)}px;' : '';
-        
-    // 12px monospace font yields ~7px screen width.
-    var colWidth = maxName.length * 7;
-
+    var height = entries.length <= 3 ? 'height: ${entries.length}em;' : '${entries.length ~/ 3}em';
+    var colWidth = "${maxName.length}em"; 
     StringBuffer sb = new StringBuffer();
-    sb.addAll(['<div class="ls-files" style="-webkit-column-width:',
-     colWidth, 'px;', height, '">']);
+    sb.add('<div class="ls-files" style="-webkit-column-width: $colWidth; height: $height">');
     return sb;
   }
   
   
   void lsCommand(String cmd, List<String> args) {
-    Function success = (List<Entry> e) {
-      if (e.length != 0) {
+    Function success = (List<Entry> entry) {
+      if (entry.length != 0) {
         
-        StringBuffer html = formatColumns(e);
-        for (int i = 0; i<e.length; i++) {
-          html.addAll(['<span class="', e[i].isDirectory ? 'folder' : 'file','">', e[i].name, '</span><br>']);
-        }
+        StringBuffer html = formatColumns(entry);
+        entry.forEach((file) {
+          var fileType = file.isDirectory ? 'folder' : 'file';
+          var span = '<span class="$fileType">${file.name}</span><br>';
+          html.add(span);
+        });
+        
         html.add('</div>');
         writeOutput(html.toString());
       }
@@ -364,11 +361,11 @@ class Terminal {
     // guarenteed the same entry won't be returned again.
     List<Entry> entries = [];
     DirectoryReader reader = cwd.createReader();
+    Function readEntries;
     readEntries = () {
       reader.readEntries(
           (List<Entry> results) {
             if (results.length == 0) {
-              //entries.sort();
               success(entries);
             } else {
               entries.addAll(results);
@@ -380,20 +377,42 @@ class Terminal {
     readEntries();
   }
   
-  void createDir(rootDirEntry, List<String> folders) {    
+  void createDir(DirectoryEntry rootDirEntry, List<String> folders, [String createFromDir="", String cmd=""]) {    
     if (folders.length == 0) {
       return;
     }
     
-    rootDirEntry.getDirectory(folders[0], 
-        options: {'create': true}, 
-        successCallback: (dirEntry) {
-          // Recursively add the new subfolder if we still have a subfolder to create.
-          if (folders.length != 0) {
-              folders.removeAt(0);
-              createDir(dirEntry, folders);
-          }
-        }, errorCallback: errorHandler);
+    if (createFromDir.isEmpty) {
+      rootDirEntry.getDirectory(folders[0], 
+          options: {'create': true}, 
+          successCallback: (dirEntry) {
+            // Recursively add the new subfolder if we still have a subfolder to create.
+            if (folders.length != 0) {
+                folders.removeAt(0);
+                createDir(dirEntry, folders);
+            }
+          }, errorCallback: errorHandler);
+    } else {
+      var fullPath = cwd.fullPath;
+      cwd.getDirectory(createFromDir, 
+          options: {}, 
+          successCallback: (DirectoryEntry dirEntry) { 
+            cwd = dirEntry;
+            // Create the folders
+            createDir(cwd, folders);
+            cwd.getDirectory(fullPath, 
+                options: {}, 
+                successCallback: (DirectoryEntry dirEntry) { 
+                  cwd = dirEntry;
+                },
+                errorCallback: (FileError error) {
+                  invalidOpForEntryType(error, cmd, fullPath);
+                });               
+          },
+          errorCallback: (FileError error) {
+            invalidOpForEntryType(error, cmd, createFromDir);
+          });
+    }
   }
   
   void mkdirCommand(String cmd, List<String> args) {
@@ -410,7 +429,7 @@ class Terminal {
     }
     
     // Create each directory passed as an argument.
-    for(int i=0; i<args.length; i++) {
+    for (int i = 0; i < args.length; i++) {
       String dirName = args[i];
       
       if (dashP) {
@@ -420,7 +439,12 @@ class Terminal {
           folders.removeAt(0);
         }
         
-        createDir(cwd, folders);
+        // If '/' is present then we change directories in createDir. 
+        if (dirName[0] == "/") {
+          createDir(cwd, folders, dirName[0], cmd);
+        } else {
+          createDir(cwd, folders);
+        }
       } else {
         cwd.getDirectory(dirName, 
             options: {'create': true, 'exclusive': true}, 
@@ -444,7 +468,7 @@ class Terminal {
     String dest = args[1];
     
     // Moving to a folder? (e.g. second arg ends in '/').
-    if (dest[dest.length - 1] == '/') {
+    if (dest[dest.length - 1].endsWith('/')) {
       cwd.getDirectory(src, 
           options: {}, 
           successCallback: (DirectoryEntry srcDirEntry) {
@@ -457,7 +481,8 @@ class Terminal {
                 errorCallback: errorHandler);
           }, 
           errorCallback: errorHandler);
-    } else { // Treat src/destination as files.
+    } else { 
+      // Treat src/destination as files.
       cwd.getFile(src, options: {}, 
           successCallback: (FileEntry srcFileEntry) {
             srcFileEntry.getParent((DirectoryEntry parentDirEntry) => action(srcFileEntry, parentDirEntry, dest),
@@ -468,22 +493,38 @@ class Terminal {
   }
 
   void cpCommand(String cmd, List<String> args) {
-    updateFilename(cmd, args, (srcDirEntry, destDirEntry, [name=""]) => name.isEmpty ? srcDirEntry.copyTo(destDirEntry) : srcDirEntry.copyTo(destDirEntry, name));
+    updateFilename(cmd, args, 
+        (srcDirEntry, destDirEntry, [name = ""]) {
+              if (name.isEmpty) {
+                srcDirEntry.copyTo(destDirEntry);
+              } else {
+                srcDirEntry.copyTo(destDirEntry, name);
+              }
+            });
   }
   
   void mvCommand(String cmd, List<String> args) {
-    updateFilename(cmd, args, (srcDirEntry, destDirEntry, [name=""]) => name.isEmpty ? srcDirEntry.moveTo(destDirEntry) : srcDirEntry.moveTo(destDirEntry, name));
+    updateFilename(cmd, args, 
+        (srcDirEntry, destDirEntry, [name = ""]) { 
+              if (name.isEmpty) { 
+                srcDirEntry.moveTo(destDirEntry); 
+              } else { 
+                srcDirEntry.moveTo(destDirEntry, name);
+              }
+            });
   }
   
   void openCommand(String cmd, List<String> args) {
-    var fileName = Strings.join(args, ' ').trim();
-    if (fileName.isEmpty) {
-      writeOutput('usage: $cmd filename');
+    //var fileName = Strings.join(args, ' ').trim();
+    if (args.length == 0) {
+      writeOutput('usage: $cmd [filenames]');
       return;
     }
     
-    open(cmd, fileName, (FileEntry fileEntry) {
-      var myWin = window.open(fileEntry.toURL(), 'mywin');
+    args.forEach((fileName) {
+      open(cmd, fileName, (FileEntry fileEntry) {
+        window.open(fileEntry.toURL(), '$fileName');
+      });
     });
   }
   
@@ -510,7 +551,11 @@ class Terminal {
     ['-r', '-f', '-rf', '-fr'].forEach((arg) {
       var index = args.indexOf(arg);
       if (index != -1) {
-        args.removeAt(index);
+        // Remove all repeated switches.
+        args.forEach((a) {
+          index = args.indexOf(a);
+          args.removeAt(index);
+        });
         recursive = true;
       }
     });
@@ -523,7 +568,7 @@ class Terminal {
           errorCallback: (error) {
             if (recursive && error.code == FileError.TYPE_MISMATCH_ERR) {
               cwd.getDirectory(fileName, 
-                  options:{}, 
+                  options: {}, 
                   successCallback: (DirectoryEntry dirEntry) => dirEntry.removeRecursively(() {}, errorHandler), 
                   errorCallback: errorHandler);
             } else if (error.code == FileError.INVALID_STATE_ERR) {
@@ -567,7 +612,8 @@ class Terminal {
   
   void whoCommand(String cmd, List<String> args) {
     writeOutput('${document.title}'
-    ' - By:  Eric Bidelman &lt;ericbidelman@chromium.org&gt;, Adam Singer &lt;financeCoding@gmail.com&gt;');
+                ' - By:  Eric Bidelman &lt;ericbidelman@chromium.org&gt;,' 
+                ' Adam Singer &lt;financeCoding@gmail.com&gt;');
   }
   
   void writeOutput(String h) {

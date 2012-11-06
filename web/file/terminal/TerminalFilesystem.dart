@@ -6,7 +6,6 @@
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
 library terminal_filesystem;
-import 'dart:core';
 import 'dart:html';
 import 'package:htmlescape/htmlescape.dart';
 part 'Terminal.dart';
@@ -42,6 +41,7 @@ class TerminalFilesystem {
   void onDragOver(MouseEvent event) {
     event.stopPropagation();
     event.preventDefault();
+    
     // Explicitly show this is a copy.
     event.dataTransfer.dropEffect = 'copy'; 
   }
