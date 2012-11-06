@@ -113,7 +113,7 @@ class Terminal {
       if (cmds[cmd] is Function) {
         cmds[cmd](cmd, args);
       } else {
-        writeOutput('$cmd: command not found');
+        writeOutput('${htmlEscape(cmd)}: command not found');
       }
       
       window.scrollTo(0, window.innerHeight);  
@@ -140,7 +140,7 @@ class Terminal {
       'who': whoCommand
     };
     
-    writeOutput('<div>Welcome to ${document.title}! (v$version)</div>');
+    writeOutput('<div>Welcome to ${htmlEscape(document.title)}! (v$version)</div>');
     writeOutput(new Date.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
     var type = persistent ? LocalWindow.PERSISTENT : LocalWindow.TEMPORARY;
@@ -148,7 +148,7 @@ class Terminal {
   }
   
   void filesystemNotInitialized(String cmd, List<String> args) {
-    writeOutput('<div>$cmd: not available since filesystem was not initialized</div>');
+    writeOutput('<div>${htmlEscape(cmd)}: not available since filesystem was not initialized</div>');
   }
   
   void filesystemCallback(DOMFileSystem filesystem) {
@@ -211,19 +211,19 @@ class Terminal {
         msg = 'FileError = ${error.code}: Error not handled';
         break;
     };
-    writeOutput('<div>Error: $msg</div>');
+    writeOutput('<div>Error: ${htmlEscape(msg)}</div>');
   }
   
   void invalidOpForEntryType(FileError error, String cmd, String dest) {
     switch (error.code) {
       case FileError.NOT_FOUND_ERR:
-        writeOutput('$cmd: $dest: No such file or directory<br>');
+        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: No such file or directory<br>');
         break;
       case FileError.INVALID_STATE_ERR:
-        writeOutput('$cmd: $dest: Not a directory<br>');
+        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: Not a directory<br>');
         break;
       case FileError.INVALID_MODIFICATION_ERR:
-        writeOutput('$cmd: $dest: File already exists<br>');
+        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: File already exists<br>');
         break;
       default:
         errorHandler(error);
@@ -267,9 +267,9 @@ class Terminal {
         }, 
         errorCallback: (error) {
           if (error.code == FileError.INVALID_STATE_ERR) {
-            writeOutput('$cmd: $path: is a directory<br>');
+            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}): is a directory<br>');
           } else if (error.code == FileError.NOT_FOUND_ERR) {
-            writeOutput('$cmd: $path: No such file or directory<br>');
+            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
           } else {
             errorHandler(error);
           }
@@ -296,9 +296,9 @@ class Terminal {
   void catCommand(String cmd, List<String> args) {
     if (args.length >= 1) {
       var fileName = args[0];
-      read(cmd, fileName, (result) => writeOutput('<pre>$result</pre>'));
+      read(cmd, fileName, (result) => writeOutput('<pre>${htmlEscape(result)}</pre>'));
     } else {
-      writeOutput('usage: $cmd filename');
+      writeOutput('usage: ${htmlEscape(cmd)} filename');
     }
   }
   
@@ -347,7 +347,7 @@ class Terminal {
         StringBuffer html = formatColumns(entry);
         entry.forEach((file) {
           var fileType = file.isDirectory ? 'folder' : 'file';
-          var span = '<span class="$fileType">${file.name}</span><br>';
+          var span = '<span class="$fileType">${htmlEscape(file.name)}</span><br>';
           html.add(span);
         });
         
@@ -424,7 +424,7 @@ class Terminal {
     }
     
     if (args.length == 0) {
-      writeOutput('usage: $cmd [-p] directory<br>');
+      writeOutput('usage: ${htmlEscape(cmd)} [-p] directory<br>');
       return;
     }
     
@@ -458,8 +458,8 @@ class Terminal {
   
   void updateFilename(String cmd, List<String> args, Function action) {
     if (args.length != 2) {
-      writeOutput('usage: $cmd source target<br>'
-                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cmd'
+      writeOutput('usage: ${htmlEscape(cmd)} source target<br>'
+                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${htmlEscape(cmd)}'
                   ' source directory/');
       return;
     }
@@ -517,7 +517,7 @@ class Terminal {
   void openCommand(String cmd, List<String> args) {
     //var fileName = Strings.join(args, ' ').trim();
     if (args.length == 0) {
-      writeOutput('usage: $cmd [filenames]');
+      writeOutput('usage: ${htmlEscape(cmd)} [filenames]');
       return;
     }
     
@@ -534,7 +534,7 @@ class Terminal {
         successCallback: successCallback, 
         errorCallback: (error) {
           if (error.code == FileError.NOT_FOUND_ERR) {
-            writeOutput('$cmd: $path: No such file or directory<br>');
+            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
           } else {
             errorHandler(error);
           }
@@ -572,7 +572,7 @@ class Terminal {
                   successCallback: (DirectoryEntry dirEntry) => dirEntry.removeRecursively(() {}, errorHandler), 
                   errorCallback: errorHandler);
             } else if (error.code == FileError.INVALID_STATE_ERR) {
-              writeOutput('$cmd: $fileName: is a directory<br>');
+              writeOutput('${htmlEscape(cmd)}: ${htmlEscape(fileName)}: is a directory<br>');
             } else {
               errorHandler(error);
             }
@@ -587,7 +587,7 @@ class Terminal {
           successCallback: (dirEntry) {
             dirEntry.remove(() {}, (error) {
               if (error.code == FileError.INVALID_MODIFICATION_ERR) {
-                writeOutput('$cmd: $dirName: Directory not empty<br>');
+                writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dirName)}: Directory not empty<br>');
               } else {
                 errorHandler(error);
               }
@@ -600,7 +600,7 @@ class Terminal {
   void themeCommand(String cmd, List<String> args) {
     var theme = Strings.join(args, ' ').trim();
     if (theme.isEmpty) {
-      writeOutput('usage: $cmd $themes');
+      writeOutput('usage: ${htmlEscape(cmd)} ${htmlEscape(themes.toString())}');
     } else {
       if (themes.contains(theme)) {
         setTheme(theme);
@@ -611,7 +611,7 @@ class Terminal {
   }
   
   void whoCommand(String cmd, List<String> args) {
-    writeOutput('${document.title}'
+    writeOutput('${htmlEscape(document.title)}'
                 ' - By:  Eric Bidelman &lt;ericbidelman@chromium.org&gt;,' 
                 ' Adam Singer &lt;financeCoding@gmail.com&gt;');
   }
