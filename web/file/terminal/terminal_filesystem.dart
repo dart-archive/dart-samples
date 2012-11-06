@@ -8,7 +8,7 @@
 library terminal_filesystem;
 import 'dart:html';
 import 'package:htmlescape/htmlescape.dart';
-part 'Terminal.dart';
+part 'terminal.dart';
 
 class TerminalFilesystem {
   Terminal term;
