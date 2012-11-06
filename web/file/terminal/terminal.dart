@@ -548,14 +548,14 @@ class Terminal {
   void rmCommand(String cmd, List<String> args) {
     // Remove recursively? If so, remove the flag(s) from the arg list.
     var recursive = false;
-    ['-r', '-f', '-rf', '-fr'].forEach((arg) {
-      var index = args.indexOf(arg);
+    var switches = ['-r', '-f', '-rf', '-fr'];
+    switches.forEach((sw) {
+      var index = args.indexOf(sw);
       if (index != -1) {
-        // Remove all repeated switches.
-        args.forEach((a) {
-          index = args.indexOf(a);
+        while (index != -1) {
           args.removeAt(index);
-        });
+          index = args.indexOf(sw);
+        }
         recursive = true;
       }
     });
