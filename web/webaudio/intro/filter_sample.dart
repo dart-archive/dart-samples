@@ -113,19 +113,19 @@ class FilterSample {
   FilterSample(this.appCtx) {
     query("#play-pause-button").on.click.add((Event e) {
       _toggle();
-    }, false);
+    });
     query("#enable-filter-checkbox").on.change.add((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
-    }, false);
+    });
     query("#frequency-range").on.change.add((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
-    }, false);
+    });
     query("#quality-range").on.change.add((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
-    }, false);
+    });
   }
 
   void _play() {

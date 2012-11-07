@@ -52,5 +52,5 @@ void showNotification() {
 }
 
 void main() {
-  query('#say-hello').on.click.add((e) => sayHello(), false);
+  query('#say-hello').on.click.add((e) => sayHello());
 }
