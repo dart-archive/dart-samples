@@ -56,7 +56,7 @@ class DndFiles {
         var thumbHolder = new Element.tag('span');
         var reader = new FileReader();
         reader.on.load.add((e) {
-          var thumbnail = new ImageElement(reader.result);
+          var thumbnail = new ImageElement(src: reader.result);
           thumbnail.classes.add('thumb');
           thumbnail.title = htmlEscape(file.name);
           thumbHolder.nodes.add(thumbnail);

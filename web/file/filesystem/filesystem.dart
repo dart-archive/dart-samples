@@ -14,19 +14,18 @@ class FileSystemExample {
 
   FileSystemExample() {
     _fileList = query('#example-list-fs-ul');
-    window.webkitRequestFileSystem(Window.TEMPORARY, 1024 * 1024,
+    window.webkitRequestFileSystem(LocalWindow.TEMPORARY, 1024 * 1024,
         _requestFileSystemCallback, _handleError);
   }
 
-  bool _requestFileSystemCallback(DOMFileSystem filesystem) {
+  void _requestFileSystemCallback(DOMFileSystem filesystem) {
     _filesystem = filesystem;
     query('#add-button').on.click.add((e) => _addFiles(), false);
     query('#list-button').on.click.add((e) => _listFiles(), false);
     query('#remove-button').on.click.add((e) => _removeFiles(), false);
-    return true;
   }
 
-  bool _handleError(FileError e) {
+  void _handleError(FileError e) {
     var msg = '';
     switch (e.code) {
       case FileError.QUOTA_EXCEEDED_ERR:
@@ -49,13 +48,12 @@ class FileSystemExample {
         break;
     }
     query("#example-list-fs-ul").text = "Error: $msg";
-    return true;
   }
 
   void _addFiles() {
-    _filesystem.root.getFile('log.txt', {"create": true}, null, _handleError);
-    _filesystem.root.getFile('song.mp3', {"create": true}, null, _handleError);
-    _filesystem.root.getDirectory('mypictures', {"create": true}, null, _handleError);
+    _filesystem.root.getFile('log.txt', options: {"create": true}, errorCallback: _handleError);
+    _filesystem.root.getFile('song.mp3', options: {"create": true}, errorCallback: _handleError);
+    _filesystem.root.getDirectory('mypictures', options: {"create": true}, errorCallback: _handleError);
     _fileList.text = 'Files created.';
   }
 

@@ -40,13 +40,13 @@ class AnimationExample {
     }
   }
 
-  bool _update(int time) {
+  void _update(num time) {
     var halfWindowHeight = window.innerHeight * 0.5;
     var offset = 0;
 
     for (var i = 0; i < _movers.length; i++) {
       Element mover = _movers[i];
-      _moverTops[i] = mover.$dom_offsetTop;
+      _moverTops[i] = mover.offsetTop;
     }
 
     // Using separate for loops is a subtle browser optimization. See the
@@ -61,7 +61,6 @@ class AnimationExample {
     }
 
     _ticking = false;
-    return false;
   }
 }
 
