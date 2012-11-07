@@ -7,9 +7,10 @@
 
 import 'dart:html';
 
-void drawImage(CanvasElement canvas, ImageElement image, [bool auto=true,
-    srcX=0,    srcY=0,    srcW=null, srcH=null,
-    desX=null, desY=null, desW=null, desH=null]) {
+void drawImage(CanvasElement canvas, ImageElement image,
+               {bool auto: true,
+                srcX: 0,    srcY: 0,    srcW: null, srcH: null,
+                desX: null, desY: null, desW: null, desH: null}) {
 
   if (srcW == null) srcW = image.naturalWidth;
   if (srcH == null) srcH = image.naturalHeight;

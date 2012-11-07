@@ -18,7 +18,7 @@ class Filters {
 
   // Get image pixels from image element.
   ImageData getPixels(ImageElement img) {
-    var canvas = new CanvasElement(img.width, img.height);
+    var canvas = new CanvasElement(width: img.width, height: img.height);
     CanvasRenderingContext2D context = canvas.getContext('2d');
     context.drawImage(img, 0, 0);
     return context.getImageData(0, 0, canvas.width, canvas.height);
@@ -26,7 +26,7 @@ class Filters {
 
   // Create a temporary canvas to apply the filter to.
   ImageData createTempCanvas(int width, int height) {
-    var tempCanvas = new CanvasElement(width, height);
+    var tempCanvas = new CanvasElement(width: width, height: height);
     CanvasRenderingContext2D tempContext = tempCanvas.getContext('2d');
     return tempContext.createImageData(width, height);
   }
