@@ -5,19 +5,8 @@
 // This is a port of "Getting Started with the Web Audio API" (the filter
 // sample) to Dart. See: http://www.html5rocks.com/en/tutorials/webaudio/intro
 //
-// To run this code, you must use a web server. For instance, on OS X and
-// Linux, you can run the following from the current directory:
-//
-//   python -m SimpleHTTPServer
-//
-// TODO(jjinux): This works in dart2js, but not with Dartium.
-// See: http://code.google.com/p/dart/issues/detail?id=5174
-//      http://code.google.com/p/dart/issues/detail?id=5176
-//
-// TODO(jjinux): You shouldn't have to pass three arguments to
-// AudioNode.connect. The last two arguments should default to 0.
-// We can update this code once they fix that bug.
-// See: http://code.google.com/p/dart/issues/detail?id=2023
+// To run this code, you must use a web server. Dart Editor does this for you
+// automatically.
 
 import 'dart:html';
 import 'dart:math';
@@ -124,19 +113,19 @@ class FilterSample {
   FilterSample(this.appCtx) {
     query("#play-pause-button").on.click.add((Event e) {
       _toggle();
-    }, false);
+    });
     query("#enable-filter-checkbox").on.change.add((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
-    }, false);
+    });
     query("#frequency-range").on.change.add((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
-    }, false);
+    });
     query("#quality-range").on.change.add((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
-    }, false);
+    });
   }
 
   void _play() {
@@ -150,20 +139,16 @@ class FilterSample {
     _filter.frequency.value = _FREQ;
 
     // Connect everything.
-    _source.connect(_filter, 0, 0);
-    _filter.connect(appCtx.audioCtx.destination, 0, 0);
+    _source.connect(_filter, null, null);
+    _filter.connect(appCtx.audioCtx.destination, null, null);
 
     // Play!
-    // TODO(jjinux): This no longer works.
-    // See: http://code.google.com/p/dart/issues/detail?id=5855
-    _source.noteOn(0);
+    _source.start(0);
     _source.loop = true;
   }
 
   void _stop() {
-    // TODO(jjinux): This no longer works.
-    // See: http://code.google.com/p/dart/issues/detail?id=5855
-    _source.noteOff(0);
+    _source.stop(0);
   }
 
   void _toggle() {
@@ -172,17 +157,17 @@ class FilterSample {
   }
 
   void _toggleFilter(bool checked) {
-    _source.disconnect(0);
-    _filter.disconnect(0);
+    _source.disconnect(null);
+    _filter.disconnect(null);
 
     // Check if we want to enable the filter.
     if (checked) {
       // Connect through the filter.
-      _source.connect(_filter, 0, 0);
-      _filter.connect(appCtx.audioCtx.destination, 0, 0);
+      _source.connect(_filter, null, null);
+      _filter.connect(appCtx.audioCtx.destination, null, null);
     } else {
       // Otherwise, connect directly.
-      _source.connect(appCtx.audioCtx.destination, 0, 0);
+      _source.connect(appCtx.audioCtx.destination, null, null);
     }
   }
 

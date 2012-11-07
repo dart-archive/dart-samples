@@ -36,11 +36,8 @@ void sayHello() {
  * a user event unless you've requested permission ahead of time. Hence,
  * I'm providing that I requested permission ahead of time.
  */
-bool scheduleNotification() {
+void scheduleNotification() {
   new Timer(1000, (timer) => showNotification());
-
-  // This is for window.webkitNotifications.requestPermission.
-  return false;
 }
 
 void showNotification() {
@@ -55,5 +52,5 @@ void showNotification() {
 }
 
 void main() {
-  query('#say-hello').on.click.add((e) => sayHello(), false);
+  query('#say-hello').on.click.add((e) => sayHello());
 }

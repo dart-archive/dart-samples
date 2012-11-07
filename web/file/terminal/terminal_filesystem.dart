@@ -26,9 +26,9 @@ class TerminalFilesystem {
     
     // Setup the DnD listeners for file drop. 
     var body = document.body;
-    body.on.dragEnter.add(onDragEnter, false);
-    body.on.dragOver.add(onDragOver, false);
-    body.on.drop.add(onDrop, false);
+    body.on.dragEnter.add(onDragEnter);
+    body.on.dragOver.add(onDragOver);
+    body.on.drop.add(onDrop);
   }
   
   void onDragEnter(MouseEvent event) {
