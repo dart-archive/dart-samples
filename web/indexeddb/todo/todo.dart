@@ -5,7 +5,7 @@
 // This is a port of "A Simple ToDo List Using HTML5 IndexedDB" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/indexeddb/todo/
 
-#import('dart:html');
+import 'dart:html';
 
 class TodoList {
   static final String _TODOS_DB = "todo";

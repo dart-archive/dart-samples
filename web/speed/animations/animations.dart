@@ -6,7 +6,7 @@
 // requestAnimationFrame" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/speed/animations/
 
-#import('dart:html');
+import 'dart:html';
 
 class AnimationExample {
   const _numMovers = 500;
@@ -14,7 +14,7 @@ class AnimationExample {
   List<num> _moverTops;
   num _lastScrollY = 0;
   bool _ticking = false;
-  
+
   AnimationExample() {
     _movers = new List<Element>(_numMovers);
     _moverTops = new List<num>(_numMovers);
@@ -25,30 +25,30 @@ class AnimationExample {
       document.body.nodes.add(mover);
       _movers[i] = mover;
     }
-    window.on.scroll.add((e) => _onScroll(), false);
+    window.on.scroll.add((e) => _onScroll());
   }
 
   void _onScroll() {
     _lastScrollY = window.scrollY;
     _requestTick();
   }
-  
+
   void _requestTick() {
     if (!_ticking) {
       window.requestAnimationFrame(_update);
       _ticking = true;
     }
   }
-  
-  bool _update(int time) {
+
+  void _update(num time) {
     var halfWindowHeight = window.innerHeight * 0.5;
     var offset = 0;
-    
+
     for (var i = 0; i < _movers.length; i++) {
       Element mover = _movers[i];
-      _moverTops[i] = mover.$dom_offsetTop;
+      _moverTops[i] = mover.offsetTop;
     }
-    
+
     // Using separate for loops is a subtle browser optimization. See the
     // tutorial.
     for (var i = 0; i < _movers.length; i++) {
@@ -59,9 +59,8 @@ class AnimationExample {
         mover.classes.remove('left');
       }
     }
-    
+
     _ticking = false;
-    return false;
   }
 }
 

@@ -5,8 +5,8 @@
 // This is a port of "Reading Files in JavaScript Using the File APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
-#import('dart:html');
-#import('package:htmlescape/htmlescape.dart');
+import 'dart:html';
+import 'package:htmlescape/htmlescape.dart';
 
 class DndFiles {
   FormElement _readForm;
@@ -56,7 +56,7 @@ class DndFiles {
         var thumbHolder = new Element.tag('span');
         var reader = new FileReader();
         reader.on.load.add((e) {
-          var thumbnail = new ImageElement(reader.result);
+          var thumbnail = new ImageElement(src: reader.result);
           thumbnail.classes.add('thumb');
           thumbnail.title = htmlEscape(file.name);
           thumbHolder.nodes.add(thumbnail);

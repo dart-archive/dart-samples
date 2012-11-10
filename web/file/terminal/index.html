@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<!--
+	Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+	for details. All rights reserved. Use of this source code is governed by a
+	BSD-style license that can be found in the LICENSE file.
+	
+	This is a port of "Exploring the FileSystem APIs" to Dart.
+	See: http://www.html5rocks.com/en/tutorials/file/filesystem/
+-->
+
+<html>
+  <head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+		<title>TerminalFilesystem</title>
+		<link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="terminal.css">
+	</head>
+  <body>
+    <h1>TerminalFilesystem</h1>
+		<div id="container">
+		  <output id="output"></output>
+		  <div id="input-line" class="input-line">
+		    <div class="prompt">$&gt;</div><div><input id="cmdline" class="cmdline" autofocus /></div>
+		  </div>
+		</div>
+    <script type="application/dart" src="terminal_filesystem.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>

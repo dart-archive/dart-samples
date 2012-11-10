@@ -2,21 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-#import('dart:html');
+import 'dart:html';
 
 void main() {
   InputElement username = query('#username');
   InputElement submit = query('#save');
   Element output = query('#username-output');
   Storage localStorage = window.localStorage;
-  
+
   // Local storage is a Map, supporting string keys and values.
   String savedUsername = localStorage['username'];
-  
+
   if (savedUsername != null) {
     output.text = savedUsername;
   }
-  
+
   submit.on.click.add((Event e) {
     output.text = username.value;
     localStorage['username'] = username.value;

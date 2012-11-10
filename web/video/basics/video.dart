@@ -11,7 +11,7 @@
 // code has the same problem.
 // See also: http://code.google.com/p/chromium/issues/detail?id=141747#c15
 
-#import('dart:html');
+import 'dart:html';
 
 class VideoExample {
   VideoElement _videoDom;
@@ -21,10 +21,10 @@ class VideoExample {
   List<num> _inertias;
   CanvasRenderingContext2D _ctxCopy, _ctxDraw;
   bool _animationRunning = false;
-  
+
   const _outPadding = 100;
   const _slices = 4;
-  
+
   VideoExample() {
     var inertia = -2.0;
 
@@ -32,7 +32,7 @@ class VideoExample {
     _canvasCopy = query('#canvas-copy-fancy');
     _canvasDraw = query('#canvas-draw-fancy');
     _offsets = <num>[];
-    _inertias = <num>[];    
+    _inertias = <num>[];
 
     for (var i = 0; i < _slices; i++) {
       _offsets.add(0);
@@ -40,12 +40,12 @@ class VideoExample {
       inertia += 0.4;
     }
 
-    _videoDom.on.canPlay.add((e) => _onCanPlay(), false);
-    _videoDom.on.play.add((e) => _onPlay(), false);
-    _videoDom.on.pause.add((e) => _stopAnimation(), false);
-    _videoDom.on.ended.add((e) => _stopAnimation(), false);
+    _videoDom.on.canPlay.add((e) => _onCanPlay());
+    _videoDom.on.play.add((e) => _onPlay());
+    _videoDom.on.pause.add((e) => _stopAnimation());
+    _videoDom.on.ended.add((e) => _stopAnimation());
   }
-  
+
   void _onCanPlay() {
     _canvasCopy.width = _canvasDraw.width = _videoDom.videoWidth;
     _canvasCopy.height = _videoDom.videoHeight;
@@ -53,7 +53,7 @@ class VideoExample {
     _ctxCopy = _canvasCopy.context2d;
     _ctxDraw = _canvasDraw.context2d;
   }
-  
+
   void _onPlay() {
     _animationRunning = true;
     _processEffectFrame();
@@ -85,7 +85,7 @@ class VideoExample {
       return false;
     });
   }
-  
+
   void _stopAnimation() {
     _animationRunning = false;
   }
