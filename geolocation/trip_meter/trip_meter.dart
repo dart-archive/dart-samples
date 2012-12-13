@@ -11,18 +11,20 @@ import 'dart:math';
 // Reused code - copyright Moveable Type Scripts
 // http://www.movable-type.co.uk/scripts/latlong.html
 // Under Creative Commons License http://creativecommons.org/licenses/by/3.0/
-num calculateDistance(num lat1, num lon1, num lat2, num lon2) {
-  const EARTH_RADIUS = 6371; // km
-  num latDiff = lat2 - lat1;
-  num lonDiff = lon2 - lon1;
+num calculateDistance(lat1, lon1, lat2, lon2) {
+  const num EARTH_RADIUS = 6371; // km
+  var dLat = toRad((lat2-lat1));
+  var dLon = toRad((lon2-lon1));
+  var a = pow(sin(dLat/2), 2) +
+          cos(toRad(lat1)) * cos(toRad(lat2)) *
+          pow(sin(dLon/2), 2);
+  var c = 2 * atan2(sqrt(a), sqrt(1-a));
+  var distance = EARTH_RADIUS * c;
+  return distance;
+}
 
-  // a is the square of half the chord length between the points.
-  var a = pow(sin(latDiff / 2), 2) + 
-          pow(cos(lat1), 2) *
-          pow(sin(lonDiff / 2), 2);
-
-  var angularDistance = 2 * atan2(sqrt(a), sqrt(1 - a));
-  return EARTH_RADIUS * angularDistance;
+num toRad(num x) {
+  return x * PI / 180;
 }
 
 // Don't use alert() in real code ;)
@@ -32,7 +34,7 @@ void alertError(PositionError error) {
 
 void main(){
   Geoposition startPosition;
-
+  
   window.navigator.geolocation.getCurrentPosition((Geoposition position) {
     startPosition = position;
     query("#start-lat").text = "${startPosition.coords.latitude}";
@@ -42,6 +44,7 @@ void main(){
   window.navigator.geolocation.watchPosition((Geoposition position) {
     query("#current-lat").text = "${position.coords.latitude}";
     query("#current-lon").text = "${position.coords.longitude}";
+    
     num distance = calculateDistance(
         startPosition.coords.latitude,
         startPosition.coords.longitude,
