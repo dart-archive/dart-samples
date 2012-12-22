@@ -3,15 +3,16 @@
 # Contents
 
 - [Strings](#strings)
-    - [Concatenating strings](#concatenating_strings)
-    - [Interpolating expressions inside strings](#interpolating_expressions_inside_strings)
-    - [Converting between character codes and strings](#converting_between_character_codes_and_strings)
+    - [Concatenating strings](#concatenating-strings)
+    - [Interpolating expressions inside strings](#interpolating-expressions-inside-strings)
+    - [Converting between character codes and strings](#converting-between-character-codes-and-strings)
 - [Testing](#testing)
-    - [Running only a single test](#running_only_a_single_test)
-    - [Filtering which tests are run](#filtering_which_tests_are_run)
+    - [Running only a single test](#running-only-a-single-test)
+    - [Filtering which tests are run](#filtering-which-tests-are-run)
+
 # Strings
 
-### <a id="concatenating_strings"></a>Concatenating strings
+### <a id="concatenating-strings"></a>Concatenating strings
 
 #### Problem
 String concatenation using a `+` works in a lot of languages, but not in Dart.
@@ -80,7 +81,7 @@ only when needed.
 You can also use string interpolation; that is the subject of different
 recipe.
 
-### <a id="interpolating_expressions_inside_strings"></a>Interpolating expressions inside strings
+### <a id="interpolating-expressions-inside-strings"></a>Interpolating expressions inside strings
 
 #### Problem
 You want to use identifiers and Dart expressions in Strings.
@@ -248,7 +249,7 @@ doing this sort of thing can lead to hard to maintain code. An abudance
 of caution is advised ;) 
 
 
-### <a id="converting_between_character_codes_and_strings"></a>Converting between character codes and strings
+### <a id="converting-between-character-codes-and-strings"></a>Converting between character codes and strings
 
 #### Problem
 You want to get the ascii character codes for a string, or to get the
@@ -431,7 +432,7 @@ and:
 
 # Testing
 
-### <a id="running_only_a_single_test"></a>Running only a single test
+### <a id="running-only-a-single-test"></a>Running only a single test
 
 **pubspec dependencies**: _unittest, args_
 
@@ -558,7 +559,7 @@ Here is the complete example:
 	  runTests();
 	}
 
-### <a id="filtering_which_tests_are_run"></a>Filtering which tests are run
+### <a id="filtering-which-tests-are-run"></a>Filtering which tests are run
 **pubspec dependencies**: _unittest, args_
 
 #### Problem
