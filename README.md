@@ -1,10 +1,8 @@
-# Dart Cookbook
-
-This project contains the source and code for the `Dart Cookbook`
-
-## Project Status on drone.io
+# Dart Cookbook 
 
 ![Alt drone.io status](https://drone.io/shailen/Cookbook/status.png)
+
+This project contains the source and code for the `Dart Cookbook`
 
 ## Project Structure
 
