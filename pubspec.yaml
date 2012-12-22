@@ -1,0 +1,6 @@
+name:  cookbook
+description:  A collection of Dart recipes
+
+dependencies:
+  unittest: any
+  args: any
