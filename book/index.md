@@ -6,7 +6,9 @@
     - [Concatenating strings](#concatenating_strings)
     - [Interpolating expressions inside strings](#interpolating_expressions_inside_strings)
     - [Converting between character codes and strings](#converting_between_character_codes_and_strings)
-
+- [Testing](#testing)
+    - [Running only a single test](#running_only_a_single_test)
+    - [Filtering which tests are run](#filtering_which_tests_are_run)
 # Strings
 
 ### <a id="concatenating_strings"></a>Concatenating strings
@@ -17,6 +19,8 @@ Since the `+` operator has not been defined for stings, the following code
 throws a `NoSuchMethodError`:
 
 	String s = "hello, " + "world!";
+	String s = "hello, " + "world!";
+	String s = "hello, " + "world!";
      
 So, how _do_ you concatenate strings in Dart?
 
@@ -24,9 +28,15 @@ So, how _do_ you concatenate strings in Dart?
 The easiest, most efficient way is by using adjacent string literals:
 
 	String s =  "hello, " "world!";
+	String s =  "hello, " "world!";
+	String s =  "hello, " "world!";
 
 This still works if the adjacent strings are on different lines:
 
+	String s = "hello, "
+	    "world!";
+	String s = "hello, "
+	    "world!";
 	String s = "hello, "
 	    "world!";
 
@@ -39,12 +49,26 @@ on it:
 	  sb.add(item);
 	  });
 	String s = sb.toString();
+	var sb = new StringBuffer(); 
+	["hello, ", "world!"].forEach((item) {
+	  sb.add(item);
+	  });
+	String s = sb.toString();
+	var sb = new StringBuffer(); 
+	["hello, ", "world!"].forEach((item) {
+	  sb.add(item);
+	  });
+	String s = sb.toString();
     
 The `Strings` class (notice the plural) gives us 2 methods, `join()` and
 `concatAll()` that can also be used. `Strings.join()` takes a delimiter as a
 second argument.
 
 	String s = Strings.join(["hello", "world!"], ", "); 
+	String s = Strings.join(["hello", "world!"], ", "); 
+	String s = Strings.join(["hello", "world!"], ", "); 
+	String s = Strings.concatAll(["hello, ", "world!"]); 
+	String s = Strings.concatAll(["hello, ", "world!"]); 
 	String s = Strings.concatAll(["hello, ", "world!"]); 
 
 All of the above work, but if you are looking for a `+` substitute, use
@@ -69,14 +93,28 @@ You can access the value of an expression inside a string by using `${expression
 	String person = "Kathy";
 	String s = "I said ${greeting} to ${person}";
 	// I said hello to Kathy
+	String greeting = "hello";
+	String person = "Kathy";
+	String s = "I said ${greeting} to ${person}";
+	// I said hello to Kathy
+	String greeting = "hello";
+	String person = "Kathy";
+	String s = "I said ${greeting} to ${person}";
+	// I said hello to Kathy
   
 If the expression is an identifier, the `{}` can be skipped.
 
+	String s = "I said $greeting to $person";
+	String s = "I said $greeting to $person";
 	String s = "I said $greeting to $person";
   
 If the variable inside the `{}` isn't a string, the variable's
 `toString()` method is called:
 
+	int x = 5;
+	String s = "There are ${x.toString()} people in this room";
+	int x = 5;
+	String s = "There are ${x.toString()} people in this room";
 	int x = 5;
 	String s = "There are ${x.toString()} people in this room";
 
@@ -92,6 +130,20 @@ This will not work as expected:
 	  String title;
 	  Book(this.title);
 	}
+	class Book {
+	  String title;
+	  Book(this.title);
+	}
+	class Book {
+	  String title;
+	  Book(this.title);
+	}
+	Book book = new Book("War and Peace");
+	String s = "The book is '${book}'";
+	// The book is "Instance of 'Book'"
+	Book book = new Book("War and Peace");
+	String s = "The book is '${book}'";
+	// The book is "Instance of 'Book'"
 	Book book = new Book("War and Peace");
 	String s = "The book is '${book}'";
 	// The book is "Instance of 'Book'"
@@ -105,6 +157,24 @@ But this will:
 	    return this.title;
 	  }
 	}
+	class Song {
+	  String title;
+	  Song(this.title);
+	  String toString() {
+	    return this.title;
+	  }
+	}
+	class Song {
+	  String title;
+	  Song(this.title);
+	  String toString() {
+	    return this.title;
+	  }
+	}
+	Song song = new Song("You can call me Al");
+	String s = "The song is '${song}'"; // The song is 'You can call me Al'
+	Song song = new Song("You can call me Al");
+	String s = "The song is '${song}'"; // The song is 'You can call me Al'
 	Song song = new Song("You can call me Al");
 	String s = "The song is '${song}'"; // The song is 'You can call me Al'
 
@@ -115,9 +185,29 @@ A ternary `if..else`:
 
 	int x = 5;
 	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
+	int x = 5;
+	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
+	int x = 5;
+	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
   
 List and Map operations:
 
+	List list = [1, 2, 3, 4, 5];
+	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
+	i * i;})}";
+	// The list is [1, 2, 3, 4, 5], and when squared it is [1, 4, 9, 16, 25]
+	
+	Map map = {"ca": "California", "pa": "Pennsylvania"};
+	String s2 = "I live in sunny ${map['ca']}";
+	// I live in sunny California
+	List list = [1, 2, 3, 4, 5];
+	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
+	i * i;})}";
+	// The list is [1, 2, 3, 4, 5], and when squared it is [1, 4, 9, 16, 25]
+	
+	Map map = {"ca": "California", "pa": "Pennsylvania"};
+	String s2 = "I live in sunny ${map['ca']}";
+	// I live in sunny California
 	List list = [1, 2, 3, 4, 5];
 	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
 	i * i;})}";
@@ -132,6 +222,16 @@ but the call to `list.map`(an expression) needs to be inside `{}`.
 
 Expressions inside `${}` can be arbitrarily complex:
 
+	List names = ['John', 'Paul', 'George', 'Ringo'];
+	String s = "${
+	  ((names) {
+	      return names[(new math.Random()).nextInt(names.length)];
+	  })(names)} was the most important member of the Beatles";
+	List names = ['John', 'Paul', 'George', 'Ringo'];
+	String s = "${
+	  ((names) {
+	      return names[(new math.Random()).nextInt(names.length)];
+	  })(names)} was the most important member of the Beatles";
 	List names = ['John', 'Paul', 'George', 'Ringo'];
 	String s = "${
 	  ((names) {
@@ -161,15 +261,27 @@ To get a list of character codes for a string, use `charCodes`:
 	String s = "hello";
 	List<int> charCodes = s.charCodes;
 	// [104, 101, 108, 108, 111]
+	String s = "hello";
+	List<int> charCodes = s.charCodes;
+	// [104, 101, 108, 108, 111]
+	String s = "hello";
+	List<int> charCodes = s.charCodes;
+	// [104, 101, 108, 108, 111]
   
 To get a specific character code, you can either subscript `charCodes`, or 
 use `charCodeAt`:
 
 	int charCode = s.charCodeAt(0); // 104
+	int charCode = s.charCodeAt(0); // 104
+	int charCode = s.charCodeAt(0); // 104
   
 To assemble a string from a list of character codes, use the `String` factory,
 `fromCharCodes`:
 
+	List<int> charCodes = [104, 101, 108, 108, 111];
+	String s = new String.fromCharCodes(charCodes);
+	List<int> charCodes = [104, 101, 108, 108, 111];
+	String s = new String.fromCharCodes(charCodes);
 	List<int> charCodes = [104, 101, 108, 108, 111];
 	String s = new String.fromCharCodes(charCodes);
 
@@ -178,6 +290,18 @@ If you are using a StringBuffer to build up a string, you can add individual
 charCodes using `addCharCode` (use `add()` to add characters; use `addCharCode()`
 to add charCodes):
 
+	StringBuffer sb = new StringBuffer();
+	List<int> charCodes = [104, 101, 108, 108, 111];
+	charCodes.forEach((charCode) {
+	  sb.addCharCode(charCode);
+	});
+	String s = sb.toString(); // "Hello" 
+	StringBuffer sb = new StringBuffer();
+	List<int> charCodes = [104, 101, 108, 108, 111];
+	charCodes.forEach((charCode) {
+	  sb.addCharCode(charCode);
+	});
+	String s = sb.toString(); // "Hello" 
 	StringBuffer sb = new StringBuffer();
 	List<int> charCodes = [104, 101, 108, 108, 111];
 	charCodes.forEach((charCode) {
@@ -218,9 +342,75 @@ places by replacing each character in it by one that is 13 characters removed
 	
 	  return (new String.fromCharCodes(rotated));
 	}
+	String rot13(String s) {
+	  List<int> rotated = [];
+	
+	  s.charCodes.forEach((charCode) {
+	    final int numLetters = 26;
+	    final int A = 65;
+	    final int a = 97;
+	    final int Z = A + numLetters;
+	    final int z = a + numLetters;
+	
+	    if (charCode < A ||
+	        charCode > z ||
+	        charCode > Z && charCode < a) {
+	      rotated.add(charCode);
+	    }
+	    else {
+	      if ([A, a].some((item){
+	        return item <= charCode && charCode < item + 13;
+	      })) {
+	        rotated.add(charCode + 13);
+	      } else {
+	        rotated.add(charCode - 13);
+	      }   
+	    }
+	  });
+	
+	  return (new String.fromCharCodes(rotated));
+	}
+	String rot13(String s) {
+	  List<int> rotated = [];
+	
+	  s.charCodes.forEach((charCode) {
+	    final int numLetters = 26;
+	    final int A = 65;
+	    final int a = 97;
+	    final int Z = A + numLetters;
+	    final int z = a + numLetters;
+	
+	    if (charCode < A ||
+	        charCode > z ||
+	        charCode > Z && charCode < a) {
+	      rotated.add(charCode);
+	    }
+	    else {
+	      if ([A, a].some((item){
+	        return item <= charCode && charCode < item + 13;
+	      })) {
+	        rotated.add(charCode + 13);
+	      } else {
+	        rotated.add(charCode - 13);
+	      }   
+	    }
+	  });
+	
+	  return (new String.fromCharCodes(rotated));
+	}
 
 Running the code:
  
+	var wordList = ["Jung", "be", "purely", "barf"];
+	List rotated = wordList.map((word) {
+	    return rot13(word);
+	  });
+	// ["What", "or", "cheryl", "ones"]
+	var wordList = ["Jung", "be", "purely", "barf"];
+	List rotated = wordList.map((word) {
+	    return rot13(word);
+	  });
+	// ["What", "or", "cheryl", "ones"]
 	var wordList = ["Jung", "be", "purely", "barf"];
 	List rotated = wordList.map((word) {
 	    return rot13(word);
@@ -232,4 +422,214 @@ and:
 	String str1 = "aMz####AmZ";
 	String str2 = rot13(rot13(str1));
 	// str1 == str2
+	String str1 = "aMz####AmZ";
+	String str2 = rot13(rot13(str1));
+	// str1 == str2
+	String str1 = "aMz####AmZ";
+	String str2 = rot13(rot13(str1));
+	// str1 == str2
+
+# Testing
+
+### <a id="running_only_a_single_test"></a>Running only a single test
+
+**pubspec dependencies**: _unittest, args_
+
+#### Problem
+You are coding away furiously and diligently writing tests for everything. But,
+running all your tests takes time and you want to run just a single test,
+perhaps the one for the code you are working on.
+
+#### Solution
+The easiest way to do this is to convert a `test()`s to a `solo_test()`:
+
+	import "package:unittest/unittest.dart";
+	
+	void main() {
+	  test("test that's already running fine", () {
+	    expect('foo', equals('foo'));
+	  }); // this test will not run
+	
+	  solo_test("test I am working on now", () {
+	    expect('bar', equals('bar'));
+	  });
+	}
+
+Run the tests now and you'll see that only the `solo_test()` runs; the `test()`
+does not.
+
+	unittest-suite-wait-for-done
+	PASS: test I am working on now
+	
+	All 1 tests passed.
+	unittest-suite-success
+
+You can also run a single test by passing the `id` of that test
+to `setSoloTest()` (see `unittest/src/unittest.dart`), perhaps as a command-line
+arg.
+
+Since the default `unittest` ouput does not include the test `id`, you
+need to extend the default Configuration class (see unittest/src/config.dart):
+
+	import 'package:unittest/unittest.dart';
+	import 'package:args/args.dart';
+	
+	class SingleTestConfiguration extends Configuration {
+	  get autoStart => false;
+	  void onDone(int passed, int failed, int errors, List<TestCase> testCases,
+	              String uncaughtError) {
+	    testCases.forEach((testCase){
+	      // get the id of the testCase in there
+	      print("${testCase.id}\t${testCase.result.toUpperCase()}: ${testCase.description}");
+	      });
+	   // skip the summary that is normally provided here...
+	  }
+	}
+
+Our custom configuration is pretty minimal: we modify the default
+`Configuration`'s `onDone()` to include the test `id` on every line (`onDone()`
+also outputs a summary of the entire test run; we skip that here).
+
+Now we need code to use our new configuration and to initialize the test
+framework (we put code for that in `useSingleTestConfiguration()` and call that function
+from `main()`):
+
+	void useSingleTestConfiguration() {
+	  configure(new SingleTestConfiguration());
+	  ensureInitialized();  
+	}
+
+We use `ArgParser` to parse the command line arguments: if an id is provided
+through the command line, only the test with that id runs:
+
+	$ dart myFile.dart 2
+	unittest-suite-wait-for-done
+	2 FAIL: failing test
+
+if no id is provided, all the tests run:
+  
+	$ dart myFile.dart
+	unittest-suite-wait-for-done
+	1 PASS: passing test
+	2 FAIL: failing test
+	3 PASS: another passing test
+
+Here is the complete example:
+
+	import 'package:unittest/unittest.dart';
+	import 'package:args/args.dart';
+	
+	class SingleTestConfiguration extends Configuration {
+	  get autoStart => false;
+	  void onDone(int passed, int failed, int errors, List<TestCase> testCases,
+	              String uncaughtError) {
+	    testCases.forEach((testCase){
+	      // get the id of the testCase in there
+	      print("${testCase.id}\t${testCase.result.toUpperCase()}: ${testCase.description}");
+	      });
+	   // skip the summary that is normally provided here...
+	  }
+	}
+	
+	void useSingleTestConfiguration() {
+	  configure(new SingleTestConfiguration());
+	  ensureInitialized();  
+	}
+	
+	void main() {
+	  useSingleTestConfiguration();
+	
+	  // get the args from the command line
+	  ArgParser argParser = new ArgParser();
+	  Options options = new Options();
+	  ArgResults results = argParser.parse(options.arguments);
+	  List<String> args = results.rest;
+	
+	  // note that the second test is failing
+	  test("passing test", () => expect(1, equals(1)));
+	  test("failing test", () => expect(false, isTrue));
+	  test("another passing test", () => expect(3, equals(3)));
+	
+	  if (!args.isEmpty) {
+	    setSoloTest(int.parse(args[0]));
+	  }
+	
+	  // run the tests (we turned off auto-running of tests, remember?
+	  runTests();
+	}
+
+### <a id="filtering_which_tests_are_run"></a>Filtering which tests are run
+**pubspec dependencies**: _unittest, args_
+
+#### Problem
+You want to run just a subset of your tests, perhaps those  whose description
+contains a word or a phrase, or that are collected together in a `group()`.
+
+#### Solution
+
+Use `filterTests()` with with a String or a RegExp argument; if a test's
+description matches the argument, the test runs, otherwise, it doesn't. 
+
+Before you use `filterTests()`, you need to disable the automatic running of
+tests (create and use a simple custom configuration that sets `autoStart` to false)
+and call `filterTests()` _after_ your `test()` and `group()` definitions. Here
+is a simple recipe that takes the string argument to `filterTests()` from the
+command line. 
+
+	import 'package:unittest/unittest.dart';
+	import 'package:args/args.dart';
+	
+	class FilterTests extends Configuration {
+	  get autoStart => false;
+	}
+	
+	void useFilterTests() {
+	  configure(new FilterTests());
+	  ensureInitialized();
+	}
+	
+	void main() {
+	  useFilterTests();
+	
+	  // get the args from the command line
+	  ArgParser argParser = new ArgParser();
+	  Options options = new Options();
+	  ArgResults results = argParser.parse(options.arguments);
+	  List<String> args = results.rest;
+	
+	  test("one banana", () => expect(1, equals(1)));
+	  test("two banana", () => expect(2, equals(2)));
+	  test("three banana",()  => expect(3, equals(3)));
+	  test("four", () => expect(4, equals(4)));
+	
+	  group("Betty Botter bought a bit of", () {
+	    test("butter", () => expect("butter".length, equals(6)));
+	    test("better butter", () => expect("better butter".length, equals(13)));
+	  });
+	
+	  if (!args.isEmpty) {
+	    filterTests(args[0]);
+	  }
+	  runTests();
+	}
+	
+
+syntax. If the keyword is `four`, only one test run.
+
+	unittest-suite-wait-for-done
+	PASS: four
+	
+	All 1 tests passed.
+	unittest-suite-success
+
+If it is `Betty`, all tests in `group()` run (same if it is `butter`).
+
+	unittest-suite-wait-for-done
+	PASS: Betty Botter bought a bit of butter
+	PASS: Betty Botter bought a bit of better butter
+	
+	All 2 tests passed.
+	unittest-suite-success
+
+If it is `banana`, 3 tests run.  Without a keyword, all tests run.
 

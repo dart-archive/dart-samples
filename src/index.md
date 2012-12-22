@@ -6,7 +6,9 @@
     - [Concatenating strings](#concatenating_strings)
     - [Interpolating expressions inside strings](#interpolating_expressions_inside_strings)
     - [Converting between character codes and strings](#converting_between_character_codes_and_strings)
-
+- [Testing](#testing)
+    - [Running only a single test](#running_only_a_single_test)
+    - [Filtering which tests are run](#filtering_which_tests_are_run)
 # Strings
 
 ### <a id="concatenating_strings"></a>Concatenating strings
@@ -158,3 +160,86 @@ MERGE(character_codes_use_rot13)
 and:
 
 MERGE(character_codes_use_rot13_with_non_alpha)
+
+# Testing
+
+### <a id="running_only_a_single_test"></a>Running only a single test
+
+**pubspec dependencies**: _unittest, args_
+
+#### Problem
+You are coding away furiously and diligently writing tests for everything. But,
+running all your tests takes time and you want to run just a single test,
+perhaps the one for the code you are working on.
+
+#### Solution
+The easiest way to do this is to convert a `test()`s to a `solo_test()`:
+
+MERGE(solo_test_code)
+
+Run the tests now and you'll see that only the `solo_test()` runs; the `test()`
+does not.
+
+MERGE(solo_test_output)
+
+You can also run a single test by passing the `id` of that test
+to `setSoloTest()` (see `unittest/src/unittest.dart`), perhaps as a command-line
+arg.
+
+Since the default `unittest` ouput does not include the test `id`, you
+need to extend the default Configuration class (see unittest/src/config.dart):
+
+MERGE(setsolotest_extend_configuration)
+
+Our custom configuration is pretty minimal: we modify the default
+`Configuration`'s `onDone()` to include the test `id` on every line (`onDone()`
+also outputs a summary of the entire test run; we skip that here).
+
+Now we need code to use our new configuration and to initialize the test
+framework (we put code for that in `useSingleTestConfiguration()` and call that function
+from `main()`):
+
+MERGE(setsolotest_use_configuration)
+
+We use `ArgParser` to parse the command line arguments: if an id is provided
+through the command line, only the test with that id runs:
+
+MERGE(setsolotest_output_with_arg)
+
+if no id is provided, all the tests run:
+  
+MERGE(setsolotest_output_without_arg)
+
+Here is the complete example:
+
+MERGE(setsolotest_complete_example)
+
+### <a id="filtering_which_tests_are_run"></a>Filtering which tests are run
+**pubspec dependencies**: _unittest, args_
+
+#### Problem
+You want to run just a subset of your tests, perhaps those  whose description
+contains a word or a phrase, or that are collected together in a `group()`.
+
+#### Solution
+
+Use `filterTests()` with with a String or a RegExp argument; if a test's
+description matches the argument, the test runs, otherwise, it doesn't. 
+
+Before you use `filterTests()`, you need to disable the automatic running of
+tests (create and use a simple custom configuration that sets `autoStart` to false)
+and call `filterTests()` _after_ your `test()` and `group()` definitions. Here
+is a simple recipe that takes the string argument to `filterTests()` from the
+command line. 
+
+MERGE(filtertests_code)
+
+syntax. If the keyword is `four`, only one test run.
+
+MERGE(filtertests_keyword_equals_four)
+
+If it is `Betty`, all tests in `group()` run (same if it is `butter`).
+
+MERGE(filtertests_keyword_equals_Betty)
+
+If it is `banana`, 3 tests run.  Without a keyword, all tests run.
