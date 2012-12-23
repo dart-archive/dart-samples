@@ -687,14 +687,14 @@ use the `throwsArgumentError` matcher:
 
 Other common matchers provided are:
 
-   throwsException
-   throwsFormatException
-   throwsArgumentError
-   throwsIllegalJSRegExpException
-   throwsRangeError
-   throwsNoSuchMethodError
-   throwsUnimplementedError
-   throwsUnsupportedError
+	throwsException
+	throwsFormatException
+	throwsArgumentError
+	throwsIllegalJSRegExpException
+	throwsRangeError
+	throwsNoSuchMethodError
+	throwsUnimplementedError
+	throwsUnsupportedError
 
 See `unittest/src/core_matchers.dart` for more details.
 

@@ -289,13 +289,6 @@ MERGE(testing_errors_and_exceptions_throwsArgumentError)
 
 Other common matchers provided are:
 
-   throwsException
-   throwsFormatException
-   throwsArgumentError
-   throwsIllegalJSRegExpException
-   throwsRangeError
-   throwsNoSuchMethodError
-   throwsUnimplementedError
-   throwsUnsupportedError
+MERGE(testing_errors_and_exceptions_matchers)
 
 See `unittest/src/core_matchers.dart` for more details.

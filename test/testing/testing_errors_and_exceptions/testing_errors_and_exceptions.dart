@@ -57,4 +57,17 @@ void main() {
       expect(() => throw new Exception("something went wrong"), throwsException);
     });
   });
+
+/*
+// BEGIN(testing_errors_and_exceptions_matchers)
+throwsException
+throwsFormatException
+throwsArgumentError
+throwsIllegalJSRegExpException
+throwsRangeError
+throwsNoSuchMethodError
+throwsUnimplementedError
+throwsUnsupportedError
+// END(testing_errors_and_exceptions_matchers)
+*/
 }
