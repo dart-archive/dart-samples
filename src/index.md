@@ -9,6 +9,7 @@
 - [Testing](#testing)
     - [Running only a single test](#running-only-a-single-test)
     - [Filtering which tests are run](#filtering-which-tests-are-run)
+    - [Testing Errors and Exceptions](#testing-errors-and-exceptions)
 
 # Strings
 
@@ -244,3 +245,57 @@ If it is `Betty`, all tests in `group()` run (same if it is `butter`).
 MERGE(filtertests_keyword_equals_Betty)
 
 If it is `banana`, 3 tests run.  Without a keyword, all tests run.
+
+
+### <a id="testing-errors-and-exceptions"></a>Testing Errors and Exceptions
+**pubspec dependencies**: _unittest_
+
+#### Problem
+
+You want to test all your code, including code that deals with errors or
+exceptions. Consider this function that you are writing:
+
+MERGE(testing_errors_and_exceptions_range)
+
+How do you test the `ArgumentError`, and test the error message?
+
+#### Solution
+
+To simply test that some code throws, you can do the following:
+
+MERGE(testing_errors_and_exceptions_throws)
+
+Conversly, to test that *no* exception is thrown, use `returnsNormally`:
+
+MERGE(testing_errors_and_exceptions_returnsNormally)
+
+To test the type of an exception, use `throwsA`:
+
+MERGE(testing_errors_and_exceptions_throwsA)
+
+To test the exception type *and* the exception message, you can do this:
+
+MERGE(testing_errors_and_exceptions_type_and_message_1)
+
+Here is another way to do the same:
+
+MERGE(testing_errors_and_exceptions_type_and_message_2)
+
+Finally, the `unittest` framework has built-in matchers to handle common
+exceptions and errors. To test the `ArguementError` in `range()`, you can simply
+use the `throwsArgumentError` matcher:
+
+MERGE(testing_errors_and_exceptions_throwsArgumentError)
+
+Other common matchers provided are:
+
+   throwsException
+   throwsFormatException
+   throwsArgumentError
+   throwsIllegalJSRegExpException
+   throwsRangeError
+   throwsNoSuchMethodError
+   throwsUnimplementedError
+   throwsUnsupportedError
+
+See `unittest/src/core_matchers.dart` for more details.
