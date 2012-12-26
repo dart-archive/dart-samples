@@ -6,12 +6,13 @@
 // See: http://www.html5rocks.com/en/tutorials/indexeddb/todo/
 
 import 'dart:html';
+import 'dart:indexed_db' as idb;
 
 class TodoList {
   static final String _TODOS_DB = "todo";
   static final String _TODOS_STORE = "todos";
 
-  IDBDatabase _db;
+  idb.Database _db;
   int _version = 1;
   InputElement _input;
   Element _todoItems;
@@ -36,12 +37,12 @@ class TodoList {
     window.console.log('An error occurred: {$e}');
   }
 
-  void _onDbOpened(IDBDatabase db) {
+  void _onDbOpened(idb.Database db) {
     _db = db;
     _getAllTodoItems();
   }
 
-  void _onUpgradeNeeded(IDBTransaction changeVersionTransaction) {
+  void _onUpgradeNeeded(idb.Transaction changeVersionTransaction) {
     changeVersionTransaction.on.complete.add((e) => _getAllTodoItems());
     changeVersionTransaction.on.error.add(_onError);
     changeVersionTransaction.db.createObjectStore(_TODOS_STORE,
