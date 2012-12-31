@@ -21,8 +21,6 @@ Since the `+` operator has not been defined for stings, the following code
 throws a `NoSuchMethodError`:
 
 	String s = "hello, " + "world!";
-	String s = "hello, " + "world!";
-	String s = "hello, " + "world!";
      
 So, how _do_ you concatenate strings in Dart?
 
@@ -30,15 +28,9 @@ So, how _do_ you concatenate strings in Dart?
 The easiest, most efficient way is by using adjacent string literals:
 
 	String s =  "hello, " "world!";
-	String s =  "hello, " "world!";
-	String s =  "hello, " "world!";
 
 This still works if the adjacent strings are on different lines:
 
-	String s = "hello, "
-	    "world!";
-	String s = "hello, "
-	    "world!";
 	String s = "hello, "
 	    "world!";
 
@@ -51,26 +43,12 @@ on it:
 	  sb.add(item);
 	  });
 	String s = sb.toString();
-	var sb = new StringBuffer(); 
-	["hello, ", "world!"].forEach((item) {
-	  sb.add(item);
-	  });
-	String s = sb.toString();
-	var sb = new StringBuffer(); 
-	["hello, ", "world!"].forEach((item) {
-	  sb.add(item);
-	  });
-	String s = sb.toString();
     
 The `Strings` class (notice the plural) gives us 2 methods, `join()` and
 `concatAll()` that can also be used. `Strings.join()` takes a delimiter as a
 second argument.
 
 	String s = Strings.join(["hello", "world!"], ", "); 
-	String s = Strings.join(["hello", "world!"], ", "); 
-	String s = Strings.join(["hello", "world!"], ", "); 
-	String s = Strings.concatAll(["hello, ", "world!"]); 
-	String s = Strings.concatAll(["hello, ", "world!"]); 
 	String s = Strings.concatAll(["hello, ", "world!"]); 
 
 All of the above work, but if you are looking for a `+` substitute, use
@@ -95,28 +73,14 @@ You can access the value of an expression inside a string by using `${expression
 	String person = "Kathy";
 	String s = "I said ${greeting} to ${person}";
 	// I said hello to Kathy
-	String greeting = "hello";
-	String person = "Kathy";
-	String s = "I said ${greeting} to ${person}";
-	// I said hello to Kathy
-	String greeting = "hello";
-	String person = "Kathy";
-	String s = "I said ${greeting} to ${person}";
-	// I said hello to Kathy
   
 If the expression is an identifier, the `{}` can be skipped.
 
-	String s = "I said $greeting to $person";
-	String s = "I said $greeting to $person";
 	String s = "I said $greeting to $person";
   
 If the variable inside the `{}` isn't a string, the variable's
 `toString()` method is called:
 
-	int x = 5;
-	String s = "There are ${x.toString()} people in this room";
-	int x = 5;
-	String s = "There are ${x.toString()} people in this room";
 	int x = 5;
 	String s = "There are ${x.toString()} people in this room";
 
@@ -132,20 +96,6 @@ This will not work as expected:
 	  String title;
 	  Book(this.title);
 	}
-	class Book {
-	  String title;
-	  Book(this.title);
-	}
-	class Book {
-	  String title;
-	  Book(this.title);
-	}
-	Book book = new Book("War and Peace");
-	String s = "The book is '${book}'";
-	// The book is "Instance of 'Book'"
-	Book book = new Book("War and Peace");
-	String s = "The book is '${book}'";
-	// The book is "Instance of 'Book'"
 	Book book = new Book("War and Peace");
 	String s = "The book is '${book}'";
 	// The book is "Instance of 'Book'"
@@ -159,24 +109,7 @@ But this will:
 	    return this.title;
 	  }
 	}
-	class Song {
-	  String title;
-	  Song(this.title);
-	  String toString() {
-	    return this.title;
-	  }
-	}
-	class Song {
-	  String title;
-	  Song(this.title);
-	  String toString() {
-	    return this.title;
-	  }
-	}
-	Song song = new Song("You can call me Al");
-	String s = "The song is '${song}'"; // The song is 'You can call me Al'
-	Song song = new Song("You can call me Al");
-	String s = "The song is '${song}'"; // The song is 'You can call me Al'
+
 	Song song = new Song("You can call me Al");
 	String s = "The song is '${song}'"; // The song is 'You can call me Al'
 
@@ -187,29 +120,9 @@ A ternary `if..else`:
 
 	int x = 5;
 	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
-	int x = 5;
-	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
-	int x = 5;
-	String s = "There are ${x < 10 ? "a few" : "many"} people in this room";
   
 List and Map operations:
 
-	List list = [1, 2, 3, 4, 5];
-	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
-	i * i;})}";
-	// The list is [1, 2, 3, 4, 5], and when squared it is [1, 4, 9, 16, 25]
-	
-	Map map = {"ca": "California", "pa": "Pennsylvania"};
-	String s2 = "I live in sunny ${map['ca']}";
-	// I live in sunny California
-	List list = [1, 2, 3, 4, 5];
-	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
-	i * i;})}";
-	// The list is [1, 2, 3, 4, 5], and when squared it is [1, 4, 9, 16, 25]
-	
-	Map map = {"ca": "California", "pa": "Pennsylvania"};
-	String s2 = "I live in sunny ${map['ca']}";
-	// I live in sunny California
 	List list = [1, 2, 3, 4, 5];
 	String s1 = "The list is $list, and when squared it is ${list.map((i) {return
 	i * i;})}";
@@ -229,16 +142,6 @@ Expressions inside `${}` can be arbitrarily complex:
 	  ((names) {
 	      return names[(new math.Random()).nextInt(names.length)];
 	  })(names)} was the most important member of the Beatles";
-	List names = ['John', 'Paul', 'George', 'Ringo'];
-	String s = "${
-	  ((names) {
-	      return names[(new math.Random()).nextInt(names.length)];
-	  })(names)} was the most important member of the Beatles";
-	List names = ['John', 'Paul', 'George', 'Ringo'];
-	String s = "${
-	  ((names) {
-	      return names[(new math.Random()).nextInt(names.length)];
-	  })(names)} was the most important member of the Beatles";
 
 The code above defines an anonymous function to pick a random name from a
 list and then calls that function with `names` as an argument. All of
@@ -248,7 +151,6 @@ Creating a function and immediately calling it is useful in a lot of
 situations (it is a common practice in Javascript); but, watch out: 
 doing this sort of thing can lead to hard to maintain code. An abudance
 of caution is advised ;) 
-
 
 ### <a id="converting-between-character-codes-and-strings"></a>Converting between character codes and strings
 
@@ -263,18 +165,10 @@ To get a list of character codes for a string, use `charCodes`:
 	String s = "hello";
 	List<int> charCodes = s.charCodes;
 	// [104, 101, 108, 108, 111]
-	String s = "hello";
-	List<int> charCodes = s.charCodes;
-	// [104, 101, 108, 108, 111]
-	String s = "hello";
-	List<int> charCodes = s.charCodes;
-	// [104, 101, 108, 108, 111]
   
 To get a specific character code, you can either subscript `charCodes`, or 
 use `charCodeAt`:
 
-	int charCode = s.charCodeAt(0); // 104
-	int charCode = s.charCodeAt(0); // 104
 	int charCode = s.charCodeAt(0); // 104
   
 To assemble a string from a list of character codes, use the `String` factory,
@@ -282,28 +176,11 @@ To assemble a string from a list of character codes, use the `String` factory,
 
 	List<int> charCodes = [104, 101, 108, 108, 111];
 	String s = new String.fromCharCodes(charCodes);
-	List<int> charCodes = [104, 101, 108, 108, 111];
-	String s = new String.fromCharCodes(charCodes);
-	List<int> charCodes = [104, 101, 108, 108, 111];
-	String s = new String.fromCharCodes(charCodes);
-
   
 If you are using a StringBuffer to build up a string, you can add individual
 charCodes using `addCharCode` (use `add()` to add characters; use `addCharCode()`
 to add charCodes):
 
-	StringBuffer sb = new StringBuffer();
-	List<int> charCodes = [104, 101, 108, 108, 111];
-	charCodes.forEach((charCode) {
-	  sb.addCharCode(charCode);
-	});
-	String s = sb.toString(); // "Hello" 
-	StringBuffer sb = new StringBuffer();
-	List<int> charCodes = [104, 101, 108, 108, 111];
-	charCodes.forEach((charCode) {
-	  sb.addCharCode(charCode);
-	});
-	String s = sb.toString(); // "Hello" 
 	StringBuffer sb = new StringBuffer();
 	List<int> charCodes = [104, 101, 108, 108, 111];
 	charCodes.forEach((charCode) {
@@ -344,62 +221,6 @@ places by replacing each character in it by one that is 13 characters removed
 	
 	  return (new String.fromCharCodes(rotated));
 	}
-	String rot13(String s) {
-	  List<int> rotated = [];
-	
-	  s.charCodes.forEach((charCode) {
-	    final int numLetters = 26;
-	    final int A = 65;
-	    final int a = 97;
-	    final int Z = A + numLetters;
-	    final int z = a + numLetters;
-	
-	    if (charCode < A ||
-	        charCode > z ||
-	        charCode > Z && charCode < a) {
-	      rotated.add(charCode);
-	    }
-	    else {
-	      if ([A, a].some((item){
-	        return item <= charCode && charCode < item + 13;
-	      })) {
-	        rotated.add(charCode + 13);
-	      } else {
-	        rotated.add(charCode - 13);
-	      }   
-	    }
-	  });
-	
-	  return (new String.fromCharCodes(rotated));
-	}
-	String rot13(String s) {
-	  List<int> rotated = [];
-	
-	  s.charCodes.forEach((charCode) {
-	    final int numLetters = 26;
-	    final int A = 65;
-	    final int a = 97;
-	    final int Z = A + numLetters;
-	    final int z = a + numLetters;
-	
-	    if (charCode < A ||
-	        charCode > z ||
-	        charCode > Z && charCode < a) {
-	      rotated.add(charCode);
-	    }
-	    else {
-	      if ([A, a].some((item){
-	        return item <= charCode && charCode < item + 13;
-	      })) {
-	        rotated.add(charCode + 13);
-	      } else {
-	        rotated.add(charCode - 13);
-	      }   
-	    }
-	  });
-	
-	  return (new String.fromCharCodes(rotated));
-	}
 
 Running the code:
  
@@ -408,25 +229,9 @@ Running the code:
 	    return rot13(word);
 	  });
 	// ["What", "or", "cheryl", "ones"]
-	var wordList = ["Jung", "be", "purely", "barf"];
-	List rotated = wordList.map((word) {
-	    return rot13(word);
-	  });
-	// ["What", "or", "cheryl", "ones"]
-	var wordList = ["Jung", "be", "purely", "barf"];
-	List rotated = wordList.map((word) {
-	    return rot13(word);
-	  });
-	// ["What", "or", "cheryl", "ones"]
 
 and:
 
-	String str1 = "aMz####AmZ";
-	String str2 = rot13(rot13(str1));
-	// str1 == str2
-	String str1 = "aMz####AmZ";
-	String str2 = rot13(rot13(str1));
-	// str1 == str2
 	String str1 = "aMz####AmZ";
 	String str2 = rot13(rot13(str1));
 	// str1 == str2
