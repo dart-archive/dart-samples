@@ -196,7 +196,7 @@ The code in `main.dart` is tasked with generating the random values:
 
 MERGE(one_way_data_binding_dart)
 
-We add a little bit of css to make our display nicer:
+We add a little bit of css (main.css) to make our display nicer:
 
 MERGE(one_way_data_binding_css)
 
@@ -291,11 +291,11 @@ MERGE(conditionals_and_loops_emptyBookList)
 
 Here is the `main.html` file:
 
-BEGIN(conditionals_and_loops_html)
+MERGE(conditionals_and_loops_html)
 
 and the `main.dart` file:
 
-BEGIN(conditionals_and_loops_dart)
+MERGE(conditionals_and_loops_dart)
 
 
 <!-- --------------------------------------------------------------------- -->
