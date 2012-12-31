@@ -6,11 +6,20 @@
     - [Concatenating strings](#concatenating-strings)
     - [Interpolating expressions inside strings](#interpolating-expressions-inside-strings)
     - [Converting between character codes and strings](#converting-between-character-codes-and-strings)
+- [web_ui](#web_ui)
+    - [Creating a one way data binding](#creating-a-one-way-data-binding)
+    - [Creating a one way data binding with a
+      watcher](#creating-a-one-way-data-binding-with-a-watcher)
+    - [Creating a two way data binding](#creating-a-two-way-data-binding)
+    - [Using template conditionals](#using-template-conditionals)
+
+
 - [Testing](#testing)
     - [Running only a single test](#running-only-a-single-test)
     - [Filtering which tests are run](#filtering-which-tests-are-run)
     - [Testing Errors and Exceptions](#testing-errors-and-exceptions)
 
+<!-- --------------------------------------------------------------------- -->
 # Strings
 
 ### <a id="concatenating-strings"></a>Concatenating strings
@@ -109,7 +118,6 @@ But this will:
 	    return this.title;
 	  }
 	}
-
 	Song song = new Song("You can call me Al");
 	String s = "The song is '${song}'"; // The song is 'You can call me Al'
 
@@ -151,6 +159,7 @@ Creating a function and immediately calling it is useful in a lot of
 situations (it is a common practice in Javascript); but, watch out: 
 doing this sort of thing can lead to hard to maintain code. An abudance
 of caution is advised ;) 
+
 
 ### <a id="converting-between-character-codes-and-strings"></a>Converting between character codes and strings
 
@@ -236,6 +245,274 @@ and:
 	String str2 = rot13(rot13(str1));
 	// str1 == str2
 
+<!-- --------------------------------------------------------------------- -->
+# web_ui
+
+### TODO (shailen): Explain the file structure of the web_ui apps
+### TODO (shailen): Explain how the examples can be run.
+
+### <a id="creating-a-one-way-data-binding"></a>Creating a one way data binding
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to set up automatic monitoring of data, and ensure that
+the UI is updated when the data’s value changes.
+
+### Solution
+
+You can inject data in your template using {{expression}}. The example below
+displays the random values generated from rolling a pair of dice. Every time
+the page is refreshed, the values - stored as {{ die1 }} and {{ die2 }} - are
+injected into the page automatically:
+
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <link href="main.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+	  <h1>Rolled the dice!</h1>
+	  <table>
+	    <tr><td>Die 1</td><td>Die 2</td></tr>
+	    <tr><td>{{ die1 }}</td><td>{{ die2 }}</td></tr>
+	  </table>
+	  <script type="application/dart" src='main.dart'></script>
+	</body>
+	</html>
+
+The code in `main.dart` is tasked with generating the random values:
+
+	import 'dart:math';
+	
+	String die1;
+	String die2;
+	Random random = new Random();
+	
+	void rollDice() {
+	  die1 = _rollDie();
+	  die2 = _rollDie();
+	}
+	
+	String _rollDie() {
+	  return (random.nextInt(6) + 1).toString();
+	}
+	
+	main() {
+	  rollDice();
+	}
+	
+We add a little bit of css (main.css) to make our display nicer:
+
+	td {
+	  border: 1px solid black; 
+	  margin: 2px; 
+	  padding: 3px 6px;
+	} 
+	
+### <a id="creating-a-one-way-data-binding-with-a-watcher"></a>Creating a one
+way data binding with a watcher
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to create a one way data binding, but you want to monitor
+the bound values and keep refreshing them in the UI.
+
+### Solution: Web UI implements this monitoring by using the `watcher.dart`
+library. `watcher.dart` is automatically run for you, but you can also directly
+invoke it. The previous recipe can be rewritten so that the random die values
+get refreshed every 2 seconds. The `rollDice()` function is unchanged; `main()`
+is altered to invoke it every 2 seconds by dispatching a watcher.  
+
+	import 'package:web_ui/watcher.dart' as watcher; // import the watcher
+	import 'dart:math';
+	import 'dart:html';
+	
+	String die1;
+	String die2;
+	Random random = new Random();
+	
+	void rollDice() {
+	  die1 = _rollDie();
+	  die2 = _rollDie();
+	}
+	
+	String _rollDie() {
+	  return (random.nextInt(6) + 1).toString();
+	}
+	
+	main() {
+	  rollDice();
+	  window.setInterval(() {
+	    rollDice();
+	    watcher.dispatch(); // dispatch the watcher repeatedly
+	  }, 2000);
+	}
+	
+Note that we have to import the watcher explicitly and call `dispatch()` on it
+to make the magic happen. 
+
+### <a id="creating-a-two-way-data-binding"></a>Creating a two
+way data binding
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want a DOM element's value to be kept in sync with the value of
+a Dart variable without having to do DOM manipulation yourself.
+
+### Solution: Web UI supports two-way data binding to keep one or more DOM
+elements in sync with a Dart variable. In this recipe, we allow a user to input
+some text (a tweet) and create a binding between the text input box and the
+Dart variable `tweet`. We use that binding to print a "shouted" version of the
+user's content and inform the user about how many characters she is still
+permitted to type. The two-way binding between the input's value value and the
+variable `tweet` allows all this to work effortlessly with no need for explicity
+DOM manipulation.
+
+The main html file contains the markup. Note the `bind-value="tweet"` declaration
+in the text input:
+
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	</head>
+	<body>
+	  <h1>Tweet something and we'll shout it out for you!</h1>
+	  <div>
+	    Tweet:
+	    <input type="text" size="140" bind-value="tweet" placeholder="tweet something here">
+	    <div> Shouted version: <span class="shouted">{{tweet.toUpperCase()}}</span></div>
+	    <div> You have {{140 - tweet.length}} characters remaining</div>
+	  </div>
+	
+	  <script type="application/dart" src='main.dart'></script>
+	</body>
+	</html>
+
+The shouted verion accesses the `tweet` variable within `{{ }}` and upcases it;
+a `div` accesses `tweet.length` within its `{{ }}` to figure how the number of
+characters remaining.
+
+The `main.dart` file is pretty Spartan in this recipe. We define a
+`tweet` variable and implement an empty `main()`:
+
+	String tweet = '';
+	
+	main() {} // main() is required, even if the body is empty
+
+### <a id="using-template-conditionals"></a>Using template conditionals
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to display templates conditionally.
+
+### Solution: Web UI allows for `if` constructs and for the conditional
+instantiation of templates.  In this recipe, we display a short list of `Book`
+objects stored in a `books` variable. 
+
+We use conditionals in two places: 1) We instantiate different templates
+based on whether our book list is empty or not. We bind this behavior to the
+value of a `noBooks` getter that we define in `main.dart`. If this returns
+true, we instantiate a template that shows a "No Books to Display" header on
+the page; if it returns false, we instantiate the template that displays the book
+data. Here is the (truncated) excerpt from `main.html`:
+
+	    <template instantiate='if noBooks'><h2>No Books to Display</h2></template>
+	    <template instantiate='if !noBooks'>
+
+and the code for the getter:
+
+	List<Book> books = [];
+	bool get noBooks => books.isEmpty;
+	List<Book> books = [];
+	bool get noBooks => books.isEmpty;
+
+2) We allow the user to choose how much detail she wants to see about each book
+by checking or unchecking the 'show details' checkbox provided. The `checked`
+state of the checkbox is bound to a `showBookDetails` boolean:
+
+	<div><input type="checkbox" bind-checked="showBookDetails">show details</div> 
+
+In `main.dart`, the value of `showBookDetails` is `true` by default and 
+changes to `false` if the bound checkbox is unchecked:
+
+	bool showBookDetails = true;
+	bool showBookDetails = true;
+
+Finally, we provide a "delete all books" link. If this is clicked, our book list
+is cleared and the "No Books to Display" template is automatically rendered.
+This is a good example of a Web UI event listener. If the link is clicked, the
+`emptyBookList()` function is called, the content of `books` are cleared and our
+first conditional(`noBooks`) is _automatically_ re-evaluated.
+
+	emptyBookList() {
+	  books = []; 
+	  return false;
+	}
+	emptyBookList() {
+	  books = []; 
+	  return false;
+	}
+
+Here is the `main.html` file:
+
+	<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	</head>
+	<body>
+	  <div>
+	    <template instantiate='if noBooks'><h2>No Books to Display</h2></template>
+	    <template instantiate='if !noBooks'>
+	      <h2>Books:</h2>
+	      <ul>
+	        <template iterate='book in books'>
+	          <li>{{book.title}}
+	          <ul template instantiate="if showBookDetails">
+	            <li>${{book.price}}</li>
+	            <li>{{book.numPages}} pages</li>
+	            <li>{{book.available ? "Available" : "Out of Stock"}}</li>
+	          </ul>
+	          </li>
+	        </template>
+	      </ul> 
+	      <div><input type="checkbox" bind-checked="showBookDetails">show details</div> 
+	      <hr>
+	      <div id="emptyBookList"><a href="#" on-click="emptyBookList()">delete all books</a></div>
+	    </template>
+	  </div>
+	
+	  <script type="application/dart" src='main.dart'></script>
+	</body>
+	</html>
+	
+and the `main.dart` file:
+
+	import "dart:html";
+	
+	class Book {
+	  String title;
+	  num price;
+	  num numPages;
+	  bool available;
+	
+	  Book(this.title, this.price, this.numPages, [this.available=true]);
+	}
+	
+	List<Book> books = [];
+	bool get noBooks => books.isEmpty;
+	bool showBookDetails = true;
+	
+	emptyBookList() {
+	  books = []; 
+	  return false;
+	}
+	
+	main() {
+	  books = [
+	    new Book("War and Peace", 20.99, 1013),
+	    new Book("Anna Karenina", 23.99, 1243, false),
+	    new Book("The Old Man and the Sea", 8.99, 78)
+	  ]; 
+	}
+	
+
+<!-- --------------------------------------------------------------------- -->
 # Testing
 
 ### <a id="running-only-a-single-test"></a>Running only a single test
@@ -502,4 +779,6 @@ Other common matchers provided are:
 	throwsUnsupportedError
 
 See `unittest/src/core_matchers.dart` for more details.
+
+
 
