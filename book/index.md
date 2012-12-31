@@ -8,12 +8,9 @@
     - [Converting between character codes and strings](#converting-between-character-codes-and-strings)
 - [web_ui](#web_ui)
     - [Creating a one way data binding](#creating-a-one-way-data-binding)
-    - [Creating a one way data binding with a
-      watcher](#creating-a-one-way-data-binding-with-a-watcher)
+    - [Creating a one way data binding with a watcher](#creating-a-one-way-data-binding-with-a-watcher)
     - [Creating a two way data binding](#creating-a-two-way-data-binding)
     - [Using template conditionals](#using-template-conditionals)
-
-
 - [Testing](#testing)
     - [Running only a single test](#running-only-a-single-test)
     - [Filtering which tests are run](#filtering-which-tests-are-run)
@@ -254,7 +251,8 @@ and:
 ### <a id="creating-a-one-way-data-binding"></a>Creating a one way data binding
 **pubspec dependencies**: _web_ui_
 
-### Problem: You want to set up automatic monitoring of data, and ensure that
+### Problem
+You want to set up automatic monitoring of data, and ensure that
 the UI is updated when the data’s value changes.
 
 ### Solution
@@ -308,11 +306,11 @@ We add a little bit of css (main.css) to make our display nicer:
 	  padding: 3px 6px;
 	} 
 	
-### <a id="creating-a-one-way-data-binding-with-a-watcher"></a>Creating a one
-way data binding with a watcher
+### <a id="creating-a-one-way-data-binding-with-a-watcher"></a>Creating a one way data binding with a watcher
 **pubspec dependencies**: _web_ui_
 
-### Problem: You want to create a one way data binding, but you want to monitor
+### Problem:
+You want to create a one way data binding, but you want to monitor
 the bound values and keep refreshing them in the UI.
 
 ### Solution: Web UI implements this monitoring by using the `watcher.dart`
@@ -349,11 +347,11 @@ is altered to invoke it every 2 seconds by dispatching a watcher.
 Note that we have to import the watcher explicitly and call `dispatch()` on it
 to make the magic happen. 
 
-### <a id="creating-a-two-way-data-binding"></a>Creating a two
-way data binding
+### <a id="creating-a-two-way-data-binding"></a>Creating a two way data binding
 **pubspec dependencies**: _web_ui_
 
-### Problem: You want a DOM element's value to be kept in sync with the value of
+### Problem:
+You want a DOM element's value to be kept in sync with the value of
 a Dart variable without having to do DOM manipulation yourself.
 
 ### Solution: Web UI supports two-way data binding to keep one or more DOM
@@ -399,7 +397,8 @@ The `main.dart` file is pretty Spartan in this recipe. We define a
 ### <a id="using-template-conditionals"></a>Using template conditionals
 **pubspec dependencies**: _web_ui_
 
-### Problem: You want to display templates conditionally.
+### Problem:
+You want to display templates conditionally.
 
 ### Solution: Web UI allows for `if` constructs and for the conditional
 instantiation of templates.  In this recipe, we display a short list of `Book`
