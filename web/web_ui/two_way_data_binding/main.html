@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<!-- // BEGIN(two_way_data_binding_html) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Tweet something and we'll shout it out for you!</h1>
+  <div>
+    Tweet:
+    <input type="text" size="140" bind-value="tweet" placeholder="tweet something here">
+    <div> Shouted version: <span class="shouted">{{tweet.toUpperCase()}}</span></div>
+    <div> You have {{140 - tweet.length}} characters remaining</div>
+  </div>
+ 
+  <script type="application/dart" src='main.dart'></script>
+</body>
+</html>
+<!-- // END(two_way_data_binding_html) -->

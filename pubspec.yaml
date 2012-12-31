@@ -4,3 +4,4 @@ description:  A collection of Dart recipes
 dependencies:
   unittest: any
   args: any
+  web_ui: any

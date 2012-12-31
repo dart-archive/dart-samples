@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- // BEGIN(conditionals_and_loops_html) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div>
+    <!-- // BEGIN(conditionals_and_loops_noBooks_html) -->
+    <template instantiate='if noBooks'><h2>No Books to Display</h2></template>
+    <template instantiate='if !noBooks'>
+    <!-- // END(conditionals_and_loops_noBooks_html) -->
+      <h2>Books:</h2>
+      <ul>
+        <template iterate='book in books'>
+          <li>{{book.title}}
+          <ul template instantiate="if showBookDetails">
+            <li>${{book.price}}</li>
+            <li>{{book.numPages}} pages</li>
+            <li>{{book.available ? "Available" : "Out of Stock"}}</li>
+          </ul>
+          </li>
+        </template>
+      </ul> 
+      <!-- // BEGIN(conditionals_and_loops_showBookDetails_html)) -->
+      <div><input type="checkbox" bind-checked="showBookDetails">show details</div> 
+      <!-- // END(conditionals_and_loops_showBookDetails_html)) -->
+      <hr>
+      <div id="emptyBookList"><a href="#" on-click="emptyBookList()">delete all books</a></div>
+    </template>
+  </div>
+  
+  <script type="application/dart" src='main.dart'></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+// BEGIN(one_way_data_binding_css)
+td {
+  border: 1px solid black; 
+  margin: 2px; 
+  padding: 3px 6px;
+} 

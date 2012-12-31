@@ -6,11 +6,20 @@
     - [Concatenating strings](#concatenating-strings)
     - [Interpolating expressions inside strings](#interpolating-expressions-inside-strings)
     - [Converting between character codes and strings](#converting-between-character-codes-and-strings)
+- [web_ui](#web_ui)
+    - [Creating a one way data binding](#creating-a-one-way-data-binding)
+    - [Creating a one way data binding with a
+      watcher](#creating-a-one-way-data-binding-with-a-watcher)
+    - [Creating a two way data binding](#creating-a-two-way-data-binding)
+    - [Using template conditionals](#using-template-conditionals)
+
+
 - [Testing](#testing)
     - [Running only a single test](#running-only-a-single-test)
     - [Filtering which tests are run](#filtering-which-tests-are-run)
     - [Testing Errors and Exceptions](#testing-errors-and-exceptions)
 
+<!-- --------------------------------------------------------------------- -->
 # Strings
 
 ### <a id="concatenating-strings"></a>Concatenating strings
@@ -140,7 +149,6 @@ To assemble a string from a list of character codes, use the `String` factory,
 `fromCharCodes`:
 
 MERGE(character_codes_use_fromCharCodes)
-
   
 If you are using a StringBuffer to build up a string, you can add individual
 charCodes using `addCharCode` (use `add()` to add characters; use `addCharCode()`
@@ -163,6 +171,134 @@ and:
 
 MERGE(character_codes_use_rot13_with_non_alpha)
 
+<!-- --------------------------------------------------------------------- -->
+# web_ui
+
+### TODO (shailen): Explain the file structure of the web_ui apps
+### TODO (shailen): Explain how the examples can be run.
+
+### <a id="creating-a-one-way-data-binding"></a>Creating a one way data binding
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to set up automatic monitoring of data, and ensure that
+the UI is updated when the data’s value changes.
+
+### Solution
+
+You can inject data in your template using {{expression}}. The example below
+displays the random values generated from rolling a pair of dice. Every time
+the page is refreshed, the values - stored as {{ die1 }} and {{ die2 }} - are
+injected into the page automatically:
+
+MERGE(one_way_data_binding_html)
+
+The code in `main.dart` is tasked with generating the random values:
+
+MERGE(one_way_data_binding_dart)
+
+We add a little bit of css to make our display nicer:
+
+MERGE(one_way_data_binding_css)
+
+### <a id="creating-a-one-way-data-binding-with-a-watcher"></a>Creating a one
+way data binding with a watcher
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to create a one way data binding, but you want to monitor
+the bound values and keep refreshing them in the UI.
+
+### Solution: Web UI implements this monitoring by using the `watcher.dart`
+library. `watcher.dart` is automatically run for you, but you can also directly
+invoke it. The previous recipe can be rewritten so that the random die values
+get refreshed every 2 seconds. The `rollDice()` function is unchanged; `main()`
+is altered to invoke it every 2 seconds by dispatching a watcher.  
+
+MERGE(one_way_data_binding_with_watcher_dart) 
+
+Note that we have to import the watcher explicitly and call `dispatch()` on it
+to make the magic happen. 
+
+### <a id="creating-a-two-way-data-binding"></a>Creating a two
+way data binding
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want a DOM element's value to be kept in sync with the value of
+a Dart variable without having to do DOM manipulation yourself.
+
+### Solution: Web UI supports two-way data binding to keep one or more DOM
+elements in sync with a Dart variable. In this recipe, we allow a user to input
+some text (a tweet) and create a binding between the text input box and the
+Dart variable `tweet`. We use that binding to print a "shouted" version of the
+user's content and inform the user about how many characters she is still
+permitted to type. The two-way binding between the input's value value and the
+variable `tweet` allows all this to work effortlessly with no need for explicity
+DOM manipulation.
+
+The main html file contains the markup. Note the `bind-value="tweet"` declaration
+in the text input:
+
+MERGE(two_way_data_binding_html)
+
+The shouted verion accesses the `tweet` variable within `{{ }}` and upcases it;
+a `div` accesses `tweet.length` within its `{{ }}` to figure how the number of
+characters remaining.
+
+The `main.dart` file is pretty Spartan in this recipe. We define a
+`tweet` variable and implement an empty `main()`:
+
+MERGE(two_way_data_binding_dart)
+
+### <a id="using-template-conditionals"></a>Using template conditionals
+**pubspec dependencies**: _web_ui_
+
+### Problem: You want to display templates conditionally.
+
+### Solution: Web UI allows for `if` constructs and for the conditional
+instantiation of templates.  In this recipe, we display a short list of `Book`
+objects stored in a `books` variable. 
+
+We use conditionals in two places: 1) We instantiate different templates
+based on whether our book list is empty or not. We bind this behavior to the
+value of a `noBooks` getter that we define in `main.dart`. If this returns
+true, we instantiate a template that shows a "No Books to Display" header on
+the page; if it returns false, we instantiate the template that displays the book
+data. Here is the (truncated) excerpt from `main.html`:
+
+MERGE(conditionals_and_loops_noBooks_html) 
+
+and the code for the getter:
+
+MERGE(conditionals_and_loops_noBooks_dart)
+
+2) We allow the user to choose how much detail she wants to see about each book
+by checking or unchecking the 'show details' checkbox provided. The `checked`
+state of the checkbox is bound to a `showBookDetails` boolean:
+
+MERGE(conditionals_and_loops_showBookDetails_html))
+
+In `main.dart`, the value of `showBookDetails` is `true` by default and 
+changes to `false` if the bound checkbox is unchecked:
+
+MERGE(conditionals_and_loops_showBookDetails_dart))
+
+Finally, we provide a "delete all books" link. If this is clicked, our book list
+is cleared and the "No Books to Display" template is automatically rendered.
+This is a good example of a Web UI event listener. If the link is clicked, the
+`emptyBookList()` function is called, the content of `books` are cleared and our
+first conditional(`noBooks`) is _automatically_ re-evaluated.
+
+MERGE(conditionals_and_loops_emptyBookList)
+
+Here is the `main.html` file:
+
+BEGIN(conditionals_and_loops_html)
+
+and the `main.dart` file:
+
+BEGIN(conditionals_and_loops_dart)
+
+
+<!-- --------------------------------------------------------------------- -->
 # Testing
 
 ### <a id="running-only-a-single-test"></a>Running only a single test
@@ -292,3 +428,5 @@ Other common matchers provided are:
 MERGE(testing_errors_and_exceptions_matchers)
 
 See `unittest/src/core_matchers.dart` for more details.
+
+
