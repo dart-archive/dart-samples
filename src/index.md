@@ -6,14 +6,13 @@
     - [Concatenating strings](#concatenating-strings)
     - [Interpolating expressions inside strings](#interpolating-expressions-inside-strings)
     - [Converting between character codes and strings](#converting-between-character-codes-and-strings)
+    - [Trimming whitespace](#trimming-whitespace)
 - [web_ui](#web_ui)
     - [Creating a one way data binding](#creating-a-one-way-data-binding)
     - [Creating a one way data binding with a
       watcher](#creating-a-one-way-data-binding-with-a-watcher)
     - [Creating a two way data binding](#creating-a-two-way-data-binding)
     - [Using template conditionals](#using-template-conditionals)
-
-
 - [Testing](#testing)
     - [Running only a single test](#running-only-a-single-test)
     - [Filtering which tests are run](#filtering-which-tests-are-run)
@@ -170,6 +169,27 @@ MERGE(character_codes_use_rot13)
 and:
 
 MERGE(character_codes_use_rot13_with_non_alpha)
+
+
+### <a id="trimming-whitespace"></a>Trimming whitespace
+
+#### Problem
+You want to remove leading and/or trailing whitespace.
+
+#### Solution
+Dart strings have the `trim()` method that removes all leading and trailing
+whitespace:
+
+MERGE(trimming_strings_use_trim)
+
+Unlike other languages, Dart does not provide an `ltrim()` method for removing
+only leading whitespace, but it is easy to define it:
+
+MERGE(trimming_strings_ltrim)
+
+There is no `rtrim()` either, but this, too, is easily constructed:
+
+MERGE(trimming_strings_rtrim)
 
 <!-- --------------------------------------------------------------------- -->
 # web_ui
