@@ -8,7 +8,7 @@
 part of terminal_filesystem;
 
 class Terminal {
-  DOMFileSystem fs;
+  FileSystem fs;
   DirectoryEntry cwd;
   String cmdLineContainer;
   String outputContainer;
@@ -151,10 +151,10 @@ class Terminal {
     writeOutput('<div>${htmlEscape(cmd)}: not available since filesystem was not initialized</div>');
   }
   
-  void filesystemCallback(DOMFileSystem filesystem) {
+  void filesystemCallback(FileSystem filesystem) {
     fs = filesystem;
     
-    if (fs is DOMFileSystem) {
+    if (fs is FileSystem) {
       cwd = fs.root;
     } else {         
       cmds['cat'] = filesystemNotInitialized;
@@ -523,7 +523,7 @@ class Terminal {
     
     args.forEach((fileName) {
       open(cmd, fileName, (FileEntry fileEntry) {
-        window.open(fileEntry.toURL(), '$fileName');
+        window.open(fileEntry.toUrl(), '$fileName');
       });
     });
   }
@@ -617,6 +617,6 @@ class Terminal {
   }
   
   void writeOutput(String h) {
-    output.insertAdjacentHTML('beforeEnd', h);
+    output.insertAdjacentHtml('beforeEnd', h);
   }
 }
