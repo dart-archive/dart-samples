@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// This is a port of "HTML5 VIDEO" to Dart.
+// This is a port of "HTML5 Video" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/video/basics/
 
 // Note, the sound is very choppy when using dart2js and running on Google
