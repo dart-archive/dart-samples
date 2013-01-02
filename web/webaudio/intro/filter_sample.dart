@@ -10,6 +10,7 @@
 
 import 'dart:html';
 import 'dart:math';
+import 'dart:web_audio';
 
 typedef void OnLoadCallback(List<AudioBuffer> bufferList);
 
