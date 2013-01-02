@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// This is a port of: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
-
+// This is a port of "Pointer Lock And First Person Shooter Controls" to Dart.
+// See: http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
 library fps;
 import 'dart:html';
