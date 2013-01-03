@@ -45,10 +45,15 @@ Contributing
 Although we’ve ported a lot of samples, many more remain. If you’d like to
 help out, this would be a great way to contribute to the Dart project!
 
+* Read the LICENSE file.
 * Sign the [Individual Contributor License Agreement](http://code.google.com/legal/individual-cla-v1.0.html).
 * Submit a bug in the [issue tracker](https://github.com/dart-lang/dart-html5-samples/issues) with the tutorial you plan on porting, so that others will know you are working on it.
-* Fork the project on GitHub, and send us a pull request. Make sure you update this README with a link to your tutorial.
 * Take a look at the other examples to get a feel for how we’ve structured things.
+* Fork the project on GitHub.
+* Add your sample.
+* Test your sample with both Dartium and dart2js.
+* Update the README with a link to your tutorial.
+* Send us a pull request.
 
 If you’d like to chat more about this, feel free to send us email on the
 [mailing list](https://groups.google.com/a/dartlang.org/forum/#!forum/misc)
