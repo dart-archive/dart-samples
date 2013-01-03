@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reading Files Using the File APIs</title>
+    <link rel="stylesheet" href="dndfiles.css">
+  </head>
+  <body>
+    <h3>Slicing a File</h3>
+    <input type="file" id="files" name="file" />
+    <span id="read-bytes-buttons">
+      <button data-startbyte="0" data-endbyte="4">1-5</button>
+      <button data-startbyte="5" data-endbyte="14">6-15</button>
+      <button data-startbyte="6" data-endbyte="7">7-8</button>
+      <button>entire file</button>
+    </span>
+    <div id="byte-range"></div>
+    <div id="byte-content"></div>
+    <script type="application/dart" src="slicing.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>

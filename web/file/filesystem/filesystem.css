@@ -1,0 +1,34 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+*/
+
+.example {
+  padding: 10px;
+  border: 1px solid #CCC;
+}
+
+#example-list-fs ul {
+  padding-left: 0;
+}
+
+#example-list-fs li {
+  list-style: none;
+}
+
+#example-list-fs img {
+  vertical-align: middle;
+}
+
+button {
+  padding: 5px 8px;
+  cursor: pointer;
+  text-shadow: 1px 1px white;
+  font-weight: 700;
+  font-size: 10pt;
+}
+
+body {
+  font: 14px Arial;
+}

@@ -1,0 +1,20 @@
+/*
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the COPYING file.
+*/
+
+#tripmeter {
+  border: 3px double black;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+p {
+  color: #222;
+  font: 14px Arial;
+}
+
+span {
+  color: #00C;
+}

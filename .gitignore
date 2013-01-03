@@ -1,0 +1,10 @@
+# Dart Editor
+.children
+.project
+*.dart.js
+*.dart.js.map
+*.dart.js.deps
+
+# pub
+packages
+pubspec.lock

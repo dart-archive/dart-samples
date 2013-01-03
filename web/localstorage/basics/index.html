@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Local Storage in Dart</title>
+  </head>
+  <body>
+    <h1>Local Storage in Dart</h1>
+    
+    <p>
+      From local storage: <output id="username-output"></output>
+    </p>
+
+  	<label for="username">Username:</label>
+  	<input type="text" name="username" id="username">
+  	<input type="submit" id="save" value="Save">
+
+    <script type="application/dart" src="localstorage.dart"></script>
+    <script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+  </body>
+</html>
