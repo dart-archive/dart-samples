@@ -1,9 +1,0 @@
-We welcome contributions. See LICENSE file for details.
-
-To contribute, fork the https://github.com/dart-lang/dart-html5-samples
-repo, add your sample, and test in Dartium and dart2js. Then, send us
-a pull request.
-
-Be sure to sign the Google CLA (a simple online form), a requirement
-before we can merge your changes.
-http://code.google.com/legal/individual-cla-v1.0.html
