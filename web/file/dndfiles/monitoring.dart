@@ -72,6 +72,7 @@ class Monitoring {
         break;  // no-op.
       default:
         window.alert('An error occurred reading this file.');
+        break;
     }
   }
 }
