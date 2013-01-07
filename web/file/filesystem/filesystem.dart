@@ -6,10 +6,10 @@
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
 import 'dart:html';
-import 'package:htmlescape/htmlescape.dart';
+import 'package:dart-html5-samples/htmlescape.dart';
 
 class FileSystemExample {
-  DOMFileSystem _filesystem;
+  FileSystem _filesystem;
   Element _fileList;
 
   FileSystemExample() {
@@ -18,7 +18,7 @@ class FileSystemExample {
         _requestFileSystemCallback, _handleError);
   }
 
-  void _requestFileSystemCallback(DOMFileSystem filesystem) {
+  void _requestFileSystemCallback(FileSystem filesystem) {
     _filesystem = filesystem;
     query('#add-button').on.click.add((e) => _addFiles());
     query('#list-button').on.click.add((e) => _listFiles());

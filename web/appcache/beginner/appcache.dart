@@ -8,7 +8,7 @@
 import 'dart:html';
 
 class AppCache {
-  DOMApplicationCache appCache;
+  ApplicationCache appCache;
 
   AppCache(this.appCache) {
     // Set up handlers to log all of the cache events or errors.
@@ -25,7 +25,7 @@ class AppCache {
   }
 
   void updateReady() {
-    if (appCache.status == DOMApplicationCache.UPDATEREADY) {
+    if (appCache.status == ApplicationCache.UPDATEREADY) {
       // The browser downloaded a new app cache. Alert the user and swap it in
       // to get the new hotness.
       appCache.swapCache();
