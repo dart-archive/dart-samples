@@ -28,7 +28,7 @@ class Basics {
     dragTarget.classes.add('moving');
     _dragSourceEl = dragTarget;
     event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/html', dragTarget.innerHTML);
+    event.dataTransfer.setData('text/html', dragTarget.innerHtml);
   }
 
   void _onDragEnd(MouseEvent event) {
@@ -64,8 +64,8 @@ class Basics {
     Element dropTarget = event.target;
     if (_dragSourceEl != dropTarget) {
       // Set the source column's HTML to the HTML of the column we dropped on.
-      _dragSourceEl.innerHTML = dropTarget.innerHTML;
-      dropTarget.innerHTML = event.dataTransfer.getData('text/html');
+      _dragSourceEl.innerHtml = dropTarget.innerHtml;
+      dropTarget.innerHtml = event.dataTransfer.getData('text/html');
     }
   }
 }
