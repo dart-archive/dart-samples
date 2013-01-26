@@ -61,26 +61,26 @@ class DndFiles {
           thumbnail.title = htmlEscape(file.name);
           thumbHolder.nodes.add(thumbnail);
         });
-        reader.readAsDataURL(file);
+        reader.readAsDataUrl(file);
         item.nodes.add(thumbHolder);
       }
 
       // For all file types, display some properties.
       var properties = new Element.tag('span');
-      properties.innerHTML = new StringBuffer('<strong>')
-          .add(htmlEscape(file.name))
-          .add('</strong> (')
-          .add(file.type != null ? htmlEscape(file.type) : 'n/a')
-          .add(') ')
-          .add(file.size)
-          .add(' bytes')
+      properties.innerHtml = (new StringBuffer('<strong>')
+          ..add(htmlEscape(file.name))
+          ..add('</strong> (')
+          ..add(file.type != null ? htmlEscape(file.type) : 'n/a')
+          ..add(') ')
+          ..add(file.size)
+          ..add(' bytes')
           // TODO(jason9t): Re-enable this when issue 5070 is resolved.
           // http://code.google.com/p/dart/issues/detail?id=5070
-          // .add(', last modified: ')
-          // .add(file.lastModifiedDate != null ?
-          //     file.lastModifiedDate.toLocal().toString() :
-          //     'n/a')
-          .toString();
+          // ..add(', last modified: ')
+          // ..add(file.lastModifiedDate != null ?
+          //       file.lastModifiedDate.toLocal().toString() :
+          //       'n/a')
+      ).toString();
       item.nodes.add(properties);
       list.nodes.add(item);
     }

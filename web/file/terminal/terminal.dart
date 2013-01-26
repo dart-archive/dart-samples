@@ -95,7 +95,7 @@ class Terminal {
       cmdInput.attributes.remove('id');
       cmdInput.autofocus = false;
       cmdInput.readOnly = true;
-      output.elements.add(line);
+      output.children.add(line);
       String cmdline = input.value;
       input.value = ""; // clear input
       
@@ -143,8 +143,8 @@ class Terminal {
     writeOutput('<div>Welcome to ${htmlEscape(document.title)}! (v$version)</div>');
     writeOutput(new Date.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
-    var type = persistent ? LocalWindow.PERSISTENT : LocalWindow.TEMPORARY;
-    window.webkitRequestFileSystem(type, size, filesystemCallback, errorHandler);
+    var type = persistent ? Window.PERSISTENT : Window.TEMPORARY;
+    window.requestFileSystem(type, size, filesystemCallback, errorHandler);
   }
   
   void filesystemNotInitialized(String cmd, List<String> args) {
@@ -277,7 +277,7 @@ class Terminal {
   }
   
   void clearCommand(String cmd, List<String> args) {
-    output.innerHTML = '';
+    output.innerHtml = '';
   }
   
   void helpCommand(String cmd, List<String> args) {

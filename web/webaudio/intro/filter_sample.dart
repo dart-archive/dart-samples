@@ -88,8 +88,8 @@ class ApplicationContext {
 
   // Loads all sound samples into the buffers object.
   void _loadBuffers() {
-    List<String> names = buffersToLoad.keys;
-    List<String> paths = buffersToLoad.values;
+    List<String> names = buffersToLoad.keys.toList();
+    List<String> paths = buffersToLoad.values.toList();
     var bufferLoader = new BufferLoader(audioCtx, paths, (List<AudioBuffer> bufferList) {
       for (var i = 0; i < bufferList.length; i++) {
         AudioBuffer buffer = bufferList[i];
@@ -102,7 +102,6 @@ class ApplicationContext {
 }
 
 class FilterSample {
-  const _LOWPASS = 0;
   const _FREQ = 5000;
   const _FREQ_MUL = 7000;
   const _QUAL_MUL = 30;
@@ -136,12 +135,12 @@ class FilterSample {
 
     // Create the filter.
     _filter = appCtx.audioCtx.createBiquadFilter();
-    _filter.type = _LOWPASS;
+    _filter.type = "lowpass";
     _filter.frequency.value = _FREQ;
 
     // Connect everything.
-    _source.connect(_filter, null, null);
-    _filter.connect(appCtx.audioCtx.destination, null, null);
+    _source.connect(_filter, 0, 0);
+    _filter.connect(appCtx.audioCtx.destination, 0, 0);
 
     // Play!
     _source.start(0);
@@ -158,17 +157,17 @@ class FilterSample {
   }
 
   void _toggleFilter(bool checked) {
-    _source.disconnect(null);
-    _filter.disconnect(null);
+    _source.disconnect(0);
+    _filter.disconnect(0);
 
     // Check if we want to enable the filter.
     if (checked) {
       // Connect through the filter.
-      _source.connect(_filter, null, null);
-      _filter.connect(appCtx.audioCtx.destination, null, null);
+      _source.connect(_filter, 0, 0);
+      _filter.connect(appCtx.audioCtx.destination, 0, 0);
     } else {
       // Otherwise, connect directly.
-      _source.connect(appCtx.audioCtx.destination, null, null);
+      _source.connect(appCtx.audioCtx.destination, 0, 0);
     }
   }
 

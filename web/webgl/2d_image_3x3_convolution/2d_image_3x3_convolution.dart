@@ -179,7 +179,7 @@ void render(image) {
   // Setup UI to pick kernels.
   var initialSelection = 'emboss';
   var ui = query('#ui');
-  var select = new Element.tag('select');
+  SelectElement select = new Element.tag('select');
   kernels.forEach((name, value) {
     OptionElement option = new Element.tag('option');
     option.value = name;

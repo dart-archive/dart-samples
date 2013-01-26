@@ -73,7 +73,7 @@ class Filters {
   ImageData convolve(List weights, [bool opaque = false]) {
     var alphaFac = opaque ? 1 : 0;
     var side = (sqrt(weights.length).toInt());
-    var halfSide = (side / 2).toInt();
+    var halfSide = side ~/ 2;
 
     var d = pixels.data;
     var width = pixels.width;
@@ -132,7 +132,7 @@ class Filters {
   ImageDataFloat32 convolveFloat32(ImageData pixels, List weights, [bool opaque = false]) {
     var alphaFac = opaque ? 1 : 0;
     var side = (sqrt(weights.length).toInt());
-    var halfSide = (side / 2).toInt();
+    var halfSide = side ~/ 2;
 
     var d = pixels.data;
     var width = pixels.width;

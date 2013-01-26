@@ -9,7 +9,7 @@
 // This has been tested under Chrome and Firefox.
 
 import 'dart:html';
-import 'dart:isolate';
+import 'dart:async';
 
 WebSocket ws;
 
