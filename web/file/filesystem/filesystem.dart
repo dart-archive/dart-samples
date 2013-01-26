@@ -14,7 +14,7 @@ class FileSystemExample {
 
   FileSystemExample() {
     _fileList = query('#example-list-fs-ul');
-    window.webkitRequestFileSystem(LocalWindow.TEMPORARY, 1024 * 1024,
+    window.requestFileSystem(Window.TEMPORARY, 1024 * 1024,
         _requestFileSystemCallback, _handleError);
   }
 
@@ -67,13 +67,13 @@ class FileSystemExample {
       }
 
       var fragment = document.createDocumentFragment();
-      for (var i = 0, entry; (entry = entries.item(i)) != null; i++) {
+      entries.forEach((entry) {
         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                                       '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
         var li = new Element.tag("li");
-        li.innerHTML = "$img<span>${htmlEscape(entry.name)}</span>";
+        li.innerHtml = "$img<span>${htmlEscape(entry.name)}</span>";
         fragment.nodes.add(li);
-      }
+      });
       _fileList.nodes.add(fragment);
     }, _handleError);
   }
@@ -81,13 +81,13 @@ class FileSystemExample {
   void _removeFiles() {
     var dirReader = _filesystem.root.createReader();
     dirReader.readEntries((entries) {
-      for (var i = 0, entry; (entry = entries.item(i)) != null; i++) {
+      entries.forEach((entry) {
         if (entry.isDirectory) {
           entry.removeRecursively(() {}, _handleError);
         } else {
           entry.remove(() {}, _handleError);
         }
-      }
+      });
       _fileList.text = 'Directory emptied.';
     }, _handleError);
   }

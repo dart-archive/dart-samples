@@ -5,13 +5,13 @@
 // This is a port of "Using the Notifications API" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/notifications/quick
 
-// TODO(jjinux): window.webkitNotifications.createNotification raises an exception in Dartium.
+// TODO(jjinux): window.notifications.createNotification doesn't work in Dartium.
 // TODO(jjinux): No matter what I set the ICON_URL to, it doesn't seem to work.
 //               Once I know it works, switch to using my own image.
 // See: http://code.google.com/p/dart/issues/detail?id=5462
 
 import 'dart:html';
-import 'dart:isolate';
+import 'dart:async';
 
 const PERMISSION_ALLOWED = 0;
 const ICON_URL = "http://www.blogger.com/img/icon_logo32.gif";
@@ -21,10 +21,10 @@ const ICON_URL = "http://www.blogger.com/img/icon_logo32.gif";
  * notifications. Then, one second later, schedule a notification.
  */
 void sayHello() {
-  if (window.webkitNotifications.checkPermission() == PERMISSION_ALLOWED) {
+  if (window.notifications.checkPermission() == PERMISSION_ALLOWED) {
     scheduleNotification();
   } else {
-    window.webkitNotifications.requestPermission(scheduleNotification);
+    window.notifications.requestPermission(scheduleNotification);
   }
 }
 
@@ -41,7 +41,7 @@ void scheduleNotification() {
 }
 
 void showNotification() {
-  var notification = window.webkitNotifications.createNotification(
+  var notification = window.notifications.createNotification(
       ICON_URL, "Hello World", "You've been notified!");
 
   // Use these if you need them.

@@ -7,7 +7,7 @@
 
 import 'dart:html';
 import 'dart:math';
-import 'dart:isolate';
+import 'dart:async';
 
 class Monitoring {
   InputElement _fileInput;
