@@ -2,5 +2,4 @@ name: dart_html5_samples
 
 dependencies:
   browser: ">=0.3.2"
-  vector_math:
-    git: https://github.com/johnmccutchan/DartVectorMath.git
+  vector_math: ">=0.9.2"
