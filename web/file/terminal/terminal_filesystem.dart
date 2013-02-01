@@ -7,7 +7,7 @@
 
 library terminal_filesystem;
 import 'dart:html';
-import 'package:dart-html5-samples/htmlescape.dart';
+import 'package:dart_html5_samples/htmlescape.dart';
 part 'terminal.dart';
 
 class TerminalFilesystem {
