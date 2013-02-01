@@ -20,9 +20,9 @@ class FileSystemExample {
 
   void _requestFileSystemCallback(FileSystem filesystem) {
     _filesystem = filesystem;
-    query('#add-button').on.click.add((e) => _addFiles());
-    query('#list-button').on.click.add((e) => _listFiles());
-    query('#remove-button').on.click.add((e) => _removeFiles());
+    query('#add-button').onClick.listen((e) => _addFiles());
+    query('#list-button').onClick.listen((e) => _listFiles());
+    query('#remove-button').onClick.listen((e) => _removeFiles());
   }
 
   void _handleError(FileError e) {

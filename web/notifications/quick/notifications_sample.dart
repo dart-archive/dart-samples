@@ -45,12 +45,12 @@ void showNotification() {
       ICON_URL, "Hello World", "You've been notified!");
 
   // Use these if you need them.
-  notification.on.display.add((e) => print("notification.on.display"));
-  notification.on.close.add((e) => print("notification.on.close"));
+  notification.onDisplay.listen((e) => print("notification.onDisplay"));
+  notification.onClose.listen((e) => print("notification.onClose"));
 
   notification.show();
 }
 
 void main() {
-  query('#say-hello').on.click.add((e) => sayHello());
+  query('#say-hello').onClick.listen((e) => sayHello());
 }

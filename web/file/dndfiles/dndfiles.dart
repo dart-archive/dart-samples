@@ -18,13 +18,13 @@ class DndFiles {
     _output = document.query('#list');
     _readForm = document.query('#read');
     _fileInput = document.query('#files');
-    _fileInput.on.change.add((e) => _onFileInputChange());
+    _fileInput.onChange.listen((e) => _onFileInputChange());
 
     _dropZone = document.query('#drop-zone');
-    _dropZone.on.dragOver.add(_onDragOver);
-    _dropZone.on.dragEnter.add((e) => _dropZone.classes.add('hover'));
-    _dropZone.on.dragLeave.add((e) => _dropZone.classes.remove('hover'));
-    _dropZone.on.drop.add(_onDrop);
+    _dropZone.onDragOver.listen(_onDragOver);
+    _dropZone.onDragEnter.listen((e) => _dropZone.classes.add('hover'));
+    _dropZone.onDragLeave.listen((e) => _dropZone.classes.remove('hover'));
+    _dropZone.onDrop.listen(_onDrop);
   }
 
   void _onDragOver(MouseEvent event) {
@@ -55,7 +55,7 @@ class DndFiles {
       if (file.type.startsWith('image')) {
         var thumbHolder = new Element.tag('span');
         var reader = new FileReader();
-        reader.on.load.add((e) {
+        reader.onLoad.listen((e) {
           var thumbnail = new ImageElement(src: reader.result);
           thumbnail.classes.add('thumb');
           thumbnail.title = htmlEscape(file.name);
