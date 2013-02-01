@@ -17,7 +17,7 @@ void main() {
     output.text = savedUsername;
   }
 
-  submit.on.click.add((Event e) {
+  submit.onClick.listen((Event e) {
     output.text = username.value;
     localStorage['username'] = username.value;
   });

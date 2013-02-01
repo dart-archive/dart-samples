@@ -230,11 +230,11 @@ class FpsControllerView {
 
   // Subscribe to input events
   void bind() {
-    document.on.pointerLockChange.add(pointerLockChange);
-    canvas.on.click.add(clicked);
-    document.on.keyDown.add(keydown);
-    document.on.keyUp.add(keyup);
-    document.on.mouseMove.add(mouseMove);
+    document.onPointerLockChange.listen(pointerLockChange);
+    canvas.onClick.listen(clicked);
+    document.onKeyDown.listen(keydown);
+    document.onKeyUp.listen(keyup);
+    document.onMouseMove.listen(mouseMove);
   }
 
   void update(double time) {

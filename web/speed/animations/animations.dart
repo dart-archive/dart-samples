@@ -25,7 +25,7 @@ class AnimationExample {
       document.body.nodes.add(mover);
       _movers[i] = mover;
     }
-    window.on.scroll.add((e) => _onScroll());
+    window.onScroll.listen((e) => _onScroll());
   }
 
   void _onScroll() {

@@ -20,14 +20,14 @@ class TodoList {
   TodoList() {
     _todoItems = query('#todo-items');
     _input = query('#todo');
-    query('input#submit').on.click.add((e) => _onAddTodo());
+    query('input#submit').onClick.listen((e) => _onAddTodo());
   }
 
   void open() {
     var request = window.indexedDB.open(_TODOS_DB, _version);
-    request.on.success.add((e) => _onDbOpened(request.result));
-    request.on.error.add(_onError);
-    request.on.upgradeNeeded.add((e) => _onUpgradeNeeded(request.transaction));
+    request.onSuccess.listen((e) => _onDbOpened(request.result));
+    request.onError.listen(_onError);
+    request.onUpgradeNeeded.listen((e) => _onUpgradeNeeded(request.transaction));
   }
 
   void _onError(e) {
@@ -43,8 +43,8 @@ class TodoList {
   }
 
   void _onUpgradeNeeded(idb.Transaction changeVersionTransaction) {
-    changeVersionTransaction.on.complete.add((e) => _getAllTodoItems());
-    changeVersionTransaction.on.error.add(_onError);
+    changeVersionTransaction.onComplete.listen((e) => _getAllTodoItems());
+    changeVersionTransaction.onError.listen(_onError);
     changeVersionTransaction.db.createObjectStore(_TODOS_STORE,
         {'keyPath': 'timeStamp'});
   }
@@ -64,16 +64,16 @@ class TodoList {
       'text': text,
       'timeStamp': new Date.now().millisecondsSinceEpoch.toString()
     });
-    request.on.success.add((e) => _getAllTodoItems());
-    request.on.error.add(_onError);
+    request.onSuccess.listen((e) => _getAllTodoItems());
+    request.onError.listen(_onError);
   }
 
   void _deleteTodo(String id) {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
     var store =  trans.objectStore(_TODOS_STORE);
     var request = store.delete(id);
-    request.on.success.add((e) => _getAllTodoItems());
-    request.on.error.add(_onError);
+    request.onSuccess.listen((e) => _getAllTodoItems());
+    request.onError.listen(_onError);
   }
 
   void _getAllTodoItems() {
@@ -84,14 +84,14 @@ class TodoList {
 
     // Get everything in the store.
     var request = store.openCursor();
-    request.on.success.add((e) {
+    request.onSuccess.listen((e) {
       var cursor = request.result;
       if (cursor != null && cursor.value != null) {
         _renderTodo(cursor.value);
         cursor.continueFunction();
       }
     });
-    request.on.error.add(_onError);
+    request.onError.listen(_onError);
   }
 
   void _renderTodo(Map todoItem) {
@@ -100,7 +100,7 @@ class TodoList {
 
     var deleteControl = new Element.tag('a');
     deleteControl.text = '[Delete]';
-    deleteControl.on.click.add((e) => _deleteTodo(todoItem['timeStamp']));
+    deleteControl.onClick.listen((e) => _deleteTodo(todoItem['timeStamp']));
 
     var item = new Element.tag('li');
     item.nodes.add(textDisplay);

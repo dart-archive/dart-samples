@@ -40,10 +40,10 @@ class VideoExample {
       inertia += 0.4;
     }
 
-    _videoDom.on.canPlay.add((e) => _onCanPlay());
-    _videoDom.on.play.add((e) => _onPlay());
-    _videoDom.on.pause.add((e) => _stopAnimation());
-    _videoDom.on.ended.add((e) => _stopAnimation());
+    _videoDom.onCanPlay.listen((e) => _onCanPlay());
+    _videoDom.onPlay.listen((e) => _onPlay());
+    _videoDom.onPause.listen((e) => _stopAnimation());
+    _videoDom.onEnded.listen((e) => _stopAnimation());
   }
 
   void _onCanPlay() {

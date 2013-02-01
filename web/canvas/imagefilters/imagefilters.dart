@@ -197,34 +197,34 @@ void main() {
                       1, 2, 1];
 
   var img = query('.orig');
-  window.on.load.add((e) => populateImages(img));
+  window.onLoad.listen((e) => populateImages(img));
 
   // Click listener for grayscale.
-  query('[name = "grayscale"]').on.click.add(
+  query('[name = "grayscale"]').onClick.listen(
       (e) => toggleFilter('grayscale',
           () => new Filters(img).grayscale()));
   // Click listener for brightness.
-  query('[name = "brightness"]').on.click.add(
+  query('[name = "brightness"]').onClick.listen(
       (e) => toggleFilter('brightness',
           () => new Filters(img).brightness(brightAdj)));
   // Click listener for threshold.
-  query('[name = "threshold"]').on.click.add(
+  query('[name = "threshold"]').onClick.listen(
       (e) => toggleFilter('threshold',
           () => new Filters(img).threshold(thresholdVal)));
   // Click listener for sharpen.
-  query('[name = "sharpen"]').on.click.add(
+  query('[name = "sharpen"]').onClick.listen(
       (e) => toggleFilter('sharpen',
           () => new Filters(img).convolve(sharpenMask)));
   // Click listener for blur.
-  query('[name = "blur"]').on.click.add(
+  query('[name = "blur"]').onClick.listen(
       (e) => toggleFilter('blur',
           () => new Filters(img).convolve(blurMask)));
   // Click listener for sobel.
-  query('[name = "sobel"]').on.click.add(
+  query('[name = "sobel"]').onClick.listen(
       (e) => toggleFilter('sobel',
           () => new Filters(img).sobel(hSobelMask, vSobelMask)));
   // Click listener for custom.
-  query('[name = "custom"]').on.click.add(
+  query('[name = "custom"]').onClick.listen(
       (e) => toggleFilter('custom', () {
         List matrix = query('#customMatrix').queryAll('input');
         var mask = new List();

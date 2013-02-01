@@ -35,22 +35,22 @@ void initWebSocket([int retrySeconds = 2]) {
     reconnectScheduled = true;
   }
 
-  ws.on.open.add((e) {
+  ws.onOpen.listen((e) {
     outputMsg('Connected');
     ws.send('Hello from Dart!');
   });
 
-  ws.on.close.add((e) {
+  ws.onClose.listen((e) {
     outputMsg('Websocket closed, retrying in $retrySeconds seconds');
     scheduleReconnect();
   });
 
-  ws.on.error.add((e) {
+  ws.onError.listen((e) {
     outputMsg("Error connecting to ws");
     scheduleReconnect();
   });
 
-  ws.on.message.add((MessageEvent e) {
+  ws.onMessage.listen((MessageEvent e) {
     outputMsg('Received message: ${e.data}');
   });
 }

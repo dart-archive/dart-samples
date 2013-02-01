@@ -36,10 +36,10 @@ class BufferLoader {
     var request = new HttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
-    request.on.load.add((e) => _onLoad(request, url, index));
+    request.onLoad.listen((e) => _onLoad(request, url, index));
 
     // Don't use alert in real life ;)
-    request.on.error.add((e) => window.alert("BufferLoader: XHR error"));
+    request.onError.listen((e) => window.alert("BufferLoader: XHR error"));
 
     request.send();
   }
@@ -111,18 +111,18 @@ class FilterSample {
   BiquadFilterNode _filter;
 
   FilterSample(this.appCtx) {
-    query("#play-pause-button").on.click.add((Event e) {
+    query("#play-pause-button").onClick.listen((Event e) {
       _toggle();
     });
-    query("#enable-filter-checkbox").on.change.add((Event e) {
+    query("#enable-filter-checkbox").onChange.listen((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
-    query("#frequency-range").on.change.add((Event e) {
+    query("#frequency-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
     });
-    query("#quality-range").on.change.add((Event e) {
+    query("#quality-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
     });

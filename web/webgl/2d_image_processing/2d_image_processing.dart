@@ -298,7 +298,7 @@ void render(image) {
   List sss = selects; // Avoid bug with closure over selects
   selects.forEach((s) {
     ui.nodes.add(s);
-    s.on.change.add((event) {
+    s.onChange.listen((event) {
       neffects.clear();
       int ncount=0;
       sss.forEach((select) {
