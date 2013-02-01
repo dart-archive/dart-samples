@@ -28,6 +28,11 @@ Future<AnalyzerResult> analyzer(String dart_analyzer, Path path) {
   var file = new File.fromPath(path).openSync();
   Document doc = parse(file);
   var scripts = doc.body.queryAll("script");
+
+  if (scripts.isEmpty) {
+    completer.complete(null);
+  }
+
   scripts.forEach((Element script) {
     Map attributes = script.attributes;
     if (attributes.containsKey('type') &&
@@ -54,6 +59,7 @@ Future<AnalyzerResult> analyzer(String dart_analyzer, Path path) {
 }
 
 void processResults() {
+  logger.fine("processResults");
   StringBuffer finalResults = new StringBuffer();
   StringBuffer verboseOutput = new StringBuffer();
   StringBuffer exitCodeLabels = new StringBuffer();
@@ -61,6 +67,7 @@ void processResults() {
   int passedCount = 0;
   int warningCount = 0;
   analyzerResults.forEach((AnalyzerResult result) {
+
     /*
      *  --extended-exit-code : 0 - clean; 1 - has warnings; 2 - has errors
      */
@@ -84,11 +91,13 @@ void processResults() {
     verboseOutput.add("${result.path.directoryPath.toString()}/${result.fileName}\n");
     verboseOutput.add("${result.processResult.stdout}\n");
     verboseOutput.add("${result.processResult.stderr}\n\n");
+    print(verboseOutput.toString());
+    verboseOutput.clear();
   });
 
   finalResults.add("PASSED: ${passedCount}, WARNING: ${warningCount}, ERROR: ${errorsCount}\n");
 
-  print(verboseOutput.toString());
+  //print(verboseOutput.toString());
   print(finalResults.toString());
 
   if (errorsCount > 0) {
@@ -172,9 +181,13 @@ void main() {
       }
 
       var path = paths.removeLast();
+      logger.fine("process_paths: ${path.toString()}");
       analyzer(dart_analyzer, path)
       ..then((analyzerResult) {
-        analyzerResults.add(analyzerResult);
+        if (analyzerResult != null) {
+          analyzerResults.add(analyzerResult);
+        }
+
         process_paths();
       })
       ..catchError((error) {
