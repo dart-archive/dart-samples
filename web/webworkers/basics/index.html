@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<!--
+  Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+  for details. All rights reserved. Use of this source code is governed by a
+  BSD-style license that can be found in the LICENSE file.
+-->
+
+<html>
+  <head>
+    <title>The Basics of Web Workers - HTML5 Rocks</title>
+  </head>
+
+  <body>
+    <p><strong>Example</strong>: Run this worker!</p>
+    <div class="example">
+      <button id="sayHI">Say HI</button>
+      <button id="unknownCmd">Send unknown command</button>
+      <button id="stop">Stop worker</button>
+      <output id="result"></output>
+    </div>
+    <script type="application/dart" src="webworker_sample.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
