@@ -22,7 +22,7 @@ class BufferLoader {
   List<AudioBuffer> _bufferList;
 
   BufferLoader(this.audioCtx, this.urlList, this.callback) {
-    _bufferList = new List<AudioBuffer>(urlList.length);
+    _bufferList = new List<AudioBuffer>.fixedLength(urlList.length);
   }
 
   void load() {
@@ -111,18 +111,18 @@ class FilterSample {
   BiquadFilterNode _filter;
 
   FilterSample(this.appCtx) {
-    query("#play-pause-button").on.click.add((Event e) {
+    query("#play-pause-button").onClick.listen((Event e) {
       _toggle();
     });
-    query("#enable-filter-checkbox").on.change.add((Event e) {
+    query("#enable-filter-checkbox").onChange.listen((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
-    query("#frequency-range").on.change.add((Event e) {
+    query("#frequency-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
     });
-    query("#quality-range").on.change.add((Event e) {
+    query("#quality-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
     });

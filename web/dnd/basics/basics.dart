@@ -14,12 +14,12 @@ class Basics {
   void start() {
     var cols = document.queryAll('#columns .column');
     for (var col in cols) {
-      col.on.dragStart.add(_onDragStart);
-      col.on.dragEnd.add(_onDragEnd);
-      col.on.dragEnter.add(_onDragEnter);
-      col.on.dragOver.add(_onDragOver);
-      col.on.dragLeave.add(_onDragLeave);
-      col.on.drop.add(_onDrop);
+      col.onDragStart.listen(_onDragStart);
+      col.onDragEnd.listen(_onDragEnd);
+      col.onDragEnter.listen(_onDragEnter);
+      col.onDragOver.listen(_onDragOver);
+      col.onDragLeave.listen(_onDragLeave);
+      col.onDrop.listen(_onDrop);
     }
   }
 

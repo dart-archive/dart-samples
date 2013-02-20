@@ -22,7 +22,7 @@ void drawImage(CanvasElement canvas, ImageElement image,
   CanvasRenderingContext2D context = canvas.getContext("2d");
 
   num devicePixelRatio = window.devicePixelRatio;
-  num backingStoreRatio = context.webkitBackingStorePixelRatio;
+  num backingStoreRatio = context.backingStorePixelRatio;
   num ratio = devicePixelRatio / backingStoreRatio;
 
   if (auto && devicePixelRatio != backingStoreRatio) {
