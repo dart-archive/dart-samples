@@ -191,7 +191,7 @@ void render(image) {
     select.nodes.add(option);
   });
 
-  select.on.change.add((var event) {
+  select.onChange.listen((var event) {
     drawWithKernel(select.value);
   });
 

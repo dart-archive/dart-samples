@@ -7,6 +7,7 @@
 
 import 'dart:html';
 import 'dart:indexed_db' as idb;
+import 'dart:async';
 
 class TodoList {
   static final String _TODOS_DB = "todo";
@@ -20,14 +21,14 @@ class TodoList {
   TodoList() {
     _todoItems = query('#todo-items');
     _input = query('#todo');
-    query('input#submit').on.click.add((e) => _onAddTodo());
+    query('input#submit').onClick.listen((e) => _onAddTodo());
   }
 
-  void open() {
-    var request = window.indexedDB.open(_TODOS_DB, _version);
-    request.on.success.add((e) => _onDbOpened(request.result));
-    request.on.error.add(_onError);
-    request.on.upgradeNeeded.add((e) => _onUpgradeNeeded(request.transaction));
+  Future open() {
+    return window.indexedDB.open(_TODOS_DB, version: _version,
+        onUpgradeNeeded: _onUpgradeNeeded)
+      .then(_onDbOpened)
+      .catchError(_onError);
   }
 
   void _onError(e) {
@@ -42,11 +43,11 @@ class TodoList {
     _getAllTodoItems();
   }
 
-  void _onUpgradeNeeded(idb.Transaction changeVersionTransaction) {
-    changeVersionTransaction.on.complete.add((e) => _getAllTodoItems());
-    changeVersionTransaction.on.error.add(_onError);
-    changeVersionTransaction.db.createObjectStore(_TODOS_STORE,
-        {'keyPath': 'timeStamp'});
+  void _onUpgradeNeeded(idb.VersionChangeEvent e) {
+    idb.Database db = e.target.result;
+    if (!db.objectStoreNames.contains(_TODOS_STORE)) {
+      db.createObjectStore(_TODOS_STORE, {'keyPath': 'timeStamp'});
+    }
   }
 
   void _onAddTodo() {
@@ -57,23 +58,22 @@ class TodoList {
     _input.value = '';
   }
 
-  void _addTodo(String text) {
+  Future _addTodo(String text) {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
     var store = trans.objectStore(_TODOS_STORE);
-    var request = store.put({
+    return store.put({
       'text': text,
-      'timeStamp': new Date.now().millisecondsSinceEpoch.toString()
-    });
-    request.on.success.add((e) => _getAllTodoItems());
-    request.on.error.add(_onError);
+      'timeStamp': new DateTime.now().millisecondsSinceEpoch.toString()
+    }).then((_) => _getAllTodoItems())
+    .catchError((e) => _onError);
   }
 
   void _deleteTodo(String id) {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
     var store =  trans.objectStore(_TODOS_STORE);
     var request = store.delete(id);
-    request.on.success.add((e) => _getAllTodoItems());
-    request.on.error.add(_onError);
+    request.onSuccess.listen((e) => _getAllTodoItems());
+    request.onError.listen(_onError);
   }
 
   void _getAllTodoItems() {
@@ -83,15 +83,9 @@ class TodoList {
     var store = trans.objectStore(_TODOS_STORE);
 
     // Get everything in the store.
-    var request = store.openCursor();
-    request.on.success.add((e) {
-      var cursor = request.result;
-      if (cursor != null && cursor.value != null) {
-        _renderTodo(cursor.value);
-        cursor.continueFunction();
-      }
-    });
-    request.on.error.add(_onError);
+    var request = store.openCursor(autoAdvance:true).listen((cursor) {
+      _renderTodo(cursor.value);
+    }, onError: _onError);
   }
 
   void _renderTodo(Map todoItem) {
@@ -100,7 +94,7 @@ class TodoList {
 
     var deleteControl = new Element.tag('a');
     deleteControl.text = '[Delete]';
-    deleteControl.on.click.add((e) => _deleteTodo(todoItem['timeStamp']));
+    deleteControl.onClick.listen((e) => _deleteTodo(todoItem['timeStamp']));
 
     var item = new Element.tag('li');
     item.nodes.add(textDisplay);

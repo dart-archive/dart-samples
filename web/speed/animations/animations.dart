@@ -16,8 +16,8 @@ class AnimationExample {
   bool _ticking = false;
 
   AnimationExample() {
-    _movers = new List<Element>(_numMovers);
-    _moverTops = new List<num>(_numMovers);
+    _movers = new List<Element>.fixedLength(_numMovers);
+    _moverTops = new List<num>.fixedLength(_numMovers);
     for (var i = 0; i < _numMovers; i++) {
       var mover = new Element.tag("div");
       mover.classes.add("mover");
@@ -25,7 +25,7 @@ class AnimationExample {
       document.body.nodes.add(mover);
       _movers[i] = mover;
     }
-    window.on.scroll.add((e) => _onScroll());
+    window.onScroll.listen((e) => _onScroll());
   }
 
   void _onScroll() {
