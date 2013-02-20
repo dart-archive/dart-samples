@@ -16,36 +16,36 @@ class TerminalFilesystem {
   void run() {
     term = new Terminal('#input-line', '#output', '#cmdline');
     term.initializeFilesystem(false, 1024 * 1024);
-    
+
     if (!window.location.hash.isEmpty) {
       var theme = window.location.hash.substring(1, window.location.hash.length).split('=')[1];
       term.setTheme(theme);
     } else if (window.localStorage.containsKey('theme')) {
       term.setTheme(window.localStorage['theme']);
     }
-    
-    // Setup the DnD listeners for file drop. 
+
+    // Setup the DnD listeners for file drop.
     var body = document.body;
-    body.on.dragEnter.add(onDragEnter);
-    body.on.dragOver.add(onDragOver);
-    body.on.drop.add(onDrop);
+    body.onDragEnter.listen(onDragEnter);
+    body.onDragOver.listen(onDragOver);
+    body.onDrop.listen(onDrop);
   }
-  
+
   void onDragEnter(MouseEvent event) {
     event.stopPropagation();
     event.preventDefault();
     Element dropTarget = event.target;
     dropTarget.classes.add('dropping');
   }
-  
+
   void onDragOver(MouseEvent event) {
     event.stopPropagation();
     event.preventDefault();
-    
+
     // Explicitly show this is a copy.
-    event.dataTransfer.dropEffect = 'copy'; 
+    event.dataTransfer.dropEffect = 'copy';
   }
-  
+
   void onDrop(MouseEvent event) {
     event.stopPropagation();
     event.preventDefault();

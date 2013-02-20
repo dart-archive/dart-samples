@@ -18,13 +18,13 @@ class DndFiles {
     _output = document.query('#list');
     _readForm = document.query('#read');
     _fileInput = document.query('#files');
-    _fileInput.on.change.add((e) => _onFileInputChange());
+    _fileInput.onChange.listen((e) => _onFileInputChange());
 
     _dropZone = document.query('#drop-zone');
-    _dropZone.on.dragOver.add(_onDragOver);
-    _dropZone.on.dragEnter.add((e) => _dropZone.classes.add('hover'));
-    _dropZone.on.dragLeave.add((e) => _dropZone.classes.remove('hover'));
-    _dropZone.on.drop.add(_onDrop);
+    _dropZone.onDragOver.listen(_onDragOver);
+    _dropZone.onDragEnter.listen((e) => _dropZone.classes.add('hover'));
+    _dropZone.onDragLeave.listen((e) => _dropZone.classes.remove('hover'));
+    _dropZone.onDrop.listen(_onDrop);
   }
 
   void _onDragOver(MouseEvent event) {
@@ -68,12 +68,12 @@ class DndFiles {
       // For all file types, display some properties.
       var properties = new Element.tag('span');
       properties.innerHtml = (new StringBuffer('<strong>')
-          ..add(htmlEscape(file.name))
-          ..add('</strong> (')
-          ..add(file.type != null ? htmlEscape(file.type) : 'n/a')
-          ..add(') ')
-          ..add(file.size)
-          ..add(' bytes')
+          ..write(htmlEscape(file.name))
+          ..write('</strong> (')
+          ..write(file.type != null ? htmlEscape(file.type) : 'n/a')
+          ..write(') ')
+          ..write(file.size)
+          ..write(' bytes')
           // TODO(jason9t): Re-enable this when issue 5070 is resolved.
           // http://code.google.com/p/dart/issues/detail?id=5070
           // ..add(', last modified: ')

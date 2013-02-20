@@ -18,13 +18,13 @@ class Slicing {
     _byteRange = query('#byte-range');
 
     _fileInput = query('#files');
-    _fileInput.on.change.add((e) {
+    _fileInput.onChange.listen((e) {
       _content.text = '';
       _byteRange.text = '';
     });
 
     var buttons = query('#read-bytes-buttons');
-    buttons.on.click.add(_onClick);
+    buttons.onClick.listen(_onClick);
   }
 
   void _onClick(MouseEvent event) {
@@ -49,7 +49,7 @@ class Slicing {
     var start = startByte != null ? startByte : 0;
     var end = endByte != null ? endByte : file.size;
     var reader = new FileReader();
-    reader.on.load.add((e) {
+    reader.onLoad.listen((e) {
       _content.text = reader.result;
       _byteRange.text =
           'Read bytes ${start + 1} - ${end + 1} of ${file.size}.';

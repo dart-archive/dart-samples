@@ -17,9 +17,9 @@ class Monitoring {
   Monitoring() {
     _progressBar = query('#progress-bar');
     _fileInput = document.query('#files');
-    _fileInput.on.change.add((e) => _onFilesSelected());
+    _fileInput.onChange.listen((e) => _onFilesSelected());
     var cancelButton = query('#cancel-read');
-    cancelButton.on.click.add((e) => _onCancel());
+    cancelButton.onClick.listen((e) => _onCancel());
   }
 
   void _setProgress(int value) {
@@ -27,7 +27,7 @@ class Monitoring {
     _progressBar.style.width = '${value}%';
     _progressBar.text = '${value}%';
     if (value == 0 || value == 100) {
-      new Timer(2000, (timer) => _progressBar.classes.remove('loading'));
+      new Timer(const Duration(milliseconds: 2000), (timer) => _progressBar.classes.remove('loading'));
     }
   }
 
@@ -39,11 +39,11 @@ class Monitoring {
     // Set up handlers and begin reading the file.
     var file = _fileInput.files[0];
     _reader = new FileReader();
-    _reader.on.error.add((e) => _onError());
-    _reader.on.progress.add(_onProgress);
-    _reader.on.abort.add((e) => window.alert('File read cancelled.'));
-    _reader.on.loadStart.add((e) => _progressBar.classes.add('loading'));
-    _reader.on.load.add((e) => _setProgress(100));
+    _reader.onError.listen((e) => _onError());
+    _reader.onProgress.listen(_onProgress);
+    _reader.onAbort.listen((e) => window.alert('File read cancelled.'));
+    _reader.onLoadStart.listen((e) => _progressBar.classes.add('loading'));
+    _reader.onLoad.listen((e) => _setProgress(100));
     _reader.readAsBinaryString(file);
   }
 

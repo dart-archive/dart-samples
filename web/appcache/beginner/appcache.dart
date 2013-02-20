@@ -12,16 +12,16 @@ class AppCache {
 
   AppCache(this.appCache) {
     // Set up handlers to log all of the cache events or errors.
-    appCache.on.cached.add(onCacheEvent);
-    appCache.on.checking.add(onCacheEvent);
-    appCache.on.downloading.add(onCacheEvent);
-    appCache.on.error.add(onCacheError);
-    appCache.on.noUpdate.add(onCacheEvent);
-    appCache.on.obsolete.add(onCacheEvent);
-    appCache.on.progress.add(onCacheEvent);
+    appCache.onCached.listen(onCacheEvent);
+    appCache.onChecking.listen(onCacheEvent);
+    appCache.onDownloading.listen(onCacheEvent);
+    appCache.onError.listen(onCacheError);
+    appCache.onNoUpdate.listen(onCacheEvent);
+    appCache.onObsolete.listen(onCacheEvent);
+    appCache.onProgress.listen(onCacheEvent);
 
     // Set up a more interesting handler to swap in the new app when ready.
-    appCache.on.updateReady.add((e) => updateReady());
+    appCache.onUpdateReady.listen((e) => updateReady());
   }
 
   void updateReady() {

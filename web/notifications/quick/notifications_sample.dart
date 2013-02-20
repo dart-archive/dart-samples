@@ -37,7 +37,7 @@ void sayHello() {
  * I'm providing that I requested permission ahead of time.
  */
 void scheduleNotification() {
-  new Timer(1000, (timer) => showNotification());
+  new Timer(const Duration(milliseconds: 1000), (timer) => showNotification());
 }
 
 void showNotification() {
@@ -45,12 +45,12 @@ void showNotification() {
       ICON_URL, "Hello World", "You've been notified!");
 
   // Use these if you need them.
-  notification.on.display.add((e) => print("notification.on.display"));
-  notification.on.close.add((e) => print("notification.on.close"));
+  notification.onDisplay.listen((e) => print("notification.on.display"));
+  notification.onClose.listen((e) => print("notification.on.close"));
 
   notification.show();
 }
 
 void main() {
-  query('#say-hello').on.click.add((e) => sayHello());
+  query('#say-hello').onClick.listen((e) => sayHello());
 }
