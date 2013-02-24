@@ -1,6 +1,6 @@
 import "package:unittest/unittest.dart";
-import "core/strings_test.dart" as core_strings_test;
+import "core/core_test.dart" as core_test;
 
 void main() {
-  core_strings_test.main();  
+  core_test.main();  
 }
