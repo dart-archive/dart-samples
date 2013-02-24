@@ -1,22 +1,13 @@
 library strings_test;
 
 import 'package:unittest/unittest.dart';
+
 import 'concatenating_strings_test.dart' as concatenating_strings_test;
+import 'interpolating_expressions_test.dart' as interpolating_expressions_test; 
 
 void main() { 
   concatenating_strings_test.main();
-  
-  group('interpolating expressions', () {
-    var favFood = 'sushi';
-    
-    test('without {}', () {
-      expect('I love $favFood', equals('I love sushi'));
-    });
-    
-    test('with {}', () {
-      expect('I love ${favFood.toUpperCase()}', equals('I love SUSHI')); 
-    });
-  });
+  interpolating_expressions_test.main();
   
   group('incrementally building a string', () {
     var string = 'Dart is fun!';
