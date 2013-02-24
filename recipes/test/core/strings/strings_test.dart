@@ -4,22 +4,12 @@ import 'package:unittest/unittest.dart';
 
 import 'concatenating_strings_test.dart' as concatenating_strings_test;
 import 'interpolating_expressions_test.dart' as interpolating_expressions_test; 
+import 'incrementally_building_test.dart' as incrementally_building_test;
 
 void main() { 
   concatenating_strings_test.main();
   interpolating_expressions_test.main();
-  
-  group('incrementally building a string', () {
-    var string = 'Dart is fun!';
-    var sb = new StringBuffer();
-    sb.write('Dart');
-    sb.writeAll([' is', ' fun']);
-    sb.writeCharCode(33); // charCode for '!'.
-    
-    test('using a StringBuffer', () {
-      expect(sb.toString(), equals(string));
-    });
-  });
+  incrementally_building_test.main();
  
   group('converting between string characters and numerical codes', () {
     var clef = '\u{1F3BC}';

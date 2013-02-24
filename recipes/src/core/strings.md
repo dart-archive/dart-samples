@@ -102,3 +102,38 @@ Interpolations are not evaluated within raw strings:
 
 	r'$favFood'; // '$favFood'
 	
+	
+## Incrementally building a string efficiently
+
+### Problem
+
+You want to combine string fragments in an efficient way. 
+
+### Solution
+
+Use a StringBuffer to programmatically generate a string. A StringBuffer 
+collects the string fragments, but does not generate a new string until
+`toString()` is called:
+
+	var sb = new StringBuffer();
+    sb.write("John, ");
+    sb.write("Paul, ");
+    sb.write("George, ");
+    sb.write("and Ringo");
+    sb.toString(); // "John, Paul, George, and Ringo"
+    
+### Discussion
+
+In addition to `write()`, the StringBuffer class provides methods to write a
+list of strings (`writeAll()`), write a numerical character code
+(`writeCharCode()`), write with an added newline ('writeln()`), and more. Here
+is a simple example:
+
+    var sb = new StringBuffer();
+    sb.writeln("The Beatles:");
+    sb.writeAll(['John, ', 'Paul, ', 'George, and Ringo']);
+    sb.writeCharCode(33); // charCode for '!'.
+    sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
+
+A StringBuffer represents a more efficient way of combining strings than
+`concat()`.  See the "Concatenating Strings" recipe for a description of `concat()`. 
