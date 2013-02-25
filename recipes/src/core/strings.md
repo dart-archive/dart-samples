@@ -67,8 +67,8 @@ You can skip the {} if the expression is an identifier:
       
 ### Discussion
 
-An interpolated string Ôstring ${expression}Õ is equivalent to the
-concatenation of the strings Ôstring' and expression.toString():
+An interpolated string â€˜string ${expression}â€™ is equivalent to the
+concatenation of the strings â€˜string' and expression.toString():
 
 	var four = 4;
     'The $four seasons'; // 'The 4 seasons'
@@ -137,3 +137,101 @@ is a simple example:
 
 A StringBuffer represents a more efficient way of combining strings than
 `concat()`.  See the "Concatenating Strings" recipe for a description of `concat()`. 
+
+
+
+
+
+
+
+
+## Converting between string characters and numbers
+
+### Problem 
+
+You want to convert string characters into code units and back.
+
+### Solution
+
+Use `string.codeUnits()` to access the sequence of Unicode UTF-16 code units
+that make up a string:
+    
+    'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
+    
+     var smileyFace = '\u263A';
+     smileyFace.codeUnits.toList(); // [9786]
+     
+The number 9786 represents the code unit '\u263A'.
+     
+Use the `runes` getter to access a string's code points:
+ 
+	'Dart'.runes.toList(); // [68, 97, 114, 116]
+
+     smileyFace.runes.toList(); // [9786]
+ 
+### Discussion
+
+Notice that using `runes` and `codeUnits()` produces identical results
+in the examples above. That is because each character in both 'Dart' and
+`smileyFace` fits within 16 bits, resulting in a code unit corresponding
+neatly with a code point.
+
+Consider an example where a character cannot be represented within 16-bits,
+the Unicode character for a Treble clef ('\u{1F3BC}'). This character consists
+of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of this
+character using `codeUnits()` produces the following result:
+
+    var clef = '\u{1F3BC}';
+	clef.codeUnits.toList(); // [55356, 57276]
+
+The numbers 55356 and 57276 represent the surrogate pair, '\uD83C' and 
+'\uDFBC', respectively.
+
+Using `runes` produces this result:
+
+    clef.runes.toList(); // [127932]
+    
+The number 127932 represents the code point '\u1F3BC'.
+
+#### Using codeUnitAt() to access individual characters
+
+To access the 16-Bit UTF-16 code unit at a particular index, use
+`codeUnitAt()`:
+
+    smileyFace.codeUnitAt(0); // 9786
+    
+    clef.codeUnitAt(0); // 55356
+	clef.codeUnitAt(1); // 57276
+
+Notice that in either call to `clef.codeUnitat()`, the values returned
+represent strings that are only one half of a UTF-16 surrogate pair.
+These are not valid UTF-16 strings.
+
+#### Converting numerical values to strings
+
+You can generate a new string from code units using the factory 
+`String.fromCharCodes(charCodes)`:
+
+	new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
+	
+    var heart = '\u2661';
+	new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
+	// 'I $heart Lucy'
+
+The charCodes can be UTF-16 code units or runes.
+
+The Unicode character for a Treble clef is '\u{1F3BC}', with a rune value of 
+127932. Passing either code units, or a code point to `String.fromCharCodes()`
+produces the `clef` string:
+
+	new String.fromCharCodes([55356, 57276]); // clef
+	new String.fromCharCodes([127932]), // clef
+	
+You can use the `String.fromCharCode()` factory to convert a single code unit
+to a string:
+
+	new String.fromCharCode(127932), // clef
+
+Creating a string with only one half of a surrogate pair is permitted, but not
+recommended.
+

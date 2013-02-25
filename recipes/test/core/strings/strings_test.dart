@@ -5,66 +5,13 @@ import 'package:unittest/unittest.dart';
 import 'concatenating_strings_test.dart' as concatenating_strings_test;
 import 'interpolating_expressions_test.dart' as interpolating_expressions_test; 
 import 'incrementally_building_test.dart' as incrementally_building_test;
+import 'converting_chars_nums_test.dart' as converting_chars_nums_test;
 
 void main() { 
   concatenating_strings_test.main();
   interpolating_expressions_test.main();
   incrementally_building_test.main();
- 
-  group('converting between string characters and numerical codes', () {
-    var clef = '\u{1F3BC}';
-
-    group('using runes', () {
-      test('', () {
-        expect('Dart'.runes.toList(), equals([68, 97, 114, 116]));
-      });
-      
-      test('with non-BMP symbol', () {
-        expect(clef.runes.first, equals(127932));
-        expect(clef.runes.first.toRadixString(16), equals('1f3bc'));
-      });
-    });
-    
-    group('using codeUnits', () {
-      test('', () {
-        expect('Dart'.codeUnits.toList(), equals([68, 97, 114, 116]));
-      });
-      
-      test('with non-BMP symbol', () {
-        expect(clef.codeUnits.toList(), equals([55356, 57276]));  
-        expect(clef.codeUnits.map((codeUnit) {
-          return codeUnit.toRadixString(16);
-        }).toList(), equals(['d83c', 'dfbc']));        
-      });
-    });
-    
-    group('using codeUnitAt', () {
-      test('', () {
-        expect('Dart'.codeUnitAt(0), equals(68));
-      });
-      
-      test('with non-BMP symbol', () {
-        expect(clef.codeUnitAt(0).toRadixString(16), equals('d83c'));  
-      });
-    });
- 
-    // * The [charCodes] can be UTF-16 code units or runes. If a char-code value is
-    // * 16-bit it is copied verbatim. If it is greater than 16 bits it is
-    // * decomposed into a surrogate pair.
-    group('using fromCharCodes', () {
-      test('', () {
-        expect(new String.fromCharCodes([68, 97, 114, 116]), equals('Dart'));
-      });
-      
-      test('with surrogate pair codeUnits', () {
-        expect(new String.fromCharCodes([55356, 57276]), equals(clef));
-      });
-      
-      test('with rune', () {
-        expect(new String.fromCharCodes([127932]), equals(clef));
-      });
-    });
-  });
+  converting_chars_nums_test.main();
   
   group('determining if string is empty', () {
     var emptyString = '';
@@ -75,6 +22,10 @@ void main() {
     
     test('with space', () {
       expect(space.isEmpty, equals(false));
+    });
+    
+    test('don\'t check for equality', () {
+      expect('' == 'u\2004', isFalse);
     });
   });
   
@@ -135,18 +86,18 @@ void main() {
   
   group('splitting a string', () {
     var doughnuts = '\u{1F369}';
-    var smiley = '\u263A';
-    var happy = 'I am $smiley';
+    var smileyFace = '\u263A';
+    var happy = 'I am $smileyFace';
     group('using split(string)', () {
       test('on code-unit boundary', () {
         expect('Dart'.split(''), equals(['D', 'a', 'r', 't']));
-        expect(smiley.split('').length, equals(1));
+        expect(smileyFace.split('').length, equals(1));
         expect(doughnuts.split('').length, equals(2));
       });
       
       test('on rune boundary', () {
         expect(happy.runes.map((charCode) => new String.fromCharCode(charCode)).last, 
-            equals(smiley));
+            equals(smileyFace));
       });
     });
       
