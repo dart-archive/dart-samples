@@ -6,28 +6,14 @@ import 'concatenating_strings_test.dart' as concatenating_strings_test;
 import 'interpolating_expressions_test.dart' as interpolating_expressions_test; 
 import 'incrementally_building_test.dart' as incrementally_building_test;
 import 'converting_chars_nums_test.dart' as converting_chars_nums_test;
+import 'testing_string_emptiness_test.dart' as testing_string_emptiness_test;
 
 void main() { 
   concatenating_strings_test.main();
   interpolating_expressions_test.main();
   incrementally_building_test.main();
   converting_chars_nums_test.main();
-  
-  group('determining if string is empty', () {
-    var emptyString = '';
-    var space = '\u2004';
-    test('', () {
-      expect(emptyString.isEmpty, equals(true));
-    });
-    
-    test('with space', () {
-      expect(space.isEmpty, equals(false));
-    });
-    
-    test('don\'t check for equality', () {
-      expect('' == 'u\2004', isFalse);
-    });
-  });
+  testing_string_emptiness_test.main;
   
   // TODO: write tests using different unicode space symbols
   group('trimming whitespace from a string', () {

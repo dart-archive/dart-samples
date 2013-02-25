@@ -235,3 +235,38 @@ to a string:
 Creating a string with only one half of a surrogate pair is permitted, but not
 recommended.
 
+## Determining if a string is empty
+
+### Problem
+
+You want to know if a string is empty. You tried ` if(string) {...}`, but that
+did not work.
+
+### Solution
+
+Use string.isEmpty:
+
+    var emptyString = '';
+  	emptyString.isEmpty; // true
+  	
+A string with a space is not empty:
+ 
+    var space = " ";
+    space.isEmpty; // false
+   
+### Discussion 
+
+Don't use `if (string)` to test the emptiness of a string. In Dart, all
+objects except the boolean true evaluate to false. `if(string)` will always
+be false.
+
+Don't try to explicitly test for the emptiness of a string:
+
+    if (emptyString == anotherString) {...}
+    
+This may work sometimes, but if `string` has an empty value that is
+not a literal `''`, the comparisons will fail:
+    
+    emptyString == '\u0020`; // false
+    emptyString == '\u2004'; // false
+ 
