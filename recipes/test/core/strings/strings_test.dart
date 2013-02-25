@@ -7,6 +7,7 @@ import 'interpolating_expressions_test.dart' as interpolating_expressions_test;
 import 'incrementally_building_test.dart' as incrementally_building_test;
 import 'converting_chars_nums_test.dart' as converting_chars_nums_test;
 import 'testing_string_emptiness_test.dart' as testing_string_emptiness_test;
+import 'trimming_whitespace_test.dart' as trimming_whitespace_test;
 
 void main() { 
   concatenating_strings_test.main();
@@ -14,23 +15,8 @@ void main() {
   incrementally_building_test.main();
   converting_chars_nums_test.main();
   testing_string_emptiness_test.main;
-  
-  // TODO: write tests using different unicode space symbols
-  group('trimming whitespace from a string', () {
-    var x = '  x  ';
-    
-    test('', () {
-      expect(x.trim(), equals('x'));
-    });
+  trimming_whitespace_test.main();
 
-    test('leading whitespace', () {
-      expect(x.replaceFirst(new RegExp(r'^\s+'), ''), equals('x  '));
-    });
-
-    test('trailing whitespace', () {
-      expect(x.replaceFirst(new RegExp(r'\s+$'), ''), equals('  x'));
-    });
-  });
   
   group('getting the length of a string', () {
     var clef = '\u{1F3BC}';

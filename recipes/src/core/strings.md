@@ -269,4 +269,45 @@ not a literal `''`, the comparisons will fail:
     
     emptyString == '\u0020`; // false
     emptyString == '\u2004'; // false
+    
+## Removing leading and trailing whitesapce
+
+### Problem
+
+You want to remove leading and trailing whitespace from a string.
+
+### Solution
+
+Use `string.trim()`:
+
+    var space = '\n\r\f\t\v';
+    var string = '$space X $space';
+    string.trim(); // 'X'
+
+The String class has no methods to remove leading and trailing whitespace. But
+you can always use regExps.
+
+Remove only leading whitespace:
+
+    string.replaceFirst(new RegExp(r'^\s+'), ''); //  'X $space'
+   
+Remove only trailing whitespace:
+
+    string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
+    
+
+      "\t\nx\t\t".replaceFirst(new RegExp(r'^\s+'), ''); // 'x\t\t'
+      
+ And to remove only trailing whitespacklp[;e, use this regExp:
+ }
+ 
+ 
+	
+    
+
+    
+
+
+
+### Discussion
  
