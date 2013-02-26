@@ -88,7 +88,7 @@ objects. Here's what happens if you don't:
     }
     
     var point = new Point(3, 4);
-      'Point: $point'; // "Point: Instance of 'Point'"
+    'Point: $point'; // "Point: Instance of 'Point'"
 
 Probably not what you wanted. Here is the same example with an explicit
 `toString()`:
@@ -97,7 +97,7 @@ Probably not what you wanted. Here is the same example with an explicit
       ...
 	    
       String toString() => "x: $x, y: $y";
-	  }
+    }
 	
     'Point: $point'; // 'Point: x: 3, y: 4'
 
@@ -178,7 +178,7 @@ of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of this
 character using `codeUnits()` produces the following result:
 
     var clef = '\u{1F3BC}'; // 🎼
-	  clef.codeUnits.toList(); // [55356, 57276]
+    clef.codeUnits.toList(); // [55356, 57276]
 
 The numbers 55356 and 57276 represent `clef`'s surrogate pair, '\uD83C' and
 '\uDFBC', respectively.
@@ -205,7 +205,7 @@ characrter.
 Using `codeUnitAt()` with the multi-byte `clef` character leads to problems:
 
     clef.codeUnitAt(0); // 55356
-	  clef.codeUnitAt(1); // 57276
+    clef.codeUnitAt(1); // 57276
 
 In either call to `clef.codeUnitAt()`, the values returned represent strings
 that are only one half of a UTF-16 surrogate pair.  These are not valid UTF-16
@@ -216,7 +216,7 @@ strings.
 You can generate a new string from code units using the factory 
 `String.fromCharCodes(charCodes)`:
 
-	  new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
+    new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
 	
     var heart = '\u2661'; // ♡
     new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
@@ -248,7 +248,7 @@ did not work.
 
 ### Solution
 
-Use string.isEmpty:
+Use `string.isEmpty`:
 
     var emptyString = '';
   	emptyString.isEmpty; // true
@@ -310,7 +310,7 @@ correctly calculate the length when working with Unicode.
 
 Use string.length to get the number of UTF-16 code units in a string:
 	
-	  'I love music'.length; // 12
+    'I love music'.length; // 12
 	
 ### Discussion
 
@@ -399,7 +399,7 @@ To split a string into a list of characters, map the string runes:
     var smileyFace = '\u263A'; // ☺
     var happy = 'I am $smileyFace'; // 'I am ☺'
     happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
-      // [I,  , a, m,  , ☺]
+    // [I,  , a, m,  , ☺]
 	
 You can also use string.split(''):
 
@@ -434,8 +434,7 @@ when using `split()` with a regExp:
 
     'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
       onMatch: (m) => '*${m.group(0).toLowerCase()}*',
-      onNonMatch: (n) => n.toUpperCase());
-    // 'EATS *shoots* LEAVES'
+      onNonMatch: (n) => n.toUpperCase()); // 'EATS *shoots* LEAVES'
       
 The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
@@ -470,7 +469,7 @@ They do not affect the characters of uni-case scripts like Devanagari (used for
 writing many of the languages of India):
 
     var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
-      // चिकन कबाब (in Devanagari)
+    // चिकन कबाब (in Devanagari)
     chickenKebab.toLowerCase();  // चिकन कबाब 
     chickenKebab.toUpperCase();  // चिकन कबाब 
     
@@ -517,7 +516,7 @@ You can also use a regExp and `hasMatch()`:
 
 ### Problem
 
-You want to use regular expressions to match a pattern in a string, and 
+You want to use regExp to match a pattern in a string, and 
 want to be able to access the matches.
 
 ### Solution
@@ -530,7 +529,8 @@ the `allMatches()` method:
     List matches = regExp.allMatches(string);
     matches.map((match) => match.group(0)).toList(); // ['fox', 'box']
      
-You can also find out the number of matches:
+You can query the object returned by `allMatches()` to find out the number of
+matches:
  
     matches.length; // 2
 
