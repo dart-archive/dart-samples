@@ -13,6 +13,8 @@ import 'subscripting_strings_test.dart' as subscripting_strings_test;
 import 'splitting_strings_test.dart' as splitting_strings_test;
 import 'changing_string_case.dart' as changing_string_case;
 import 'determining_if_string_contains_test.dart' as determining_if_string_contains_test;
+import 'finding_regexp_matches_test.dart' as finding_regexp_matches_test;
+import 'substituting_strings_test.dart' as substituting_strings_test;
 
 void main() {
   concatenating_strings_test.main();
@@ -26,38 +28,6 @@ void main() {
   splitting_strings_test.main();
   changing_string_case.main();
   determining_if_string_contains_test.main();
-  
-  group('finding occurences of a string inside another string', () {
-    var string = 'Not with a fox, not in a box';
-    var regExp = new RegExp(r'[fb]ox');
-    
-    test('using allMatches()', () {
-      List matches = regExp.allMatches(string);
-      expect(matches.map((match) => match.group(0)).toList(), equals(['fox', 'box'])); 
-      // Finding the number of occurences of a substring.
-      expect(matches.length, equals(2));
-    });
-
-    test('using firstMatch()', () {
-      expect(regExp.firstMatch(string).group(0), equals('fox'));
-    });
-  });
-  
-  group('substituting strings based on regExp matches', () {
-    var names = 'Seth Mary/Mem Tim=Timmy';
-    var namesRegExp = new RegExp(r'(\s|/|=)');
-    
-    test('using replaceAll()', () {
-      expect('resume'.replaceAll(new RegExp(r'e'), '\u00E9'), equals('résumé'));
-    });
-    
-    test('using replaceAllMapped()', () {
-      expect(names.replaceAllMapped(namesRegExp, (_) => ' | '), 
-          equals('Seth | Mary | Mem | Tim | Timmy'));
-    });
-    
-    test('using replaceFirst()', () {
-      expect('0.0001'.replaceFirst(new RegExp(r'0+'), ''), equals('.0001'));
-    });
-  });
+  finding_regexp_matches_test.main(); 
+  substituting_strings_test.main();
 }

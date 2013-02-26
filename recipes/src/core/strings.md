@@ -102,7 +102,6 @@ Interpolations are not evaluated within raw strings:
 
 	r'$favFood'; // '$favFood'
 	
-	
 ## Incrementally building a string efficiently
 
 ### Problem
@@ -136,14 +135,7 @@ is a simple example:
     sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
 
 A StringBuffer represents a more efficient way of combining strings than
-`concat()`.  See the "Concatenating Strings" recipe for a description of `concat()`. 
-
-
-
-
-
-
-
+`concat()`.  See the "Concatenating Strings" recipe for a description of `concat()`.
 
 ## Converting between string characters and numbers
 
@@ -295,7 +287,6 @@ Remove only trailing whitespace:
 
     string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
 
-
 ## Calculating the length of a string
 
 ### Problem
@@ -368,28 +359,10 @@ You can always subscript runes and code units:
 The number 127861 represents the code point '\u{1F375}' (coffee). The number
 55356 represents the first of the surrogate pair for '\u{1F375}'. 
 
-
 ## Splitting a string
-
-  /**
-   * Splits the string around matches of [pattern]. Returns
-   * a list of substrings.
-   *
-   * Splitting with an empty string pattern (`""`) splits at UTF-16 code unit
-   * boundaries and not at rune boundaries. The following two expressions
-   * are hence equivalent:
-   *
-   *     string.split("")
-   *     string.codeUnits.map((unit) => new String.character(unit))
-   *
-   * Unless it guaranteed that the string is in the basic multilingual plane
-   * (meaning that each code unit represents a rune) it is often better to
-   * map the runes instead:
-   *
-   *     string.runes.map((rune) => new String.character(rune))
-   */
    
 ### Problem
+
 You want to split a string into substrings.
 
 ### Solution
@@ -508,3 +481,57 @@ found within a string, and its matching index, if it is:
 You can also use a regExp and `hasMatch()`:
 
     new RegExp(r'ar[et]').hasMatch(string); //  True, 'art' and 'are' match.
+    
+## Finding substring occurrences
+
+### Problem
+
+You want to use regular expressions to match a pattern in a string, and 
+want to be able to access the matches.
+
+### Solution
+
+Construct a regular expression using the RegExp class and find matches using
+the `allMatches()` method:
+
+    var string = 'Not with a fox, not in a box';
+    var regExp = new RegExp(r'[fb]ox');
+    List matches = regExp.allMatches(string);
+    matches.map((match) => match.group(0)).toList(); // ['fox', 'box']
+     
+You can also find out the number of matches:
+ 
+      matches.length; // 2
+
+To find the first match, use `firstMatch()`:
+	
+	regExp.firstMatch(string).group(0); // 'fox'
+
+## Substituting strings based on regExp matches
+
+### Problem
+
+You want to match substrings within a string and make substitutions based on
+the matches.
+
+### Solution
+
+Construct a regular expression using the RegExp class and make replacements
+using `replaceAll()` method:
+
+	'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'
+
+If you want to replace just the first match, use 'replaceFirst()`:
+
+	'0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
+	
+The RegExp matches for one or more 0's and replaces them with an empty string.
+
+You can use `replaceAllMatched()` and register a function to modify the
+matches:
+
+    var heart = '\u2661';
+    var string = "I like Ike but I $heart Lucy";
+    var regExp = new RegExp(r'[A-Z]\w+');
+    string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
+    // 'I like IKE but I ♡ LUCY'
