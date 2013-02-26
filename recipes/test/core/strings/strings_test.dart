@@ -17,6 +17,12 @@ import 'finding_regexp_matches_test.dart' as finding_regexp_matches_test;
 import 'substituting_strings_test.dart' as substituting_strings_test;
 
 void main() {
+  var smileyFace = '\u263A'; // ☺
+  var happy = 'I am $smileyFace'; // 'I am ☺'
+  print(happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList()); 
+  print('\u2661');
+  return;
+  
   concatenating_strings_test.main();
   interpolating_expressions_test.main();
   incrementally_building_test.main();

@@ -150,7 +150,7 @@ that make up a string:
     
     'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
     
-     var smileyFace = '\u263A';
+     var smileyFace = '\u263A'; // ☺
      smileyFace.codeUnits.toList(); // [9786]
      
 The number 9786 represents the code unit '\u263A'.
@@ -173,7 +173,7 @@ the Unicode character for a Treble clef ('\u{1F3BC}'). This character consists
 of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of this
 character using `codeUnits()` produces the following result:
 
-    var clef = '\u{1F3BC}';
+    var clef = '\u{1F3BC}'; // 🎼
 	clef.codeUnits.toList(); // [55356, 57276]
 
 The numbers 55356 and 57276 represent the surrogate pair, '\uD83C' and 
@@ -206,9 +206,9 @@ You can generate a new string from code units using the factory
 
 	new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
 	
-    var heart = '\u2661';
+    var heart = '\u2661'; // ♡
 	new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
-	// 'I $heart Lucy'
+	// 'I ♡ Lucy'
 
 The charCodes can be UTF-16 code units or runes.
 
@@ -216,13 +216,13 @@ The Unicode character for a Treble clef is '\u{1F3BC}', with a rune value of
 127932. Passing either code units, or a code point to `String.fromCharCodes()`
 produces the `clef` string:
 
-	new String.fromCharCodes([55356, 57276]); // clef
-	new String.fromCharCodes([127932]), // clef
+	new String.fromCharCodes([55356, 57276]); // 🎼
+	new String.fromCharCodes([127932]), // 🎼
 	
 You can use the `String.fromCharCode()` factory to convert a single code unit
 to a string:
 
-	new String.fromCharCode(127932), // clef
+	new String.fromCharCode(127932), // 🎼
 
 Creating a string with only one half of a surrogate pair is permitted, but not
 recommended.
@@ -259,7 +259,7 @@ Don't try to explicitly test for the emptiness of a string:
 This may work sometimes, but if `string` has an empty value that is
 not a literal `''`, the comparisons will fail:
     
-    emptyString == '\u0020`; // false
+    emptyString == '\u0020'; // false
     emptyString == '\u2004'; // false
     
 ## Removing leading and trailing whitesapce
@@ -304,9 +304,9 @@ Use string.length to get the number of UTF-16 code units in a string:
 
 The code unit length may be the same as the rune length of the string:
 
-    var clef = '\u{1F3BC}';
-    var hearts = '\u2661';
-    var music = 'I $hearts $clef';
+    var clef = '\u{1F3BC}'; // 🎼
+    var hearts = '\u2661'; // ♡
+    var music = 'I $hearts $clef'; // 'I ♡ 🎼'
     
     hearts.length; // 1
     hearts.runes.length; // 1
@@ -336,20 +336,20 @@ string:
 
     'Dart'[0]; // 'D'
 
-    var hearts = '\u2661';
-    hearts[0]; '\u2661'
+    var hearts = '\u2661'; // ♡
+    hearts[0]; '\u2661' // ♡
 
 For non-BMP characters, subscripting yields invalid UTF-16 characters:
 
-    var coffee = '\u{1F375}';
-    var doughnuts = '\u{1F369}';
-    var healthFood = '$coffee and $doughnuts';
+    var coffee = '\u{1F375}'; // 🍵
+    var doughnuts = '\u{1F369}'; // 🍩
+    var healthFood = '$coffee and $doughnuts'; // 🍵 and 🍩
  
     healthFood[0]; // Invalid string, half of a surrogate pair.
     
 You can slice the string to get the first 2 code units:
  
-    healthFood.slice(0, 2); // coffee
+    healthFood.slice(0, 2); // 🍵
 
 You can always subscript runes and code units:
 
@@ -372,10 +372,10 @@ To split a string into a list of characters, map the string runes:
 	"dart".runes.map((rune) => new String.fromCharCode(rune)).toList(); 
 	// ['d', 'a', 'r', 't']
 	
-	var smileyFace = '\u263A'; // In BMP.
-	var happy = 'I am $smileyFace';
+	var smileyFace = '\u263A'; // ☺
+	var happy = 'I am $smileyFace'; // 'I am ☺'
 	happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
-    // ['I', ' ', 'a', 'm', ' ', '\u263A']
+    // [I,  , a, m,  , ☺]
 	
 You can also use string.split(''):
 
@@ -386,7 +386,7 @@ Do this only if you are sure that the string is in the Basic Multilingual
 Plane (BMP). Since `split('')` splits at the UTF-16 code unit boundaries,
 invoking it on a non-BMP character yields the string's surrogate pair:
 
-	var clef = '\u{1F3BC}'; // Not in BMP.
+	var clef = '\u{1F3BC}'; // 🎼, not in BMP.
 	clef.split('').length; // 2
 	
 ### Split a string using a regExp
