@@ -11,6 +11,8 @@ import 'trimming_whitespace_test.dart' as trimming_whitespace_test;
 import 'getting_the_length_test.dart' as getting_the_length_test;
 import 'subscripting_strings_test.dart' as subscripting_strings_test;
 import 'splitting_strings_test.dart' as splitting_strings_test;
+import 'changing_string_case.dart' as changing_string_case;
+import 'determining_if_string_contains_test.dart' as determining_if_string_contains_test;
 
 void main() {
   concatenating_strings_test.main();
@@ -22,51 +24,9 @@ void main() {
   getting_the_length_test.main();
   subscripting_strings_test.main();
   splitting_strings_test.main();
+  changing_string_case.main();
+  determining_if_string_contains_test.main();
   
-  group('changing the case of a string', () {
-    var string = 'Rohan loves trains';
-    var hearts = '\u2661';
-    var stringWithSymbol = 'Rohan $hearts trains';
-    
-    test('with toUpperCase()', () {
-      expect(string.toUpperCase(), equals('ROHAN LOVES TRAINS'));
-    });
-    
-    test('with toLowerCase()', () {
-      expect(string.toLowerCase(), equals('rohan loves trains'));
-    });
-    
-    test('when using symbols', () {
-      expect(stringWithSymbol.toUpperCase(), equals('ROHAN $hearts TRAINS'));
-      expect(stringWithSymbol.toLowerCase(), equals('rohan $hearts trains'));
-    });
-  });
-  
-  group('determining whether a string contains a substring', () {
-    var string = 'Dart strings are immutable';
-    
-    test('using contains', () {
-      expect(string.contains('immutable'), isTrue);
-      expect(string.contains('Dart', 2), isFalse);
-    });
-    
-    test('using startsWith()', () {
-      expect(string.startsWith('Dart'), isTrue);
-    });
-    
-    test('using endsWith()', () {
-      assert(string.endsWith('e') == true);
-    });
-  
-    test('using indexOf()', () {
-      expect(string.indexOf('art') != -1, isTrue);
-    });
-    
-    test('using hasMatch()', () {
-      expect(new RegExp(r'ar[et]').hasMatch(string), isTrue);
-    });
-  });
-
   group('finding occurences of a string inside another string', () {
     var string = 'Not with a fox, not in a box';
     var regExp = new RegExp(r'[fb]ox');

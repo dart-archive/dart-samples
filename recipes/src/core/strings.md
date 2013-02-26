@@ -67,8 +67,8 @@ You can skip the {} if the expression is an identifier:
       
 ### Discussion
 
-An interpolated string ‘string ${expression}’ is equivalent to the
-concatenation of the strings ‘string' and expression.toString():
+An interpolated string ‚Äòstring ${expression}‚Äô is equivalent to the
+concatenation of the strings ‚Äòstring' and expression.toString():
 
 	var four = 4;
     'The $four seasons'; // 'The 4 seasons'
@@ -441,6 +441,70 @@ The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
 substrings are joined together again.
 
+## Changing string case
 
+### Problem
+
+You want to change the case of strings.
+
+### Solution
+
+Use `string.toUpperCase()` and `string.toLowerCase()` to covert a string to 
+lower-case or upper-case, respectively:
+
+    string = "I love Lucy";
+    string.toUpperCase(); // 'I LOVE LUCY!'
+	string.toLowerCase(); // 'i love lucy!'
  
- ### 
+ ### Discussion
+ 
+Case changes affect the characters of bi-cameral scripts like Greek and French:
+ 
+    var zeus = '\u0394\u03af\u03b1\u03c2'; // Δίας (Zeus in modern Greek)
+    zeus.toUpperCase(); // 'ΔΊΑΣ'
+    
+    var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // Résumé
+    resume.toLowerCase(); // 'résumé'
+    
+They do not affect the characters of uni-case scripts like Devanagari (used for
+writing many of the languages of India):
+
+    var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
+      // चिकन कबाब (in Devanagari)
+    chickenKebab.toLowerCase();  // चिकन कबाब 
+    chickenKebab.toUpperCase();  // चिकन कबाब 
+    
+If a character's case does not change when using `toUpperCase()` and
+`toLowerCase()`, it is most likely because the character only has one
+form.
+
+## Determining whether a string contains another string
+
+### Problem
+
+You want to find out if a string contains another string.
+
+### Solution
+
+Use `string.contains()`:
+
+    var string = 'Dart strings are immutable';
+    string.contains('immutable'); // True.
+    string.contains('Dart', 2); // False
+    
+### Discussion
+
+The String library provides a couple of shortcuts for testing that a string
+is a substring of another:
+
+    string.startsWith('Dart'); // True.
+	string.endsWith('e'); // True.
+	
+You can also use `string.indexOf()`, which returns -1 if the substring is
+found within a string, and its matching index, if it is:
+
+	string.indexOf('art') != -1; // True.
+
+You can also use a regExp and `hasMatch()`:
+
+    new RegExp(r'ar[et]').hasMatch(string); //  True, 'art' and 'are' match.
