@@ -9,7 +9,7 @@ that resulted in an error.
 
 Use adjacent string literals:
 
-    'Dart'  is' ' fun!'; // 'Dart is fun!'
+    'Dart'  'is' ' fun!'; // 'Dart is fun!'
 	
 ### Discussion
 
@@ -17,7 +17,7 @@ Adjacent literals also work over multiple lines:
 
   	'Dart'
   	'is'
-  	fun!; // 'Dart is fun!'
+  	'fun!'; // 'Dart is fun!'
 
 They also work when using multiline strings:
 
