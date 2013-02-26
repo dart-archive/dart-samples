@@ -8,87 +8,20 @@ import 'incrementally_building_test.dart' as incrementally_building_test;
 import 'converting_chars_nums_test.dart' as converting_chars_nums_test;
 import 'testing_string_emptiness_test.dart' as testing_string_emptiness_test;
 import 'trimming_whitespace_test.dart' as trimming_whitespace_test;
+import 'getting_the_length_test.dart' as getting_the_length_test;
+import 'subscripting_strings_test.dart' as subscripting_strings_test;
+import 'splitting_strings_test.dart' as splitting_strings_test;
 
-void main() { 
+void main() {
   concatenating_strings_test.main();
   interpolating_expressions_test.main();
   incrementally_building_test.main();
   converting_chars_nums_test.main();
   testing_string_emptiness_test.main;
   trimming_whitespace_test.main();
-
-  
-  group('getting the length of a string', () {
-    var clef = '\u{1F3BC}';
-    var hearts = '\u2661';
-    var music = 'I $hearts $clef'; // length of 4 or 6
-    
-//    print(music.length); //  Defaults.codeUnit.
-//    print(music.runes.length); // You probably want runes.
-//    print(music.codeUnits.length); // Same as default.
-
-    test('', () {
-      expect('Dart'.length, equals(4));
-    });
-    
-    test('which contains non-BMP symbols', () {
-      expect(clef.length, equals(2));
-      expect(clef.runes.length, equals(1));
-    });
-  });
-
-  group('subscripting a string that may contain non-BMP symbols', () {
-    var hearts = '\u2661';
-    var coffee = '\u{1F375}';
-    var doughnuts = '\u{1F369}';
-    var healthFood = '$coffee and $doughnuts';
-    test('', () {
-      expect('Dart'[0], equals('D'));
-      expect(hearts[0], equals('\u2661'));
-    });
-    
-    test('with non-BMP symbol', () {
-      var code = 127861;
-      expect(healthFood.runes.first, equals(code));
-      expect(healthFood.runes.toList()[2], equals(97));
-      expect(new String.fromCharCode(code), equals('\u{1f375}')); // prints the coffee symbol
-    });    
-    // food[0] is not valid. It is half of a surrogate pair.
-  });
-  
-  group('splitting a string', () {
-    var doughnuts = '\u{1F369}';
-    var smileyFace = '\u263A';
-    var happy = 'I am $smileyFace';
-    group('using split(string)', () {
-      test('on code-unit boundary', () {
-        expect('Dart'.split(''), equals(['D', 'a', 'r', 't']));
-        expect(smileyFace.split('').length, equals(1));
-        expect(doughnuts.split('').length, equals(2));
-      });
-      
-      test('on rune boundary', () {
-        expect(happy.runes.map((charCode) => new String.fromCharCode(charCode)).last, 
-            equals(smileyFace));
-      });
-    });
-      
-    group('using split(regExp)', () {
-      var names = 'Seth Mary/Mem Tim=Timmy';
-      var namesRegExp = new RegExp(r'(\s|/|=)');
-      test('', () {
-        expect(names.split(namesRegExp), 
-            equals(['Seth', 'Mary', 'Mem', 'Tim', 'Timmy']));        
-      });
-    });
-    
-    group('using splitMapJoin(regExp)', () {
-      expect('Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
-          onMatch: (m) => m.group(0).toLowerCase(),
-          onNonMatch: (n) => n.toUpperCase()
-      ), equals('EATS shoots LEAVES'));
-    });
-  });
+  getting_the_length_test.main();
+  subscripting_strings_test.main();
+  splitting_strings_test.main();
   
   group('changing the case of a string', () {
     var string = 'Rohan loves trains';

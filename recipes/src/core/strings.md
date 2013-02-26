@@ -294,20 +294,153 @@ Remove only leading whitespace:
 Remove only trailing whitespace:
 
     string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
-    
 
-      "\t\nx\t\t".replaceFirst(new RegExp(r'^\s+'), ''); // 'x\t\t'
-      
- And to remove only trailing whitespacklp[;e, use this regExp:
- }
- 
- 
+
+## Calculating the length of a string
+
+### Problem
+
+You want to get the length of a string, but are not sure how to 
+correctly calculate the length when working with Unicode.
+
+### Solution:
+
+Use string.length to get the number of UTF-16 code units in a string:
 	
-    
-
-    
-
-
-
+	'I love music'.length; // 12
+	
 ### Discussion
+
+The code unit length may be the same as the rune length of the string:
+
+    var clef = '\u{1F3BC}';
+    var hearts = '\u2661';
+    var music = 'I $hearts $clef';
+    
+    hearts.length; // 1
+    hearts.runes.length; // 1
+  
+If the string contains any characters outside the Basic Multilingual
+Plane (BMP), the rune length will be less than the code unit length:
+  
+    clef.length; // 2
+    clef.runes.length; // 1
+    
+    music.length; // 6
+    music.runes.length // 5
+
+Use `length` if you want to number of code units; use `runes.length` if you 
+want the number of distinct characters.
+
+## Getting the character at a specific index in a string
+
+### Problem
+
+You want to be able to access a character in a string at a particular index.
+
+### Solution
+
+For strings in the Basic Multilingual Plane (BMP), use [] to subscript the
+string:
+
+    'Dart'[0]; // 'D'
+
+    var hearts = '\u2661';
+    hearts[0]; '\u2661'
+
+For non-BMP characters, subscripting yields invalid UTF-16 characters:
+
+    var coffee = '\u{1F375}';
+    var doughnuts = '\u{1F369}';
+    var healthFood = '$coffee and $doughnuts';
  
+    healthFood[0]; // Invalid string, half of a surrogate pair.
+    
+You can slice the string to get the first 2 code units:
+ 
+    healthFood.slice(0, 2); // coffee
+
+You can always subscript runes and code units:
+
+    healthFood.runes.first; // 127861
+    healthFood.codeUnits.first; // 55356
+ 
+The number 127861 represents the code point '\u{1F375}' (coffee). The number
+55356 represents the first of the surrogate pair for '\u{1F375}'. 
+
+
+## Splitting a string
+
+  /**
+   * Splits the string around matches of [pattern]. Returns
+   * a list of substrings.
+   *
+   * Splitting with an empty string pattern (`""`) splits at UTF-16 code unit
+   * boundaries and not at rune boundaries. The following two expressions
+   * are hence equivalent:
+   *
+   *     string.split("")
+   *     string.codeUnits.map((unit) => new String.character(unit))
+   *
+   * Unless it guaranteed that the string is in the basic multilingual plane
+   * (meaning that each code unit represents a rune) it is often better to
+   * map the runes instead:
+   *
+   *     string.runes.map((rune) => new String.character(rune))
+   */
+   
+### Problem
+You want to split a string into substrings.
+
+### Solution
+
+To split a string into a list of characters, map the string runes:
+
+	"dart".runes.map((rune) => new String.fromCharCode(rune)).toList(); 
+	// ['d', 'a', 'r', 't']
+	
+	var smileyFace = '\u263A'; // In BMP.
+	var happy = 'I am $smileyFace';
+	happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
+    // ['I', ' ', 'a', 'm', ' ', '\u263A']
+	
+You can also use string.split(''):
+
+	'Dart'.split(''); // ['D', 'a', 'r', 't']
+	smileyFace.split('').length; // 1
+	
+Do this only if you are sure that the string is in the Basic Multilingual
+Plane (BMP). Since `split('')` splits at the UTF-16 code unit boundaries,
+invoking it on a non-BMP character yields the string's surrogate pair:
+
+	var clef = '\u{1F3BC}'; // Not in BMP.
+	clef.split('').length; // 2
+	
+### Split a string using a regExp
+
+The `split()` method takes a string or a regExp as an argument. Here is an
+example of using `split()` with a regExp:
+
+      var nums = "2/7 3 4/5 3~/5";
+      var numsRegExp = new RegExp(r'(\s|/|~/)');
+      nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']
+
+In the code above, the string `nums` contains various numbers, some of which
+are expressed as fractions or as int-division. A regExp is used to split the
+string based on the number delimiters in the string.
+ 
+You can perform operations on the matched and unmatched portions of a string
+when using `split()` with a regExp:
+
+      'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
+          onMatch: (m) => '*${m.group(0).toLowerCase()}*',
+          onNonMatch: (n) => n.toUpperCase());
+      // 'EATS *shoots* LEAVES'
+      
+The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
+registered to transform the matched and unmatched substrings before the
+substrings are joined together again.
+
+
+ 
+ ### 
