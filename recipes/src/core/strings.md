@@ -294,7 +294,7 @@ Remove only trailing whitespace:
 You want to get the length of a string, but are not sure how to 
 correctly calculate the length when working with Unicode.
 
-### Solution:
+### Solution
 
 Use string.length to get the number of UTF-16 code units in a string:
 	
@@ -405,10 +405,10 @@ string based on the number delimiters in the string.
 You can perform operations on the matched and unmatched portions of a string
 when using `split()` with a regExp:
 
-      'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
-          onMatch: (m) => '*${m.group(0).toLowerCase()}*',
-          onNonMatch: (n) => n.toUpperCase());
-      // 'EATS *shoots* LEAVES'
+    'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
+      onMatch: (m) => '*${m.group(0).toLowerCase()}*',
+      onNonMatch: (n) => n.toUpperCase());
+    // 'EATS *shoots* LEAVES'
       
 The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
@@ -425,11 +425,11 @@ You want to change the case of strings.
 Use `string.toUpperCase()` and `string.toLowerCase()` to covert a string to 
 lower-case or upper-case, respectively:
 
-    string = "I love Lucy";
+    var string = "I love Lucy";
     string.toUpperCase(); // 'I LOVE LUCY!'
 	string.toLowerCase(); // 'i love lucy!'
  
- ### Discussion
+### Discussion
  
 Case changes affect the characters of bi-cameral scripts like Greek and French:
  
@@ -501,7 +501,7 @@ the `allMatches()` method:
      
 You can also find out the number of matches:
  
-      matches.length; // 2
+    matches.length; // 2
 
 To find the first match, use `firstMatch()`:
 	
@@ -530,7 +530,7 @@ The RegExp matches for one or more 0's and replaces them with an empty string.
 You can use `replaceAllMatched()` and register a function to modify the
 matches:
 
-    var heart = '\u2661';
+    var heart = '\u2661'; // ♡
     var string = "I like Ike but I $heart Lucy";
     var regExp = new RegExp(r'[A-Z]\w+');
     string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
