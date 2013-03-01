@@ -1,0 +1,5 @@
+name:  recipes
+description:  A collection of Dart recipes
+
+dependencies:
+  unittest: any
