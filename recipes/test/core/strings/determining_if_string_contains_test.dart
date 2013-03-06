@@ -5,27 +5,27 @@ import 'package:unittest/unittest.dart';
 void main() {
   
   group('determining whether a string contains a substring', () {
-    var string = 'Dart strings are immutable';
+    var fact = 'Dart strings are immutable';
     
     test('using contains', () {
-      expect(string.contains('immutable'), isTrue);
-      expect(string.contains('Dart', 2), isFalse);
+      expect(fact.contains('immutable'), isTrue);
+      expect(fact.contains('Dart', 2), isFalse);
     });
     
     test('using startsWith()', () {
-      expect(string.startsWith('Dart'), isTrue);
+      expect(fact.startsWith('Dart'), isTrue);
     });
     
     test('using endsWith()', () {
-      assert(string.endsWith('e') == true);
+      assert(fact.endsWith('e') == true);
     });
     
     test('using indexOf()', () {
-      expect(string.indexOf('art') != -1, isTrue);
+      expect(fact.indexOf('art') != -1, isTrue);
     });
     
     test('using hasMatch()', () {
-      expect(new RegExp(r'ar[et]').hasMatch(string), isTrue);
+      expect(new RegExp(r'ar[et]').hasMatch(fact), isTrue);
     });
   });
 

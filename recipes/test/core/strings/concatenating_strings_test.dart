@@ -2,24 +2,24 @@ library concatenating_strings_test;
 
 import 'package:unittest/unittest.dart';
 
+String filmToWatch() => "The Big Lebowski";
+
 void main() { 
   group('concatenating strings', () {
     group('using adjacent string literals', () {
-      var string = 'Dart is fun!';
-      
       test('on one line', () {
-        expect('Dart' ' is' ' fun!', equals(string));
+        expect('Dart' ' is' ' fun!', equals('Dart is fun!'));
       });
       
       test('over many lines', () {
         expect('Dart' 
             ' is' 
-            ' fun!', equals(string));
+            ' fun!', equals('Dart is fun!'));
       });
       
       test('over one or many lines', () {
         expect('Dart' ' is' 
-            ' fun!', equals(string));
+            ' fun!', equals('Dart is fun!'));
       });
       
       test('using multiline strings', () {
@@ -30,21 +30,21 @@ jelly''', equals('Peanut\nbutter and\njelly'));
       });
         
       test('combining single and multiline string', () {
-        expect('Peanut ' 'butter'
+        expect('Dewey ' 'Cheatem'
             ''' and
-jelly''', equals('Peanut butter and\njelly'));
+Howe''', equals('Dewey Cheatem and\nHowe'));
       });
     });
   
     group('using alternatives to string literals', () {
-      var string = "Dewey Cheatem and Howe";
-      
       test(': concat()', () {
-        expect('Dewey'.concat(' Cheatem').concat(' and').concat( ' Howe'), equals(string)); 
+        var film = filmToWatch();
+        film = film.concat("\n");
+        expect(film, equals("The Big Lebowski\n")); 
       });
     
       test(': join()', () {
-        expect(['Dewey', 'Cheatem', 'and', 'Howe'].join(' '), equals(string));
+        expect(['The', 'Big', 'Lebowski'].join(' '), equals('The Big Lebowski'));
       });
     });
   });

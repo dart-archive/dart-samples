@@ -12,23 +12,24 @@ void main() {
       test('', () {
         expect('Dart'.runes.toList(), equals([68, 97, 114, 116]));
         
-        var codePoints = smileyFace.runes.toList(); // [9786]
-        expect(codePoints.first.toRadixString(16), equals('263a'));
-        
-        codePoints = clef.runes.toList(); // [127932]
-        expect(codePoints.first.toRadixString(16), equals('1f3bc'));
+        expect(smileyFace.runes.toList(), equals([9786]));
+        expect(smileyFace.runes.first.toRadixString(16), equals('263a'));
+
+        expect(clef.runes.toList(), equals([127932]));
+        expect(clef.runes.first.toRadixString(16), equals('1f3bc'));
       });
     });
     
     group('using codeUnits', () {
       test('', () {
         expect('Dart'.codeUnits.toList(), equals([68, 97, 114, 116]));
-
-        var codeUnits = smileyFace.codeUnits.toList(); // [9786]
-        expect(codeUnits.first.toRadixString(16), equals('263a'));
         
-        codeUnits = clef.codeUnits.toList(); // [55356, 57276]
-        expect(codeUnits.map((codeUnit) => codeUnit.toRadixString(16)).toList(), equals(['d83c', 'dfbc']));
+        expect(smileyFace.codeUnits.toList(), equals([9786]));
+        expect(smileyFace.codeUnits.first.toRadixString(16), equals('263a'));
+
+        expect(clef.codeUnits.toList(), equals([55356, 57276]));
+        expect(clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16))
+          .toList(), equals(['d83c', 'dfbc']));
       });
     });
     
@@ -36,14 +37,13 @@ void main() {
       test('', () {
         expect('Dart'.codeUnitAt(0), equals(68));
         
-        var codeUnit = smileyFace.codeUnitAt(0); // 9786
-        expect(codeUnit.toRadixString(16), equals('263a'));
+        expect(smileyFace.codeUnitAt(0), equals(9786)); // 9786
+        expect(smileyFace.codeUnitAt(0).toRadixString(16), equals('263a'));
         
-        codeUnit = clef.codeUnitAt(0); // 55356
-        expect(codeUnit.toRadixString(16), equals('d83c'));
-        
-        codeUnit = clef.codeUnitAt(1); // 57276
-        expect(codeUnit.toRadixString(16), equals('dfbc'));
+        expect(clef.codeUnitAt(0), equals(55356));
+        expect(clef.codeUnitAt(0).toRadixString(16), equals('d83c'));
+        expect(clef.codeUnitAt(1), equals(57276));
+       expect(clef.codeUnitAt(1).toRadixString(16), equals('dfbc'));
       });
     });
  
@@ -56,7 +56,6 @@ void main() {
             equals("I $heart Lucy"));
       });
       
-      var smileyFace = '\u263A';
       test('', () {
         expect(new String.fromCharCodes([9786]), equals(smileyFace));
       });
@@ -66,6 +65,14 @@ void main() {
       });
       
       test('with rune', () {
+        expect(new String.fromCharCode(127932), equals(clef));
+      });
+    });
+    
+    group('using fromCharCode', () {      
+      test('', () {
+        expect(new String.fromCharCode(68), equals('D'));
+        expect(new String.fromCharCode(9786), equals(smileyFace));
         expect(new String.fromCharCode(127932), equals(clef));
       });
     });

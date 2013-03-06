@@ -1,24 +1,17 @@
-library changing_string_case;
+library changing_string_case_test;
 
 import 'package:unittest/unittest.dart';
 
 void main() {
 group('changing string case', () {
-    var string = 'I love Lucy!';
+    var whoILove = 'I love Lucy!';
 
     test('with toUpperCase()', () {
-      expect(string.toUpperCase(), equals('I LOVE LUCY!'));
+      expect(whoILove.toUpperCase(), equals('I LOVE LUCY!'));
     });
     
     test('with toLowerCase()', () {
-      expect(string.toLowerCase(), equals('i love lucy!'));
-    });
-    
-    test('with unicameral characters', () {
-      var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
-      // चिकन कबाब
-      expect(chickenKebab.toLowerCase(), equals(chickenKebab));
-      expect(chickenKebab.toUpperCase(), equals(chickenKebab));
+      expect(whoILove.toLowerCase(), equals('i love lucy!'));
     });
     
     test('with bicameral characters', () {
@@ -28,6 +21,13 @@ group('changing string case', () {
       expect(zeus.toUpperCase(), equals('ΔΊΑΣ'));
       expect(resume.toLowerCase(), equals('résumé'));
       expect(resume.toUpperCase(), equals('RÉSUMÉ'));
+    });
+
+    test('with unicameral characters', () {
+      var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
+      // चिकन कबाब
+      expect(chickenKebab.toLowerCase(), equals(chickenKebab));
+      expect(chickenKebab.toUpperCase(), equals(chickenKebab));
     });
   });
 }

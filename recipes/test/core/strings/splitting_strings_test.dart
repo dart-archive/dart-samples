@@ -10,14 +10,7 @@ void main() {
 
     group('using split(string)', () {
       test('on code-unit boundary', () {
-        expect('Dart'.split(''), equals(['D', 'a', 'r', 't']));
-        expect(smileyFace.split('').length, equals(1));
-        expect(clef.split('').length, equals(2));
-      });
-      
-      test('on rune boundary', () {
-        expect(happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(), 
-            equals(['I', ' ', 'a', 'm', ' ', '\u263A']));
+        expect(happy.split(' '), equals(['I', 'am', '☺']));
       });
     });
       
@@ -26,7 +19,7 @@ void main() {
       var numsRegExp = new RegExp(r'(\s|/|~/)');
       test('', () { 
         expect(nums.split(numsRegExp), 
-            equals(['2', '7', '3', '4', '5', '3', '5']));
+          equals(['2', '7', '3', '4', '5', '3', '5']));
       });
     });
     

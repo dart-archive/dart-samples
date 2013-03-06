@@ -1,15 +1,76 @@
+# Strings
+
+Dart string represents a sequence of characters encoded in UTF-16. Decoding
+UTF-16 yields Unicode code points. Borrowing terminology from Go, Dart uses
+the term `rune` for an integer representing a Unicode code point. 
+
+The string recipes included in this chapter assume that you have some
+familiarity with Unicode and UTF-16. Here is a brief refresher:
+
+### What is the Basic Multilingual Plane?
+
+The Unicode code space is divided into seventeen planes of 65,536 points each. 
+The first plane (code points U+0000 to U+FFFF) contains the most
+frequently used characters and is called the Basic Multilingual Plane or BMP.
+
+### What is a Surrogate Pair?
+
+The term "surrogate pair" refers to a means of encoding Unicode characters
+outside the Basic Multilingual Plane.
+
+In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
+characters. Since two bytes can only contain the 65,536 characters in the 0x0
+to 0xFFFF range, a pair of code points are used to store values in the
+0x10000 to 0x10FFFF range.
+
+For example the Unicode character for musical Treble-clef (🎼 ), with
+a value of '\u{1F3BC}', it too large to fit in 16 bits. 
+
+    var clef = '\u{1F3BC}'; // 🎼
+
+'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [u\D83C, \uDFBC].
+
+### What is the difference between a code point and a code unit?
+
+Within the Basic Multilingual Plane, the code point for a character is
+numerically the same as code unit for that charcter.
+
+    'D'.runes.first; // 68
+    'D'.codeUnits.first; // 68 
+
+For non-BMP characters, each code point is represented by two code units.
+
+    var clef = '\u{1F3BC}'; // 🎼
+    clef.runes.length; // 1
+    clef.codeUnits.length; // 2
+
+### What exactly is a character?
+
+A character is a string contained in the Universal Character Set. Each character
+maps to a single rune value (code point); BMP characters map to 1 code
+unit; non-BMP characters map 2 code units. 
+
+You can read more about the Universal Character Set at
+http://en.wikipedia.org/wiki/Universal_Character_Set.
+
+### Do I have to really deal with Unicode?
+
+Yes, if you want to build robust international applications, you do.
+Besides, the String library makes working with Unicode relatively painless,
+so there's no great overhead in doing things right.
+
 ## Concatenating Strings
 
 ### Problem
 
-You want to know how to concatenate strings in Dart. You tried using `+`, but
+You want to concatenate strings in Dart. You tried using `+`, but
 that resulted in an error.
 
 ### Solution
 
 Use adjacent string literals:
 
-    'Dart'  'is' ' fun!'; // 'Dart is fun!'
+   'Dart'  'is' ' fun!'; // 'Dart is fun!'
 	
 ### Discussion
 
@@ -26,27 +87,31 @@ They also work when using multiline strings:
     '''and
     jelly'''; // 'Peanut\nbutter and\njelly'
 	
-You can also concatenate adjacent single line literals with multiline strings:
+You can concatenate adjacent single line literals with multiline strings:
 
-    'Peanut ' 'butter'
+    'Dewey ' 'Cheatem'
     ''' and
-    jelly'''; // 'Peanut butter and\n jelly'
+    Howe'''; // 'Dewey Cheatem and\n Howe'
+
 
 #### Alternatives to adjacent string literals
 
-Use `concat()`:
+You can also use the `concat()` method on a string to concatenate it to another
+string:
 
-    'Dewey'.concat(' Cheatem').concat(' and').concat( ' Howe'); // 'Dewey Cheatem and Howe'
+    var film = filmToWatch();
+    film = film.concat("\n");  // "The Big Lebowski\n" 
 
 Since `concat()` creates a new string every time it is invoked, a long chain of
-`concat()`s can be expensive; if you need to incrementally build up a long
-string, use a StringBuffer instead (see below).
+`concat()`s can be expensive. Avoid those. Use a StringBuffer instead (see 
+_Incrementally building a string efficiently using a StringBuffer_, below).
 
-Use `join()` to combine a sequence of strings:
+Use can `join()` to combine a sequence of strings:
 
-    ['Dewey', 'Cheatem', 'and', 'Howe'].join(' '); // 'Dewey Cheatem and Howe'
-
-You can also use string interpolation (see below).
+    ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'
+	
+You can also use string interpolation to concatenate strings (see 
+_Interpolating expressions inside strings_, below).
 
 
 ## Interpolating expressions inside strings
@@ -68,8 +133,8 @@ You can skip the {} if the expression is an identifier:
       
 ### Discussion
 
-An interpolated string‚ `string ${expression}` is equivalent to the
-concatenation of the strings ‚ 'string ' and `expression.toString()`.
+An interpolated string, `string ${expression}` is equivalent to the
+concatenation of the strings 'string ' and `expression.toString()`.
 Consider this code:
 
     var four = 4;
@@ -101,9 +166,42 @@ Probably not what you wanted. Here is the same example with an explicit
 	
     'Point: $point'; // 'Point: x: 3, y: 4'
 
-Interpolations are not evaluated within raw strings:
 
-    r'$favFood'; // '$favFood'
+## Escaping special characters
+
+### Problem 
+
+You want to know how to escape special characters.
+
+### Solution
+
+Prefix special characters with a `\`.
+
+	"Wile\nCoyote"; 
+	// Wile
+	// Coyote
+
+### Discussion
+
+Dart designates a few characters as special, and these can be escaped:
+
+- \n for newline, equivalent to \x0A.
+- \r for carriage return, equivalent to \x0D.
+- \f for form feed, equivalent to \x0C.
+- \b for backspace, equivalent to \x08.
+- \t for tab, equivalent to \x09.
+- \v for vertical tab, equivalent to \x0B.
+
+If you prefer, you can use `\x` or `\u` notation to indicate the special
+character:
+
+	  "Wile\x0ACoyote";  // same as "Wile\nCoyote"; 
+    "Wile\u000ACoyote"; // same as Wile\nCoyote"; 
+
+If you escape a non-special character, the `\` is ignored:
+
+	"Wile \E Coyote"; // 'Wile E Coyote'
+
 	
 ## Incrementally building a string efficiently using a StringBuffer
 
@@ -139,59 +237,51 @@ is a simple example that show the use of these methods:
 
 Since a StringBuffer waits until the call to `toString()` to generate the
 concatenated string,  it represents a more efficient way of combining strings
-than `concat()`.  See the "Concatenating Strings" recipe for a description of
+than `concat()`.  See the _Concatenating Strings_ recipe for a description of
 `concat()`.
 
-## Converting between string characters and numbers
+## Converting between string characters and numerical codes
 
 ### Problem 
 
-You want to convert string characters into numerical code units and back.
+You want to convert string characters into numerical codes and back.
 
 ### Solution
 
-Use `string.codeUnits()` to access the sequence of Unicode UTF-16 code units
-that make up a string:
-    
-    'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
-    
+Use the `runes` getter to access a string's code points:
+
+     'Dart'.runes.toList(); // [68, 97, 114, 116]
+ 
      var smileyFace = '\u263A'; // ☺
-     smileyFace.codeUnits.toList(); // [9786]
+     smileyFace.runes.toList(); // [9786]
      
 The number 9786 represents the code unit '\u263A'.
-     
-Use the `runes` getter to access a string's code points:
- 
-    'Dart'.runes.toList(); // [68, 97, 114, 116]
-     smileyFace.runes.toList(); // [9786]
+
+Use `string.codeUnits()` to get a string's UTF-16 code units:
+    
+    'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
+     smileyFace.codeUnits.toList(); // [9786]
  
 ### Discussion
 
 Notice that using `runes` and `codeUnits()` produces identical results
-in the examples above. That is because each character in both 'Dart' and
+in the examples above. That happens because each character in 'Dart' and in
 `smileyFace` fits within 16 bits, resulting in a code unit corresponding
 neatly with a code point.
 
 Consider an example where a character cannot be represented within 16-bits,
 the Unicode character for a Treble clef ('\u{1F3BC}'). This character consists
 of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of this
-character using `codeUnits()` produces the following result:
+character using `codeUnits()` and `runes` produces the following result:
 
-    var clef = '\u{1F3BC}'; // 🎼
+    var clef = '\u{1F3BC}'; // 🎼 
     clef.codeUnits.toList(); // [55356, 57276]
+    clef.runes.toList(); // [127932]
 
 The numbers 55356 and 57276 represent `clef`'s surrogate pair, '\uD83C' and
-'\uDFBC', respectively.
+'\uDFBC', respectively. The number 127932 represents the code point '\u1F3BC'.
 
-#### Using the runes getter
-
-You can also use `runes` to convert a string to its corresponding numerical values:
-
-    clef.runes.toList(); // [127932]
-    
-The number 127932 represents the code point '\u1F3BC'.
-
-#### Using codeUnitAt() to access individual characters
+#### Using codeUnitAt() to access individual code units
 
 To access the 16-Bit UTF-16 code unit at a particular index, use
 `codeUnitAt()`:
@@ -199,9 +289,6 @@ To access the 16-Bit UTF-16 code unit at a particular index, use
     'Dart'.codeUnitAt(0); // 68
     smileyFace.codeUnitAt(0); // 9786
     
-The number 9786 represents the code unit '\u263A', the `smileyFace`
-characrter.
-
 Using `codeUnitAt()` with the multi-byte `clef` character leads to problems:
 
     clef.codeUnitAt(0); // 55356
@@ -211,30 +298,26 @@ In either call to `clef.codeUnitAt()`, the values returned represent strings
 that are only one half of a UTF-16 surrogate pair.  These are not valid UTF-16
 strings.
 
-#### Converting numerical values to strings
 
-You can generate a new string from code units using the factory 
+#### Converting numerical codes to strings
+
+You can generate a new string from runes or code units using the factory 
 `String.fromCharCodes(charCodes)`:
 
     new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
 	
-    var heart = '\u2661'; // ♡
     new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
     // 'I ♡ Lucy'
 
-The charCodes can be UTF-16 code units or runes.
+    new String.fromCharCodes([55356, 57276]); // 🎼  
+    new String.fromCharCodes([127932]), // 🎼  
 
-The Unicode character for a Treble clef is '\u{1F3BC}', with a rune value of 
-127932. Passing either code units, or a code point to `String.fromCharCodes()`
-produces the `clef` string:
+You can use the `String.fromCharCode()` factory to convert a single rune or
+code unit to a string:
 
-    new String.fromCharCodes([55356, 57276]); // 🎼
-    new String.fromCharCodes([127932]), // 🎼
-	
-You can use the `String.fromCharCode()` factory to convert a single code unit
-to a string:
-
-    new String.fromCharCode(127932); // 🎼
+    new String.fromCharCode(68); // 'D'
+    new String.fromCharCode(9786); // ☺
+    new String.fromCharCode(127932); // 🎼  
 
 Creating a string with only one half of a surrogate pair is permitted, but not
 recommended.
@@ -274,6 +357,7 @@ not a literal `''`, the comparisons will fail:
     emptyString == '\u0020'; // false
     emptyString == '\u2004'; // false
     
+
 ## Removing leading and trailing whitesapce
 
 ### Problem
@@ -284,7 +368,7 @@ You want to remove leading and trailing whitespace from a string.
 
 Use `string.trim()`:
 
-    var space = '\n\r\f\t\v';
+    var space = '\n\r\f\t\v';  // We'll use a variety of space characters.
     var string = '$space X $space';
     string.trim(); // 'X'
 
@@ -299,6 +383,7 @@ Remove only trailing whitespace:
 
     string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
 
+
 ## Calculating the length of a string
 
 ### Problem
@@ -311,6 +396,7 @@ correctly calculate the length when working with Unicode.
 Use string.length to get the number of UTF-16 code units in a string:
 	
     'I love music'.length; // 12
+    'I love music'.runes.length; // 12
 	
 ### Discussion
 
@@ -318,23 +404,23 @@ For characters that fit into 16 bites, the code unit length is the same as the
 rune length:
 
     var hearts = '\u2661'; // ♡
-    
     hearts.length; // 1
     hearts.runes.length; // 1
   
 If the string contains any characters outside the Basic Multilingual
 Plane (BMP), the rune length will be less than the code unit length:
   
-    var clef = '\u{1F3BC}'; // 🎼
+    var clef = '\u{1F3BC}'; // 🎼  
     clef.length; // 2
     clef.runes.length; // 1
     
-    var music = 'I $hearts $clef'; // 'I ♡ 🎼'
+    var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
     music.length; // 6
     music.runes.length // 5
 
 Use `length` if you want to number of code units; use `runes.length` if you 
 want the number of distinct characters.
+
 
 ## Getting the character at a specific index in a string
 
@@ -344,82 +430,76 @@ You want to be able to access a character in a string at a particular index.
 
 ### Solution
 
-For strings in the Basic Multilingual Plane (BMP), use [] to subscript the
-string:
+Subscript runes:
+
+    var coffee = '\u{1F375}'; // 🍵  
+    coffee.runes.toList()[0]; // 127861
+    
+The number 127861 represents the code point for coffee, '\u{1F375}' (🍵 ). 
+
+### Discussion
+
+Subscripting a string directly can be problematic. This is because the default 
+`[]` implementation subscripts along code units.  This means that
+for non-BMP characters, subscripting yields invalid UTF-16 characters: 
 
     'Dart'[0]; // 'D'
 
     var hearts = '\u2661'; // ♡
     hearts[0]; '\u2661' // ♡
-
-For non-BMP characters, subscripting yields invalid UTF-16 characters:
-
-    var coffee = '\u{1F375}'; // 🍵
-    var doughnuts = '\u{1F369}'; // 🍩
-    var healthFood = '$coffee and $doughnuts'; // 🍵 and 🍩
- 
-    healthFood[0]; // Invalid string, half of a surrogate pair.
     
-You can slice the string to get the first 2 code units:
- 
-    healthFood.slice(0, 2); // 🍵
+    coffee[0]; // 55356, Invalid string, half of a surrogate pair.
+    coffee.codeUnits.toList()[0]; // The same.
+    
 
-#### The safer approach: subscript runes
+## Getting a list of the characters in string
 
-You can always subscript runes and be sure that you are dealing with complete
-characters:
+### Problem
 
-    healthFood.runes.first; // 127861
+You want to get a string as a list of characters.
 
-The number 127861 represents the code point for coffee, '\u{1F375}' (🍵 ). 
+### Solution
 
-Contrast this with the result of subscripting `codeUnits`:
+To obtain the characters that make up a string, map the string runes:
 
-    healthFood.codeUnits.first; // 55356
+    "Dart".runes.map((rune) => new String.fromCharCode(rune)).toList(); 
+    // ['D', 'a', 'r', 't']
+    
+    var smileyFace = '\u263A'; // '☺'
+    var happy = 'I am $smileyFace'; // 'I am ☺'
+    happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
+    // [I,  ,a, m, ,☺]
+	
+If you are sure that the string is in the Basic Multilingual Plane (BMP), use
+string.split(''):
 
-The number 55356 represents the first of the surrogate pair for '\u{1F375}'. 
-This is not a valid UTF-16 string.
+    'Dart'.split(''); // ['D', 'a', 'r', 't']
+    smileyFace.split('').length; // 1
+	
+Since `split('')` splits at the UTF-16 code unit boundaries,
+invoking it on a non-BMP character yields the string's surrogate pair:
 
-If you are dealing with non-BMP characters, avoid subscripting `codeUnits`. 
+    var clef = '\u{1F3BC}'; // 🎼 , not in BMP.
+    clef.split('').length; // 2
+	
+The surrogate pair members are not valid UTF-16 strings.
 
 
-## Splitting a string
-   
+## Splitting a string into substrings
+
 ### Problem
 
 You want to split a string into substrings.
 
 ### Solution
 
-To split a string into a list of characters, map the string runes:
+Use the `split()` method with a string or a regExp as an argument. 
 
-    "dart".runes.map((rune) => new String.fromCharCode(rune)).toList(); 
-    // ['d', 'a', 'r', 't']
+    var smileyFace = '\u263A';
+    var happy = 'I am $smileyFace';
+    happy.split(' '); // ['I', 'am', '☺']
     
-    var smileyFace = '\u263A'; // ☺
-    var happy = 'I am $smileyFace'; // 'I am ☺'
-    happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
-    // [I,  , a, m,  , ☺]
-	
-You can also use string.split(''):
-
-    'Dart'.split(''); // ['D', 'a', 'r', 't']
-    smileyFace.split('').length; // 1
-	
-Do this only if you are sure that the string is in the Basic Multilingual
-Plane (BMP). Since `split('')` splits at the UTF-16 code unit boundaries,
-invoking it on a non-BMP character yields the string's surrogate pair:
-
-    var clef = '\u{1F3BC}'; // 🎼, not in BMP.
-    clef.split('').length; // 2
-	
-The surrogate pair members are not valid UTF-16 strings.
-
-
-### Split a string using a regExp
-
-The `split()` method takes a string or a regExp as an argument. Here is an
-example of using `split()` with a regExp:
+Here is an example of using `split()` with a regExp:
 
     var nums = "2/7 3 4/5 3~/5";
     var numsRegExp = new RegExp(r'(\s|/|~/)');
@@ -440,6 +520,7 @@ The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
 substrings are joined together again.
 
+
 ## Changing string case
 
 ### Problem
@@ -451,27 +532,26 @@ You want to change the case of strings.
 Use `string.toUpperCase()` and `string.toLowerCase()` to covert a string to 
 lower-case or upper-case, respectively:
 
-    var string = "I love Lucy";
-    string.toUpperCase(); // 'I LOVE LUCY!'
-    string.toLowerCase(); // 'i love lucy!'
+    var whoILove = "I love Lucy";
+    whoILove.toUpperCase(); // 'I LOVE LUCY!'
+    whoILove.toLowerCase(); // 'i love lucy!'
  
 ### Discussion
  
 Case changes affect the characters of bi-cameral scripts like Greek and French:
- 
-    var zeus = '\u0394\u03af\u03b1\u03c2'; // Δίας (Zeus in modern Greek)
+    var zeus = '\u0394\u03af\u03b1\u03c2'; // 'Δίας' (Zeus in modern Greek)
     zeus.toUpperCase(); // 'ΔΊΑΣ'
     
-    var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // Résumé
+    var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // 'Résumé'
     resume.toLowerCase(); // 'résumé'
     
-They do not affect the characters of uni-case scripts like Devanagari (used for
+They do not affect the characters of uni-cameral scripts like Devanagari (used for
 writing many of the languages of India):
 
     var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
-    // चिकन कबाब (in Devanagari)
-    chickenKebab.toLowerCase();  // चिकन कबाब 
-    chickenKebab.toUpperCase();  // चिकन कबाब 
+    // 'चिकन कबाब'  (in Devanagari)
+    chickenKebab.toLowerCase();  // 'चिकन कबाब'
+    chickenKebab.toUpperCase();  // 'चिकन कबाब'
     
 If a character's case does not change when using `toUpperCase()` and
 `toLowerCase()`, it is most likely because the character only has one
@@ -481,13 +561,13 @@ form.
 
 ### Problem
 
-You want to find out if a string is the subset of another string.
+You want to find out if a string is the substring of another string.
 
 ### Solution
 
 Use `string.contains()`:
 
-    var string = 'Dart strings are immutable';
+    var fact = 'Dart strings are immutable';
     string.contains('immutable'); // True.
 
 You can indicate a startIndex as a second argument:
@@ -524,10 +604,12 @@ want to be able to access the matches.
 Construct a regular expression using the RegExp class and find matches using
 the `allMatches()` method:
 
-    var string = 'Not with a fox, not in a box';
+    var neverEatingThat = 'Not with a fox, not in a box';
     var regExp = new RegExp(r'[fb]ox');
-    List matches = regExp.allMatches(string);
+    List matches = regExp.allMatches(neverEatingThat);
     matches.map((match) => match.group(0)).toList(); // ['fox', 'box']
+    
+### Discussion
      
 You can query the object returned by `allMatches()` to find out the number of
 matches:
@@ -536,7 +618,12 @@ matches:
 
 To find the first match, use `firstMatch()`:
 	
-	regExp.firstMatch(string).group(0); // 'fox'
+	regExp.firstMatch(neverEatingThat).group(0); // 'fox'
+	
+To directly access the matched string, use `stringMatch()`:
+
+	regExp.stringMatch(neverEatingThat); // 'fox'
+    regExp.stringMatch('I like bagels and lox'); // null
 
 
 ## Substituting strings based on regExp matches
@@ -562,7 +649,7 @@ The RegExp matches for one or more 0's and replaces them with an empty string.
 You can use `replaceAllMatched()` and register a function to modify the
 matches:
 
-    var heart = '\u2661'; // ♡
+    var heart = '\u2661'; // '♡'
     var string = "I like Ike but I $heart Lucy";
     var regExp = new RegExp(r'[A-Z]\w+');
     string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
