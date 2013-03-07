@@ -1,9 +1,9 @@
-library getting_the_length_test;
+library calculating_the_length_test;
 
 import 'package:unittest/unittest.dart';
 
 void main() {
-  group('getting the length of a string', () {
+  group('calculating the length of a string', () {
     
     var hearts = '\u2661';
 

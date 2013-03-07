@@ -1,4 +1,4 @@
-library subscripting_strings_test;
+library subscripting_a_string_test;
 
 import 'package:unittest/unittest.dart';
 

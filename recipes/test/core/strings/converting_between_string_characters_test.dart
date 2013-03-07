@@ -1,4 +1,4 @@
-library converting_chars_nums_test;
+library converting_between_string_characters_test;
 
 import 'package:unittest/unittest.dart';
 

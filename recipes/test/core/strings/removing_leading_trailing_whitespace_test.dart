@@ -1,4 +1,4 @@
-library trimming_whitespace_test;
+library removing_leading_trailing_whitespace_test;
 
 import "package:unittest/unittest.dart";
 

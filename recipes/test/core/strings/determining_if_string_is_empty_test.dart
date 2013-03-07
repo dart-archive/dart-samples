@@ -1,4 +1,4 @@
-library testing_string_emptiness_test;
+library determining_if_string_is_empty_test;
 
 import 'package:unittest/unittest.dart';
 

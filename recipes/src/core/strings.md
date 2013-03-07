@@ -358,7 +358,7 @@ not a literal `''`, the comparisons will fail:
     emptyString == '\u2004'; // false
     
 
-## Removing leading and trailing whitesapce
+## Removing leading and trailing whitespace
 
 ### Problem
 
@@ -370,18 +370,18 @@ Use `string.trim()`:
 
     var space = '\n\r\f\t\v';  // We'll use a variety of space characters.
     var string = '$space X $space';
-    string.trim(); // 'X'
+    var newString = string.trim(); // 'X'
 
 The String class has no methods to remove leading and trailing whitespace. But
 you can always use regExps.
 
 Remove only leading whitespace:
 
-    string.replaceFirst(new RegExp(r'^\s+'), ''); //  'X $space'
+    var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); //  'X $space'
    
 Remove only trailing whitespace:
 
-    string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
+    var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
 
 
 ## Calculating the length of a string
@@ -422,7 +422,7 @@ Use `length` if you want to number of code units; use `runes.length` if you
 want the number of distinct characters.
 
 
-## Getting the character at a specific index in a string
+## Subscripting a string
 
 ### Problem
 
@@ -452,26 +452,24 @@ for non-BMP characters, subscripting yields invalid UTF-16 characters:
     coffee.codeUnits.toList()[0]; // The same.
     
 
-## Getting a list of the characters in string
+## Processing a string one character at a time
 
 ### Problem
 
-You want to get a string as a list of characters.
+You want to do something with each individual character in a string.
 
 ### Solution
 
-To obtain the characters that make up a string, map the string runes:
+To access an individual character, map the string runes:
 
-    'Dart'.runes.map((rune) => new String.fromCharCode(rune)).toList(); 
-    // ['D', 'a', 'r', 't']
-    
-    var smileyFace = '\u263A'; // '☺'
-    var happy = 'I am $smileyFace'; // 'I am ☺'
-    happy.runes.map((charCode) => new String.fromCharCode(charCode)).toList(); 
-    // [I,  ,a, m, ,☺]
-	
-If you are sure that the string is in the Basic Multilingual Plane (BMP), use
-string.split(''):
+    var charList = "Dart".runes.map((rune) => '*${new String.fromCharCode(rune)}*').toList();
+          // ['*D*', '*a*', '*r*', '*t*']
+      
+    var runeList = happy.runes.map((rune) => [rune, new String.fromCharCode(rune)]).toList(), 
+          // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+      
+If you are sure that the string is in the Basic Multilingual Plane (BMP), you
+can use string.split(''):
 
     'Dart'.split(''); // ['D', 'a', 'r', 't']
     smileyFace.split('').length; // 1
