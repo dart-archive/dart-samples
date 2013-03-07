@@ -2,7 +2,7 @@ library concatenating_strings_test;
 
 import 'package:unittest/unittest.dart';
 
-String filmToWatch() => "The Big Lebowski";
+String filmToWatch() => 'The Big Lebowski';
 
 void main() { 
   group('concatenating strings', () {
@@ -39,8 +39,8 @@ Howe''', equals('Dewey Cheatem and\nHowe'));
     group('using alternatives to string literals', () {
       test(': concat()', () {
         var film = filmToWatch();
-        film = film.concat("\n");
-        expect(film, equals("The Big Lebowski\n")); 
+        film = film.concat('\n');
+        expect(film, equals('The Big Lebowski\n')); 
       });
     
       test(': join()', () {

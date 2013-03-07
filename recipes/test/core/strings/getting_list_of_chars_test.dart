@@ -6,9 +6,7 @@ void main() {
   group('getting a list of characters', () {
     var smileyFace = '\u263A';
     var happy = 'I am $smileyFace';
-    print(happy);
     var clef = '\u{1F3BC}';
-    print(clef);
     
     test('on rune boundary', () {
       expect('Dart'.runes.map((rune) => new String.fromCharCode(rune)).toList(), 

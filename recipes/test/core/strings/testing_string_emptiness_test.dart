@@ -5,7 +5,7 @@ import 'package:unittest/unittest.dart';
 void main() {
   group('determining if string is empty', () {
     var emptyString = '';
-    var space = '\u2004';
+    var space = ' ';
     
     test('', () {
       expect(emptyString.isEmpty, isTrue);

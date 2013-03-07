@@ -15,7 +15,7 @@ void main() {
     });
       
     group('using split(regExp)', () {
-      var nums = "2/7 3 4/5 3~/5";
+      var nums = '2/7 3 4/5 3~/5';
       var numsRegExp = new RegExp(r'(\s|/|~/)');
       test('', () { 
         expect(nums.split(numsRegExp), 

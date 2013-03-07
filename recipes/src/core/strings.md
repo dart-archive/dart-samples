@@ -15,7 +15,7 @@ frequently used characters and is called the Basic Multilingual Plane or BMP.
 
 ### What is a Surrogate Pair?
 
-The term "surrogate pair" refers to a means of encoding Unicode characters
+The term 'surrogate pair' refers to a means of encoding Unicode characters
 outside the Basic Multilingual Plane.
 
 In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
@@ -70,26 +70,26 @@ that resulted in an error.
 
 Use adjacent string literals:
 
-   'Dart'  'is' ' fun!'; // 'Dart is fun!'
+    var fact = 'Dart'  'is' ' fun!'; // 'Dart is fun!'
 	
 ### Discussion
 
 Adjacent literals also work over multiple lines:
 
-  	'Dart'
+  	var fact = 'Dart'
   	'is'
   	'fun!'; // 'Dart is fun!'
 
 They also work when using multiline strings:
 
-    '''Peanut
+    var lunch = '''Peanut
     butter'''
     '''and
     jelly'''; // 'Peanut\nbutter and\njelly'
 	
 You can concatenate adjacent single line literals with multiline strings:
 
-    'Dewey ' 'Cheatem'
+    var funnyGuys = 'Dewey ' 'Cheatem'
     ''' and
     Howe'''; // 'Dewey Cheatem and\n Howe'
 
@@ -100,7 +100,7 @@ You can also use the `concat()` method on a string to concatenate it to another
 string:
 
     var film = filmToWatch();
-    film = film.concat("\n");  // "The Big Lebowski\n" 
+    film = film.concat('\n');  // 'The Big Lebowski\n' 
 
 Since `concat()` creates a new string every time it is invoked, a long chain of
 `concat()`s can be expensive. Avoid those. Use a StringBuffer instead (see 
@@ -108,7 +108,7 @@ _Incrementally building a string efficiently using a StringBuffer_, below).
 
 Use can `join()` to combine a sequence of strings:
 
-    ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'
+    var film = ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'
 	
 You can also use string interpolation to concatenate strings (see 
 _Interpolating expressions inside strings_, below).
@@ -125,11 +125,11 @@ You want to create strings that contain Dart expressions and identifiers.
 You can put the value of an expression inside a string by using ${expression}.
 
     var favFood = 'sushi';
-    'I love ${favFood.toUpperCase()}'; // 'I love SUSHI'
+    var whatDoILove = 'I love ${favFood.toUpperCase()}'; // 'I love SUSHI'
 
 You can skip the {} if the expression is an identifier:
 
-    'I love $favFood'; // 'I love sushi'
+    var whatDoILove = 'I love $favFood'; // 'I love sushi'
       
 ### Discussion
 
@@ -138,11 +138,11 @@ concatenation of the strings 'string ' and `expression.toString()`.
 Consider this code:
 
     var four = 4;
-    'The $four seasons'; // 'The 4 seasons'
+    var seasons = 'The $four seasons'; // 'The 4 seasons'
 	
 It is equivalent to the following:
 
-    'The '.concat(4.toString()).concat(' seasons'); // 'The 4 seasons'
+    var seasons = 'The '.concat(4.toString()).concat(' seasons'); // 'The 4 seasons'
 	
 You should consider implementing a `toString()` method for user-defined
 objects. Here's what happens if you don't:
@@ -153,7 +153,7 @@ objects. Here's what happens if you don't:
     }
     
     var point = new Point(3, 4);
-    'Point: $point'; // "Point: Instance of 'Point'"
+    print('Point: $point'); // "Point: Instance of 'Point'"
 
 Probably not what you wanted. Here is the same example with an explicit
 `toString()`:
@@ -161,10 +161,10 @@ Probably not what you wanted. Here is the same example with an explicit
     class Point {
       ...
 	    
-      String toString() => "x: $x, y: $y";
+      String toString() => 'x: $x, y: $y';
     }
 	
-    'Point: $point'; // 'Point: x: 3, y: 4'
+    print('Point: $point'); // 'Point: x: 3, y: 4'
 
 
 ## Escaping special characters
@@ -177,7 +177,7 @@ You want to know how to escape special characters.
 
 Prefix special characters with a `\`.
 
-	"Wile\nCoyote"; 
+	print(Wile\nCoyote'); 
 	// Wile
 	// Coyote
 
@@ -195,12 +195,12 @@ Dart designates a few characters as special, and these can be escaped:
 If you prefer, you can use `\x` or `\u` notation to indicate the special
 character:
 
-	  "Wile\x0ACoyote";  // same as "Wile\nCoyote"; 
-    "Wile\u000ACoyote"; // same as Wile\nCoyote"; 
+	  print('Wile\x0ACoyote');  // same as print('Wile\nCoyote'); 
+    print('Wile\u000ACoyote'); // same as print('Wile\nCoyote'); 
 
 If you escape a non-special character, the `\` is ignored:
 
-	"Wile \E Coyote"; // 'Wile E Coyote'
+	  print('Wile \E Coyote'); // 'Wile E Coyote'
 
 	
 ## Incrementally building a string efficiently using a StringBuffer
@@ -216,11 +216,11 @@ collects the string fragments, but does not generate a new string until
 `toString()` is called:
 
     var sb = new StringBuffer();
-    sb.write("John, ");
-    sb.write("Paul, ");
-    sb.write("George, ");
-    sb.write("and Ringo");
-    sb.toString(); // "John, Paul, George, and Ringo"
+    sb.write('John, ');
+    sb.write('Paul, ');
+    sb.write('George, ');
+    sb.write('and Ringo');
+    var beatles = sb.toString(); // 'John, Paul, George, and Ringo'
     
 ### Discussion
 
@@ -230,10 +230,10 @@ list of strings (`writeAll()`), write a numerical character code
 is a simple example that show the use of these methods:
 
     var sb = new StringBuffer();
-    sb.writeln("The Beatles:");
+    sb.writeln('The Beatles:');
     sb.writeAll(['John, ', 'Paul, ', 'George, and Ringo']);
     sb.writeCharCode(33); // charCode for '!'.
-    sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
+    var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
 
 Since a StringBuffer waits until the call to `toString()` to generate the
 concatenated string,  it represents a more efficient way of combining strings
@@ -338,7 +338,7 @@ Use `string.isEmpty`:
   	
 A string with a space is not empty:
  
-    var space = " ";
+    var space = ' ';
     space.isEmpty; // false
    
 ### Discussion 
@@ -462,7 +462,7 @@ You want to get a string as a list of characters.
 
 To obtain the characters that make up a string, map the string runes:
 
-    "Dart".runes.map((rune) => new String.fromCharCode(rune)).toList(); 
+    'Dart'.runes.map((rune) => new String.fromCharCode(rune)).toList(); 
     // ['D', 'a', 'r', 't']
     
     var smileyFace = '\u263A'; // '☺'
@@ -501,7 +501,7 @@ Use the `split()` method with a string or a regExp as an argument.
     
 Here is an example of using `split()` with a regExp:
 
-    var nums = "2/7 3 4/5 3~/5";
+    var nums = '2/7 3 4/5 3~/5';
     var numsRegExp = new RegExp(r'(\s|/|~/)');
     nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']
 
@@ -516,7 +516,7 @@ when using `split()` with a regExp:
       onMatch: (m) => '*${m.group(0).toLowerCase()}*',
       onNonMatch: (n) => n.toUpperCase()); // 'EATS *shoots* LEAVES'
       
-The regExp matches the middle word ("SHOOTS"). A pair of callbacks are
+The regExp matches the middle word ('SHOOTS'). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
 substrings are joined together again.
 
@@ -532,9 +532,9 @@ You want to change the case of strings.
 Use `string.toUpperCase()` and `string.toLowerCase()` to covert a string to 
 lower-case or upper-case, respectively:
 
-    var whoILove = "I love Lucy";
-    whoILove.toUpperCase(); // 'I LOVE LUCY!'
-    whoILove.toLowerCase(); // 'i love lucy!'
+    var theOneILove = 'I love Lucy';
+    theOneILove.toUpperCase(); // 'I LOVE LUCY!'
+    theOneILove.toLowerCase(); // 'i love lucy!'
  
 ### Discussion
  
@@ -585,7 +585,7 @@ is a substring of another:
 You can also use `string.indexOf()`, which returns -1 if the substring is
 not found within a string, and its matching index, if it is:
 
-	string.indexOf('art') != -1; // True, `art` is found in `Dart`
+    string.indexOf('art') != -1; // True, `art` is found in `Dart`
 
 You can also use a regExp and `hasMatch()`:
 
@@ -618,11 +618,11 @@ matches:
 
 To find the first match, use `firstMatch()`:
 	
-	regExp.firstMatch(neverEatingThat).group(0); // 'fox'
+    regExp.firstMatch(neverEatingThat).group(0); // 'fox'
 	
 To directly access the matched string, use `stringMatch()`:
 
-	regExp.stringMatch(neverEatingThat); // 'fox'
+    regExp.stringMatch(neverEatingThat); // 'fox'
     regExp.stringMatch('I like bagels and lox'); // null
 
 
@@ -650,7 +650,7 @@ You can use `replaceAllMatched()` and register a function to modify the
 matches:
 
     var heart = '\u2661'; // '♡'
-    var string = "I like Ike but I $heart Lucy";
+    var string = 'I like Ike but I $heart Lucy';
     var regExp = new RegExp(r'[A-Z]\w+');
     string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
     // 'I like IKE but I ♡ LUCY'

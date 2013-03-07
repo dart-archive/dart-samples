@@ -4,14 +4,14 @@ import 'package:unittest/unittest.dart';
 
 void main() {
 group('changing string case', () {
-    var whoILove = 'I love Lucy!';
+    var theOneILove = 'I love Lucy!';
 
     test('with toUpperCase()', () {
-      expect(whoILove.toUpperCase(), equals('I LOVE LUCY!'));
+      expect(theOneILove.toUpperCase(), equals('I LOVE LUCY!'));
     });
     
     test('with toLowerCase()', () {
-      expect(whoILove.toLowerCase(), equals('i love lucy!'));
+      expect(theOneILove.toLowerCase(), equals('i love lucy!'));
     });
     
     test('with bicameral characters', () {
