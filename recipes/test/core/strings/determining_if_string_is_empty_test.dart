@@ -14,10 +14,6 @@ void main() {
     test('if string contains a space', () {
       expect(space.isEmpty, isFalse);
     });
-    
-    test('by checking for equality', () {
-      expect('' == 'u\2004', isFalse);
-    });
   });  
 }
 

@@ -21,10 +21,17 @@ Coyote'''));
     test('using unicode notation', () {
       expect('Wile\u000ACoyote', equals('''Wile
 Coyote'''));
+      expect('Wile\u{000A}Coyote', equals('''Wile
+Coyote'''));
     });
     
     test('with non-special character', () {
       expect('Wile \E Coyote', equals('Wile E Coyote'));
+    });
+
+    test('with a variable', () {
+      var superGenius = 'Wile Coyote';
+      expect('\$superGenius', equals(r'$superGenius'));
     });
   });
 }

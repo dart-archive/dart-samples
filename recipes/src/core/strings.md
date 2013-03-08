@@ -1,6 +1,6 @@
 # Strings
 
-Dart string represents a sequence of characters encoded in UTF-16. Decoding
+A Dart string represents a sequence of characters encoded in UTF-16. Decoding
 UTF-16 yields Unicode code points. Borrowing terminology from Go, Dart uses
 the term `rune` for an integer representing a Unicode code point. 
 
@@ -33,7 +33,7 @@ a value of '\u{1F3BC}', it too large to fit in 16 bits.
 ### What is the difference between a code point and a code unit?
 
 Within the Basic Multilingual Plane, the code point for a character is
-numerically the same as code unit for that charcter.
+numerically the same as the code unit for that character.
 
     'D'.runes.first; // 68
     'D'.codeUnits.first; // 68 
@@ -48,7 +48,7 @@ For non-BMP characters, each code point is represented by two code units.
 
 A character is a string contained in the Universal Character Set. Each character
 maps to a single rune value (code point); BMP characters map to 1 code
-unit; non-BMP characters map 2 code units. 
+unit; non-BMP characters map to 2 code units. 
 
 You can read more about the Universal Character Set at
 http://en.wikipedia.org/wiki/Universal_Character_Set.
@@ -171,15 +171,15 @@ Probably not what you wanted. Here is the same example with an explicit
 
 ### Problem 
 
-You want to know how to escape special characters.
+You want to put newlines, dollar signs, or other special characters in your strings.
 
 ### Solution
 
 Prefix special characters with a `\`.
 
-	print(Wile\nCoyote'); 
-	// Wile
-	// Coyote
+	  print(Wile\nCoyote'); 
+	  // Wile
+	  // Coyote
 
 ### Discussion
 
@@ -195,12 +195,22 @@ Dart designates a few characters as special, and these can be escaped:
 If you prefer, you can use `\x` or `\u` notation to indicate the special
 character:
 
-	  print('Wile\x0ACoyote');  // same as print('Wile\nCoyote'); 
-    print('Wile\u000ACoyote'); // same as print('Wile\nCoyote'); 
+    print('Wile\x0ACoyote');       // same as print('Wile\nCoyote'); 
+    print('Wile\u000ACoyote');     // same as print('Wile\nCoyote'); 
+
+You can also use `\u{}` notation:
+
+    print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote'); 
+
+You can also escape the `$` used in string interpolation:
+
+    var superGenius = 'Wile Coyote';
+    print('$superGenius and Road Runner');  // 'Wile Coyote and Road Runner'
+    print('\$superGenius and Road Runner'); // '$superGenius and Road Runner'
 
 If you escape a non-special character, the `\` is ignored:
-
-	  print('Wile \E Coyote'); // 'Wile E Coyote'
+ 
+    print('Wile \E Coyote'); // 'Wile E Coyote'
 
 	
 ## Incrementally building a string efficiently using a StringBuffer
@@ -250,21 +260,21 @@ You want to convert string characters into numerical codes and back.
 
 Use the `runes` getter to access a string's code points:
 
-     'Dart'.runes.toList(); // [68, 97, 114, 116]
+    'Dart'.runes.toList(); // [68, 97, 114, 116]
  
-     var smileyFace = '\u263A'; // ☺
-     smileyFace.runes.toList(); // [9786]
+    var smileyFace = '\u263A'; // ☺
+    smileyFace.runes.toList(); // [9786]
      
 The number 9786 represents the code unit '\u263A'.
 
-Use `string.codeUnits()` to get a string's UTF-16 code units:
+Use `string.codeUnits` to get a string's UTF-16 code units:
     
     'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
-     smileyFace.codeUnits.toList(); // [9786]
+    smileyFace.codeUnits.toList(); // [9786]
  
 ### Discussion
 
-Notice that using `runes` and `codeUnits()` produces identical results
+Notice that using `runes` and `codeUnits` produces identical results
 in the examples above. That happens because each character in 'Dart' and in
 `smileyFace` fits within 16 bits, resulting in a code unit corresponding
 neatly with a code point.
@@ -272,7 +282,7 @@ neatly with a code point.
 Consider an example where a character cannot be represented within 16-bits,
 the Unicode character for a Treble clef ('\u{1F3BC}'). This character consists
 of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of this
-character using `codeUnits()` and `runes` produces the following result:
+character using `codeUnits` and `runes` produces the following result:
 
     var clef = '\u{1F3BC}'; // 🎼 
     clef.codeUnits.toList(); // [55356, 57276]
@@ -347,16 +357,6 @@ Don't use `if (string)` to test the emptiness of a string. In Dart, all
 objects except the boolean true evaluate to false. `if(string)` will always
 be false.
 
-Don't try to explicitly test for the emptiness of a string:
-
-    if (emptyString == anotherString) {...}
-    
-This may work sometimes, but if `string` has an empty value that is
-not a literal `''`, the comparisons will fail:
-    
-    emptyString == '\u0020'; // false
-    emptyString == '\u2004'; // false
-    
 
 ## Removing leading and trailing whitespace
 
@@ -372,8 +372,8 @@ Use `string.trim()`:
     var string = '$space X $space';
     var newString = string.trim(); // 'X'
 
-The String class has no methods to remove leading and trailing whitespace. But
-you can always use regExps.
+The String class has no methods to remove only leading or only trailing
+whitespace. But you can always use regExps.
 
 Remove only leading whitespace:
 
@@ -400,7 +400,7 @@ Use string.length to get the number of UTF-16 code units in a string:
 	
 ### Discussion
 
-For characters that fit into 16 bites, the code unit length is the same as the
+For characters that fit into 16 bits, the code unit length is the same as the
 rune length:
 
     var hearts = '\u2661'; // ♡
@@ -419,7 +419,7 @@ Plane (BMP), the rune length will be less than the code unit length:
     music.runes.length // 5
 
 Use `length` if you want to number of code units; use `runes.length` if you 
-want the number of distinct characters.
+want the number of runes.
 
 
 ## Subscripting a string
@@ -432,10 +432,10 @@ You want to be able to access a character in a string at a particular index.
 
 Subscript runes:
 
-    var coffee = '\u{1F375}'; // 🍵  
-    coffee.runes.toList()[0]; // 127861
+    var teacup = '\u{1F375}'; // 🍵  
+    teacup.runes.toList()[0]; // 127861
     
-The number 127861 represents the code point for coffee, '\u{1F375}' (🍵 ). 
+The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ). 
 
 ### Discussion
 
@@ -448,8 +448,8 @@ for non-BMP characters, subscripting yields invalid UTF-16 characters:
     var hearts = '\u2661'; // ♡
     hearts[0]; '\u2661' // ♡
     
-    coffee[0]; // 55356, Invalid string, half of a surrogate pair.
-    coffee.codeUnits.toList()[0]; // The same.
+    teacup[0]; // 55356, Invalid string, half of a surrogate pair.
+    teacup.codeUnits.toList()[0]; // The same.
     
 
 ## Processing a string one character at a time
@@ -527,7 +527,7 @@ You want to change the case of strings.
 
 ### Solution
 
-Use `string.toUpperCase()` and `string.toLowerCase()` to covert a string to 
+Use `string.toUpperCase()` and `string.toLowerCase()` to convert a string to 
 lower-case or upper-case, respectively:
 
     var theOneILove = 'I love Lucy';
