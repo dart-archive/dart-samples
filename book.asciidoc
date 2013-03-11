@@ -1,7 +1,6 @@
 = Dart Cookbook
 :author: Shailen Tuli
 :encoding: UTF-8
-:plaintext:
 
 == Strings
 
