@@ -28,7 +28,7 @@ a value of '\u{1F3BC}', it too large to fit in 16 bits.
 
     var clef = '\u{1F3BC}'; // 🎼
 
-'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [u\D83C, \uDFBC].
+'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
 
 ### What is the difference between a code point and a code unit?
 
@@ -46,9 +46,9 @@ For non-BMP characters, each code point is represented by two code units.
 
 ### What exactly is a character?
 
-A character is a string contained in the Universal Character Set. Each character
-maps to a single rune value (code point); BMP characters map to 1 code
-unit; non-BMP characters map to 2 code units. 
+A character is a string contained in the Universal Character Set.
+Each character maps to a single rune value (code point); BMP characters
+map to 1 code unit; non-BMP characters map to 2 code units. 
 
 You can read more about the Universal Character Set at
 http://en.wikipedia.org/wiki/Universal_Character_Set.
@@ -466,7 +466,7 @@ To access an individual character, map the string runes:
           // ['*D*', '*a*', '*r*', '*t*']
       
     var runeList = happy.runes.map((rune) => [rune, new String.fromCharCode(rune)]).toList(), 
-          // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+    // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
       
 If you are sure that the string is in the Basic Multilingual Plane (BMP), you
 can use string.split(''):
