@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="AsciiDoc 8.6.8">
+<title>Dart Cookbook</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Dart Cookbook</h1>
+<span id="author">Shailen Tuli</span><br>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_strings">Strings</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A Dart string represents a sequence of characters encoded in UTF-16.
+Decoding UTF-16 yields Unicode code points. Borrowing terminology from
+Go, Dart uses the term `rune` for an integer representing a Unicode code
+point.</p></div>
+<div class="paragraph"><p>The string recipes included in this chapter assume that you have some
+familiarity with Unicode and UTF-16. Here is a brief refresher:</p></div>
+<div class="paragraph"><div class="title">What is the Basic Multilingual Plane?</div><p>The Unicode code space is divided into seventeen planes of 65,536 points
+each. The first plane (code points U+0000 to U+FFFF) contains the most
+frequently used characters and is called the Basic Multilingual Plane or
+BMP.</p></div>
+<div class="paragraph"><div class="title">What is a Surrogate Pair?</div><p>The term 'surrogate pair' refers to a means of encoding Unicode
+characters outside the Basic Multilingual Plane.</p></div>
+<div class="paragraph"><p>In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
+characters. Since two bytes can only contain the 65,536 characters in
+the 0x0 to 0xFFFF range, a pair of code points are used to store values
+in the 0x10000 to 0x10FFFF range.</p></div>
+<div class="paragraph"><p>For example the Unicode character for musical Treble-clef (🎼 ), with a</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var clef = '\u{1F3BC}'; // 🎼</pre>
+</div></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><div class="title">What is the difference between a code point and a code unit?</div><p>Within the Basic Multilingual Plane, the code point for a character is
+numerically the same as the code unit for that character.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'D'.runes.first; // 68
+'D'.codeUnits.first; // 68</pre>
+</div></div>
+<div class="paragraph"><p>For non-BMP characters, each code point is represented by two code
+units.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var clef = '\u{1F3BC}'; // 🎼
+clef.runes.length; // 1
+clef.codeUnits.length; // 2</pre>
+</div></div>
+<div class="paragraph"><div class="title">What exactly is a character?</div><p>A character is a string contained in the Universal Character Set. Each
+character maps to a single rune value (code point); BMP characters map
+to 1 code unit; non-BMP characters map to 2 code units.</p></div>
+<div class="paragraph"><p>You can read more about the Universal Character Set at
+http://en.wikipedia.org/wiki/Universal_Character_Set.</p></div>
+<div class="paragraph"><div class="title">Do I have to really deal with Unicode?</div><p>Yes, if you want to build robust international applications, you do.
+Besides, the String library makes working with Unicode relatively
+painless, so there's no great overhead in doing things right.</p></div>
+<div class="sect2">
+<h3 id="_concatenating_strings">Concatenating Strings</h3>
+<div class="sect3">
+<h4 id="_problem">Problem</h4>
+<div class="paragraph"><p>You want to concatenate strings in Dart. You tried using `+`, but that
+resulted in an error.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution">Solution</h4>
+<div class="paragraph"><p>Use adjacent string literals:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var fact = 'Dart'  'is' ' fun!'; // 'Dart is fun!'</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion">Discussion</h4>
+<div class="paragraph"><p>Adjacent literals also work over multiple lines:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var fact = 'Dart'
+'is'
+'fun!'; // 'Dart is fun!'</pre>
+</div></div>
+<div class="paragraph"><p>They also work when using multiline strings:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var lunch = '''Peanut
+butter'''
+'''and
+jelly'''; // 'Peanut\nbutter and\njelly'</pre>
+</div></div>
+<div class="paragraph"><p>You can concatenate adjacent single line literals with multiline
+strings:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var funnyGuys = 'Dewey ' 'Cheatem'
+''' and
+Howe'''; // 'Dewey Cheatem and\n Howe'</pre>
+</div></div>
+<div class="sect4">
+<h5 id="_alternatives_to_adjacent_string_literals">Alternatives to adjacent string literals</h5>
+<div class="paragraph"><p>You can also use the `concat()` method on a string to concatenate it to
+another string:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var film = filmToWatch();
+film = film.concat('\n');  // 'The Big Lebowski\n'</pre>
+</div></div>
+<div class="paragraph"><p>Since `concat()` creates a new string every time it is invoked, a long
+chain of `concat()`s can be expensive. Avoid those. Use a StringBuffer
+instead (see _Incrementally building a string efficiently using a
+StringBuffer_, below).</p></div>
+<div class="paragraph"><p>Use can `join()` to combine a sequence of strings:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var film = ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'</pre>
+</div></div>
+<div class="paragraph"><p>You can also use string interpolation to concatenate strings (see
+_Interpolating expressions inside strings_, below).</p></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interpolating_expressions_inside_strings">Interpolating expressions inside strings</h3>
+<div class="sect3">
+<h4 id="_problem_2">Problem</h4>
+<div class="paragraph"><p>You want to create strings that contain Dart expressions and
+identifiers.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_2">Solution</h4>
+<div class="paragraph"><p>You can put the value of an expression inside a string by using
+${expression}.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var favFood = 'sushi';
+var whatDoILove = 'I love ${favFood.toUpperCase()}'; // 'I love SUSHI'</pre>
+</div></div>
+<div class="paragraph"><p>You can skip the {} if the expression is an identifier:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var whatDoILove = 'I love $favFood'; // 'I love sushi'</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_2">Discussion</h4>
+<div class="paragraph"><p>An interpolated string, `string ${expression}` is equivalent to the
+concatenation of the strings 'string ' and `expression.toString()`.
+Consider this code:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var four = 4;
+var seasons = 'The $four seasons'; // 'The 4 seasons'</pre>
+</div></div>
+<div class="paragraph"><p>It is equivalent to the following:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var seasons = 'The '.concat(4.toString()).concat(' seasons');
+// 'The 4 seasons'</pre>
+</div></div>
+<div class="paragraph"><p>You should consider implementing a `toString()` method for user-defined
+objects. Here's what happens if you don't:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>class Point {
+  num x, y;
+  Point(this.x, this.y);
+}
+
+var point = new Point(3, 4);
+print('Point: $point'); // "Point: Instance of 'Point'"</pre>
+</div></div>
+<div class="paragraph"><p>Probably not what you wanted. Here is the same example with an explicit
+`toString()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>class Point {
+  ...
+
+  String toString() =&amp;gt; 'x: $x, y: $y';
+}
+
+print('Point: $point'); // 'Point: x: 3, y: 4'</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_escaping_special_characters">Escaping special characters</h3>
+<div class="sect3">
+<h4 id="_problem_3">Problem</h4>
+<div class="paragraph"><p>You want to put newlines, dollar signs, or other special characters in
+your strings.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_3">Solution</h4>
+<div class="paragraph"><p>Prefix special characters with a `\`.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>  print(Wile\nCoyote');
+  // Wile
+  // Coyote</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_3">Discussion</h4>
+<div class="paragraph"><p>Dart designates a few characters as special, and these can be escaped:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+\n for newline, equivalent to \x0A.
+</p>
+</li>
+<li>
+<p>
+\r for carriage return, equivalent to \x0D.
+</p>
+</li>
+<li>
+<p>
+\f for form feed, equivalent to \x0C.
+</p>
+</li>
+<li>
+<p>
+\b for backspace, equivalent to \x08.
+</p>
+</li>
+<li>
+<p>
+\t for tab, equivalent to \x09.
+</p>
+</li>
+<li>
+<p>
+\v for vertical tab, equivalent to \x0B.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If you prefer, you can use `\x` or `\u` notation to indicate the special
+character:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>print('Wile\x0ACoyote');       // same as print('Wile\nCoyote');
+print('Wile\u000ACoyote');     // same as print('Wile\nCoyote');</pre>
+</div></div>
+<div class="paragraph"><p>You can also use `\u{}` notation:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote');</pre>
+</div></div>
+<div class="paragraph"><p>You can also escape the `$` used in string interpolation:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var superGenius = 'Wile Coyote';
+print('$superGenius and Road Runner');  // 'Wile Coyote and Road Runner'
+print('\$superGenius and Road Runner'); // '$superGenius and Road Runner'</pre>
+</div></div>
+<div class="paragraph"><p>If you escape a non-special character, the `\` is ignored:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>print('Wile \E Coyote'); // 'Wile E Coyote'</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_incrementally_building_a_string_efficiently_using_a_stringbuffer">Incrementally building a string efficiently using a StringBuffer</h3>
+<div class="sect3">
+<h4 id="_problem_4">Problem</h4>
+<div class="paragraph"><p>You want to collect string fragments and combine them in an efficient
+manner.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_4">Solution</h4>
+<div class="paragraph"><p>Use a StringBuffer to programmatically generate a string. A StringBuffer
+collects the string fragments, but does not generate a new string until
+`toString()` is called:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var sb = new StringBuffer();
+sb.write('John, ');
+sb.write('Paul, ');
+sb.write('George, ');
+sb.write('and Ringo');
+var beatles = sb.toString(); // 'John, Paul, George, and Ringo'</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_4">Discussion</h4>
+<div class="paragraph"><p>In addition to `write()`, the StringBuffer class provides methods to
+write a list of strings (`writeAll()`), write a numerical character code
+(`writeCharCode()`), write with an added newline ('writeln()`), and
+more. Here is a simple example that show the use of these methods:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var sb = new StringBuffer();
+sb.writeln('The Beatles:');
+sb.writeAll(['John, ', 'Paul, ', 'George, and Ringo']);
+sb.writeCharCode(33); // charCode for '!'.
+var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!'</pre>
+</div></div>
+<div class="paragraph"><p>Since a StringBuffer waits until the call to `toString()` to generate
+the concatenated string, it represents a more efficient way of combining
+strings than `concat()`. See the _Concatenating Strings_ recipe for a
+description of `concat()`.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_converting_between_string_characters_and_numerical_codes">Converting between string characters and numerical codes</h3>
+<div class="sect3">
+<h4 id="_problem_5">Problem</h4>
+<div class="paragraph"><p>You want to convert string characters into numerical codes and back.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_5">Solution</h4>
+<div class="paragraph"><p>Use the `runes` getter to access a string's code points:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Dart'.runes.toList(); // [68, 97, 114, 116]
+
+var smileyFace = '\u263A'; // ☺
+smileyFace.runes.toList(); // [9786]</pre>
+</div></div>
+<div class="paragraph"><p>The number 9786 represents the code unit '263A'.</p></div>
+<div class="paragraph"><p>Use `string.codeUnits` to get a string's UTF-16 code units:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
+smileyFace.codeUnits.toList(); // [9786]</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_5">Discussion</h4>
+<div class="paragraph"><p>Notice that using `runes` and `codeUnits` produces identical results in
+the examples above. That happens because each character in 'Dart' and in
+`smileyFace` fits within 16 bits, resulting in a code unit corresponding
+neatly with a code point.</p></div>
+<div class="paragraph"><p>Consider an example where a character cannot be represented within
+consists of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of
+this character using `codeUnits` and `runes` produces the following
+result:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var clef = '\u{1F3BC}'; // 🎼
+clef.codeUnits.toList(); // [55356, 57276]
+clef.runes.toList(); // [127932]</pre>
+</div></div>
+<div class="paragraph"><p>The numbers 55356 and 57276 represent `clef`'s surrogate pair, '\uD83C' and
+'\uDFBC', respectively. The number 127932 represents the code point '\u1F3BC'.</p></div>
+<div class="sect4">
+<h5 id="_using_codeunitat_to_access_individual_code_units">Using codeUnitAt() to access individual code units</h5>
+<div class="paragraph"><p>To access the 16-Bit UTF-16 code unit at a particular index, use
+`codeUnitAt()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Dart'.codeUnitAt(0); // 68
+smileyFace.codeUnitAt(0); // 9786</pre>
+</div></div>
+<div class="paragraph"><p>Using `codeUnitAt()` with the multi-byte `clef` character leads to
+problems:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>clef.codeUnitAt(0); // 55356
+clef.codeUnitAt(1); // 57276</pre>
+</div></div>
+<div class="paragraph"><p>In either call to `clef.codeUnitAt()`, the values returned represent
+strings that are only one half of a UTF-16 surrogate pair. These are not
+valid UTF-16 strings.</p></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_converting_numerical_codes_to_strings">Converting numerical codes to strings</h3>
+<div class="paragraph"><p>You can generate a new string from runes or code units using the factory
+`String.fromCharCodes(charCodes)`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
+
+new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
+// 'I ♡ Lucy'
+
+new String.fromCharCodes([55356, 57276]); // 🎼
+new String.fromCharCodes([127932]), // 🎼</pre>
+</div></div>
+<div class="paragraph"><p>You can use the `String.fromCharCode()` factory to convert a single rune
+or code unit to a string:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>new String.fromCharCode(68); // 'D'
+new String.fromCharCode(9786); // ☺
+new String.fromCharCode(127932); // 🎼</pre>
+</div></div>
+<div class="paragraph"><p>Creating a string with only one half of a surrogate pair is permitted,
+but not recommended.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_determining_if_a_string_is_empty">Determining if a string is empty</h3>
+<div class="sect3">
+<h4 id="_problem_6">Problem</h4>
+<div class="paragraph"><p>You want to know if a string is empty. You tried `if(string) {...}`, but
+that did not work.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_6">Solution</h4>
+<div class="paragraph"><p>Use `string.isEmpty`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var emptyString = '';
+emptyString.isEmpty; // true</pre>
+</div></div>
+<div class="paragraph"><p>A string with a space is not empty:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var space = ' ';
+space.isEmpty; // false</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_6">Discussion</h4>
+<div class="paragraph"><p>Don't use `if (string)` to test the emptiness of a string. In Dart, all
+objects except the boolean true evaluate to false. `if(string)` will
+always be false.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_removing_leading_and_trailing_whitespace">Removing leading and trailing whitespace</h3>
+<div class="sect3">
+<h4 id="_problem_7">Problem</h4>
+<div class="paragraph"><p>You want to remove leading and trailing whitespace from a string.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_7">Solution</h4>
+<div class="paragraph"><p>Use `string.trim()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var space = '\n\r\f\t\v';  // We'll use a variety of space characters.
+var string = '$space X $space';
+var newString = string.trim(); // 'X'</pre>
+</div></div>
+<div class="paragraph"><p>The String class has no methods to remove only leading or only trailing
+whitespace. But you can always use regExps.</p></div>
+<div class="paragraph"><p>Remove only leading whitespace:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); //  'X $space'</pre>
+</div></div>
+<div class="paragraph"><p>Remove only trailing whitespace:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_calculating_the_length_of_a_string">Calculating the length of a string</h3>
+<div class="sect3">
+<h4 id="_problem_8">Problem</h4>
+<div class="paragraph"><p>You want to get the length of a string, but are not sure how to
+correctly calculate the length when working with Unicode.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_8">Solution</h4>
+<div class="paragraph"><p>Use string.length to get the number of UTF-16 code units in a string:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'I love music'.length; // 12
+'I love music'.runes.length; // 12</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_7">Discussion</h4>
+<div class="paragraph"><p>For characters that fit into 16 bits, the code unit length is the same
+as the rune length:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var hearts = '\u2661'; // ♡
+hearts.length; // 1
+hearts.runes.length; // 1</pre>
+</div></div>
+<div class="paragraph"><p>If the string contains any characters outside the Basic Multilingual
+Plane (BMP), the rune length will be less than the code unit length:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var clef = '\u{1F3BC}'; // 🎼
+clef.length; // 2
+clef.runes.length; // 1
+
+var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+music.length; // 6
+music.runes.length // 5</pre>
+</div></div>
+<div class="paragraph"><p>Use `length` if you want to number of code units; use `runes.length` if
+you want the number of runes.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_subscripting_a_string">Subscripting a string</h3>
+<div class="sect3">
+<h4 id="_problem_9">Problem</h4>
+<div class="paragraph"><p>You want to be able to access a character in a string at a particular
+index.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_9">Solution</h4>
+<div class="paragraph"><p>Subscript runes:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var teacup = '\u{1F375}'; // 🍵
+teacup.runes.toList()[0]; // 127861</pre>
+</div></div>
+<div class="paragraph"><p></p></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_8">Discussion</h4>
+<div class="paragraph"><p>Subscripting a string directly can be problematic. This is because the
+default `[]` implementation subscripts along code units. This means that
+for non-BMP characters, subscripting yields invalid UTF-16 characters:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Dart'[0]; // 'D'
+
+var hearts = '\u2661'; // ♡
+hearts[0]; '\u2661' // ♡
+
+teacup[0]; // 55356, Invalid string, half of a surrogate pair.
+teacup.codeUnits.toList()[0]; // The same.</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_processing_a_string_one_character_at_a_time">Processing a string one character at a time</h3>
+<div class="sect3">
+<h4 id="_problem_10">Problem</h4>
+<div class="paragraph"><p>You want to do something with each individual character in a string.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_10">Solution</h4>
+<div class="paragraph"><p>To access an individual character, map the string runes:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var charList = "Dart".runes.map((rune) =&amp;gt; '*${new String.fromCharCode(rune)}*').toList();
+      // ['*D*', '*a*', '*r*', '*t*']
+
+var runeList = happy.runes.map((rune) =&amp;gt; [rune, new String.fromCharCode(rune)]).toList(),
+// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]</pre>
+</div></div>
+<div class="paragraph"><p>If you are sure that the string is in the Basic Multilingual Plane
+(BMP), you can use string.split(''):</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Dart'.split(''); // ['D', 'a', 'r', 't']
+smileyFace.split('').length; // 1</pre>
+</div></div>
+<div class="paragraph"><p>Since `split('')` splits at the UTF-16 code unit boundaries, invoking it
+on a non-BMP character yields the string's surrogate pair:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var clef = '\u{1F3BC}'; // 🎼 , not in BMP.
+clef.split('').length; // 2</pre>
+</div></div>
+<div class="paragraph"><p>The surrogate pair members are not valid UTF-16 strings.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_splitting_a_string_into_substrings">Splitting a string into substrings</h3>
+<div class="sect3">
+<h4 id="_problem_11">Problem</h4>
+<div class="paragraph"><p>You want to split a string into substrings.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_11">Solution</h4>
+<div class="paragraph"><p>Use the `split()` method with a string or a regExp as an argument.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var smileyFace = '\u263A';
+var happy = 'I am $smileyFace';
+happy.split(' '); // ['I', 'am', '☺']</pre>
+</div></div>
+<div class="paragraph"><p>Here is an example of using `split()` with a regExp:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var nums = '2/7 3 4/5 3~/5';
+var numsRegExp = new RegExp(r'(\s|/|~/)');
+nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']</pre>
+</div></div>
+<div class="paragraph"><p>In the code above, the string `nums` contains various numbers, some of
+which are expressed as fractions or as int-divisions. A regExp is used
+to split the string to extract just the numbers.</p></div>
+<div class="paragraph"><p>You can perform operations on the matched and unmatched portions of a
+string when using `split()` with a regExp:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
+  onMatch: (m) =&amp;gt; '*${m.group(0).toLowerCase()}*',
+  onNonMatch: (n) =&amp;gt; n.toUpperCase()); // 'EATS *shoots* LEAVES'</pre>
+</div></div>
+<div class="paragraph"><p>The regExp matches the middle word ('SHOOTS'). A pair of callbacks are
+registered to transform the matched and unmatched substrings before the
+substrings are joined together again.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_string_case">Changing string case</h3>
+<div class="sect3">
+<h4 id="_problem_12">Problem</h4>
+<div class="paragraph"><p>You want to change the case of strings.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_12">Solution</h4>
+<div class="paragraph"><p>Use `string.toUpperCase()` and `string.toLowerCase()` to convert a
+string to lower-case or upper-case, respectively:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var theOneILove = 'I love Lucy';
+theOneILove.toUpperCase(); // 'I LOVE LUCY!'
+theOneILove.toLowerCase(); // 'i love lucy!'</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_9">Discussion</h4>
+<div class="paragraph"><p>Case changes affect the characters of bi-cameral scripts like Greek and
+French: var zeus = '039403af03b103c2'; // 'Δίας' (Zeus in modern Greek)
+zeus.toUpperCase(); // 'ΔΊΑΣ'</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var zeus = '\u0394\u03af\u03b1\u03c2'; // 'Δίας' (Zeus in modern Greek)
+zeus.toUpperCase(); // 'ΔΊΑΣ'
+
+var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // 'Résumé'
+resume.toLowerCase(); // 'résumé'</pre>
+</div></div>
+<div class="paragraph"><p>They do not affect the characters of uni-cameral scripts like Devanagari
+(used for writing many of the languages of India):</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c';
+// 'चिकन कबाब'  (in Devanagari)
+chickenKebab.toLowerCase();  // 'चिकन कबाब'
+chickenKebab.toUpperCase();  // 'चिकन कबाब'</pre>
+</div></div>
+<div class="paragraph"><p>If a character's case does not change when using `toUpperCase()` and
+`toLowerCase()`, it is most likely because the character only has one
+form.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_determining_whether_a_string_contains_another_string">Determining whether a string contains another string</h3>
+<div class="sect3">
+<h4 id="_problem_13">Problem</h4>
+<div class="paragraph"><p>You want to find out if a string is the substring of another string.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_13">Solution</h4>
+<div class="paragraph"><p>Use `string.contains()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var fact = 'Dart strings are immutable';
+string.contains('immutable'); // True.</pre>
+</div></div>
+<div class="paragraph"><p>You can indicate a startIndex as a second argument:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>string.contains('Dart', 2); // False</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_10">Discussion</h4>
+<div class="paragraph"><p>The String library provides a couple of shortcuts for testing whether a
+string is a substring of another:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>string.startsWith('Dart'); // True.
+string.endsWith('e'); // True.</pre>
+</div></div>
+<div class="paragraph"><p>You can also use `string.indexOf()`, which returns -1 if the substring
+is not found within a string, and its matching index, if it is:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>string.indexOf('art') != -1; // True, `art` is found in `Dart`</pre>
+</div></div>
+<div class="paragraph"><p>You can also use a regExp and `hasMatch()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>new RegExp(r'ar[et]').hasMatch(string); //  True, 'art' and 'are' match.</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_finding_matches_of_a_regexp_pattern_in_a_string">Finding matches of a regExp pattern in a string</h3>
+<div class="sect3">
+<h4 id="_problem_14">Problem</h4>
+<div class="paragraph"><p>You want to use regExp to match a pattern in a string, and want to be
+able to access the matches.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_14">Solution</h4>
+<div class="paragraph"><p>Construct a regular expression using the RegExp class and find matches
+using the `allMatches()` method:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var neverEatingThat = 'Not with a fox, not in a box';
+var regExp = new RegExp(r'[fb]ox');
+List matches = regExp.allMatches(neverEatingThat);
+matches.map((match) =&amp;gt; match.group(0)).toList(); // ['fox', 'box']</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_11">Discussion</h4>
+<div class="paragraph"><p>You can query the object returned by `allMatches()` to find out the
+number of matches:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>matches.length; // 2</pre>
+</div></div>
+<div class="paragraph"><p>To find the first match, use `firstMatch()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>regExp.firstMatch(neverEatingThat).group(0); // 'fox'</pre>
+</div></div>
+<div class="paragraph"><p>To directly access the matched string, use `stringMatch()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>regExp.stringMatch(neverEatingThat); // 'fox'
+regExp.stringMatch('I like bagels and lox'); // null</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_substituting_strings_based_on_regexp_matches">Substituting strings based on regExp matches</h3>
+<div class="sect3">
+<h4 id="_problem_15">Problem</h4>
+<div class="paragraph"><p>You want to match substrings within a string and make substitutions
+based on the matches.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_15">Solution</h4>
+<div class="paragraph"><p>Construct a regular expression using the RegExp class and make
+replacements using `replaceAll()` method:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'</pre>
+</div></div>
+<div class="paragraph"><p>If you want to replace just the first match, use 'replaceFirst()`:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>'0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'</pre>
+</div></div>
+<div class="paragraph"><p>The RegExp matches for one or more 0's and replaces them with an empty
+string.</p></div>
+<div class="paragraph"><p>You can use `replaceAllMatched()` and register a function to modify the
+matches:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var heart = '\u2661'; // '♡'
+var string = 'I like Ike but I $heart Lucy';
+var regExp = new RegExp(r'[A-Z]\w+');
+string.replaceAllMapped(regExp, (match) =&amp;gt; match.group(0).toUpperCase());
+// 'I like IKE but I ♡ LUCY'</pre>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-03-11 13:32:29 PDT
+</div>
+</div>
+</body>
+</html>
