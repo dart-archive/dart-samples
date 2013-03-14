@@ -4,14 +4,17 @@ import 'package:unittest/unittest.dart';
 
 void main() {
   group('determining if string is empty', () {
-    var emptyString = '';
-    var space = ' ';
-    
-    test('', () {
-      expect(emptyString.isEmpty, isTrue);
+    test('using isEmpty', () {
+      expect(''.isEmpty, isTrue);
     });
     
+    test('using ==', () {
+      var string = "asdf";
+      expect(string == "", equals(false));
+    });
+   
     test('if string contains a space', () {
+      var space = ' ';
       expect(space.isEmpty, isFalse);
     });
   });  

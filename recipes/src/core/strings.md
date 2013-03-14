@@ -1,63 +1,33 @@
 # Strings
 
-A Dart string represents a sequence of characters encoded in UTF-16. Decoding
-UTF-16 yields Unicode code points. Borrowing terminology from Go, Dart uses
-the term `rune` for an integer representing a Unicode code point. 
+Dart strings are immutable: once you create a string, you cannot change it.
+You can always build a string out of other strings, or assign the results
+of calling a method on a string to a new string.
 
-The string recipes included in this chapter assume that you have some
-familiarity with Unicode and UTF-16. Here is a brief refresher:
+String literals can be written in three ways: with single quotes ('with
+embedded "double" quotes'), with double quotes: "with embedded 'single'
+quotes"), or with triple quotes ('''With single quotes''', """With double
+quotes"""). Triple quoted strings can span multiple lines with associated
+whitespace preserved.
 
-### What is the Basic Multilingual Plane?
+Dart does not have a char type. Indexing operations on strings give you
+one-character strings.
 
-The Unicode code space is divided into seventeen planes of 65,536 points each. 
-The first plane (code points U+0000 to U+FFFF) contains the most
-frequently used characters and is called the Basic Multilingual Plane or BMP.
+Dart strings support string concatenation and expression interpolation. The
+String class provides methods for searching inside a string, extracting
+substrings, handling case, trimming whitespace, replacing a part of a
+string, and more. The StringBuffer class lets you programmatically build
+up a string in an efficient manner. You can use regular expressions
+(RegExp objects) to search within strings and to replace parts of strings. 
 
-### What is a Surrogate Pair?
+Dart string characters are encoded in UTF-16. Decoding UTF-16 yields Unicode
+code points. Borrowing terminology from Go, Dart uses the term `rune` for an
+integer representing a Unicode code point. The runes of a String are accessible
+throught the `runes` getter.
 
-The term 'surrogate pair' refers to a means of encoding Unicode characters
-outside the Basic Multilingual Plane.
-
-In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
-characters. Since two bytes can only contain the 65,536 characters in the 0x0
-to 0xFFFF range, a pair of code points are used to store values in the
-0x10000 to 0x10FFFF range.
-
-For example the Unicode character for musical Treble-clef (🎼 ), with
-a value of '\u{1F3BC}', it too large to fit in 16 bits. 
-
-    var clef = '\u{1F3BC}'; // 🎼
-
-'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
-
-### What is the difference between a code point and a code unit?
-
-Within the Basic Multilingual Plane, the code point for a character is
-numerically the same as the code unit for that character.
-
-    'D'.runes.first; // 68
-    'D'.codeUnits.first; // 68 
-
-For non-BMP characters, each code point is represented by two code units.
-
-    var clef = '\u{1F3BC}'; // 🎼
-    clef.runes.length; // 1
-    clef.codeUnits.length; // 2
-
-### What exactly is a character?
-
-A character is a string contained in the Universal Character Set.
-Each character maps to a single rune value (code point); BMP characters
-map to 1 code unit; non-BMP characters map to 2 code units. 
-
-You can read more about the Universal Character Set at
-http://en.wikipedia.org/wiki/Universal_Character_Set.
-
-### Do I have to really deal with Unicode?
-
-Yes, if you want to build robust international applications, you do.
-Besides, the String library makes working with Unicode relatively painless,
-so there's no great overhead in doing things right.
+Dart strings support the full Unicode range, and cover every alphabetic system
+in use in the whole world. The String library provides support for the correct
+handling of extended UTF-16 characters.
 
 ## Concatenating Strings
 
@@ -652,3 +622,56 @@ matches:
     var regExp = new RegExp(r'[A-Z]\w+');
     string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
     // 'I like IKE but I ♡ LUCY'
+==============================================================================
+
+
+The string recipes included in this chapter assume that you have some
+familiarity with Unicode and UTF-16. Here is a brief refresher:
+
+### What is the Basic Multilingual Plane?
+
+The Unicode code space is divided into seventeen planes of 65,536 points each. 
+The first plane (code points U+0000 to U+FFFF) contains the most
+frequently used characters and is called the Basic Multilingual Plane or BMP.
+
+### What is a Surrogate Pair?
+
+The term 'surrogate pair' refers to a means of encoding Unicode characters
+outside the Basic Multilingual Plane.
+
+In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
+characters. Since two bytes can only contain the 65,536 characters in the 0x0
+to 0xFFFF range, a pair of code points are used to store values in the
+0x10000 to 0x10FFFF range.
+
+For example the Unicode character for musical Treble-clef (🎼 ), with
+a value of '\u{1F3BC}', it too large to fit in 16 bits. 
+
+    var clef = '\u{1F3BC}'; // 🎼
+
+'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
+
+### What is the difference between a code point and a code unit?
+
+Within the Basic Multilingual Plane, the code point for a character is
+numerically the same as the code unit for that character.
+
+    'D'.runes.first; // 68
+    'D'.codeUnits.first; // 68 
+
+For non-BMP characters, each code point is represented by two code units.
+
+    var clef = '\u{1F3BC}'; // 🎼
+    clef.runes.length; // 1
+    clef.codeUnits.length; // 2
+
+### What exactly is a character?
+
+A character is a string contained in the Universal Character Set.
+Each character maps to a single rune value (code point); BMP characters
+map to 1 code unit; non-BMP characters map to 2 code units. 
+
+You can read more about the Universal Character Set at
+http://en.wikipedia.org/wiki/Universal_Character_Set.
+
+

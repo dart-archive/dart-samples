@@ -2,6 +2,10 @@ library calculating_the_length_test;
 
 import 'package:unittest/unittest.dart';
 
+print(obj) {
+  return obj;  
+}
+
 void main() {
   group('calculating the length of a string', () {
     
@@ -23,6 +27,13 @@ void main() {
       var music = 'I $hearts $clef';
       expect(music.length, equals(6));
       expect(music.runes.length, equals(5));
+    });
+    
+    test('that has superimposed characters', () {
+      var name = 'Ameli\u00E9';  // 'Amelié'
+      var anotherName = 'Ameli\u0065\u0301';  // 'Amelié'
+      expect(print(name.length), equals(6));
+      expect(print(anotherName.length), equals(7));
     });
   });
 }

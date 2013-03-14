@@ -4,73 +4,12 @@
 
 == Strings
 
-A Dart string represents a sequence of characters encoded in UTF-16.
-Decoding UTF-16 yields Unicode code points. Borrowing terminology from
-Go, Dart uses the term `rune` for an integer representing a Unicode code
-point.
+// Recipes talking about BMP: 
+// converting between characters and numeric codes (this is the first one)
+// get length
+// subscripting a string 
+// processing a string one character at a time
 
-The string recipes included in this chapter assume that you have some
-familiarity with Unicode and UTF-16. Here is a brief refresher:
-
-.What is the Basic Multilingual Plane?
-
-The Unicode code space is divided into seventeen planes of 65,536 points
-each. The first plane (code points U+0000 to U+FFFF) contains the most
-frequently used characters and is called the Basic Multilingual Plane or
-BMP.
-
-.What is a Surrogate Pair?
-
-The term 'surrogate pair' refers to a means of encoding Unicode
-characters outside the Basic Multilingual Plane.
-
-In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
-characters. Since two bytes can only contain the 65,536 characters in
-the 0x0 to 0xFFFF range, a pair of code points are used to store values
-in the 0x10000 to 0x10FFFF range.
-
-For example the Unicode character for musical Treble-clef (🎼 ), with a
-value of '\u{1F3BC}', it too large to fit in 16 bits.
-
------------------------------
-var clef = '\u{1F3BC}'; // 🎼
------------------------------
-
-'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
-
-.What is the difference between a code point and a code unit?
-
-Within the Basic Multilingual Plane, the code point for a character is
-numerically the same as the code unit for that character.
-
----------------------------
-'D'.runes.first; // 68
-'D'.codeUnits.first; // 68 
----------------------------
-
-For non-BMP characters, each code point is represented by two code
-units.
-
------------------------------
-var clef = '\u{1F3BC}'; // 🎼
-clef.runes.length; // 1
-clef.codeUnits.length; // 2
------------------------------
-
-.What exactly is a character?
-
-A character is a string contained in the Universal Character Set. Each
-character maps to a single rune value (code point); BMP characters map
-to 1 code unit; non-BMP characters map to 2 code units.
-
-You can read more about the Universal Character Set at
-http://en.wikipedia.org/wiki/Universal_Character_Set.
-
-.Do I have to really deal with Unicode?
-
-Yes, if you want to build robust international applications, you do.
-Besides, the String library makes working with Unicode relatively
-painless, so there's no great overhead in doing things right.
 
 === Concatenating Strings
 
@@ -126,7 +65,7 @@ film = film.concat('\n');  // 'The Big Lebowski\n'
 ---------------------------------------------------
 
 Since `concat()` creates a new string every time it is invoked, a long
-chain of `concat()`s can be expensive. Avoid those. Use a StringBuffer
+chain of `concat()` s can be expensive. Avoid those. Use a StringBuffer
 instead (see _Incrementally building a string efficiently using a
 StringBuffer_, below).
 
@@ -143,8 +82,7 @@ _Interpolating expressions inside strings_, below).
 
 ==== Problem
 
-You want to create strings that contain Dart expressions and
-identifiers.
+You want to embed Dart code inside strings.
 
 ==== Solution
 
@@ -174,7 +112,7 @@ var four = 4;
 var seasons = 'The $four seasons'; // 'The 4 seasons'
 -----------------------------------------------------
 
-It is equivalent to the following:
+This is functionally equivalent to the following:
 
 ------------------------------------------------------------------------------
 var seasons = 'The '.concat(4.toString()).concat(' seasons');
@@ -207,7 +145,7 @@ class Point {
 print('Point: $point'); // 'Point: x: 3, y: 4'
 ----------------------------------------------
 
-=== Escaping special characters
+=== Handling special characters within strings
 
 ==== Problem
 
@@ -272,24 +210,75 @@ manner.
 
 ==== Solution
 
-Use a StringBuffer to programmatically generate a string. A StringBuffer
-collects the string fragments, but does not generate a new string until
-`toString()` is called:
+Use a StringBuffer to programmatically generate a string. Consider this code
+below, for assembling a series of urls from fragments:
 
----------------------------------------------------------------
-var sb = new StringBuffer();
-sb.write('John, ');
-sb.write('Paul, ');
-sb.write('George, ');
-sb.write('and Ringo');
-var beatles = sb.toString(); // 'John, Paul, George, and Ringo'
----------------------------------------------------------------
+--------------------------------------------------------------------------
+var data = [{'scheme': 'https', 'domain': 'news.ycombinator.com'}, 
+            {'domain': 'www.google.com'}, 
+            {'domain': 'reddit.com', 'path': 'search', 'params': 'q=dart'}
+           ];
+
+String assembleUrlsUsingStringBuffer(entries) {
+  StringBuffer sb = new StringBuffer();
+  for (final item in entries) {
+    sb.write(item['scheme'] != null ? item['scheme']  : 'http');
+    sb.write("://");
+    sb.write(item['domain']);
+    sb.write('/');
+    sb.write(item['path'] != null ? item['path']  : '');
+    if (item['params'] != null) {
+      sb.write('?');
+      sb.write(item['params']);
+    }
+    sb.write('\n');
+  }
+  return sb.toString();
+}
+
+// https://news.ycombinator.com/
+// http://www.google.com/
+// http://reddit.com/search?q=dart
+--------------------------------------------------------------------------
 
 ==== Discussion
 
+A StringBuffer collects string fragments, but does not generate a new string
+until `toString()` is called.  This is vastly more efficient than
+concatenating fragments at each step: Consider this rewrite of the above code:
+
+-------------------------------------------------------------------------
+String assembleUrlsUsingConcat(entries) {
+  var urls = '';
+  for (final item in entries) {
+    urls = urls.concat(item['scheme'] != null ? item['scheme']  : 'http');
+    urls = urls.concat("://");
+    urls = urls.concat(item['domain']);
+    urls = urls.concat('/');
+    urls = urls.concat(item['path'] != null ? item['path']  : '');
+    if (item['params'] != null) {
+      urls = urls.concat('?');
+      urls = urls.concat(item['params']);
+    }
+    urls = urls.concat('\n');
+  }
+  return urls;
+}
+-------------------------------------------------------------------------
+
+This approach produces the exact same result, but incurs the cost of
+joining strings multiple times. 
+
+Because a StringBuffer waits until the call to `toString()` to generate
+the concatenated string, it represents a more efficient way of combining
+strings than `concat()`. See the _Concatenating Strings_ recipe for a
+description of `concat()`.
+
+===== Other StringBuffer methods
+
 In addition to `write()`, the StringBuffer class provides methods to
 write a list of strings (`writeAll()`), write a numerical character code
-(`writeCharCode()`), write with an added newline ('writeln()`), and
+(`writeCharCode()`), write with an added newline (`writeln()`), and
 more. Here is a simple example that show the use of these methods:
 
 -------------------------------------------------------------------------------
@@ -300,16 +289,15 @@ sb.writeCharCode(33); // charCode for '!'.
 var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
 -------------------------------------------------------------------------------
 
-Since a StringBuffer waits until the call to `toString()` to generate
-the concatenated string, it represents a more efficient way of combining
-strings than `concat()`. See the _Concatenating Strings_ recipe for a
-description of `concat()`.
 
 === Converting between string characters and numerical codes
 
 ==== Problem
 
-You want to convert string characters into numerical codes and back.
+You want to convert string characters into numerical codes and back. You want
+to do this because sometimes you need to compare characters in a string to
+numerical values coming from another source. Or, maybe you want to split up
+a string into individual characters and operate on each character.
 
 ==== Solution
 
@@ -339,6 +327,8 @@ the examples above. That happens because each character in 'Dart' and in
 `smileyFace` fits within 16 bits, resulting in a code unit corresponding
 neatly with a code point.
 
+===== Runes vs. code units
+
 Consider an example where a character cannot be represented within
 16-bits, the Unicode character for a Treble clef ('\u{1F3BC}'). This character
 consists of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of
@@ -364,8 +354,7 @@ To access the 16-Bit UTF-16 code unit at a particular index, use
 smileyFace.codeUnitAt(0); // 9786
 ---------------------------------
 
-Using `codeUnitAt()` with the multi-byte `clef` character leads to
-problems:
+Using `codeUnitAt()` with the `clef` character leads to problems:
 
 ----------------------------
 clef.codeUnitAt(0); // 55356
@@ -373,13 +362,15 @@ clef.codeUnitAt(1); // 57276
 ----------------------------
 
 In either call to `clef.codeUnitAt()`, the values returned represent
-strings that are only one half of a UTF-16 surrogate pair. These are not
-valid UTF-16 strings.
+strings that are only one half of a UTF-16 surrogate pair. Half of a
+surrogate pair can never be mistaken for a single valid character.
 
-=== Converting numerical codes to strings
+==== Converting numerical codes to strings
 
-You can generate a new string from runes or code units using the factory
-`String.fromCharCodes(charCodes)`:
+You can generate a new string from numerical codes using the factory
+`String.fromCharCodes(charCodes)`. You can pass either runes or code
+units and it can tell the difference and do the right thing
+automatically:
 
 ---------------------------------------------------------------
 new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
@@ -387,7 +378,11 @@ new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
 new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
 // 'I ♡ Lucy'
 
+// Passing code units representing the surrogate pair.
 new String.fromCharCodes([55356, 57276]); // 🎼  
+
+
+// Passing runes.
 new String.fromCharCodes([127932]), // 🎼  
 ---------------------------------------------------------------
 
@@ -419,6 +414,10 @@ var emptyString = '';
 emptyString.isEmpty; // true
 ----------------------------
 
+You can also just use `==`:
+
+string == ""; // True if string is empty.
+
 A string with a space is not empty:
 
 -----------------------
@@ -430,7 +429,8 @@ space.isEmpty; // false
 
 Don't use `if (string)` to test the emptiness of a string. In Dart, all
 objects except the boolean true evaluate to false. `if(string)` will
-always be false.
+always be false. And you will see a warning in the editor if you use
+an 'if' statement with a non-boolean in checked mode.
 
 === Removing leading and trailing whitespace
 
@@ -506,6 +506,25 @@ music.runes.length // 5
 Use `length` if you want to number of code units; use `runes.length` if
 you want the number of runes.
 
+===== Looks can be deceptive
+
+It is tempting to brush aside much of the complexity involved in dealing with
+runes and code units and base the length of the string on the number of
+characters it has. Anyone can tell that 'Dart' has four characters, and
+'Amelié' has six, right? Almost. The length of 'Dart' is indeed four, but
+the length of 'Amelié' depends on how that string was constructed:
+
+---------------------------------------------------
+var name = 'Ameli\u00E9';  // 'Amelié'
+var anotherName = 'Ameli\u0065\u0301';  // 'Amelié'
+print(name.length); // 6
+print(anotherName.length); // 7
+---------------------------------------------------
+
+Both `name` and `anotherName` return strings that look the same, but where
+the 'é' is constructed using a different number of runes. This makes it
+impossible to know the length of these strings by intuitive visual inspection. 
+
 === Subscripting a string
 
 ==== Problem
@@ -515,30 +534,36 @@ index.
 
 ==== Solution
 
-Subscript runes:
-
------------------------------------
-var teacup = '\u{1F375}'; // 🍵  
-teacup.runes.toList()[0]; // 127861
------------------------------------
-
-The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ).
-
-==== Discussion
-
-Subscripting a string directly can be problematic. This is because the
-default `[]` implementation subscripts along code units. This means that
-for non-BMP characters, subscripting yields invalid UTF-16 characters:
+For almost every string that you are likely to encounter, simple subscripting
+using `[]` works fine:
 
 --------------------------------------------------------------
 'Dart'[0]; // 'D'
 
 var hearts = '\u2661'; // ♡
 hearts[0]; '\u2661' // ♡
-
-teacup[0]; // 55356, Invalid string, half of a surrogate pair.
-teacup.codeUnits.toList()[0]; // The same.
 --------------------------------------------------------------
+
+
+
+==== Discussion
+
+Subscripting a string that contains characters that are larger than 16 bits
+is problematic. This is because the default `[]` implementation subscripts
+along code units. This means that for non-BMP characters, subscripting yields
+invalid UTF-16 characters:
+
+--------------------------------------------------------------
+var teacup = '\u{1F375}'; // 🍵  
+teacup.runes.toList()[0]; // 127861
+teacup[0]; // 55356
+teacup.codeUnits.toList()[0]; // The same, 55356.
+--------------------------------------------------------------
+
+The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ).
+The number 55356 represents the first item of the surrogate pair that makes up
+`teacup`. This represents an invalid string.
+
 
 === Processing a string one character at a time
 
@@ -552,15 +577,15 @@ To access an individual character, map the string runes:
 
 ------------------------------------------------------------------------------------------
 var charList = "Dart".runes.map((rune) => '*${new String.fromCharCode(rune)}*').toList();
-      // ['*D*', '*a*', '*r*', '*t*']
-  
+// ['*D*', '*a*', '*r*', '*t*']
+
 var runeList = happy.runes.map((rune) => [rune, new String.fromCharCode(rune)]).toList(), 
-// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
-  
+    // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+
 ------------------------------------------------------------------------------------------
 
-If you are sure that the string is in the Basic Multilingual Plane
-(BMP), you can use string.split(''):
+If you are sure that the string is in the Basic Multilingual Plane (BMP), you can
+use string.split(''):
 
 -----------------------------------------
 'Dart'.split(''); // ['D', 'a', 'r', 't']
@@ -784,3 +809,76 @@ var regExp = new RegExp(r'[A-Z]\w+');
 string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
 // 'I like IKE but I ♡ LUCY'
 --------------------------------------------------------------------------
+
+A Dart string represents a sequence of characters encoded in UTF-16.
+Decoding UTF-16 yields Unicode code points. Borrowing terminology from
+Go, Dart uses the term `rune` for an integer representing a Unicode code
+point.
+
+The string recipes included in this chapter assume that you have some
+familiarity with Unicode and UTF-16. Here is a brief refresher:
+
+
+
+
+
+.What is the Basic Multilingual Plane?
+
+The Unicode code space is divided into seventeen planes of 65,536 points
+each. The first plane (code points U+0000 to U+FFFF) contains the most
+frequently used characters and is called the Basic Multilingual Plane or
+BMP.
+
+.What is a Surrogate Pair?
+
+The term 'surrogate pair' refers to a means of encoding Unicode
+characters outside the Basic Multilingual Plane.
+
+In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
+characters. Since two bytes can only contain the 65,536 characters in
+the 0x0 to 0xFFFF range, a pair of code points are used to store values
+in the 0x10000 to 0x10FFFF range.
+
+For example the Unicode character for musical Treble-clef (🎼 ), with a
+value of '\u{1F3BC}', it too large to fit in 16 bits.
+
+-----------------------------
+var clef = '\u{1F3BC}'; // 🎼
+-----------------------------
+
+'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
+
+.What is the difference between a code point and a code unit?
+
+Within the Basic Multilingual Plane, the code point for a character is
+numerically the same as the code unit for that character.
+
+---------------------------
+'D'.runes.first; // 68
+'D'.codeUnits.first; // 68 
+---------------------------
+
+For non-BMP characters, each code point is represented by two code
+units.
+
+-----------------------------
+var clef = '\u{1F3BC}'; // 🎼
+clef.runes.length; // 1
+clef.codeUnits.length; // 2
+-----------------------------
+
+.What exactly is a character?
+
+A character is a string contained in the Universal Character Set. Each
+character maps to a single rune value (code point); BMP characters map
+to 1 code unit; non-BMP characters map to 2 code units.
+
+You can read more about the Universal Character Set at
+http://en.wikipedia.org/wiki/Universal_Character_Set.
+
+.Do I have to really deal with Unicode?
+
+Yes, if you want to build robust international applications, you do.
+Besides, the String library makes working with Unicode relatively
+painless, so there's no great overhead in doing things right.
+
