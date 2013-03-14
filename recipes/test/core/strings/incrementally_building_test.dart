@@ -42,12 +42,6 @@ String assembleUrlsUsingConcat(data) {
 }
 
 void main() {
-  
-  print(measure(assembleUrlsUsingStringBuffer));
-  print(measure(assembleUrlsUsingConcat));
-  
-  return;
-  
   group('incrementally building a string', () {
     group('using a StringBuffer', () {
       test('using write()', () {
