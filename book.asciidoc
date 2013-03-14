@@ -4,13 +4,6 @@
 
 == Strings
 
-// Recipes talking about BMP: 
-// converting between characters and numeric codes (this is the first one)
-// get length
-// subscripting a string 
-// processing a string one character at a time
-
-
 === Concatenating Strings
 
 ==== Problem
@@ -114,10 +107,10 @@ var seasons = 'The $four seasons'; // 'The 4 seasons'
 
 This is functionally equivalent to the following:
 
-------------------------------------------------------------------------------
+-------------------------------------------------------------
 var seasons = 'The '.concat(4.toString()).concat(' seasons');
 // 'The 4 seasons'
-------------------------------------------------------------------------------
+-------------------------------------------------------------
 
 You should consider implementing a `toString()` method for user-defined
 objects. Here's what happens if you don't:
@@ -200,6 +193,7 @@ If you escape a non-special character, the `\` is ignored:
 -------------------------------------------
 print('Wile \E Coyote'); // 'Wile E Coyote'
 -------------------------------------------
+
 
 === Incrementally building a string efficiently using a StringBuffer
 
@@ -289,115 +283,6 @@ sb.writeCharCode(33); // charCode for '!'.
 var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
 -------------------------------------------------------------------------------
 
-
-=== Converting between string characters and numerical codes
-
-==== Problem
-
-You want to convert string characters into numerical codes and back. You want
-to do this because sometimes you need to compare characters in a string to
-numerical values coming from another source. Or, maybe you want to split up
-a string into individual characters and operate on each character.
-
-==== Solution
-
-Use the `runes` getter to access a string's code points:
-
---------------------------------------------
-'Dart'.runes.toList(); // [68, 97, 114, 116]
-
-var smileyFace = '\u263A'; // ☺
-smileyFace.runes.toList(); // [9786]
- 
---------------------------------------------
-
-The number 9786 represents the code unit '263A'.
-
-Use `string.codeUnits` to get a string's UTF-16 code units:
-
-------------------------------------------------
-'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
-smileyFace.codeUnits.toList(); // [9786]
-------------------------------------------------
-
-==== Discussion
-
-Notice that using `runes` and `codeUnits` produces identical results in
-the examples above. That happens because each character in 'Dart' and in
-`smileyFace` fits within 16 bits, resulting in a code unit corresponding
-neatly with a code point.
-
-===== Runes vs. code units
-
-Consider an example where a character cannot be represented within
-16-bits, the Unicode character for a Treble clef ('\u{1F3BC}'). This character
-consists of a surrogate pair: '\uD83C', '\uDFBC'. Getting the numerical value of
-this character using `codeUnits` and `runes` produces the following
-result:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 
-clef.codeUnits.toList(); // [55356, 57276]
-clef.runes.toList(); // [127932]
-------------------------------------------
-
-The numbers 55356 and 57276 represent `clef`'s surrogate pair, '\uD83C' and
-'\uDFBC', respectively. The number 127932 represents the code point '\u1F3BC'.
-
-===== Using codeUnitAt() to access individual code units
-
-To access the 16-Bit UTF-16 code unit at a particular index, use
-`codeUnitAt()`:
-
----------------------------------
-'Dart'.codeUnitAt(0); // 68
-smileyFace.codeUnitAt(0); // 9786
----------------------------------
-
-Using `codeUnitAt()` with the `clef` character leads to problems:
-
-----------------------------
-clef.codeUnitAt(0); // 55356
-clef.codeUnitAt(1); // 57276
-----------------------------
-
-In either call to `clef.codeUnitAt()`, the values returned represent
-strings that are only one half of a UTF-16 surrogate pair. Half of a
-surrogate pair can never be mistaken for a single valid character.
-
-==== Converting numerical codes to strings
-
-You can generate a new string from numerical codes using the factory
-`String.fromCharCodes(charCodes)`. You can pass either runes or code
-units and it can tell the difference and do the right thing
-automatically:
-
----------------------------------------------------------------
-new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
-
-new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
-// 'I ♡ Lucy'
-
-// Passing code units representing the surrogate pair.
-new String.fromCharCodes([55356, 57276]); // 🎼  
-
-
-// Passing runes.
-new String.fromCharCodes([127932]), // 🎼  
----------------------------------------------------------------
-
-You can use the `String.fromCharCode()` factory to convert a single rune
-or code unit to a string:
-
----------------------------------------
-new String.fromCharCode(68); // 'D'
-new String.fromCharCode(9786); // ☺
-new String.fromCharCode(127932); // 🎼  
----------------------------------------
-
-Creating a string with only one half of a surrogate pair is permitted,
-but not recommended.
-
 === Determining if a string is empty
 
 ==== Problem
@@ -416,7 +301,9 @@ emptyString.isEmpty; // true
 
 You can also just use `==`:
 
+----------------------------------------
 string == ""; // True if string is empty.
+----------------------------------------
 
 A string with a space is not empty:
 
@@ -431,6 +318,7 @@ Don't use `if (string)` to test the emptiness of a string. In Dart, all
 objects except the boolean true evaluate to false. `if(string)` will
 always be false. And you will see a warning in the editor if you use
 an 'if' statement with a non-boolean in checked mode.
+
 
 === Removing leading and trailing whitespace
 
@@ -463,186 +351,6 @@ Remove only trailing whitespace:
 var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
 ---------------------------------------------------------------------------
 
-=== Calculating the length of a string
-
-==== Problem
-
-You want to get the length of a string, but are not sure how to
-correctly calculate the length when working with Unicode.
-
-==== Solution
-
-Use string.length to get the number of UTF-16 code units in a string:
-
-----------------------------------
-'I love music'.length; // 12
-'I love music'.runes.length; // 12
-----------------------------------
-
-==== Discussion
-
-For characters that fit into 16 bits, the code unit length is the same
-as the rune length:
-
----------------------------
-var hearts = '\u2661'; // ♡
-hearts.length; // 1
-hearts.runes.length; // 1
----------------------------
-
-If the string contains any characters outside the Basic Multilingual
-Plane (BMP), the rune length will be less than the code unit length:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼  
-clef.length; // 2
-clef.runes.length; // 1
-
-var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
-music.length; // 6
-music.runes.length // 5
-------------------------------------------
-
-Use `length` if you want to number of code units; use `runes.length` if
-you want the number of runes.
-
-===== Looks can be deceptive
-
-It is tempting to brush aside much of the complexity involved in dealing with
-runes and code units and base the length of the string on the number of
-characters it has. Anyone can tell that 'Dart' has four characters, and
-'Amelié' has six, right? Almost. The length of 'Dart' is indeed four, but
-the length of 'Amelié' depends on how that string was constructed:
-
----------------------------------------------------
-var name = 'Ameli\u00E9';  // 'Amelié'
-var anotherName = 'Ameli\u0065\u0301';  // 'Amelié'
-print(name.length); // 6
-print(anotherName.length); // 7
----------------------------------------------------
-
-Both `name` and `anotherName` return strings that look the same, but where
-the 'é' is constructed using a different number of runes. This makes it
-impossible to know the length of these strings by intuitive visual inspection. 
-
-=== Subscripting a string
-
-==== Problem
-
-You want to be able to access a character in a string at a particular
-index.
-
-==== Solution
-
-For almost every string that you are likely to encounter, simple subscripting
-using `[]` works fine:
-
---------------------------------------------------------------
-'Dart'[0]; // 'D'
-
-var hearts = '\u2661'; // ♡
-hearts[0]; '\u2661' // ♡
---------------------------------------------------------------
-
-
-
-==== Discussion
-
-Subscripting a string that contains characters that are larger than 16 bits
-is problematic. This is because the default `[]` implementation subscripts
-along code units. This means that for non-BMP characters, subscripting yields
-invalid UTF-16 characters:
-
---------------------------------------------------------------
-var teacup = '\u{1F375}'; // 🍵  
-teacup.runes.toList()[0]; // 127861
-teacup[0]; // 55356
-teacup.codeUnits.toList()[0]; // The same, 55356.
---------------------------------------------------------------
-
-The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ).
-The number 55356 represents the first item of the surrogate pair that makes up
-`teacup`. This represents an invalid string.
-
-
-=== Processing a string one character at a time
-
-==== Problem
-
-You want to do something with each individual character in a string.
-
-==== Solution
-
-To access an individual character, map the string runes:
-
-------------------------------------------------------------------------------------------
-var charList = "Dart".runes.map((rune) => '*${new String.fromCharCode(rune)}*').toList();
-// ['*D*', '*a*', '*r*', '*t*']
-
-var runeList = happy.runes.map((rune) => [rune, new String.fromCharCode(rune)]).toList(), 
-    // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
-
-------------------------------------------------------------------------------------------
-
-If you are sure that the string is in the Basic Multilingual Plane (BMP), you can
-use string.split(''):
-
------------------------------------------
-'Dart'.split(''); // ['D', 'a', 'r', 't']
-smileyFace.split('').length; // 1
------------------------------------------
-
-Since `split('')` splits at the UTF-16 code unit boundaries, invoking it
-on a non-BMP character yields the string's surrogate pair:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 , not in BMP.
-clef.split('').length; // 2
-------------------------------------------
-
-The surrogate pair members are not valid UTF-16 strings.
-
-=== Splitting a string into substrings
-
-==== Problem
-
-You want to split a string into substrings.
-
-==== Solution
-
-Use the `split()` method with a string or a regExp as an argument.
-
--------------------------------------
-var smileyFace = '\u263A';
-var happy = 'I am $smileyFace';
-happy.split(' '); // ['I', 'am', '☺']
--------------------------------------
-
-Here is an example of using `split()` with a regExp:
-
---------------------------------------------------------------
-var nums = '2/7 3 4/5 3~/5';
-var numsRegExp = new RegExp(r'(\s|/|~/)');
-nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']
---------------------------------------------------------------
-
-In the code above, the string `nums` contains various numbers, some of
-which are expressed as fractions or as int-divisions. A regExp is used
-to split the string to extract just the numbers.
-
-You can perform operations on the matched and unmatched portions of a
-string when using `split()` with a regExp:
-
-----------------------------------------------------------------
-'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
-  onMatch: (m) => '*${m.group(0).toLowerCase()}*',
-  onNonMatch: (n) => n.toUpperCase()); // 'EATS *shoots* LEAVES'
-  
-----------------------------------------------------------------
-
-The regExp matches the middle word ('SHOOTS'). A pair of callbacks are
-registered to transform the matched and unmatched substrings before the
-substrings are joined together again.
 
 === Changing string case
 
@@ -688,6 +396,395 @@ chickenKebab.toUpperCase();  // 'चिकन कबाब'
 If a character's case does not change when using `toUpperCase()` and
 `toLowerCase()`, it is most likely because the character only has one
 form.
+
+
+
+
+
+
+
+
+
+
+=== Handling extended characters that are composed of multiple code units
+
+==== Problem
+
+You want to use emoticons and other special symbols that don't fit into 16
+bits. How can you create such strings and use them effectively in your code? 
+
+==== Solution
+
+You can create an extended character using `'\u{}'` syntax:
+
+-----------------------------
+var clef = '\u{1F3BC}'; // 🎼
+-----------------------------
+
+You can mostly use this string like any other:
+
+--------------------
+print(clef); // '🎼 '
+--------------------
+
+Some special considerations apply when handling strings that are internally
+composed to 2 strings. These are discussed below.
+
+==== Discussion
+
+'\u{1F3BC}' is composed of `'\uD83C'` and `'\uDFBC'`, the 'surrogate pair' of
+the clef glyph. 
+
+------------------------------------------------------------
+clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16)); 
+// ['d83c', 'dfbc']
+------------------------------------------------------------
+
+Using a surrogate pair is the normal way of encoding extended
+Unicode characters. Most UTF-16 strings that you will ever encounter are
+stored as two-byte (16 bit) code sequences. Since two bytes can only contain
+the 65,536 characters in the 0x0 to 0xFFFF range, a pair of code points are
+used to store values in the 0x10000 to 0x10FFFF range.
+
+The clef glyph is composed of two code units, but only a single code point.
+Borrowing terminology from Go, Dart uses the term `rune` for an integer
+representing a Unicode code point. 
+
+===== Getting the length of an extended string
+
+String length is described in code units by default:
+
+-----------------------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼
+
+print(clef.length); // 2
+print(clef.codeUnits.length); // 2
+-----------------------------------------------------------
+
+You can always query the `runes` getter to get the rune length:
+
+-----------------------------------------------------------
+print(clef.runes.length); // 1
+print(clef.runes.map((rune) => rune.toRadixString(16)).toList()));
+// ['1f3bc']
+-----------------------------------------------------------
+
+===== Subscripting an extended string
+
+Subscripting a string that contains characters that are larger than 16 bits
+requires special attention. This is because the default `[]` implementation
+subscripts along code units. This means that for non-BMP characters,
+subscripting yields invalid UTF-16 characters:
+
+--------------------------------------------------------------
+var teacup = '\u{1F375}'; // 🍵  
+teacup[0]; // 55356
+teacup.codeUnits.toList()[0]; // The same, 55356.
+--------------------------------------------------------------
+
+The number 55356 represents the first item of the surrogate pair that makes up
+`teacup`. This represents an invalid string.
+
+It is easy to end up with invalid strings when subscripting an extended
+string inside a loop:
+
+-------------------------------------------
+var list = [];
+for(var i = 0; i < clef.length; i++) {
+  list.add([clef[i], clef[i].runes.first]); 
+}
+-------------------------------------------
+
+Dart Editor show the value of `list` as `[[?, 55356], [?, 57276]]`. Because
+`list` contains invalid strings, trying to print it generates an error.
+
+
+When working with extended strings, it is better to subscript the runes:
+
+--------------------------------------------------------------
+teacup.runes.toList()[0]; // 127861
+--------------------------------------------------------------
+
+The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ).
+
+===== Problems with using split('') with an extended string
+
+Because `split('')` splits at the UTF-16 code unit boundaries, invoking it
+on a non-BMP character yields the string's surrogate pair:
+
+------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼 
+clef.split('').length; // 2
+------------------------------------------
+
+The surrogate pair members are not valid UTF-16 strings.
+
+Map the string runes instead:
+
+---------------------------------------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼 
+var title = '$clef list:'
+print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
+// ['🎼', ' ', 'l', 'i', 's', 't', ':']
+--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+=== Converting between string characters and numerical codes
+
+==== Problem
+
+You want to convert string characters into numerical codes and back. You want
+to do this because sometimes you need to compare characters in a string to
+numerical values coming from another source. Or, maybe you want to split up
+a string into individual characters and operate on each character.
+
+==== Solution
+
+Use the `runes` getter to access a string's code points:
+
+--------------------------------------------
+'Dart'.runes.toList(); // [68, 97, 114, 116]
+
+var smileyFace = '\u263A'; // ☺
+smileyFace.runes.toList(); // [9786]
+--------------------------------------------
+
+The number 9786 represents the code unit '263A'.
+
+Use `string.codeUnits` to get a string's UTF-16 code units:
+
+------------------------------------------------
+'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
+smileyFace.codeUnits.toList(); // [9786]
+------------------------------------------------
+
+==== Discussion
+
+For most strings, using `runes` or `codeUnits` produces identical results.
+This is not the case for extended characters:
+
+------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼 
+clef.codeUnits.toList(); // [55356, 57276]
+clef.runes.toList(); // [127932]
+------------------------------------------
+
+===== Using codeUnitAt() to access individual code units
+
+To access the code unit at a particular index, use `codeUnitAt()`:
+
+---------------------------------
+'Dart'.codeUnitAt(0); // 68
+smileyFace.codeUnitAt(0); // 9786
+---------------------------------
+
+Using `codeUnitAt()` with an extended character yields an invalid
+string. 
+
+// [[ xref ]]
+
+==== Converting numerical codes to strings
+
+You can generate a new string from numerical codes using the factory
+`String.fromCharCodes(charCodes)`. You can pass either runes or code
+units and it can tell the difference and do the right thing
+automatically:
+
+---------------------------------------------------------------
+new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
+
+new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
+// 'I ♡ Lucy'
+
+// Passing code units representing the surrogate pair.
+new String.fromCharCodes([55356, 57276]); // 🎼  
+
+
+// Passing runes.
+new String.fromCharCodes([127932]), // 🎼  
+---------------------------------------------------------------
+
+You can use the `String.fromCharCode()` factory to convert a single rune
+or code unit to a string:
+
+---------------------------------------
+new String.fromCharCode(68); // 'D'
+new String.fromCharCode(9786); // ☺
+new String.fromCharCode(127932); // 🎼  
+---------------------------------------
+
+Creating a string with only one half of a surrogate pair is permitted,
+but not recommended.
+
+
+=== Calculating the length of a string
+
+==== Problem
+
+You want to get the length of a string, but are not sure how to
+correctly calculate the length when working with Unicode.
+
+==== Solution
+
+Use `string.length` to get the number of UTF-16 code units in a string:
+
+----------------------------------
+'I love music'.length; // 12
+'I love music'.runes.length; // 12
+----------------------------------
+
+==== Discussion
+
+For extended characters, the rune length will be less than the code
+unit length:
+
+------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼  
+var subject = '$clef list:';
+
+clef.length; // 2
+clef.runes.length; // 1
+
+var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+music.length; // 6
+music.runes.length // 5
+------------------------------------------
+
+Use `length` if you want to number of code units; use `runes.length` if
+you want the number of runes.
+
+// [[ xref ]]
+
+===== Working with combined characters
+
+It is tempting to brush aside much of the complexity involved in dealing with
+runes and code units and base the length of the string on the number of
+characters it appears to have. Anyone can tell that 'Dart' has four characters,
+and 'Amelié' has six, right? Almost. The length of 'Dart' is indeed four, but
+the length of 'Amelié' depends on how that string was constructed:
+
+---------------------------------------------------
+var name = 'Ameli\u00E9';  // 'Amelié'
+var anotherName = 'Ameli\u0065\u0301';  // 'Amelié'
+print(name.length); // 6
+print(anotherName.length); // 7
+---------------------------------------------------
+
+Both `name` and `anotherName` return strings that look the same, but where
+the 'é' is constructed using a different number of runes. This makes it
+impossible to know the length of these strings by intuitive visual inspection. 
+
+
+=== Processing a string one character at a time
+
+==== Problem
+
+You want to do something with each individual character in a string.
+
+==== Solution
+
+
+For most strings, you can map the results of calling string.split(''):
+
+----------------------------------------------------------
+var lang= 'Dart';
+print(lang.split('').map((char) => '*${char}*').toList());
+// ['*D*', '*a*', '*r*', '*t*']
+----------------------------------------------------------
+
+
+==== Discussion
+
+Splitting on an empty string works fine for 16-bit non-ascii strings:
+
+---------------------------------------------------------
+var smileyFace = '\u263A';
+var happy = 'I am $smileyFace';
+print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']
+---------------------------------------------------------
+
+You can also map the string runes:
+
+------------------------------------------------------------------------
+var charList = "Dart".runes.map((rune) {
+  return '*${new String.fromCharCode(rune)}*').toList();
+});
+// ['*D*', '*a*', '*r*', '*t*']
+
+var runeList = happy.runes.map((rune) {
+  return [rune, new String.fromCharCode(rune)]).toList();
+});
+// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+------------------------------------------------------------------------
+
+For extended strings that don't fit within 16 bits, you must map the string
+runes.
+
+// [[ xref ]]
+
+===== Looping over strings
+
+You can loop over the characters of a string, and process each unit. This will
+mostly work fine:
+        
+var list = [];
+for(var i = 0; i < lang.length; i++) {
+  list.add('*${lang[i]}*'); 
+}
+
+print(list); // ['*D*', '*a*', '*r*', '*t*']
+
+
+=== Splitting a string into substrings using a delimiter or a pattern
+
+==== Problem
+
+You want to split a string into substrings.
+
+==== Solution
+
+Use the `split()` method with a string or a regExp as an argument.
+
+-------------------------------------
+var smileyFace = '\u263A';
+var happy = 'I am $smileyFace';
+happy.split(' '); // ['I', 'am', '☺']
+-------------------------------------
+
+Here is an example of using `split()` with a regExp:
+
+--------------------------------------------------------------
+var nums = '2/7 3 4/5 3~/5';
+var numsRegExp = new RegExp(r'(\s|/|~/)');
+nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']
+--------------------------------------------------------------
+
+In the code above, the string `nums` contains various numbers, some of
+which are expressed as fractions or as int-divisions. A regExp is used
+to split the string to extract just the numbers.
+
+You can perform operations on the matched and unmatched portions of a
+string when using `split()` with a regExp:
+
+----------------------------------------------------------------
+'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
+  onMatch: (m) => '*${m.group(0).toLowerCase()}*',
+  onNonMatch: (n) => n.toUpperCase()); // 'EATS *shoots* LEAVES'
+  
+----------------------------------------------------------------
+
+The regExp matches the middle word ('SHOOTS'). A pair of callbacks are
+registered to transform the matched and unmatched substrings before the
+substrings are joined together again.
 
 === Determining whether a string contains another string
 
@@ -809,76 +906,3 @@ var regExp = new RegExp(r'[A-Z]\w+');
 string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
 // 'I like IKE but I ♡ LUCY'
 --------------------------------------------------------------------------
-
-A Dart string represents a sequence of characters encoded in UTF-16.
-Decoding UTF-16 yields Unicode code points. Borrowing terminology from
-Go, Dart uses the term `rune` for an integer representing a Unicode code
-point.
-
-The string recipes included in this chapter assume that you have some
-familiarity with Unicode and UTF-16. Here is a brief refresher:
-
-
-
-
-
-.What is the Basic Multilingual Plane?
-
-The Unicode code space is divided into seventeen planes of 65,536 points
-each. The first plane (code points U+0000 to U+FFFF) contains the most
-frequently used characters and is called the Basic Multilingual Plane or
-BMP.
-
-.What is a Surrogate Pair?
-
-The term 'surrogate pair' refers to a means of encoding Unicode
-characters outside the Basic Multilingual Plane.
-
-In UTF-16, two-byte (16-bit) code sequences are used to store Unicode
-characters. Since two bytes can only contain the 65,536 characters in
-the 0x0 to 0xFFFF range, a pair of code points are used to store values
-in the 0x10000 to 0x10FFFF range.
-
-For example the Unicode character for musical Treble-clef (🎼 ), with a
-value of '\u{1F3BC}', it too large to fit in 16 bits.
-
------------------------------
-var clef = '\u{1F3BC}'; // 🎼
------------------------------
-
-'\u{1F3BC}' is composed of a UTF-16 surrogate pair: [\uD83C, \uDFBC].
-
-.What is the difference between a code point and a code unit?
-
-Within the Basic Multilingual Plane, the code point for a character is
-numerically the same as the code unit for that character.
-
----------------------------
-'D'.runes.first; // 68
-'D'.codeUnits.first; // 68 
----------------------------
-
-For non-BMP characters, each code point is represented by two code
-units.
-
------------------------------
-var clef = '\u{1F3BC}'; // 🎼
-clef.runes.length; // 1
-clef.codeUnits.length; // 2
------------------------------
-
-.What exactly is a character?
-
-A character is a string contained in the Universal Character Set. Each
-character maps to a single rune value (code point); BMP characters map
-to 1 code unit; non-BMP characters map to 2 code units.
-
-You can read more about the Universal Character Set at
-http://en.wikipedia.org/wiki/Universal_Character_Set.
-
-.Do I have to really deal with Unicode?
-
-Yes, if you want to build robust international applications, you do.
-Besides, the String library makes working with Unicode relatively
-painless, so there's no great overhead in doing things right.
-
