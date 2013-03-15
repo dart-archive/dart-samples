@@ -17,6 +17,7 @@ import 'determining_if_string_contains_test.dart' as determining_if_string_conta
 import 'finding_regexp_matches_test.dart' as finding_regexp_matches_test;
 import 'substituting_strings_test.dart' as substituting_strings_test;
 import 'processing_a_string_one_character_test.dart' as processing_a_string_one_character_test;
+import 'handling_extended_characters_test.dart' as handling_extended_characters_test;
 
 void main() {  
   concatenating_strings_test.main();
@@ -34,4 +35,5 @@ void main() {
   determining_if_string_contains_test.main();
   finding_regexp_matches_test.main(); 
   substituting_strings_test.main();
+  handling_extended_characters_test.main();
 }

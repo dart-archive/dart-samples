@@ -62,7 +62,7 @@ chain of `concat()` s can be expensive. Avoid those. Use a StringBuffer
 instead (see _Incrementally building a string efficiently using a
 StringBuffer_, below).
 
-Use can `join()` to combine a sequence of strings:
+Use `join()` to combine a sequence of strings:
 
 -----------------------------------------------------------------------
 var film = ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'
@@ -91,7 +91,6 @@ You can skip the \{} if the expression is an identifier:
 
 ------------------------------------------------------
 var whatDoILove = 'I love $favFood'; // 'I love sushi'
-  
 ------------------------------------------------------
 
 ==== Discussion
@@ -137,6 +136,7 @@ class Point {
 
 print('Point: $point'); // 'Point: x: 3, y: 4'
 ----------------------------------------------
+
 
 === Handling special characters within strings
 
@@ -428,12 +428,13 @@ print(clef); // '🎼 '
 --------------------
 
 Some special considerations apply when handling strings that are internally
-composed to 2 strings. These are discussed below.
+composed of 2 strings. These are discussed below.
 
 ==== Discussion
 
-'\u{1F3BC}' is composed of `'\uD83C'` and `'\uDFBC'`, the 'surrogate pair' of
-the clef glyph. 
+The clef glyph ('\u{1F3BC}') is composed of two strings, `'\uD83C'` and
+`'\uDFBC'`. These are the glyphs surrogate pair. They only have semantic
+meaning as a pair; individually, they are invalid UTF-16 strings.
 
 ------------------------------------------------------------
 clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16)); 
@@ -443,25 +444,25 @@ clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16));
 Using a surrogate pair is the normal way of encoding extended
 Unicode characters. Most UTF-16 strings that you will ever encounter are
 stored as two-byte (16 bit) code sequences. Since two bytes can only contain
-the 65,536 characters in the 0x0 to 0xFFFF range, a pair of code points are
+the 65,536 characters in the 0x0 to 0xFFFF range, a pair of strings are
 used to store values in the 0x10000 to 0x10FFFF range.
 
-The clef glyph is composed of two code units, but only a single code point.
-Borrowing terminology from Go, Dart uses the term `rune` for an integer
-representing a Unicode code point. 
+But the clef glyph is a single semantic entity and is represented by a
+single code point.  Borrowing terminology from Go, Dart uses the term `rune`
+for an integer representing a Unicode code point. 
 
 ===== Getting the length of an extended string
 
-String length is described in code units by default:
+In the String class, length is described in UTF-16 code units by default:
 
 -----------------------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼
+var clef = '\u{1F3BC}';       // 🎼   
 
-print(clef.length); // 2
+print(clef.length);           // 2
 print(clef.codeUnits.length); // 2
 -----------------------------------------------------------
 
-You can always query the `runes` getter to get the rune length:
+You can query the `runes` getter to get the rune length:
 
 -----------------------------------------------------------
 print(clef.runes.length); // 1
@@ -472,52 +473,46 @@ print(clef.runes.map((rune) => rune.toRadixString(16)).toList()));
 ===== Subscripting an extended string
 
 Subscripting a string that contains characters that are larger than 16 bits
-requires special attention. This is because the default `[]` implementation
-subscripts along code units. This means that for non-BMP characters,
-subscripting yields invalid UTF-16 characters:
+requires special attention. Because the default `[]` implementation
+subscripts along code units, subscripting extended characters only yields just
+one of the surrogate pair strings. This string is invalid by itself.
 
---------------------------------------------------------------
-var teacup = '\u{1F375}'; // 🍵  
-teacup[0]; // 55356
-teacup.codeUnits.toList()[0]; // The same, 55356.
---------------------------------------------------------------
+-----------------------------------------------------------------------
+print(clef[0]);           // Error. Illegal string.
+print(clef.codeUnits[0]); // 55356, numerical code for first code unit.
+-----------------------------------------------------------------------
 
-The number 55356 represents the first item of the surrogate pair that makes up
-`teacup`. This represents an invalid string.
+Because looping over a string works with that string's code units, it is easy
+to end up with incorrectly subscripted strings:
 
-It is easy to end up with invalid strings when subscripting an extended
-string inside a loop:
-
--------------------------------------------
+------------------------------------------------------------------------
 var list = [];
 for(var i = 0; i < clef.length; i++) {
-  list.add([clef[i], clef[i].runes.first]); 
+  list.add([clef[i], clef[i].runes.first]); // OOPS, clef[i] isn't legal.
 }
--------------------------------------------
+------------------------------------------------------------------------
 
-Dart Editor show the value of `list` as `[[?, 55356], [?, 57276]]`. Because
-`list` contains invalid strings, trying to print it generates an error.
+Because `list` contains invalid strings, trying to print it generates an error.
+Dart Editor show the value of `list` as `[[?, 55356], [?, 57276]]`.
 
-
-When working with extended strings, it is better to subscript the runes:
+If you must subscript a string, it is better to avoid code units and subscript
+the runes:
 
 --------------------------------------------------------------
-teacup.runes.toList()[0]; // 127861
+print(clef.runes.toList()[0]); // 127932
 --------------------------------------------------------------
 
-The number 127861 represents the code point for teacup, '\u{1F375}' (🍵 ).
+The number 127932 represents the code point for `clef`, '\u{1F3BC}'.
 
-===== Problems with using split('') with an extended string
+===== Problems with using split('') with extended strings
 
 Because `split('')` splits at the UTF-16 code unit boundaries, invoking it
-on a non-BMP character yields the string's surrogate pair:
+on extended characters yields the string's surrogate pair:
 
 ------------------------------------------
 var clef = '\u{1F3BC}'; // 🎼 
 clef.split('').length; // 2
 ------------------------------------------
-
-The surrogate pair members are not valid UTF-16 strings.
 
 Map the string runes instead:
 
@@ -529,23 +524,14 @@ print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
 --------------------------------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
 === Converting between string characters and numerical codes
 
 ==== Problem
 
 You want to convert string characters into numerical codes and back. You want
 to do this because sometimes you need to compare characters in a string to
-numerical values coming from another source. Or, maybe you want to split up
-a string into individual characters and operate on each character.
+numerical values coming from another source. Or, maybe you want to split a
+string and then operate on each character.
 
 ==== Solution
 
@@ -556,6 +542,9 @@ Use the `runes` getter to access a string's code points:
 
 var smileyFace = '\u263A'; // ☺
 smileyFace.runes.toList(); // [9786]
+
+var clef = '\u{1F3BC}'; // 🎼 
+clef.runes.toList(); // [127932]
 --------------------------------------------
 
 The number 9786 represents the code unit '263A'.
@@ -565,32 +554,18 @@ Use `string.codeUnits` to get a string's UTF-16 code units:
 ------------------------------------------------
 'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
 smileyFace.codeUnits.toList(); // [9786]
-------------------------------------------------
-
-==== Discussion
-
-For most strings, using `runes` or `codeUnits` produces identical results.
-This is not the case for extended characters:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 
 clef.codeUnits.toList(); // [55356, 57276]
-clef.runes.toList(); // [127932]
-------------------------------------------
+------------------------------------------------
 
 ===== Using codeUnitAt() to access individual code units
 
 To access the code unit at a particular index, use `codeUnitAt()`:
 
----------------------------------
+----------------------------------------------------------------
 'Dart'.codeUnitAt(0); // 68
 smileyFace.codeUnitAt(0); // 9786
----------------------------------
-
-Using `codeUnitAt()` with an extended character yields an invalid
-string. 
-
-// [[ xref ]]
+clef.codeUnitAt(0); // 55356 (does not represent a legal string) 
+----------------------------------------------------------------
 
 ==== Converting numerical codes to strings
 
@@ -607,7 +582,6 @@ new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
 
 // Passing code units representing the surrogate pair.
 new String.fromCharCodes([55356, 57276]); // 🎼  
-
 
 // Passing runes.
 new String.fromCharCodes([127932]), // 🎼  
@@ -692,27 +666,19 @@ You want to do something with each individual character in a string.
 
 ==== Solution
 
-
-For most strings, you can map the results of calling string.split(''):
+Map the results of calling string.split(''):
 
 ----------------------------------------------------------
 var lang= 'Dart';
 print(lang.split('').map((char) => '*${char}*').toList());
 // ['*D*', '*a*', '*r*', '*t*']
-----------------------------------------------------------
 
-
-==== Discussion
-
-Splitting on an empty string works fine for 16-bit non-ascii strings:
-
----------------------------------------------------------
 var smileyFace = '\u263A';
 var happy = 'I am $smileyFace';
 print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']
----------------------------------------------------------
+----------------------------------------------------------
 
-You can also map the string runes:
+Or, map the string runes:
 
 ------------------------------------------------------------------------
 var charList = "Dart".runes.map((rune) {
@@ -726,29 +692,31 @@ var runeList = happy.runes.map((rune) {
 // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
 ------------------------------------------------------------------------
 
-For extended strings that don't fit within 16 bits, you must map the string
-runes.
-
-// [[ xref ]]
-
-===== Looping over strings
-
-You can loop over the characters of a string, and process each unit. This will
-mostly work fine:
+Or, loop over the characters of a string:
         
+--------------------------------------
 var list = [];
 for(var i = 0; i < lang.length; i++) {
   list.add('*${lang[i]}*'); 
 }
 
 print(list); // ['*D*', '*a*', '*r*', '*t*']
+--------------------------------------
+
+==== Discussion
+
+For processing each character of a string that don't fit within 16 bits, you
+must map the string runes. Using `split('')`, or subscripting within a loop
+yields only half of a surrogate pair.
+
+// [[ xref ]]
 
 
-=== Splitting a string into substrings using a delimiter or a pattern
+=== Splitting a string into substrings
 
 ==== Problem
 
-You want to split a string into substrings.
+You want to split a string into substrings using a delimiter or a pattern.
 
 ==== Solution
 

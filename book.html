@@ -794,7 +794,7 @@ film = film.concat('\n');  // 'The Big Lebowski\n'</pre>
 chain of <span class="monospaced">concat()</span> s can be expensive. Avoid those. Use a StringBuffer
 instead (see <em>Incrementally building a string efficiently using a
 StringBuffer</em>, below).</p></div>
-<div class="paragraph"><p>Use can <span class="monospaced">join()</span> to combine a sequence of strings:</p></div>
+<div class="paragraph"><p>Use <span class="monospaced">join()</span> to combine a sequence of strings:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var film = ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'</pre>
@@ -1180,7 +1180,7 @@ Borrowing terminology from Go, Dart uses the term <span class="monospaced">rune<
 representing a Unicode code point.</p></div>
 <div class="sect4">
 <h5 id="_getting_the_length_of_an_extended_string">Getting the length of an extended string</h5>
-<div class="paragraph"><p>String length is described in code units by default:</p></div>
+<div class="paragraph"><p>In the String class, length is described in UTF-16 code units by default:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}'; // 🎼
@@ -1199,9 +1199,9 @@ print(clef.runes.map((rune) =&gt; rune.toRadixString(16)).toList()));
 <div class="sect4">
 <h5 id="_subscripting_an_extended_string">Subscripting an extended string</h5>
 <div class="paragraph"><p>Subscripting a string that contains characters that are larger than 16 bits
-reauires special attention. This is because the default <span class="monospaced">[]</span> implementation
-subscripts along code units. This means that for non-BMP characters,
-subscripting yields invalid UTF-16 characters:</p></div>
+requires special attention. Because the default <span class="monospaced">[]</span> implementation
+subscripts along code units, subscripting extended characters yields invalid
+UTF-16 characters:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var teacup = '\u{1F375}'; // 🍵
@@ -1210,8 +1210,8 @@ teacup.codeUnits.toList()[0]; // The same, 55356.</pre>
 </div></div>
 <div class="paragraph"><p>The number 55356 represents the first item of the surrogate pair that makes up
 <span class="monospaced">teacup</span>. This represents an invalid string.</p></div>
-<div class="paragraph"><p>It is easy to end up with invalid strings when subscripting an extended
-string inside a loop:</p></div>
+<div class="paragraph"><p>When using a loop, it is easy to end up with invalid strings by subscripting
+an extended string:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var list = [];
@@ -1231,7 +1231,7 @@ for(var i = 0; i &lt; clef.length; i++) {
 <div class="sect4">
 <h5 id="_problems_with_using_split_with_an_extended_string">Problems with using split('') with an extended string</h5>
 <div class="paragraph"><p>Because <span class="monospaced">split('')</span> splits at the UTF-16 code unit boundaries, invoking it
-on a non-BMP character yields the string&#8217;s surrogate pair:</p></div>
+on extended characters yields the string&#8217;s surrogate pair:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}'; // 🎼
@@ -1278,28 +1278,23 @@ smileyFace.codeUnits.toList(); // [9786]</pre>
 </div>
 <div class="sect3">
 <h4 id="_discussion_8">Discussion</h4>
-<div class="paragraph"><p>Because <em>Dart</em> amd <span class="monospaced">smileyFace</span> fit within 16 bits, using either <span class="monospaced">runes</span> or
-<span class="monospaced">codeUnits</span> produces identical results. This is not the case for characters
-larger than 16 bits:</p></div>
+<div class="paragraph"><p>For most strings, using <span class="monospaced">runes</span> or <span class="monospaced">codeUnits</span> produces identical results.
+This is not the case for extended characters:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}'; // 🎼
 clef.codeUnits.toList(); // [55356, 57276]
 clef.runes.toList(); // [127932]</pre>
 </div></div>
-<div class="paragraph"><p>The numbers 55356 and 57276 represent <span class="monospaced">clef</span><em>s surrogate pair, '\uD83C</em> and
-<em>\uDFBC</em>, respectively. The number 127932 represents the rune value of
-<em>\u1F3BC</em>.</p></div>
 <div class="sect4">
 <h5 id="_using_codeunitat_to_access_individual_code_units">Using codeUnitAt() to access individual code units</h5>
-<div class="paragraph"><p>To access the 16-Bit UTF-16 code unit at a particular index, use
-<span class="monospaced">codeUnitAt()</span>:</p></div>
+<div class="paragraph"><p>To access the code unit at a particular index, use <span class="monospaced">codeUnitAt()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>'Dart'.codeUnitAt(0); // 68
 smileyFace.codeUnitAt(0); // 9786</pre>
 </div></div>
-<div class="paragraph"><p>Don&#8217;t use <span class="monospaced">codeUnitAt()</span> with an extended character; it will yield an invalid
+<div class="paragraph"><p>Using <span class="monospaced">codeUnitAt()</span> with an extended character yields an invalid
 string.</p></div>
 </div>
 </div>
@@ -1353,7 +1348,7 @@ correctly calculate the length when working with Unicode.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_discussion_9">Discussion</h4>
-<div class="paragraph"><p>For characters larger than 16-bits, the rune length will be less than the code
+<div class="paragraph"><p>For extended characters, the rune length will be less than the code
 unit length:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1417,11 +1412,15 @@ print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']</pre>
 <div class="paragraph"><p>You can also map the string runes:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var charList = "Dart".runes.map((rune) =&gt; '*${new String.fromCharCode(rune)}*').toList();
+<pre>var charList = "Dart".runes.map((rune) {
+  return '*${new String.fromCharCode(rune)}*').toList();
+});
 // ['*D*', '*a*', '*r*', '*t*']
 
-var runeList = happy.runes.map((rune) =&gt; [rune, new String.fromCharCode(rune)]).toList(),
-    // [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]</pre>
+var runeList = happy.runes.map((rune) {
+  return [rune, new String.fromCharCode(rune)]).toList();
+});
+// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]</pre>
 </div></div>
 <div class="paragraph"><p>For extended strings that don&#8217;t fit within 16 bits, you must map the string
 runes.</p></div>
@@ -1429,11 +1428,15 @@ runes.</p></div>
 <h5 id="_looping_over_strings">Looping over strings</h5>
 <div class="paragraph"><p>You can loop over the characters of a string, and process each unit. This will
 mostly work fine:</p></div>
-<div class="paragraph"><p>var list = [];
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var list = [];
 for(var i = 0; i &lt; lang.length; i++) {
-  list.add(<em><strong>${lang[i]}</strong></em>);
-}</p></div>
-<div class="paragraph"><p>print(list); // [<em><strong>D</strong></em>, <em><strong>a</strong></em>, <em><strong>r</strong></em>, <em><strong>t</strong></em>]</p></div>
+  list.add('*${lang[i]}*');
+}
+
+print(list); // ['*D*', '*a*', '*r*', '*t*']</pre>
+</div></div>
 </div>
 </div>
 </div>
@@ -1597,7 +1600,7 @@ string.replaceAllMapped(regExp, (match) =&gt; match.group(0).toUpperCase());
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-03-14 15:02:05 PDT
+Last updated 2013-03-14 21:23:20 PDT
 </div>
 </div>
 </body>

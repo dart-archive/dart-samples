@@ -1,4 +1,4 @@
-library calculating_the_length_test;
+library handling_extended_characters_test;
 
 import 'package:unittest/unittest.dart';
 
@@ -30,6 +30,11 @@ void main() {
   group('subscripting', () {
     test('', () {
       expect(print(clef.runes.first.toRadixString(16)), equals('1f3bc'));
+      expect(print(clef.runes.toList()[0].toRadixString(16)), equals('1f3bc'));
+      // This test will never pass because clef[0] is an illegal string.
+      // expect(print(clef[0]), equals('?'));
+      expect(print(clef.codeUnits[0]), equals(55356));
+      expect(clef.runes.toList()[0], equals(127932));
     });
   });
 }
