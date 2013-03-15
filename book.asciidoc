@@ -331,9 +331,9 @@ You want to remove leading and trailing whitespace from a string.
 Use `string.trim()`:
 
 ----------------------------------------------------------------------
-var space = '\n\r\f\t\v';  // We'll use a variety of space characters.
+var space = '\n\r\f\t\v';       // We'll use a variety of space characters.
 var string = '$space X $space';
-var newString = string.trim(); // 'X'
+var newString = string.trim();  // 'X'
 ----------------------------------------------------------------------
 
 The String class has no methods to remove only leading or only trailing
@@ -342,7 +342,7 @@ whitespace. But you can always use regExps.
 Remove only leading whitespace:
 
 ----------------------------------------------------------------------------
-var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); //  'X $space'
+var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); // 'X $space'
 ----------------------------------------------------------------------------
 
 Remove only trailing whitespace:
@@ -377,10 +377,10 @@ zeus.toUpperCase(); // 'ΔΊΑΣ'
 
 -----------------------------------------------------------------------
 var zeus = '\u0394\u03af\u03b1\u03c2'; // 'Δίας' (Zeus in modern Greek)
-zeus.toUpperCase(); // 'ΔΊΑΣ'
+zeus.toUpperCase();                    // 'ΔΊΑΣ'
 
 var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // 'Résumé'
-resume.toLowerCase(); // 'résumé'
+resume.toLowerCase();                                // 'résumé'
 ----------------------------------------------------------------
 
 They do not affect the characters of uni-cameral scripts like Devanagari
@@ -396,14 +396,6 @@ chickenKebab.toUpperCase();  // 'चिकन कबाब'
 If a character's case does not change when using `toUpperCase()` and
 `toLowerCase()`, it is most likely because the character only has one
 form.
-
-
-
-
-
-
-
-
 
 
 === Handling extended characters that are composed of multiple code units
@@ -432,14 +424,17 @@ composed of 2 strings. These are discussed below.
 
 ==== Discussion
 
-The clef glyph ('\u{1F3BC}') is composed of two strings, `'\uD83C'` and
-`'\uDFBC'`. These are the glyphs surrogate pair. They only have semantic
+The clef glyph `'\u{1F3BC}'` is composed of two strings, `'\uD83C'` and
+`'\uDFBC'`. These are the glyph's surrogate pair. They only have semantic
 meaning as a pair; individually, they are invalid UTF-16 strings.
 
-------------------------------------------------------------
+-------------------------------------------------------------------------------
 clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16)); 
 // ['d83c', 'dfbc']
-------------------------------------------------------------
+
+print('\ud83c'); // Error. Dart Editor complains about an 'invalid code point'.
+print('\udfbc'); // Also an error.
+-------------------------------------------------------------------------------
 
 Using a surrogate pair is the normal way of encoding extended
 Unicode characters. Most UTF-16 strings that you will ever encounter are
@@ -447,13 +442,23 @@ stored as two-byte (16 bit) code sequences. Since two bytes can only contain
 the 65,536 characters in the 0x0 to 0xFFFF range, a pair of strings are
 used to store values in the 0x10000 to 0x10FFFF range.
 
-But the clef glyph is a single semantic entity and is represented by a
+The clef glyph is a single semantic entity and is represented by a
 single code point.  Borrowing terminology from Go, Dart uses the term `rune`
-for an integer representing a Unicode code point. 
+for an integer representing a Unicode code point. When dealing with strings
+containing extended characters, you will normally want to work with runes.
 
 ===== Getting the length of an extended string
 
-In the String class, length is described in UTF-16 code units by default:
+Query the `runes` getter to get the string length:
+
+-----------------------------------------------------------
+print(clef.runes.length); // 1
+print(clef.runes.map((rune) => rune.toRadixString(16)).toList()));
+// ['1f3bc']
+-----------------------------------------------------------
+
+By default, the `length` property of a string is based on the string's code
+units:
 
 -----------------------------------------------------------
 var clef = '\u{1F3BC}';       // 🎼   
@@ -462,59 +467,37 @@ print(clef.length);           // 2
 print(clef.codeUnits.length); // 2
 -----------------------------------------------------------
 
-You can query the `runes` getter to get the rune length:
-
------------------------------------------------------------
-print(clef.runes.length); // 1
-print(clef.runes.map((rune) => rune.toRadixString(16)).toList()));
-// ['1f3bc']
------------------------------------------------------------
+Avoid using `length` unless you have a specific need for accessing the code
+units. Work with `runes` instead.
 
 ===== Subscripting an extended string
 
 Subscripting a string that contains characters that are larger than 16 bits
 requires special attention. Because the default `[]` implementation
-subscripts along code units, subscripting extended characters only yields just
-one of the surrogate pair strings. This string is invalid by itself.
+subscripts along code units, subscripting an extended character yields just
+one of that characters's surrogate pair strings. Such a string is invalid.
 
------------------------------------------------------------------------
-print(clef[0]);           // Error. Illegal string.
-print(clef.codeUnits[0]); // 55356, numerical code for first code unit.
------------------------------------------------------------------------
-
-Because looping over a string works with that string's code units, it is easy
-to end up with incorrectly subscripted strings:
-
-------------------------------------------------------------------------
+-------------------------------------------------------------------------
 var list = [];
 for(var i = 0; i < clef.length; i++) {
   list.add([clef[i], clef[i].runes.first]); // OOPS, clef[i] isn't legal.
 }
-------------------------------------------------------------------------
+
+print(list); // Error.
+
+-------------------------------------------------------------------------
 
 Because `list` contains invalid strings, trying to print it generates an error.
-Dart Editor show the value of `list` as `[[?, 55356], [?, 57276]]`.
 
-If you must subscript a string, it is better to avoid code units and subscript
-the runes:
+If you must subscript a string, avoid code units. Instead, subscript runes:
 
 --------------------------------------------------------------
-print(clef.runes.toList()[0]); // 127932
+print(clef.runes.toList()[0]); // 127932 ('\u{1F3BC}')
 --------------------------------------------------------------
 
-The number 127932 represents the code point for `clef`, '\u{1F3BC}'.
+===== Splitting a string that contains extended characters
 
-===== Problems with using split('') with extended strings
-
-Because `split('')` splits at the UTF-16 code unit boundaries, invoking it
-on extended characters yields the string's surrogate pair:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 
-clef.split('').length; // 2
-------------------------------------------
-
-Map the string runes instead:
+To get a list of a string's characters, map the string runes:
 
 ---------------------------------------------------------------------------
 var clef = '\u{1F3BC}'; // 🎼 
@@ -522,6 +505,15 @@ var title = '$clef list:'
 print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
 // ['🎼', ' ', 'l', 'i', 's', 't', ':']
 --------------------------------------------------------------------------
+
+Avoid using `split('')`. Because `split('')` splits at the UTF-16 code unit
+boundaries, invoking it on extended characters yields the string's
+surrogate pair:
+
+------------------------------------------
+var clef = '\u{1F3BC}'; // 🎼 
+clef.split('').length;  // 2
+------------------------------------------
 
 
 === Converting between string characters and numerical codes
@@ -537,62 +529,59 @@ string and then operate on each character.
 
 Use the `runes` getter to access a string's code points:
 
---------------------------------------------
+-----------------------------------------------------------------------------
 'Dart'.runes.toList(); // [68, 97, 114, 116]
 
 var smileyFace = '\u263A'; // ☺
-smileyFace.runes.toList(); // [9786]
+print(smileyFace.runes.toList()); // [9786], (Equivalent to ['\u263A']).
 
 var clef = '\u{1F3BC}'; // 🎼 
-clef.runes.toList(); // [127932]
---------------------------------------------
-
-The number 9786 represents the code unit '263A'.
+print(clef.runes.toList());       // [127932], (Equivalent to ['\u{1F3BC}']).
+-----------------------------------------------------------------------------
 
 Use `string.codeUnits` to get a string's UTF-16 code units:
 
-------------------------------------------------
-'Dart'.codeUnits.toList(); // [68, 97, 114, 116]
+----------------------------------------------------
+'Dart'.codeUnits.toList();     // [68, 97, 114, 116]
 smileyFace.codeUnits.toList(); // [9786]
-clef.codeUnits.toList(); // [55356, 57276]
-------------------------------------------------
+clef.codeUnits.toList();       // [55356, 57276]
+----------------------------------------------------
 
 ===== Using codeUnitAt() to access individual code units
 
 To access the code unit at a particular index, use `codeUnitAt()`:
 
-----------------------------------------------------------------
-'Dart'.codeUnitAt(0); // 68
+----------------------------------------------------------------------
+'Dart'.codeUnitAt(0);     // 68
 smileyFace.codeUnitAt(0); // 9786
-clef.codeUnitAt(0); // 55356 (does not represent a legal string) 
-----------------------------------------------------------------
+clef.codeUnitAt(0);       // 55356 (does not represent a legal string) 
+----------------------------------------------------------------------
 
 ==== Converting numerical codes to strings
 
 You can generate a new string from numerical codes using the factory
-`String.fromCharCodes(charCodes)`. You can pass either runes or code
-units and it can tell the difference and do the right thing
-automatically:
+`String.fromCharCodes(charCodes)`. You can pass either runes or code units and
+`String.fromCharCodes(charCodes)` can tell the difference and do the right
+thing automatically:
 
----------------------------------------------------------------
-new String.fromCharCodes([68, 97, 114, 116]); // 'Dart'
+-----------------------------------------------------------------------------
+new String.fromCharCodes([68, 97, 114, 116]);                   // 'Dart'
 
-new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]);
-// 'I ♡ Lucy'
+new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]); // 'I ♡ Lucy'
 
 // Passing code units representing the surrogate pair.
-new String.fromCharCodes([55356, 57276]); // 🎼  
+new String.fromCharCodes([55356, 57276]);                       // 🎼  
 
 // Passing runes.
-new String.fromCharCodes([127932]), // 🎼  
----------------------------------------------------------------
+new String.fromCharCodes([127932]);                             // 🎼  
+-----------------------------------------------------------------------------
 
 You can use the `String.fromCharCode()` factory to convert a single rune
 or code unit to a string:
 
 ---------------------------------------
-new String.fromCharCode(68); // 'D'
-new String.fromCharCode(9786); // ☺
+new String.fromCharCode(68);     // 'D'
+new String.fromCharCode(9786);   // ☺
 new String.fromCharCode(127932); // 🎼  
 ---------------------------------------
 
@@ -612,7 +601,7 @@ correctly calculate the length when working with Unicode.
 Use `string.length` to get the number of UTF-16 code units in a string:
 
 ----------------------------------
-'I love music'.length; // 12
+'I love music'.length;       // 12
 'I love music'.runes.length; // 12
 ----------------------------------
 
@@ -622,21 +611,20 @@ For extended characters, the rune length will be less than the code
 unit length:
 
 ------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼  
+var clef = '\u{1F3BC}';        // 🎼  
 var subject = '$clef list:';
 
-clef.length; // 2
-clef.runes.length; // 1
+clef.length;                   // 2
+clef.runes.length;             // 1
 
 var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
-music.length; // 6
-music.runes.length // 5
+music.length;                  // 6
+music.runes.length             // 5
 ------------------------------------------
 
 Use `length` if you want to number of code units; use `runes.length` if
-you want the number of runes.
-
-// [[ xref ]]
+you want the number of runes. For extended characters, you want to work with
+the rune length.
 
 ===== Working with combined characters
 
@@ -647,10 +635,10 @@ and 'Amelié' has six, right? Almost. The length of 'Dart' is indeed four, but
 the length of 'Amelié' depends on how that string was constructed:
 
 ---------------------------------------------------
-var name = 'Ameli\u00E9';  // 'Amelié'
+var name = 'Ameli\u00E9';               // 'Amelié'
 var anotherName = 'Ameli\u0065\u0301';  // 'Amelié'
-print(name.length); // 6
-print(anotherName.length); // 7
+print(name.length);                     // 6
+print(anotherName.length);              // 7
 ---------------------------------------------------
 
 Both `name` and `anotherName` return strings that look the same, but where
@@ -694,22 +682,20 @@ var runeList = happy.runes.map((rune) {
 
 Or, loop over the characters of a string:
         
---------------------------------------
+--------------------------------------------
 var list = [];
 for(var i = 0; i < lang.length; i++) {
   list.add('*${lang[i]}*'); 
 }
 
 print(list); // ['*D*', '*a*', '*r*', '*t*']
---------------------------------------
-
-==== Discussion
+--------------------------------------------
 
 For processing each character of a string that don't fit within 16 bits, you
-must map the string runes. Using `split('')`, or subscripting within a loop
-yields only half of a surrogate pair.
-
-// [[ xref ]]
+_must_ map the string runes. See the _Handling extended characters that are
+composed of multiple code units_ recipe for why using `split('')` or
+subscripting within a loop is problematic when working with extended
+characters.
 
 
 === Splitting a string into substrings
@@ -744,9 +730,13 @@ You can perform operations on the matched and unmatched portions of a
 string when using `split()` with a regExp:
 
 ----------------------------------------------------------------
-'Eats SHOOTS leaves'.splitMapJoin((new RegExp(r'SHOOTS')),
-  onMatch: (m) => '*${m.group(0).toLowerCase()}*',
-  onNonMatch: (n) => n.toUpperCase()); // 'EATS *shoots* LEAVES'
+var phrase = 'Eats SHOOTS leaves';
+
+var newPhrase = phrase.splitMapJoin((new RegExp(r'SHOOTS')),
+  onMatch:    (m) => '*${m.group(0).toLowerCase()}*',
+  onNonMatch: (n) => n.toUpperCase());
+
+print(newPhrase); // 'EATS *shoots* LEAVES'
   
 ----------------------------------------------------------------
 
@@ -764,38 +754,39 @@ You want to find out if a string is the substring of another string.
 
 Use `string.contains()`:
 
-----------------------------------------
+---------------------------------------------
 var fact = 'Dart strings are immutable';
-string.contains('immutable'); // True.
-----------------------------------------
+print(fact.contains('immutable')); // True.
+---------------------------------------------
 
 You can indicate a startIndex as a second argument:
 
-------------------------------------
-string.contains('Dart', 2); // False
-------------------------------------
+-----------------------------------------
+print(fact.contains('Dart', 2)); // False
+-----------------------------------------
 
 ==== Discussion
 
 The String library provides a couple of shortcuts for testing whether a
 string is a substring of another:
 
------------------------------------
-string.startsWith('Dart'); // True.
-string.endsWith('e'); // True.
------------------------------------
+------------------------------------------
+print(string.startsWith('Dart')); // True.
+print(string.endsWith('e'));      // True.
+------------------------------------------
 
 You can also use `string.indexOf()`, which returns -1 if the substring
 is not found within a string, and its matching index, if it is:
 
---------------------------------------------------------------
-string.indexOf('art') != -1; // True, `art` is found in `Dart`
---------------------------------------------------------------
+--------------------------------------------------------------------------
+var found = string.indexOf('art') != -1; // True, `art` is found in `Dart`
+--------------------------------------------------------------------------
 
 You can also use a regExp and `hasMatch()`:
 
 ------------------------------------------------------------------------
-new RegExp(r'ar[et]').hasMatch(string); //  True, 'art' and 'are' match.
+var found = new RegExp(r'ar[et]').hasMatch(string);
+//  True, 'art' and 'are' match.
 ------------------------------------------------------------------------
 
 === Finding matches of a regExp pattern in a string
@@ -810,34 +801,34 @@ able to access the matches.
 Construct a regular expression using the RegExp class and find matches
 using the `allMatches()` method:
 
-------------------------------------------------------------------
+-------------------------------------------------------------------------
 var neverEatingThat = 'Not with a fox, not in a box';
 var regExp = new RegExp(r'[fb]ox');
 List matches = regExp.allMatches(neverEatingThat);
-matches.map((match) => match.group(0)).toList(); // ['fox', 'box']
-------------------------------------------------------------------
+print(matches.map((match) => match.group(0)).toList()); // ['fox', 'box']
+-------------------------------------------------------------------------
 
 ==== Discussion
 
 You can query the object returned by `allMatches()` to find out the
 number of matches:
 
---------------------
-matches.length; // 2
---------------------
+-----------------------------------------
+var howManyMatches = matches.length; // 2
+-----------------------------------------
 
 To find the first match, use `firstMatch()`:
 
------------------------------------------------------
-regExp.firstMatch(neverEatingThat).group(0); // 'fox'
------------------------------------------------------
+----------------------------------------------------------------------
+var firstMatch = regExp.firstMatch(neverEatingThat).group(0); // 'fox'
+----------------------------------------------------------------------
 
 To directly access the matched string, use `stringMatch()`:
 
-----------------------------------------------------
-regExp.stringMatch(neverEatingThat); // 'fox'
-regExp.stringMatch('I like bagels and lox'); // null
-----------------------------------------------------
+-----------------------------------------------------------
+print(regExp.stringMatch(neverEatingThat)); // 'fox'
+print(regExp.stringMatch('I like bagels and lox')); // null
+-----------------------------------------------------------
 
 === Substituting strings based on regExp matches
 
@@ -851,15 +842,15 @@ based on the matches.
 Construct a regular expression using the RegExp class and make
 replacements using `replaceAll()` method:
 
-------------------------------------------------------------
-'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'
-------------------------------------------------------------
+-------------------------------------------------------------------------
+var resume = 'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'
+-------------------------------------------------------------------------
 
 If you want to replace just the first match, use 'replaceFirst()`:
 
---------------------------------------------------------
-'0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
---------------------------------------------------------
+-----------------------------------------------------------------------
+var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
+-----------------------------------------------------------------------
 
 The RegExp matches for one or more 0's and replaces them with an empty
 string.
@@ -867,10 +858,12 @@ string.
 You can use `replaceAllMatched()` and register a function to modify the
 matches:
 
---------------------------------------------------------------------------
+---------------------------------------------------------
 var heart = '\u2661'; // '♡'
 var string = 'I like Ike but I $heart Lucy';
 var regExp = new RegExp(r'[A-Z]\w+');
-string.replaceAllMapped(regExp, (match) => match.group(0).toUpperCase()); 
-// 'I like IKE but I ♡ LUCY'
---------------------------------------------------------------------------
+var newString = string.replaceAllMapped(regExp, (match) {
+  return match.group(0).toUpperCase()
+}); 
+print(newString); // 'I like IKE but I ♡ LUCY'
+---------------------------------------------------------
