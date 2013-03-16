@@ -758,7 +758,7 @@ resulted in an error.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_discussion">Discussion</h4>
-<div class="paragraph"><p>Adjacent literals also work over multiple lines:</p></div>
+<div class="paragraph"><p>Adjacent literals work over multiple lines:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var fact = 'Dart'
@@ -783,14 +783,14 @@ Howe'''; // 'Dewey Cheatem and\n Howe'</pre>
 </div></div>
 <div class="sect4">
 <h5 id="_alternatives_to_adjacent_string_literals">Alternatives to adjacent string literals</h5>
-<div class="paragraph"><p>You can also use the <span class="monospaced">concat()</span> method on a string to concatenate it to
+<div class="paragraph"><p>You can use the <span class="monospaced">concat()</span> method on a string to concatenate it to
 another string:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var film = filmToWatch();
 film = film.concat('\n');  // 'The Big Lebowski\n'</pre>
 </div></div>
-<div class="paragraph"><p>Since <span class="monospaced">concat()</span> creates a new string every time it is invoked, a long
+<div class="paragraph"><p>Because <span class="monospaced">concat()</span> creates a new string every time it is invoked, a long
 chain of <span class="monospaced">concat()</span> s can be expensive. Avoid those. Use a StringBuffer
 instead (see <em>Incrementally building a string efficiently using a
 StringBuffer</em>, below).</p></div>
@@ -827,8 +827,8 @@ var whatDoILove = 'I love ${favFood.toUpperCase()}'; // 'I love SUSHI'</pre>
 </div>
 <div class="sect3">
 <h4 id="_discussion_2">Discussion</h4>
-<div class="paragraph"><p>An interpolated string, <span class="monospaced">string ${expression}</span> is equivalent to the
-concatenation of the strings 'string ' and <span class="monospaced">expression.toString()</span>.
+<div class="paragraph"><p>An interpolated string, <span class="monospaced">'string ${expression}</span> is equivalent to the
+concatenation of the strings <span class="monospaced">string</span> and <span class="monospaced">expression.toString()</span>.
 Consider this code:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -871,8 +871,7 @@ print('Point: $point'); // 'Point: x: 3, y: 4'</pre>
 <h3 id="_handling_special_characters_within_strings">Handling special characters within strings</h3>
 <div class="sect3">
 <h4 id="_problem_3">Problem</h4>
-<div class="paragraph"><p>You want to put newlines, dollar signs, or other special characters in
-your strings.</p></div>
+<div class="paragraph"><p>You want to put newlines, dollar signs, or other special characters in strings.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_3">Solution</h4>
@@ -923,13 +922,13 @@ your strings.</p></div>
 character:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print('Wile\x0ACoyote');       // same as print('Wile\nCoyote');
-print('Wile\u000ACoyote');     // same as print('Wile\nCoyote');</pre>
+<pre>print('Wile\x0ACoyote');   // Same as print('Wile\nCoyote')
+print('Wile\u000ACoyote'); // Same as print('Wile\nCoyote')</pre>
 </div></div>
 <div class="paragraph"><p>You can also use <span class="monospaced">\u{}</span> notation:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote');</pre>
+<pre>print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote')</pre>
 </div></div>
 <div class="paragraph"><p>You can also escape the <span class="monospaced">$</span> used in string interpolation:</p></div>
 <div class="listingblock">
@@ -946,7 +945,7 @@ print('\$superGenius and Road Runner'); // '$superGenius and Road Runner'</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_incrementally_building_a_string_efficiently_using_a_stringbuffer">Incrementally building a string efficiently using a StringBuffer</h3>
+<h3 id="_incrementally_building_a_string_using_a_stringbuffer">Incrementally building a string using a StringBuffer</h3>
 <div class="sect3">
 <h4 id="_problem_4">Problem</h4>
 <div class="paragraph"><p>You want to collect string fragments and combine them in an efficient
@@ -955,7 +954,7 @@ manner.</p></div>
 <div class="sect3">
 <h4 id="_solution_4">Solution</h4>
 <div class="paragraph"><p>Use a StringBuffer to programmatically generate a string. Consider this code
-below, for assembling a series of urls from fragments:</p></div>
+below for assembling a series of urls from fragments:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var data = [{'scheme': 'https', 'domain': 'news.ycombinator.com'},
@@ -984,12 +983,13 @@ String assembleUrlsUsingStringBuffer(entries) {
 // http://www.google.com/
 // http://reddit.com/search?q=dart</pre>
 </div></div>
+<div class="paragraph"><p>A StringBuffer collects string fragments, but does not generate a new string
+until <span class="monospaced">toString()</span> is called.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_discussion_4">Discussion</h4>
-<div class="paragraph"><p>A StringBuffer collects string fragments, but does not generate a new string
-until <span class="monospaced">toString()</span> is called.  This is vastly more efficient than
-concatenating fragments at each step: Consider this rewrite of the above code:</p></div>
+<div class="paragraph"><p>Using a StringBuffer is vastly more efficient than concatenating fragments
+at each step: Consider this rewrite of the above code:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>String assembleUrlsUsingConcat(entries) {
@@ -1011,16 +1011,13 @@ concatenating fragments at each step: Consider this rewrite of the above code:</
 </div></div>
 <div class="paragraph"><p>This approach produces the exact same result, but incurs the cost of
 joining strings multiple times.</p></div>
-<div class="paragraph"><p>Because a StringBuffer waits until the call to <span class="monospaced">toString()</span> to generate
-the concatenated string, it represents a more efficient way of combining
-strings than <span class="monospaced">concat()</span>. See the <em>Concatenating Strings</em> recipe for a
-description of <span class="monospaced">concat()</span>.</p></div>
+<div class="paragraph"><p>See the <em>Concatenating Strings</em> recipe for a description of <span class="monospaced">concat()</span>.</p></div>
 <div class="sect4">
 <h5 id="_other_stringbuffer_methods">Other StringBuffer methods</h5>
 <div class="paragraph"><p>In addition to <span class="monospaced">write()</span>, the StringBuffer class provides methods to
 write a list of strings (<span class="monospaced">writeAll()</span>), write a numerical character code
 (<span class="monospaced">writeCharCode()</span>), write with an added newline (<span class="monospaced">writeln()</span>), and
-more. Here is a simple example that show the use of these methods:</p></div>
+more. The example below shows how to use these methods:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var sb = new StringBuffer();
@@ -1033,10 +1030,10 @@ var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!'</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_determining_if_a_string_is_empty">Determining if a string is empty</h3>
+<h3 id="_determining_whether_a_string_is_empty">Determining whether a string is empty</h3>
 <div class="sect3">
 <h4 id="_problem_5">Problem</h4>
-<div class="paragraph"><p>You want to know if a string is empty. You tried <span class="monospaced">if(string) {...}</span>, but
+<div class="paragraph"><p>You want to know whether a string is empty. You tried <span class="monospaced">if (string) {...}</span>, but
 that did not work.</p></div>
 </div>
 <div class="sect3">
@@ -1045,54 +1042,55 @@ that did not work.</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var emptyString = '';
-emptyString.isEmpty; // true</pre>
+print(emptyString.isEmpty); // true</pre>
 </div></div>
 <div class="paragraph"><p>You can also just use <span class="monospaced">==</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>string == ""; // True if string is empty.</pre>
+<pre>if (string == '') {...} // True if string is empty.</pre>
 </div></div>
 <div class="paragraph"><p>A string with a space is not empty:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var space = ' ';
-space.isEmpty; // false</pre>
+print(space.isEmpty); // false</pre>
 </div></div>
 </div>
 <div class="sect3">
 <h4 id="_discussion_5">Discussion</h4>
-<div class="paragraph"><p>Don&#8217;t use <span class="monospaced">if (string)</span> to test the emptiness of a string. In Dart, all
-objects except the boolean true evaluate to false. <span class="monospaced">if(string)</span> will
-always be false. And you will see a warning in the editor if you use
-an <em>if</em> statement with a non-boolean in checked mode.</p></div>
+<div class="paragraph"><p>Don&#8217;t use <span class="monospaced">if (string)</span> to test the emptiness of a string. In Dart, all objects
+except the boolean true evaluate to false, so <span class="monospaced">if(string)</span> is always false. You
+will see a warning in the editor if you use an <em>if</em> statement with a non-boolean
+in checked mode.</p></div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_removing_leading_and_trailing_whitespace">Removing leading and trailing whitespace</h3>
 <div class="sect3">
 <h4 id="_problem_6">Problem</h4>
-<div class="paragraph"><p>You want to remove leading and trailing whitespace from a string.</p></div>
+<div class="paragraph"><p>You want to remove spaces, tabs, and other whitespace from the beginning and
+end of strings.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_6">Solution</h4>
 <div class="paragraph"><p>Use <span class="monospaced">string.trim()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var space = '\n\r\f\t\v';       // We'll use a variety of space characters.
+<pre>var space = '\n\r\f\t\v';       // A variety of space characters.
 var string = '$space X $space';
 var newString = string.trim();  // 'X'</pre>
 </div></div>
 <div class="paragraph"><p>The String class has no methods to remove only leading or only trailing
-whitespace. But you can always use regExps.</p></div>
+whitespace. You can always use a RegExp.</p></div>
 <div class="paragraph"><p>Remove only leading whitespace:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); // 'X $space'</pre>
+<pre>var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); // 'X \n\r\f\t\v'</pre>
 </div></div>
 <div class="paragraph"><p>Remove only trailing whitespace:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'</pre>
+<pre>var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '\n\r\f\t\v X'</pre>
 </div></div>
 </div>
 </div>
@@ -1104,30 +1102,22 @@ whitespace. But you can always use regExps.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_7">Solution</h4>
-<div class="paragraph"><p>Use <span class="monospaced">string.toUpperCase()</span> and <span class="monospaced">string.toLowerCase()</span> to convert a
-string to lower-case or upper-case, respectively:</p></div>
+<div class="paragraph"><p>Use String&#8217;s <span class="monospaced">toUpperCase()</span> and <span class="monospaced">toLowerCase()</span> methods:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var theOneILove = 'I love Lucy';
-theOneILove.toUpperCase(); // 'I LOVE LUCY!'
-theOneILove.toLowerCase(); // 'i love lucy!'</pre>
-</div></div>
-</div>
-<div class="sect3">
-<h4 id="_discussion_6">Discussion</h4>
-<div class="paragraph"><p>Case changes affect the characters of bi-cameral scripts like Greek and
-French: var zeus = <em>039403af03b103c2</em>; // <em>Δίας</em> (Zeus in modern Greek)
-zeus.toUpperCase(); // <em>ΔΊΑΣ</em></p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>var zeus = '\u0394\u03af\u03b1\u03c2'; // 'Δίας' (Zeus in modern Greek)
-zeus.toUpperCase();                    // 'ΔΊΑΣ'
+theOneILove.toUpperCase();                           // 'I LOVE LUCY!'
+theOneILove.toLowerCase();                           // 'i love lucy!'
+
+// Zeus in modern Greek.
+var zeus = '\u0394\u03af\u03b1\u03c2';               // 'Δίας'
+zeus.toUpperCase();                                  // 'ΔΊΑΣ'
 
 var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // 'Résumé'
 resume.toLowerCase();                                // 'résumé'</pre>
 </div></div>
-<div class="paragraph"><p>They do not affect the characters of uni-cameral scripts like Devanagari
-(used for writing many of the languages of India):</p></div>
+<div class="paragraph"><p>The <span class="monospaced">toUpperCase()</span> and <span class="monospaced">toLowerCase()</span> methods don&#8217;t affect the characters of
+scripts such as Devanagri that don&#8217;t have distinct letter cases.</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c';
@@ -1145,7 +1135,7 @@ form.</p></div>
 <div class="sect3">
 <h4 id="_problem_8">Problem</h4>
 <div class="paragraph"><p>You want to use emoticons and other special symbols that don&#8217;t fit into 16
-bits. How can you create such strings and use them effectively in your code?</p></div>
+bits. How can you create such strings and use them correctly in your code?</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_8">Solution</h4>
@@ -1154,82 +1144,49 @@ bits. How can you create such strings and use them effectively in your code?</p>
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}'; // 🎼</pre>
 </div></div>
-<div class="paragraph"><p>You can mostly use this string like any other:</p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>print(clef); // '🎼 '</pre>
-</div></div>
-<div class="paragraph"><p>Some special considerations apply when handling strings that are internally
-composed of 2 strings. These are discussed below.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_discussion_7">Discussion</h4>
-<div class="paragraph"><p>The clef glyph <span class="monospaced">'\u{1F3BC}'</span> is composed of two strings, <span class="monospaced">'\uD83C'</span> and
-<span class="monospaced">'\uDFBC'</span>. These are the glyph&#8217;s surrogate pair. They only have semantic
-meaning as a pair; individually, they are invalid UTF-16 strings.</p></div>
+<h4 id="_discussion_6">Discussion</h4>
+<div class="paragraph"><p>Most UTF-16 strings are stored as two-byte (16 bit) code sequences.
+Since two bytes can only contain the 65,536 characters in the 0x0 to 0xFFFF
+range, a pair of strings is used to store values in the 0x10000 to 0x10FFFF
+range. These strings only have semantic meaning as a pair. Individually, they
+are invalid UTF-16 strings. The term <em>surrogate pair</em> is often used to
+describe these strings.</p></div>
+<div class="paragraph"><p>The clef glyph <span class="monospaced">'\u{1F3BC}'</span> is composed of the <span class="monospaced">'\uD83C'</span> and <span class="monospaced">'\uDFBC'</span>
+surrogate pair.</p></div>
+<div class="paragraph"><p>You can get an extended string&#8217;s surrogate pair through its <span class="monospaced">codeUnits</span>
+property:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>clef.codeUnits.map((codeUnit) =&gt; codeUnit.toRadixString(16));
-// ['d83c', 'dfbc']
-
-print('\ud83c'); // Error. Dart Editor complains about an 'invalid code point'.
-print('\udfbc'); // Also an error.</pre>
+// ['d83c', 'dfbc']</pre>
 </div></div>
-<div class="paragraph"><p>Using a surrogate pair is the normal way of encoding extended
-Unicode characters. Most UTF-16 strings that you will ever encounter are
-stored as two-byte (16 bit) code sequences. Since two bytes can only contain
-the 65,536 characters in the 0x0 to 0xFFFF range, a pair of strings are
-used to store values in the 0x10000 to 0x10FFFF range.</p></div>
-<div class="paragraph"><p>The clef glyph is a single semantic entity and is represented by a
-single code point.  Borrowing terminology from Go, Dart uses the term <span class="monospaced">rune</span>
-for an integer representing a Unicode code point. When dealing with strings
-containing extended characters, you will normally want to work with runes.</p></div>
-<div class="sect4">
-<h5 id="_getting_the_length_of_an_extended_string">Getting the length of an extended string</h5>
-<div class="paragraph"><p>Query the <span class="monospaced">runes</span> getter to get the string length:</p></div>
+<div class="paragraph"><p>Accessing a surrogate pair member leads to errors, and you should avoid
+properties and methods that expose it:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print(clef.runes.length); // 1
-print(clef.runes.map((rune) =&gt; rune.toRadixString(16)).toList()));
-// ['1f3bc']</pre>
+<pre>print('\ud83c'); // Error: '\ud83c' is not a valid string.
+print('\udfbc'); // Error: '\udfbc' is not a valid string either.
+clef.split()[1]; // Error: accessing half of a surrogate pair.
+print(clef[i];)  // Again, error: accessing half of a surrogate pair.</pre>
 </div></div>
-<div class="paragraph"><p>By default, the <span class="monospaced">length</span> property of a string is based on the string&#8217;s code
-units:</p></div>
+<div class="paragraph"><p>When dealing with strings containing extended characters, you should use the
+<span class="monospaced">runes</span> getter.</p></div>
+<div class="paragraph"><p>To get the string&#8217;s length, use <span class="monospaced">string.runes.length</span>. Don&#8217;t use
+<span class="monospaced">string.length</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var clef = '\u{1F3BC}';       // 🎼
-
+<pre>print(clef.runes.length);     // 1
 print(clef.length);           // 2
 print(clef.codeUnits.length); // 2</pre>
 </div></div>
-<div class="paragraph"><p>Avoid using <span class="monospaced">length</span> unless you have a specific need for accessing the code
-units. Work with <span class="monospaced">runes</span> instead.</p></div>
-</div>
-<div class="sect4">
-<h5 id="_subscripting_an_extended_string">Subscripting an extended string</h5>
-<div class="paragraph"><p>Subscripting a string that contains characters that are larger than 16 bits
-requires special attention. Because the default <span class="monospaced">[]</span> implementation
-subscripts along code units, subscripting an extended character yields just
-one of that characters&#8217;s surrogate pair strings. Such a string is invalid.</p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>var list = [];
-for(var i = 0; i &lt; clef.length; i++) {
-  list.add([clef[i], clef[i].runes.first]); // OOPS, clef[i] isn't legal.
-}
-
-print(list); // Error.</pre>
-</div></div>
-<div class="paragraph"><p>Because <span class="monospaced">list</span> contains invalid strings, trying to print it generates an error.</p></div>
-<div class="paragraph"><p>If you must subscript a string, avoid code units. Instead, subscript runes:</p></div>
+<div class="paragraph"><p>To get an individual character or its numeric equivalent, index the rune list:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>print(clef.runes.toList()[0]); // 127932 ('\u{1F3BC}')</pre>
 </div></div>
-</div>
-<div class="sect4">
-<h5 id="_splitting_a_string_that_contains_extended_characters">Splitting a string that contains extended characters</h5>
-<div class="paragraph"><p>To get a list of a string&#8217;s characters, map the string runes:</p></div>
+<div class="paragraph"><p>To get the string&#8217;s characters as a list, map the string runes:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}'; // 🎼
@@ -1237,38 +1194,29 @@ var title = '$clef list:'
 print(subject.runes.map((rune) =&gt; new String.fromCharCode(rune)).toList());
 // ['🎼', ' ', 'l', 'i', 's', 't', ':']</pre>
 </div></div>
-<div class="paragraph"><p>Avoid using <span class="monospaced">split('')</span>. Because <span class="monospaced">split('')</span> splits at the UTF-16 code unit
-boundaries, invoking it on extended characters yields the string&#8217;s
-surrogate pair:</p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>var clef = '\u{1F3BC}'; // 🎼
-clef.split('').length;  // 2</pre>
-</div></div>
-</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_converting_between_string_characters_and_numerical_codes">Converting between string characters and numerical codes</h3>
+<h3 id="_converting_between_characters_and_numerical_codes">Converting between characters and numerical codes</h3>
 <div class="sect3">
 <h4 id="_problem_9">Problem</h4>
-<div class="paragraph"><p>You want to convert string characters into numerical codes and back. You want
-to do this because sometimes you need to compare characters in a string to
-numerical values coming from another source. Or, maybe you want to split a
+<div class="paragraph"><p>You want to convert string characters into numerical codes and vice versa.
+You want to do this because sometimes you need to compare characters in a string
+to numerical values coming from another source. Or, maybe you want to split a
 string and then operate on each character.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_9">Solution</h4>
-<div class="paragraph"><p>Use the <span class="monospaced">runes</span> getter to access a string&#8217;s code points:</p></div>
+<div class="paragraph"><p>Use the <span class="monospaced">runes</span> getter to get a string&#8217;s code points:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>'Dart'.runes.toList(); // [68, 97, 114, 116]
+<pre>'Dart'.runes.toList();            // [68, 97, 114, 116]
 
-var smileyFace = '\u263A'; // ☺
-print(smileyFace.runes.toList()); // [9786], (Equivalent to ['\u263A']).
+var smileyFace = '\u263A';        // ☺
+print(smileyFace.runes.toList()); // [9786], (equivalent to ['\u263A']).
 
-var clef = '\u{1F3BC}'; // 🎼
-print(clef.runes.toList());       // [127932], (Equivalent to ['\u{1F3BC}']).</pre>
+var clef = '\u{1F3BC}';           // 🎼
+print(clef.runes.toList());       // [127932], (equivalent to ['\u{1F3BC}']).</pre>
 </div></div>
 <div class="paragraph"><p>Use <span class="monospaced">string.codeUnits</span> to get a string&#8217;s UTF-16 code units:</p></div>
 <div class="listingblock">
@@ -1278,12 +1226,12 @@ smileyFace.codeUnits.toList(); // [9786]
 clef.codeUnits.toList();       // [55356, 57276]</pre>
 </div></div>
 <div class="sect4">
-<h5 id="_using_codeunitat_to_access_individual_code_units">Using codeUnitAt() to access individual code units</h5>
-<div class="paragraph"><p>To access the code unit at a particular index, use <span class="monospaced">codeUnitAt()</span>:</p></div>
+<h5 id="_using_codeunitat_to_get_individual_code_units">Using codeUnitAt() to get individual code units</h5>
+<div class="paragraph"><p>To get the code unit at a particular index, use <span class="monospaced">codeUnitAt()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>'Dart'.codeUnitAt(0);     // 68
-smileyFace.codeUnitAt(0); // 9786
+smileyFace.codeUnitAt(0); // 9786 (the decimal value of '\u263A')
 clef.codeUnitAt(0);       // 55356 (does not represent a legal string)</pre>
 </div></div>
 </div>
@@ -1296,15 +1244,16 @@ clef.codeUnitAt(0);       // 55356 (does not represent a legal string)</pre>
 thing automatically:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>new String.fromCharCodes([68, 97, 114, 116]);                   // 'Dart'
+<pre>print(new String.fromCharCodes([68, 97, 114, 116]));                  // 'Dart'
 
-new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]); // 'I ♡ Lucy'
+print(new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]));
+// 'I ♡ Lucy'
 
 // Passing code units representing the surrogate pair.
-new String.fromCharCodes([55356, 57276]);                       // 🎼
+print(new String.fromCharCodes([55356, 57276]));                      // 🎼
 
 // Passing runes.
-new String.fromCharCodes([127932]);                             // 🎼</pre>
+print(new String.fromCharCodes([127932]));                            // 🎼</pre>
 </div></div>
 <div class="paragraph"><p>You can use the <span class="monospaced">String.fromCharCode()</span> factory to convert a single rune
 or code unit to a string:</p></div>
@@ -1322,44 +1271,51 @@ but not recommended.</p></div>
 <h3 id="_calculating_the_length_of_a_string">Calculating the length of a string</h3>
 <div class="sect3">
 <h4 id="_problem_10">Problem</h4>
-<div class="paragraph"><p>You want to get the length of a string, but are not sure how to
-correctly calculate the length when working with Unicode.</p></div>
+<div class="paragraph"><p>You want to get the length of a string, but are not sure how to calculate the
+length correctly when working with variable length Unicode characters.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_10">Solution</h4>
-<div class="paragraph"><p>Use <span class="monospaced">string.length</span> to get the number of UTF-16 code units in a string:</p></div>
+<div class="paragraph"><p>Use <span class="monospaced">string.runes.length</span> to get the number of characters in a string.</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>'I love music'.length;       // 12
-'I love music'.runes.length; // 12</pre>
+<pre>print('I love music'.runes.length); // 12</pre>
 </div></div>
-</div>
-<div class="sect3">
-<h4 id="_discussion_8">Discussion</h4>
-<div class="paragraph"><p>For extended characters, the rune length will be less than the code
-unit length:</p></div>
+<div class="paragraph"><p>You can safely use <span class="monospaced">string.runes.length</span> to get the length of strings that
+contain extended characters:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var clef = '\u{1F3BC}';        // 🎼
-var subject = '$clef list:';
-
-clef.length;                   // 2
-clef.runes.length;             // 1
-
+var subject = '$clef list:';   //
 var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
-music.length;                  // 6
+
+clef.runes.length;             // 1
 music.runes.length             // 5</pre>
 </div></div>
-<div class="paragraph"><p>Use <span class="monospaced">length</span> if you want to number of code units; use <span class="monospaced">runes.length</span> if
-you want the number of runes. For extended characters, you want to work with
-the rune length.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_discussion_7">Discussion</h4>
+<div class="paragraph"><p>You can directly use a string&#8217;s <span class="monospaced">length</span> property (minus <span class="monospaced">runes</span>). This returns
+the string&#8217;s code unit length. Using <span class="monospaced">string.length</span> produces the same length
+as <span class="monospaced">string.runes.length</span> for most unicode characters.</p></div>
+<div class="paragraph"><p>For extended characters, the code unit length is one more than the rune
+length:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>clef.length;                   // 2
+
+var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+music.length;                  // 6</pre>
+</div></div>
+<div class="paragraph"><p>Unless you specifically need the code unit length of a string, use
+<span class="monospaced">string.runes.length</span>.</p></div>
 <div class="sect4">
 <h5 id="_working_with_combined_characters">Working with combined characters</h5>
-<div class="paragraph"><p>It is tempting to brush aside much of the complexity involved in dealing with
-runes and code units and base the length of the string on the number of
-characters it appears to have. Anyone can tell that <em>Dart</em> has four characters,
-and <em>Amelié</em> has six, right? Almost. The length of <em>Dart</em> is indeed four, but
-the length of <em>Amelié</em> depends on how that string was constructed:</p></div>
+<div class="paragraph"><p>It is tempting to brush aside the complexity involved in dealing with runes and
+code units and base the length of the string on the number of characters it
+appears to have. Anyone can tell that <em>Dart</em> has four characters, and <em>Amelié</em>
+has six, right? Almost. The length of <em>Dart</em> is indeed four, but the length of
+<em>Amelié</em> depends on how that string was constructed:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var name = 'Ameli\u00E9';               // 'Amelié'
@@ -1369,7 +1325,7 @@ print(anotherName.length);              // 7</pre>
 </div></div>
 <div class="paragraph"><p>Both <span class="monospaced">name</span> and <span class="monospaced">anotherName</span> return strings that look the same, but where
 the <em>é</em> is constructed using a different number of runes. This makes it
-impossible to know the length of these strings by intuitive visual inspection.</p></div>
+impossible to know the length of these strings by just looking at them.</p></div>
 </div>
 </div>
 </div>
@@ -1377,33 +1333,21 @@ impossible to know the length of these strings by intuitive visual inspection.</
 <h3 id="_processing_a_string_one_character_at_a_time">Processing a string one character at a time</h3>
 <div class="sect3">
 <h4 id="_problem_11">Problem</h4>
-<div class="paragraph"><p>You want to do something with each individual character in a string.</p></div>
+<div class="paragraph"><p>You want to do something with each character in a string.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_11">Solution</h4>
-<div class="paragraph"><p>Map the results of calling string.split(''):</p></div>
+<div class="paragraph"><p>Map the results of calling <span class="monospaced">string.split('')</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var lang= 'Dart';
-print(lang.split('').map((char) =&gt; '*${char}*').toList());
+
 // ['*D*', '*a*', '*r*', '*t*']
+print(lang.split('').map((char) =&gt; '*${char}*').toList());
 
 var smileyFace = '\u263A';
 var happy = 'I am $smileyFace';
 print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']</pre>
-</div></div>
-<div class="paragraph"><p>Or, map the string runes:</p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>var charList = "Dart".runes.map((rune) {
-  return '*${new String.fromCharCode(rune)}*').toList();
-});
-// ['*D*', '*a*', '*r*', '*t*']
-
-var runeList = happy.runes.map((rune) {
-  return [rune, new String.fromCharCode(rune)]).toList();
-});
-// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]</pre>
 </div></div>
 <div class="paragraph"><p>Or, loop over the characters of a string:</p></div>
 <div class="listingblock">
@@ -1415,11 +1359,23 @@ for(var i = 0; i &lt; lang.length; i++) {
 
 print(list); // ['*D*', '*a*', '*r*', '*t*']</pre>
 </div></div>
-<div class="paragraph"><p>For processing each character of a string that don&#8217;t fit within 16 bits, you
-<em>must</em> map the string runes. See the <em>Handling extended characters that are
-composed of multiple code units</em> recipe for why using <span class="monospaced">split('')</span> or
-subscripting within a loop is problematic when working with extended
-characters.</p></div>
+<div class="paragraph"><p>Or, map the string runes:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>// ['*D*', '*a*', '*r*', '*t*']
+var charList = "Dart".runes.map((rune) {
+  return '*${new String.fromCharCode(rune)}*').toList();
+});
+
+// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+var runeList = happy.runes.map((rune) {
+  return [rune, new String.fromCharCode(rune)]).toList();
+});</pre>
+</div></div>
+<div class="paragraph"><p>When working with extended characters, you should always map the string runes.
+Don&#8217;t use <span class="monospaced">split('')</span> and avoid indexing an extended string. See the <em>Handling
+extended characters that are composed of multiple code units</em> recipe for
+special considerations when working with extended strings.</p></div>
 </div>
 </div>
 <div class="sect2">
@@ -1430,25 +1386,25 @@ characters.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_12">Solution</h4>
-<div class="paragraph"><p>Use the <span class="monospaced">split()</span> method with a string or a regExp as an argument.</p></div>
+<div class="paragraph"><p>Use the <span class="monospaced">split()</span> method with a string or a RegExp as an argument.</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var smileyFace = '\u263A';
 var happy = 'I am $smileyFace';
 happy.split(' '); // ['I', 'am', '☺']</pre>
 </div></div>
-<div class="paragraph"><p>Here is an example of using <span class="monospaced">split()</span> with a regExp:</p></div>
+<div class="paragraph"><p>Here is an example of using <span class="monospaced">split()</span> with a RegExp:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var nums = '2/7 3 4/5 3~/5';
 var numsRegExp = new RegExp(r'(\s|/|~/)');
 nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']</pre>
 </div></div>
-<div class="paragraph"><p>In the code above, the string <span class="monospaced">nums</span> contains various numbers, some of
-which are expressed as fractions or as int-divisions. A regExp is used
-to split the string to extract just the numbers.</p></div>
-<div class="paragraph"><p>You can perform operations on the matched and unmatched portions of a
-string when using <span class="monospaced">split()</span> with a regExp:</p></div>
+<div class="paragraph"><p>In the code above, the string <span class="monospaced">nums</span> contains various numbers, some of which
+are expressed as fractions or as int-divisions. A RegExp splits the string to
+extract just the numbers.</p></div>
+<div class="paragraph"><p>You can perform operations on the matched and unmatched portions of a string
+when using <span class="monospaced">split()</span> with a RegExp:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var phrase = 'Eats SHOOTS leaves';
@@ -1459,7 +1415,7 @@ var newPhrase = phrase.splitMapJoin((new RegExp(r'SHOOTS')),
 
 print(newPhrase); // 'EATS *shoots* LEAVES'</pre>
 </div></div>
-<div class="paragraph"><p>The regExp matches the middle word (<em>SHOOTS</em>). A pair of callbacks are
+<div class="paragraph"><p>The RegExp matches the middle word (<em>SHOOTS</em>). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
 substrings are joined together again.</p></div>
 </div>
@@ -1468,7 +1424,7 @@ substrings are joined together again.</p></div>
 <h3 id="_determining_whether_a_string_contains_another_string">Determining whether a string contains another string</h3>
 <div class="sect3">
 <h4 id="_problem_13">Problem</h4>
-<div class="paragraph"><p>You want to find out if a string is the substring of another string.</p></div>
+<div class="paragraph"><p>You want to find out whether a string is the substring of another string.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_13">Solution</h4>
@@ -1478,15 +1434,15 @@ substrings are joined together again.</p></div>
 <pre>var fact = 'Dart strings are immutable';
 print(fact.contains('immutable')); // True.</pre>
 </div></div>
-<div class="paragraph"><p>You can indicate a startIndex as a second argument:</p></div>
+<div class="paragraph"><p>You can use a second argument to specify where in the string to start looking:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>print(fact.contains('Dart', 2)); // False</pre>
 </div></div>
 </div>
 <div class="sect3">
-<h4 id="_discussion_9">Discussion</h4>
-<div class="paragraph"><p>The String library provides a couple of shortcuts for testing whether a
+<h4 id="_discussion_8">Discussion</h4>
+<div class="paragraph"><p>The String class provides a couple of shortcuts for testing whether a
 string is a substring of another:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1494,12 +1450,12 @@ string is a substring of another:</p></div>
 print(string.endsWith('e'));      // True.</pre>
 </div></div>
 <div class="paragraph"><p>You can also use <span class="monospaced">string.indexOf()</span>, which returns -1 if the substring
-is not found within a string, and its matching index, if it is:</p></div>
+is not found within a string, and otherwise returns the matching index:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var found = string.indexOf('art') != -1; // True, `art` is found in `Dart`</pre>
+<pre>var found = string.indexOf('art') != -1; // True, `art` is found in `Dart`.</pre>
 </div></div>
-<div class="paragraph"><p>You can also use a regExp and <span class="monospaced">hasMatch()</span>:</p></div>
+<div class="paragraph"><p>You can also use a RegExp and <span class="monospaced">hasMatch()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var found = new RegExp(r'ar[et]').hasMatch(string);
@@ -1508,15 +1464,15 @@ is not found within a string, and its matching index, if it is:</p></div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_finding_matches_of_a_regexp_pattern_in_a_string">Finding matches of a regExp pattern in a string</h3>
+<h3 id="_finding_matches_of_a_regexp_pattern_in_a_string">Finding matches of a RegExp pattern in a string</h3>
 <div class="sect3">
 <h4 id="_problem_14">Problem</h4>
-<div class="paragraph"><p>You want to use regExp to match a pattern in a string, and want to be
+<div class="paragraph"><p>You want to use RegExp to match a pattern in a string, and want to be
 able to access the matches.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_solution_14">Solution</h4>
-<div class="paragraph"><p>Construct a regular expression using the RegExp class and find matches
+<div class="paragraph"><p>Construct a regular expression using the RegExp class, and find matches
 using the <span class="monospaced">allMatches()</span> method:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1527,7 +1483,7 @@ print(matches.map((match) =&gt; match.group(0)).toList()); // ['fox', 'box']</pr
 </div></div>
 </div>
 <div class="sect3">
-<h4 id="_discussion_10">Discussion</h4>
+<h4 id="_discussion_9">Discussion</h4>
 <div class="paragraph"><p>You can query the object returned by <span class="monospaced">allMatches()</span> to find out the
 number of matches:</p></div>
 <div class="listingblock">
@@ -1537,18 +1493,18 @@ number of matches:</p></div>
 <div class="paragraph"><p>To find the first match, use <span class="monospaced">firstMatch()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var firstMatch = regExp.firstMatch(neverEatingThat).group(0); // 'fox'</pre>
+<pre>var firstMatch = RegExp.firstMatch(neverEatingThat).group(0); // 'fox'</pre>
 </div></div>
-<div class="paragraph"><p>To directly access the matched string, use <span class="monospaced">stringMatch()</span>:</p></div>
+<div class="paragraph"><p>To directly get the matched string, use <span class="monospaced">stringMatch()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print(regExp.stringMatch(neverEatingThat)); // 'fox'
+<pre>print(regExp.stringMatch(neverEatingThat));         // 'fox'
 print(regExp.stringMatch('I like bagels and lox')); // null</pre>
 </div></div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_substituting_strings_based_on_regexp_matches">Substituting strings based on regExp matches</h3>
+<h3 id="_substituting_strings_based_on_regexp_matches">Substituting strings based on RegExp matches</h3>
 <div class="sect3">
 <h4 id="_problem_15">Problem</h4>
 <div class="paragraph"><p>You want to match substrings within a string and make substitutions
@@ -1562,14 +1518,13 @@ replacements using <span class="monospaced">replaceAll()</span> method:</p></div
 <div class="content monospaced">
 <pre>var resume = 'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'</pre>
 </div></div>
-<div class="paragraph"><p>If you want to replace just the first match, use 'replaceFirst()`:</p></div>
+<div class="paragraph"><p>If you want to replace just the first match, use <span class="monospaced">replaceFirst()</span>:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'</pre>
+<pre>// Replace the first match of one or more zeros with an empty string.
+var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'</pre>
 </div></div>
-<div class="paragraph"><p>The RegExp matches for one or more 0&#8217;s and replaces them with an empty
-string.</p></div>
-<div class="paragraph"><p>You can use <span class="monospaced">replaceAllMatched()</span> and register a function to modify the
+<div class="paragraph"><p>You can use <span class="monospaced">replaceAllMatched()</span> to register a function that modifies the
 matches:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1589,7 +1544,7 @@ print(newString); // 'I like IKE but I ♡ LUCY'</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-03-15 05:02:45 PDT
+Last updated 2013-03-16 10:56:58 PDT
 </div>
 </div>
 </body>

@@ -21,7 +21,7 @@ var fact = 'Dart'  'is' ' fun!'; // 'Dart is fun!'
 
 ==== Discussion
 
-Adjacent literals also work over multiple lines:
+Adjacent literals work over multiple lines:
 
 -------------------------
 var fact = 'Dart'
@@ -49,7 +49,7 @@ Howe'''; // 'Dewey Cheatem and\n Howe'
 
 ===== Alternatives to adjacent string literals
 
-You can also use the `concat()` method on a string to concatenate it to
+You can use the `concat()` method on a string to concatenate it to
 another string:
 
 ---------------------------------------------------
@@ -57,7 +57,7 @@ var film = filmToWatch();
 film = film.concat('\n');  // 'The Big Lebowski\n' 
 ---------------------------------------------------
 
-Since `concat()` creates a new string every time it is invoked, a long
+Because `concat()` creates a new string every time it is invoked, a long
 chain of `concat()` s can be expensive. Avoid those. Use a StringBuffer
 instead (see _Incrementally building a string efficiently using a
 StringBuffer_, below).
@@ -95,8 +95,8 @@ var whatDoILove = 'I love $favFood'; // 'I love sushi'
 
 ==== Discussion
 
-An interpolated string, `string ${expression}` is equivalent to the
-concatenation of the strings 'string ' and `expression.toString()`.
+An interpolated string, `'string ${expression}` is equivalent to the
+concatenation of the strings `string` and `expression.toString()`.
 Consider this code:
 
 -----------------------------------------------------
@@ -137,13 +137,11 @@ class Point {
 print('Point: $point'); // 'Point: x: 3, y: 4'
 ----------------------------------------------
 
-
 === Handling special characters within strings
 
 ==== Problem
 
-You want to put newlines, dollar signs, or other special characters in
-your strings.
+You want to put newlines, dollar signs, or other special characters in strings.
 
 ==== Solution
 
@@ -169,16 +167,16 @@ Dart designates a few characters as special, and these can be escaped:
 If you prefer, you can use `\x` or `\u` notation to indicate the special
 character:
 
------------------------------------------------------------------
-print('Wile\x0ACoyote');       // same as print('Wile\nCoyote'); 
-print('Wile\u000ACoyote');     // same as print('Wile\nCoyote'); 
------------------------------------------------------------------
+-----------------------------------------------------------
+print('Wile\x0ACoyote');   // Same as print('Wile\nCoyote')
+print('Wile\u000ACoyote'); // Same as print('Wile\nCoyote') 
+-----------------------------------------------------------
 
 You can also use `\u{}` notation:
 
----------------------------------------------------------------
-print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote'); 
----------------------------------------------------------------
+-------------------------------------------------------------
+print('Wile\u{000A}Coyote'); // same as print('Wile\nCoyote')
+-------------------------------------------------------------
 
 You can also escape the `$` used in string interpolation:
 
@@ -195,7 +193,7 @@ print('Wile \E Coyote'); // 'Wile E Coyote'
 -------------------------------------------
 
 
-=== Incrementally building a string efficiently using a StringBuffer
+=== Incrementally building a string using a StringBuffer
 
 ==== Problem
 
@@ -205,7 +203,7 @@ manner.
 ==== Solution
 
 Use a StringBuffer to programmatically generate a string. Consider this code
-below, for assembling a series of urls from fragments:
+below for assembling a series of urls from fragments:
 
 --------------------------------------------------------------------------
 var data = [{'scheme': 'https', 'domain': 'news.ycombinator.com'}, 
@@ -235,11 +233,13 @@ String assembleUrlsUsingStringBuffer(entries) {
 // http://reddit.com/search?q=dart
 --------------------------------------------------------------------------
 
+A StringBuffer collects string fragments, but does not generate a new string
+until `toString()` is called. 
+
 ==== Discussion
 
-A StringBuffer collects string fragments, but does not generate a new string
-until `toString()` is called.  This is vastly more efficient than
-concatenating fragments at each step: Consider this rewrite of the above code:
+Using a StringBuffer is vastly more efficient than concatenating fragments
+at each step: Consider this rewrite of the above code:
 
 -------------------------------------------------------------------------
 String assembleUrlsUsingConcat(entries) {
@@ -263,17 +263,14 @@ String assembleUrlsUsingConcat(entries) {
 This approach produces the exact same result, but incurs the cost of
 joining strings multiple times. 
 
-Because a StringBuffer waits until the call to `toString()` to generate
-the concatenated string, it represents a more efficient way of combining
-strings than `concat()`. See the _Concatenating Strings_ recipe for a
-description of `concat()`.
+See the _Concatenating Strings_ recipe for a description of `concat()`.
 
 ===== Other StringBuffer methods
 
 In addition to `write()`, the StringBuffer class provides methods to
 write a list of strings (`writeAll()`), write a numerical character code
 (`writeCharCode()`), write with an added newline (`writeln()`), and
-more. Here is a simple example that show the use of these methods:
+more. The example below shows how to use these methods:
 
 -------------------------------------------------------------------------------
 var sb = new StringBuffer();
@@ -283,73 +280,75 @@ sb.writeCharCode(33); // charCode for '!'.
 var beatles = sb.toString(); // 'The Beatles:\nJohn, Paul, George, and Ringo!' 
 -------------------------------------------------------------------------------
 
-=== Determining if a string is empty
+
+=== Determining whether a string is empty
 
 ==== Problem
 
-You want to know if a string is empty. You tried `if(string) {...}`, but
+You want to know whether a string is empty. You tried `if (string) {...}`, but
 that did not work.
 
 ==== Solution
 
 Use `string.isEmpty`:
 
-----------------------------
+-----------------------------------
 var emptyString = '';
-emptyString.isEmpty; // true
-----------------------------
+print(emptyString.isEmpty); // true
+-----------------------------------
 
 You can also just use `==`:
 
-----------------------------------------
-string == ""; // True if string is empty.
-----------------------------------------
+---------------------------------------------------
+if (string == '') {...} // True if string is empty.
+---------------------------------------------------
 
 A string with a space is not empty:
 
 -----------------------
 var space = ' ';
-space.isEmpty; // false
+print(space.isEmpty); // false
 -----------------------
 
 ==== Discussion
 
-Don't use `if (string)` to test the emptiness of a string. In Dart, all
-objects except the boolean true evaluate to false. `if(string)` will
-always be false. And you will see a warning in the editor if you use
-an 'if' statement with a non-boolean in checked mode.
+Don't use `if (string)` to test the emptiness of a string. In Dart, all objects
+except the boolean true evaluate to false, so `if(string)` is always false. You
+will see a warning in the editor if you use an 'if' statement with a non-boolean
+in checked mode.
 
 
 === Removing leading and trailing whitespace
 
 ==== Problem
 
-You want to remove leading and trailing whitespace from a string.
+You want to remove spaces, tabs, and other whitespace from the beginning and
+end of strings.
 
 ==== Solution
 
 Use `string.trim()`:
 
-----------------------------------------------------------------------
-var space = '\n\r\f\t\v';       // We'll use a variety of space characters.
+-----------------------------------------------------------------
+var space = '\n\r\f\t\v';       // A variety of space characters.
 var string = '$space X $space';
 var newString = string.trim();  // 'X'
-----------------------------------------------------------------------
+-----------------------------------------------------------------
 
 The String class has no methods to remove only leading or only trailing
-whitespace. But you can always use regExps.
+whitespace. You can always use a RegExp.
 
 Remove only leading whitespace:
 
-----------------------------------------------------------------------------
-var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); // 'X $space'
-----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+var newString = string.replaceFirst(new RegExp(r'^\s+'), ''); // 'X \n\r\f\t\v'
+-------------------------------------------------------------------------------
 
 Remove only trailing whitespace:
 
----------------------------------------------------------------------------
-var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '$space X'
----------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+var newString = string.replaceFirst(new RegExp(r'\s+$'), ''); // '\n\r\f\t\v X'
+-------------------------------------------------------------------------------
 
 
 === Changing string case
@@ -360,31 +359,23 @@ You want to change the case of strings.
 
 ==== Solution
 
-Use `string.toUpperCase()` and `string.toLowerCase()` to convert a
-string to lower-case or upper-case, respectively:
+Use String's `toUpperCase()` and `toLowerCase()` methods: 
 
---------------------------------------------
+----------------------------------------------------------------------
 var theOneILove = 'I love Lucy';
-theOneILove.toUpperCase(); // 'I LOVE LUCY!'
-theOneILove.toLowerCase(); // 'i love lucy!'
---------------------------------------------
+theOneILove.toUpperCase();                           // 'I LOVE LUCY!'
+theOneILove.toLowerCase();                           // 'i love lucy!'
 
-==== Discussion
-
-Case changes affect the characters of bi-cameral scripts like Greek and
-French: var zeus = '039403af03b103c2'; // 'Δίας' (Zeus in modern Greek)
-zeus.toUpperCase(); // 'ΔΊΑΣ'
-
------------------------------------------------------------------------
-var zeus = '\u0394\u03af\u03b1\u03c2'; // 'Δίας' (Zeus in modern Greek)
-zeus.toUpperCase();                    // 'ΔΊΑΣ'
+// Zeus in modern Greek.
+var zeus = '\u0394\u03af\u03b1\u03c2';               // 'Δίας'
+zeus.toUpperCase();                                  // 'ΔΊΑΣ'
 
 var resume = '\u0052\u00e9\u0073\u0075\u006d\u00e9'; // 'Résumé'
 resume.toLowerCase();                                // 'résumé'
-----------------------------------------------------------------
+----------------------------------------------------------------------
 
-They do not affect the characters of uni-cameral scripts like Devanagari
-(used for writing many of the languages of India):
+The `toUpperCase()` and `toLowerCase()` methods don't affect the characters of
+scripts such as Devanagri that don't have distinct letter cases.
 
 ------------------------------------------------------------------------
 var chickenKebab = '\u091a\u093f\u0915\u0928 \u0915\u092c\u093e\u092c'; 
@@ -403,140 +394,95 @@ form.
 ==== Problem
 
 You want to use emoticons and other special symbols that don't fit into 16
-bits. How can you create such strings and use them effectively in your code? 
+bits. How can you create such strings and use them correctly in your code? 
 
 ==== Solution
 
 You can create an extended character using `'\u{}'` syntax:
 
------------------------------
+------------------------------
 var clef = '\u{1F3BC}'; // 🎼
------------------------------
-
-You can mostly use this string like any other:
-
---------------------
-print(clef); // '🎼 '
---------------------
-
-Some special considerations apply when handling strings that are internally
-composed of 2 strings. These are discussed below.
+------------------------------
 
 ==== Discussion
 
-The clef glyph `'\u{1F3BC}'` is composed of two strings, `'\uD83C'` and
-`'\uDFBC'`. These are the glyph's surrogate pair. They only have semantic
-meaning as a pair; individually, they are invalid UTF-16 strings.
+Most UTF-16 strings are stored as two-byte (16 bit) code sequences.
+Since two bytes can only contain the 65,536 characters in the 0x0 to 0xFFFF
+range, a pair of strings is used to store values in the 0x10000 to 0x10FFFF
+range. These strings only have semantic meaning as a pair. Individually, they
+are invalid UTF-16 strings. The term 'surrogate pair' is often used to
+describe these strings. 
+
+The clef glyph `'\u{1F3BC}'` is composed of the `'\uD83C'` and `'\uDFBC'`
+surrogate pair.
+
+You can get an extended string's surrogate pair through its `codeUnits`
+property:
 
 -------------------------------------------------------------------------------
 clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16)); 
 // ['d83c', 'dfbc']
-
-print('\ud83c'); // Error. Dart Editor complains about an 'invalid code point'.
-print('\udfbc'); // Also an error.
 -------------------------------------------------------------------------------
 
-Using a surrogate pair is the normal way of encoding extended
-Unicode characters. Most UTF-16 strings that you will ever encounter are
-stored as two-byte (16 bit) code sequences. Since two bytes can only contain
-the 65,536 characters in the 0x0 to 0xFFFF range, a pair of strings are
-used to store values in the 0x10000 to 0x10FFFF range.
+Accessing a surrogate pair member leads to errors, and you should avoid
+properties and methods that expose it:
 
-The clef glyph is a single semantic entity and is represented by a
-single code point.  Borrowing terminology from Go, Dart uses the term `rune`
-for an integer representing a Unicode code point. When dealing with strings
-containing extended characters, you will normally want to work with runes.
+-------------------------------------------------------------------------------
+print('\ud83c'); // Error: '\ud83c' is not a valid string.
+print('\udfbc'); // Error: '\udfbc' is not a valid string either.
+clef.split()[1]; // Error: accessing half of a surrogate pair.
+print(clef[i];)  // Again, error: accessing half of a surrogate pair.
+-------------------------------------------------------------------------------
 
-===== Getting the length of an extended string
+When dealing with strings containing extended characters, you should use the
+`runes` getter.
 
-Query the `runes` getter to get the string length:
+To get the string's length, use `string.runes.length`. Don't use
+`string.length`:
 
------------------------------------------------------------
-print(clef.runes.length); // 1
-print(clef.runes.map((rune) => rune.toRadixString(16)).toList()));
-// ['1f3bc']
------------------------------------------------------------
-
-By default, the `length` property of a string is based on the string's code
-units:
-
------------------------------------------------------------
-var clef = '\u{1F3BC}';       // 🎼   
-
+-------------------------------------------------------------------------------
+print(clef.runes.length);     // 1
 print(clef.length);           // 2
 print(clef.codeUnits.length); // 2
------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-Avoid using `length` unless you have a specific need for accessing the code
-units. Work with `runes` instead.
-
-===== Subscripting an extended string
-
-Subscripting a string that contains characters that are larger than 16 bits
-requires special attention. Because the default `[]` implementation
-subscripts along code units, subscripting an extended character yields just
-one of that characters's surrogate pair strings. Such a string is invalid.
-
--------------------------------------------------------------------------
-var list = [];
-for(var i = 0; i < clef.length; i++) {
-  list.add([clef[i], clef[i].runes.first]); // OOPS, clef[i] isn't legal.
-}
-
-print(list); // Error.
-
--------------------------------------------------------------------------
-
-Because `list` contains invalid strings, trying to print it generates an error.
-
-If you must subscript a string, avoid code units. Instead, subscript runes:
+To get an individual character or its numeric equivalent, index the rune list:
 
 --------------------------------------------------------------
 print(clef.runes.toList()[0]); // 127932 ('\u{1F3BC}')
 --------------------------------------------------------------
 
-===== Splitting a string that contains extended characters
-
-To get a list of a string's characters, map the string runes:
+To get the string's characters as a list, map the string runes:
 
 ---------------------------------------------------------------------------
 var clef = '\u{1F3BC}'; // 🎼 
 var title = '$clef list:'
 print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
 // ['🎼', ' ', 'l', 'i', 's', 't', ':']
---------------------------------------------------------------------------
-
-Avoid using `split('')`. Because `split('')` splits at the UTF-16 code unit
-boundaries, invoking it on extended characters yields the string's
-surrogate pair:
-
-------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 
-clef.split('').length;  // 2
-------------------------------------------
+---------------------------------------------------------------------------
 
 
-=== Converting between string characters and numerical codes
+=== Converting between characters and numerical codes
 
 ==== Problem
 
-You want to convert string characters into numerical codes and back. You want
-to do this because sometimes you need to compare characters in a string to
-numerical values coming from another source. Or, maybe you want to split a
+You want to convert string characters into numerical codes and vice versa.
+You want to do this because sometimes you need to compare characters in a string
+to numerical values coming from another source. Or, maybe you want to split a
 string and then operate on each character.
 
 ==== Solution
 
-Use the `runes` getter to access a string's code points:
+Use the `runes` getter to get a string's code points:
 
 -----------------------------------------------------------------------------
-'Dart'.runes.toList(); // [68, 97, 114, 116]
+'Dart'.runes.toList();            // [68, 97, 114, 116]
 
-var smileyFace = '\u263A'; // ☺
-print(smileyFace.runes.toList()); // [9786], (Equivalent to ['\u263A']).
+var smileyFace = '\u263A';        // ☺
+print(smileyFace.runes.toList()); // [9786], (equivalent to ['\u263A']).
 
-var clef = '\u{1F3BC}'; // 🎼 
-print(clef.runes.toList());       // [127932], (Equivalent to ['\u{1F3BC}']).
+var clef = '\u{1F3BC}';           // 🎼 
+print(clef.runes.toList());       // [127932], (equivalent to ['\u{1F3BC}']).
 -----------------------------------------------------------------------------
 
 Use `string.codeUnits` to get a string's UTF-16 code units:
@@ -547,13 +493,13 @@ smileyFace.codeUnits.toList(); // [9786]
 clef.codeUnits.toList();       // [55356, 57276]
 ----------------------------------------------------
 
-===== Using codeUnitAt() to access individual code units
+===== Using codeUnitAt() to get individual code units
 
-To access the code unit at a particular index, use `codeUnitAt()`:
+To get the code unit at a particular index, use `codeUnitAt()`:
 
 ----------------------------------------------------------------------
 'Dart'.codeUnitAt(0);     // 68
-smileyFace.codeUnitAt(0); // 9786
+smileyFace.codeUnitAt(0); // 9786 (the decimal value of '\u263A')
 clef.codeUnitAt(0);       // 55356 (does not represent a legal string) 
 ----------------------------------------------------------------------
 
@@ -564,17 +510,18 @@ You can generate a new string from numerical codes using the factory
 `String.fromCharCodes(charCodes)` can tell the difference and do the right
 thing automatically:
 
------------------------------------------------------------------------------
-new String.fromCharCodes([68, 97, 114, 116]);                   // 'Dart'
+-------------------------------------------------------------------------------
+print(new String.fromCharCodes([68, 97, 114, 116]));                  // 'Dart'
 
-new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]); // 'I ♡ Lucy'
+print(new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]));
+// 'I ♡ Lucy'
 
 // Passing code units representing the surrogate pair.
-new String.fromCharCodes([55356, 57276]);                       // 🎼  
+print(new String.fromCharCodes([55356, 57276]));                      // 🎼  
 
 // Passing runes.
-new String.fromCharCodes([127932]);                             // 🎼  
------------------------------------------------------------------------------
+print(new String.fromCharCodes([127932]));                            // 🎼  
+-------------------------------------------------------------------------------
 
 You can use the `String.fromCharCode()` factory to convert a single rune
 or code unit to a string:
@@ -593,46 +540,55 @@ but not recommended.
 
 ==== Problem
 
-You want to get the length of a string, but are not sure how to
-correctly calculate the length when working with Unicode.
+You want to get the length of a string, but are not sure how to calculate the
+length correctly when working with variable length Unicode characters.
 
 ==== Solution
 
-Use `string.length` to get the number of UTF-16 code units in a string:
+Use `string.runes.length` to get the number of characters in a string.
 
-----------------------------------
-'I love music'.length;       // 12
-'I love music'.runes.length; // 12
-----------------------------------
+-----------------------------------------
+print('I love music'.runes.length); // 12
+-----------------------------------------
+
+You can safely use `string.runes.length` to get the length of strings that
+contain extended characters:
+
+-----------------------------------------
+var clef = '\u{1F3BC}';        // 🎼  
+var subject = '$clef list:';   // 
+var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+
+clef.runes.length;             // 1
+music.runes.length             // 5
+-----------------------------------------
 
 ==== Discussion
 
-For extended characters, the rune length will be less than the code
-unit length:
+You can directly use a string's `length` property (minus `runes`). This returns
+the string's code unit length. Using `string.length` produces the same length
+as `string.runes.length` for most unicode characters.
+
+For extended characters, the code unit length is one more than the rune
+length:
 
 ------------------------------------------
-var clef = '\u{1F3BC}';        // 🎼  
-var subject = '$clef list:';
-
 clef.length;                   // 2
-clef.runes.length;             // 1
 
 var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
 music.length;                  // 6
-music.runes.length             // 5
 ------------------------------------------
 
-Use `length` if you want to number of code units; use `runes.length` if
-you want the number of runes. For extended characters, you want to work with
-the rune length.
+Unless you specifically need the code unit length of a string, use
+`string.runes.length`.
 
 ===== Working with combined characters
 
-It is tempting to brush aside much of the complexity involved in dealing with
-runes and code units and base the length of the string on the number of
-characters it appears to have. Anyone can tell that 'Dart' has four characters,
-and 'Amelié' has six, right? Almost. The length of 'Dart' is indeed four, but
-the length of 'Amelié' depends on how that string was constructed:
+It is tempting to brush aside the complexity involved in dealing with runes and
+code units and base the length of the string on the number of characters it
+appears to have. Anyone can tell that 'Dart' has four characters, and 'Amelié'
+has six, right? Almost. The length of 'Dart' is indeed four, but the length of
+'Amelié' depends on how that string was constructed:
 
 ---------------------------------------------------
 var name = 'Ameli\u00E9';               // 'Amelié'
@@ -643,42 +599,30 @@ print(anotherName.length);              // 7
 
 Both `name` and `anotherName` return strings that look the same, but where
 the 'é' is constructed using a different number of runes. This makes it
-impossible to know the length of these strings by intuitive visual inspection. 
+impossible to know the length of these strings by just looking at them.
 
 
 === Processing a string one character at a time
 
 ==== Problem
 
-You want to do something with each individual character in a string.
+You want to do something with each character in a string.
 
 ==== Solution
 
-Map the results of calling string.split(''):
+Map the results of calling `string.split('')`:
 
 ----------------------------------------------------------
 var lang= 'Dart';
-print(lang.split('').map((char) => '*${char}*').toList());
+
 // ['*D*', '*a*', '*r*', '*t*']
+print(lang.split('').map((char) => '*${char}*').toList());
 
 var smileyFace = '\u263A';
 var happy = 'I am $smileyFace';
 print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']
 ----------------------------------------------------------
 
-Or, map the string runes:
-
-------------------------------------------------------------------------
-var charList = "Dart".runes.map((rune) {
-  return '*${new String.fromCharCode(rune)}*').toList();
-});
-// ['*D*', '*a*', '*r*', '*t*']
-
-var runeList = happy.runes.map((rune) {
-  return [rune, new String.fromCharCode(rune)]).toList();
-});
-// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
-------------------------------------------------------------------------
 
 Or, loop over the characters of a string:
         
@@ -691,11 +635,24 @@ for(var i = 0; i < lang.length; i++) {
 print(list); // ['*D*', '*a*', '*r*', '*t*']
 --------------------------------------------
 
-For processing each character of a string that don't fit within 16 bits, you
-_must_ map the string runes. See the _Handling extended characters that are
-composed of multiple code units_ recipe for why using `split('')` or
-subscripting within a loop is problematic when working with extended
-characters.
+Or, map the string runes:
+
+------------------------------------------------------------------------
+// ['*D*', '*a*', '*r*', '*t*']
+var charList = "Dart".runes.map((rune) {
+  return '*${new String.fromCharCode(rune)}*').toList();
+});
+
+// [[73, 'I'], [32, ' '], [97, 'a'], [109, 'm'], [32, ' '], [9786, '☺']]
+var runeList = happy.runes.map((rune) {
+  return [rune, new String.fromCharCode(rune)]).toList();
+});
+------------------------------------------------------------------------
+
+When working with extended characters, you should always map the string runes.
+Don't use `split('')` and avoid indexing an extended string. See the _Handling
+extended characters that are composed of multiple code units_ recipe for
+special considerations when working with extended strings.
 
 
 === Splitting a string into substrings
@@ -706,7 +663,7 @@ You want to split a string into substrings using a delimiter or a pattern.
 
 ==== Solution
 
-Use the `split()` method with a string or a regExp as an argument.
+Use the `split()` method with a string or a RegExp as an argument.
 
 -------------------------------------
 var smileyFace = '\u263A';
@@ -714,7 +671,7 @@ var happy = 'I am $smileyFace';
 happy.split(' '); // ['I', 'am', '☺']
 -------------------------------------
 
-Here is an example of using `split()` with a regExp:
+Here is an example of using `split()` with a RegExp:
 
 --------------------------------------------------------------
 var nums = '2/7 3 4/5 3~/5';
@@ -722,12 +679,12 @@ var numsRegExp = new RegExp(r'(\s|/|~/)');
 nums.split(numsRegExp); // ['2', '7', '3', '4', '5', '3', '5']
 --------------------------------------------------------------
 
-In the code above, the string `nums` contains various numbers, some of
-which are expressed as fractions or as int-divisions. A regExp is used
-to split the string to extract just the numbers.
+In the code above, the string `nums` contains various numbers, some of which
+are expressed as fractions or as int-divisions. A RegExp splits the string to
+extract just the numbers.
 
-You can perform operations on the matched and unmatched portions of a
-string when using `split()` with a regExp:
+You can perform operations on the matched and unmatched portions of a string
+when using `split()` with a RegExp:
 
 ----------------------------------------------------------------
 var phrase = 'Eats SHOOTS leaves';
@@ -740,15 +697,16 @@ print(newPhrase); // 'EATS *shoots* LEAVES'
   
 ----------------------------------------------------------------
 
-The regExp matches the middle word ('SHOOTS'). A pair of callbacks are
+The RegExp matches the middle word ('SHOOTS'). A pair of callbacks are
 registered to transform the matched and unmatched substrings before the
 substrings are joined together again.
+
 
 === Determining whether a string contains another string
 
 ==== Problem
 
-You want to find out if a string is the substring of another string.
+You want to find out whether a string is the substring of another string.
 
 ==== Solution
 
@@ -759,7 +717,7 @@ var fact = 'Dart strings are immutable';
 print(fact.contains('immutable')); // True.
 ---------------------------------------------
 
-You can indicate a startIndex as a second argument:
+You can use a second argument to specify where in the string to start looking:
 
 -----------------------------------------
 print(fact.contains('Dart', 2)); // False
@@ -767,7 +725,7 @@ print(fact.contains('Dart', 2)); // False
 
 ==== Discussion
 
-The String library provides a couple of shortcuts for testing whether a
+The String class provides a couple of shortcuts for testing whether a
 string is a substring of another:
 
 ------------------------------------------
@@ -776,29 +734,29 @@ print(string.endsWith('e'));      // True.
 ------------------------------------------
 
 You can also use `string.indexOf()`, which returns -1 if the substring
-is not found within a string, and its matching index, if it is:
+is not found within a string, and otherwise returns the matching index:
 
---------------------------------------------------------------------------
-var found = string.indexOf('art') != -1; // True, `art` is found in `Dart`
---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+var found = string.indexOf('art') != -1; // True, `art` is found in `Dart`.
+---------------------------------------------------------------------------
 
-You can also use a regExp and `hasMatch()`:
+You can also use a RegExp and `hasMatch()`:
 
 ------------------------------------------------------------------------
 var found = new RegExp(r'ar[et]').hasMatch(string);
 //  True, 'art' and 'are' match.
 ------------------------------------------------------------------------
 
-=== Finding matches of a regExp pattern in a string
+=== Finding matches of a RegExp pattern in a string
 
 ==== Problem
 
-You want to use regExp to match a pattern in a string, and want to be
+You want to use RegExp to match a pattern in a string, and want to be
 able to access the matches.
 
 ==== Solution
 
-Construct a regular expression using the RegExp class and find matches
+Construct a regular expression using the RegExp class, and find matches
 using the `allMatches()` method:
 
 -------------------------------------------------------------------------
@@ -820,17 +778,17 @@ var howManyMatches = matches.length; // 2
 To find the first match, use `firstMatch()`:
 
 ----------------------------------------------------------------------
-var firstMatch = regExp.firstMatch(neverEatingThat).group(0); // 'fox'
+var firstMatch = RegExp.firstMatch(neverEatingThat).group(0); // 'fox'
 ----------------------------------------------------------------------
 
-To directly access the matched string, use `stringMatch()`:
+To directly get the matched string, use `stringMatch()`:
 
------------------------------------------------------------
-print(regExp.stringMatch(neverEatingThat)); // 'fox'
+------------------------------------------------------------
+print(regExp.stringMatch(neverEatingThat));         // 'fox'
 print(regExp.stringMatch('I like bagels and lox')); // null
------------------------------------------------------------
+------------------------------------------------------------
 
-=== Substituting strings based on regExp matches
+=== Substituting strings based on RegExp matches
 
 ==== Problem
 
@@ -846,16 +804,14 @@ replacements using `replaceAll()` method:
 var resume = 'resume'.replaceAll(new RegExp(r'e'), '\u00E9'); // 'résumé'
 -------------------------------------------------------------------------
 
-If you want to replace just the first match, use 'replaceFirst()`:
+If you want to replace just the first match, use `replaceFirst()`:
 
 -----------------------------------------------------------------------
+// Replace the first match of one or more zeros with an empty string.
 var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
 -----------------------------------------------------------------------
 
-The RegExp matches for one or more 0's and replaces them with an empty
-string.
-
-You can use `replaceAllMatched()` and register a function to modify the
+You can use `replaceAllMatched()` to register a function that modifies the
 matches:
 
 ---------------------------------------------------------
