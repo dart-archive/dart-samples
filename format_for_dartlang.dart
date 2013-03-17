@@ -5,6 +5,7 @@ import 'dart:async';
 
 var content = '';
 bool _headersConverted = false;
+var stateErrorMessage = "Call convertHeaders() first.";
 
 var preface = '''---
 layout: default
@@ -45,8 +46,7 @@ String getHref(title) {
 /// Generates TOC.
 String generateTOC() {
   if (!_headersConverted) {
-    throw new StateError('cannot generate TOC until convertHeaders() has been'
-        'called');
+    throw new StateError('Error inside generateTOC: $stateErrorMessage');
   }
   var sb = new StringBuffer();
   var regExp = new RegExp(r'(^#{1,3}) ([\w\s]+)\n', multiLine: true);
@@ -85,8 +85,7 @@ String generateTOC() {
 /// Makes all h3 elements named anchors.
 void generateH3Anchors() {
   if (!_headersConverted) {
-    throw new StateError('cannot generate H3 anchors until convertHeaders() has'
-      'been called');
+    throw new StateError('Error inside generateH3Anchors: $stateErrorMessage');
   }
   var regExp = new RegExp(r'(\n### )([[A-Z][\w\s]+)\n');
   content = content.replaceAllMapped(regExp, (match) {
@@ -99,8 +98,7 @@ void generateH3Anchors() {
 /// Converts asciidoc code delimiters ('-------') to <pre> tags.
 void generatePreTags() {
   if (!_headersConverted) {
-    throw new StateError('cannot generate pre tags until convertHeaders() has'
-      'been called');
+    throw new StateError('Error inside generatePreTags: $stateErrorMessage');
   }
   var regExp = new RegExp('\n\n-+\n');
   var matches = regExp.allMatches(content);
@@ -108,7 +106,7 @@ void generatePreTags() {
   
   regExp = new RegExp('\n-+\n\n');
   matches = regExp.allMatches(content); 
-  content = content.replaceAll(regExp, '\n<pre class="programlisting">\n\n');
+  content = content.replaceAll(regExp, '\n</pre>\n\n');
 }
 
 
