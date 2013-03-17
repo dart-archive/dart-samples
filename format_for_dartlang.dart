@@ -10,7 +10,8 @@ var stateErrorMessage = "Call convertHeaders() first.";
 var preface = '''---
 layout: default
 title: "Dart Cookbook"
-description: "Tasty recipes to make you more productive with Dart."
+description: "Recipes and prescriptions for using Dart."
+has-permalinks: true
 ---
 
 # Dart Cookbook
@@ -40,58 +41,30 @@ void convertHeaders() {
 }
 
 String getHref(title) {
-  return title.trim().toLowerCase().replaceAll(' ', '_');  
+  return title.trim().toLowerCase().replaceAll(' ', '-');  
 }
 
-/// Generates TOC.
+/// Generates TOC. 
 String generateTOC() {
   if (!_headersConverted) {
     throw new StateError('Error inside generateTOC: $stateErrorMessage');
   }
   var sb = new StringBuffer();
+  sb.write('\n');
   var regExp = new RegExp(r'(^#{1,3}) ([\w\s]+)\n', multiLine: true);
   var matches = regExp.allMatches(content);
-  var closingTags = new List<String>();
-  
-  var h2ClosingTags = [];
-  bool firstH2 = true;
-  
-  // The <ol> for the TOC.
-  sb.write('<ol>\n');
-  
+ 
   matches.forEach((match) {
     var hType = match.group(1);
     var text = match.group(2).trim();
     if (hType == "##") {
-      if (!h2ClosingTags.isEmpty) {
-        sb.write(h2ClosingTags.removeLast());
-      }
-      sb.write('<li><a href="#${getHref(text)}">$text</a><ol>\n');
-      h2ClosingTags.addAll(['</li>\n', '</ol>\n']);
+      sb.write('1. [$text](#${getHref(text)})\n');
     } else if (hType == "###") {
-      sb.write('<li><a href="${getHref(text)}">$text</a></li>\n');      
+      sb.write('    1. [$text](#${getHref(text)})\n');     
     }
   });
-  
-  // Final H2 closing tag (only H2's nest).
-  sb.write('\n</ol>\n<li>');
-
-  // Add final TOC closing tag.
-  sb.write('\n</ol>'); 
+  sb.write('{:.toc}\n\n');
   return sb.toString();
-}
-
-
-/// Makes all h3 elements named anchors.
-void generateH3Anchors() {
-  if (!_headersConverted) {
-    throw new StateError('Error inside generateH3Anchors: $stateErrorMessage');
-  }
-  var regExp = new RegExp(r'(\n### )([[A-Z][\w\s]+)\n');
-  content = content.replaceAllMapped(regExp, (match) {
-    var anchorId = match.group(2).toLowerCase().replaceAll(' ', '_').trim();
-    return('\n<h3><a id="${anchorId}" href="#${anchorId}">${match.group(2).trim()}</a></h3>\n\n');  
-  });
 }
 
 
@@ -134,7 +107,6 @@ void main() {
   convertHeaders();
   
   var toc = generateTOC();
-  generateH3Anchors();
   generatePreTags();
 
   writeToOutputFile(outFile, preface, toc);
