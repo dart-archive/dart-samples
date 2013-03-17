@@ -401,7 +401,7 @@ bits. How can you create such strings and use them correctly in your code?
 You can create an extended character using `'\u{}'` syntax:
 
 ------------------------------
-var clef = '\u{1F3BC}'; // 🎼
+var clef = '\u{1F3BC}'; // 🎼 
 ------------------------------
 
 ==== Discussion
@@ -623,9 +623,8 @@ var happy = 'I am $smileyFace';
 print(happy.split('')); // ['I', ' ', 'a', 'm', ' ', '☺']
 ----------------------------------------------------------
 
-
 Or, loop over the characters of a string:
-        
+
 --------------------------------------------
 var list = [];
 for(var i = 0; i < lang.length; i++) {
@@ -823,3 +822,6 @@ var newString = string.replaceAllMapped(regExp, (match) {
 }); 
 print(newString); // 'I like IKE but I ♡ LUCY'
 ---------------------------------------------------------
+
+
+
