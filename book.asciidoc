@@ -401,7 +401,7 @@ bits. How can you create such strings and use them correctly in your code?
 You can create an extended character using `'\u{}'` syntax:
 
 ------------------------------
-var clef = '\u{1F3BC}'; // 🎼
+var clef = '\u{1D11E}'; // 𝄞
 ------------------------------
 
 ==== Discussion
@@ -413,7 +413,7 @@ range. These strings only have semantic meaning as a pair. Individually, they
 are invalid UTF-16 strings. The term 'surrogate pair' is often used to
 describe these strings. 
 
-The clef glyph `'\u{1F3BC}'` is composed of the `'\uD83C'` and `'\uDFBC'`
+The clef glyph `'\u{1D11E}'` is composed of the `'\uD834'` and `'\uDD1E'`
 surrogate pair.
 
 You can get an extended string's surrogate pair through its `codeUnits`
@@ -421,15 +421,15 @@ property:
 
 -------------------------------------------------------------------------------
 clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16)); 
-// ['d83c', 'dfbc']
+// ['D834', 'DD1E']
 -------------------------------------------------------------------------------
 
 Accessing a surrogate pair member leads to errors, and you should avoid
 properties and methods that expose it:
 
 -------------------------------------------------------------------------------
-print('\ud83c'); // Error: '\ud83c' is not a valid string.
-print('\udfbc'); // Error: '\udfbc' is not a valid string either.
+print('\uD834'); // Error: '\uD834' is not a valid string.
+print('\uDD1E'); // Error: '\uDD1E' is not a valid string either.
 clef.split()[1]; // Error: accessing half of a surrogate pair.
 print(clef[i];)  // Again, error: accessing half of a surrogate pair.
 -------------------------------------------------------------------------------
@@ -449,13 +449,13 @@ print(clef.codeUnits.length); // 2
 To get an individual character or its numeric equivalent, index the rune list:
 
 --------------------------------------------------------------
-print(clef.runes.toList()[0]); // 127932 ('\u{1F3BC}')
+print(clef.runes.toList()[0]); // 119070 ('\u{1D11E}')
 --------------------------------------------------------------
 
 To get the string's characters as a list, map the string runes:
 
 ---------------------------------------------------------------------------
-var clef = '\u{1F3BC}'; // 🎼 
+var clef = '\u{1D11E}'; // 𝄞
 var title = '$clef list:'
 print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
 // ['🎼', ' ', 'l', 'i', 's', 't', ':']
@@ -481,8 +481,8 @@ Use the `runes` getter to get a string's code points:
 var smileyFace = '\u263A';        // ☺
 print(smileyFace.runes.toList()); // [9786], (equivalent to ['\u263A']).
 
-var clef = '\u{1F3BC}';           // 🎼 
-print(clef.runes.toList());       // [127932], (equivalent to ['\u{1F3BC}']).
+var clef = '\u{1D11E}';           // 𝄞
+print(clef.runes.toList());       // [119070], (equivalent to ['\u{1D11E}']).
 -----------------------------------------------------------------------------
 
 Use `string.codeUnits` to get a string's UTF-16 code units:
@@ -490,7 +490,7 @@ Use `string.codeUnits` to get a string's UTF-16 code units:
 ----------------------------------------------------
 'Dart'.codeUnits.toList();     // [68, 97, 114, 116]
 smileyFace.codeUnits.toList(); // [9786]
-clef.codeUnits.toList();       // [55356, 57276]
+clef.codeUnits.toList();       // [55348, 56606]
 ----------------------------------------------------
 
 ===== Using codeUnitAt() to get individual code units
@@ -500,7 +500,7 @@ To get the code unit at a particular index, use `codeUnitAt()`:
 ----------------------------------------------------------------------
 'Dart'.codeUnitAt(0);     // 68
 smileyFace.codeUnitAt(0); // 9786 (the decimal value of '\u263A')
-clef.codeUnitAt(0);       // 55356 (does not represent a legal string) 
+clef.codeUnitAt(0);       // 55348 (does not represent a legal string) 
 ----------------------------------------------------------------------
 
 ==== Converting numerical codes to strings
@@ -517,10 +517,10 @@ print(new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]));
 // 'I ♡ Lucy'
 
 // Passing code units representing the surrogate pair.
-print(new String.fromCharCodes([55356, 57276]));                      // 🎼  
+print(new String.fromCharCodes([55348, 56606]));                      // 𝄞
 
 // Passing runes.
-print(new String.fromCharCodes([127932]));                            // 🎼  
+print(new String.fromCharCodes([119070]));                            // 𝄞
 -------------------------------------------------------------------------------
 
 You can use the `String.fromCharCode()` factory to convert a single rune
@@ -529,7 +529,7 @@ or code unit to a string:
 ---------------------------------------
 new String.fromCharCode(68);     // 'D'
 new String.fromCharCode(9786);   // ☺
-new String.fromCharCode(127932); // 🎼  
+new String.fromCharCode(119070); // 𝄞
 ---------------------------------------
 
 Creating a string with only one half of a surrogate pair is permitted,
@@ -555,9 +555,9 @@ You can safely use `string.runes.length` to get the length of strings that
 contain extended characters:
 
 -----------------------------------------
-var clef = '\u{1F3BC}';        // 🎼  
+var clef = '\u{1D11E}';        // 𝄞
 var subject = '$clef list:';   // 
-var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+var music = 'I $hearts $clef'; // 'I ♡ 𝄞'
 
 clef.runes.length;             // 1
 music.runes.length             // 5
@@ -575,7 +575,7 @@ length:
 ------------------------------------------
 clef.length;                   // 2
 
-var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+var music = 'I $hearts $clef'; // 'I ♡ 𝄞'
 music.length;                  // 6
 ------------------------------------------
 

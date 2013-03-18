@@ -20,7 +20,7 @@ void main() {
     });
     
     test('that contains non-BMP symbols', () {
-      var clef = '\u{1F3BC}';
+      var clef = '\u{1D11E}';
       expect(clef.length, equals(2));
       expect(clef.runes.length, equals(1));
 

@@ -1142,7 +1142,7 @@ bits. How can you create such strings and use them correctly in your code?</p></
 <div class="paragraph"><p>You can create an extended character using <span class="monospaced">'\u{}'</span> syntax:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var clef = '\u{1F3BC}'; // 🎼</pre>
+<pre>var clef = '\u{1D11E}'; // 𝄞</pre>
 </div></div>
 </div>
 <div class="sect3">
@@ -1153,21 +1153,21 @@ range, a pair of strings is used to store values in the 0x10000 to 0x10FFFF
 range. These strings only have semantic meaning as a pair. Individually, they
 are invalid UTF-16 strings. The term <em>surrogate pair</em> is often used to
 describe these strings.</p></div>
-<div class="paragraph"><p>The clef glyph <span class="monospaced">'\u{1F3BC}'</span> is composed of the <span class="monospaced">'\uD83C'</span> and <span class="monospaced">'\uDFBC'</span>
+<div class="paragraph"><p>The clef glyph <span class="monospaced">'\u{1D11E}'</span> is composed of the <span class="monospaced">'\uD834'</span> and <span class="monospaced">'\uDD1E'</span>
 surrogate pair.</p></div>
 <div class="paragraph"><p>You can get an extended string&#8217;s surrogate pair through its <span class="monospaced">codeUnits</span>
 property:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>clef.codeUnits.map((codeUnit) =&gt; codeUnit.toRadixString(16));
-// ['d83c', 'dfbc']</pre>
+// ['D834', 'DD1E']</pre>
 </div></div>
 <div class="paragraph"><p>Accessing a surrogate pair member leads to errors, and you should avoid
 properties and methods that expose it:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print('\ud83c'); // Error: '\ud83c' is not a valid string.
-print('\udfbc'); // Error: '\udfbc' is not a valid string either.
+<pre>print('\uD834'); // Error: '\uD834' is not a valid string.
+print('\uDD1E'); // Error: '\uDD1E' is not a valid string either.
 clef.split()[1]; // Error: accessing half of a surrogate pair.
 print(clef[i];)  // Again, error: accessing half of a surrogate pair.</pre>
 </div></div>
@@ -1184,12 +1184,12 @@ print(clef.codeUnits.length); // 2</pre>
 <div class="paragraph"><p>To get an individual character or its numeric equivalent, index the rune list:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print(clef.runes.toList()[0]); // 127932 ('\u{1F3BC}')</pre>
+<pre>print(clef.runes.toList()[0]); // 119070 ('\u{1D11E}')</pre>
 </div></div>
 <div class="paragraph"><p>To get the string&#8217;s characters as a list, map the string runes:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var clef = '\u{1F3BC}'; // 🎼
+<pre>var clef = '\u{1D11E}'; // 𝄞
 var title = '$clef list:'
 print(subject.runes.map((rune) =&gt; new String.fromCharCode(rune)).toList());
 // ['🎼', ' ', 'l', 'i', 's', 't', ':']</pre>
@@ -1215,15 +1215,15 @@ string and then operate on each character.</p></div>
 var smileyFace = '\u263A';        // ☺
 print(smileyFace.runes.toList()); // [9786], (equivalent to ['\u263A']).
 
-var clef = '\u{1F3BC}';           // 🎼
-print(clef.runes.toList());       // [127932], (equivalent to ['\u{1F3BC}']).</pre>
+var clef = '\u{1D11E}';           // 𝄞
+print(clef.runes.toList());       // [119070], (equivalent to ['\u{1D11E}']).</pre>
 </div></div>
 <div class="paragraph"><p>Use <span class="monospaced">string.codeUnits</span> to get a string&#8217;s UTF-16 code units:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>'Dart'.codeUnits.toList();     // [68, 97, 114, 116]
 smileyFace.codeUnits.toList(); // [9786]
-clef.codeUnits.toList();       // [55356, 57276]</pre>
+clef.codeUnits.toList();       // [55348, 56606]</pre>
 </div></div>
 <div class="sect4">
 <h5 id="_using_codeunitat_to_get_individual_code_units">Using codeUnitAt() to get individual code units</h5>
@@ -1232,7 +1232,7 @@ clef.codeUnits.toList();       // [55356, 57276]</pre>
 <div class="content monospaced">
 <pre>'Dart'.codeUnitAt(0);     // 68
 smileyFace.codeUnitAt(0); // 9786 (the decimal value of '\u263A')
-clef.codeUnitAt(0);       // 55356 (does not represent a legal string)</pre>
+clef.codeUnitAt(0);       // 55348 (does not represent a legal string)</pre>
 </div></div>
 </div>
 </div>
@@ -1250,10 +1250,10 @@ print(new String.fromCharCodes([73, 32, 9825, 32, 76, 117, 99, 121]));
 // 'I ♡ Lucy'
 
 // Passing code units representing the surrogate pair.
-print(new String.fromCharCodes([55356, 57276]));                      // 🎼
+print(new String.fromCharCodes([55348, 56606]));                      // 𝄞
 
 // Passing runes.
-print(new String.fromCharCodes([127932]));                            // 🎼</pre>
+print(new String.fromCharCodes([119070]));                            // 𝄞</pre>
 </div></div>
 <div class="paragraph"><p>You can use the <span class="monospaced">String.fromCharCode()</span> factory to convert a single rune
 or code unit to a string:</p></div>
@@ -1261,7 +1261,7 @@ or code unit to a string:</p></div>
 <div class="content monospaced">
 <pre>new String.fromCharCode(68);     // 'D'
 new String.fromCharCode(9786);   // ☺
-new String.fromCharCode(127932); // 🎼</pre>
+new String.fromCharCode(119070); // 𝄞</pre>
 </div></div>
 <div class="paragraph"><p>Creating a string with only one half of a surrogate pair is permitted,
 but not recommended.</p></div>
@@ -1285,9 +1285,9 @@ length correctly when working with variable length Unicode characters.</p></div>
 contain extended characters:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>var clef = '\u{1F3BC}';        // 🎼
+<pre>var clef = '\u{1D11E}';        // 𝄞
 var subject = '$clef list:';   //
-var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+var music = 'I $hearts $clef'; // 'I ♡ 𝄞'
 
 clef.runes.length;             // 1
 music.runes.length             // 5</pre>
@@ -1304,7 +1304,7 @@ length:</p></div>
 <div class="content monospaced">
 <pre>clef.length;                   // 2
 
-var music = 'I $hearts $clef'; // 'I ♡ 🎼 '
+var music = 'I $hearts $clef'; // 'I ♡ 𝄞'
 music.length;                  // 6</pre>
 </div></div>
 <div class="paragraph"><p>Unless you specifically need the code unit length of a string, use
@@ -1544,7 +1544,7 @@ print(newString); // 'I like IKE but I ♡ LUCY'</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-03-16 10:56:58 PDT
+Last updated 2013-03-17 18:01:10 PDT
 </div>
 </div>
 </body>

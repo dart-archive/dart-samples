@@ -9,7 +9,7 @@ print(obj) {
 void main() {
   
   group('processing a string one character at a time', () {
-    var clef = '\u{1F3BC}';
+    var clef = '\u{1D11E}';
     var lang= 'Dart';
     
     group('using split', () {
@@ -39,7 +39,7 @@ void main() {
           list.add([clef[i], clef[i].runes.first]); 
         }
         // Because we are dealing with invalid strings, this test can never pass.
-        // expect(print(list.last), equals([[?, 55356], [?, 57276]]));
+        // expect(print(list.last), equals([[?, 55348], [?, 56606]]));
       });
     });
 
@@ -55,7 +55,7 @@ void main() {
         
         var subject = '$clef list:';
         expect(subject.runes.map((rune) => new String.fromCharCode(rune)).toList(), 
-            equals(['🎼', ' ', 'l', 'i', 's', 't', ':']));
+            equals(['𝄞', ' ', 'l', 'i', 's', 't', ':']));
       });
     });
   });
