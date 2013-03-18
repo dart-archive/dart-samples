@@ -458,7 +458,7 @@ To get the string's characters as a list, map the string runes:
 var clef = '\u{1D11E}'; // 𝄞
 var title = '$clef list:'
 print(subject.runes.map((rune) => new String.fromCharCode(rune)).toList());
-// ['🎼', ' ', 'l', 'i', 's', 't', ':']
+// ['𝄞', ' ', 'l', 'i', 's', 't', ':']
 ---------------------------------------------------------------------------
 
 
