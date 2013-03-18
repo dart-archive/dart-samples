@@ -4,7 +4,7 @@
 
 == Strings
 
-=== Concatenating Strings
+=== Concatenating strings
 
 ==== Problem
 
@@ -29,7 +29,7 @@ var fact = 'Dart'
 'fun!'; // 'Dart is fun!'
 -------------------------
 
-They also work when using multiline strings:
+They also work when using multi-line strings:
 
 ----------------------------------------
 var lunch = '''Peanut
@@ -38,8 +38,7 @@ butter'''
 jelly'''; // 'Peanut\nbutter and\njelly'
 ----------------------------------------
 
-You can concatenate adjacent single line literals with multiline
-strings:
+You can concatenate adjacent single-line literals with multi-line strings:
 
 --------------------------------------
 var funnyGuys = 'Dewey ' 'Cheatem'
@@ -95,7 +94,7 @@ var whatDoILove = 'I love $favFood'; // 'I love sushi'
 
 ==== Discussion
 
-An interpolated string, `'string ${expression}` is equivalent to the
+The interpolated string, `'string ${expression}` is equivalent to the
 concatenation of the strings `string` and `expression.toString()`.
 Consider this code:
 
@@ -111,8 +110,8 @@ var seasons = 'The '.concat(4.toString()).concat(' seasons');
 // 'The 4 seasons'
 -------------------------------------------------------------
 
-You should consider implementing a `toString()` method for user-defined
-objects. Here's what happens if you don't:
+You should consider implementing a `toString()` method for classes that you
+define. Here's what happens if you don't:
 
 -------------------------------------------------------
 class Point {
@@ -148,7 +147,7 @@ You want to put newlines, dollar signs, or other special characters in strings.
 Prefix special characters with a `\`.
 
 ------------------------
-  print(Wile\nCoyote'); 
+  print('Wile\nCoyote'); 
   // Wile
   // Coyote
 ------------------------
@@ -413,8 +412,8 @@ range. These strings only have semantic meaning as a pair. Individually, they
 are invalid UTF-16 strings. The term 'surrogate pair' is often used to
 describe these strings. 
 
-The clef glyph `'\u{1D11E}'` is composed of the `'\uD834'` and `'\uDD1E'`
-surrogate pair.
+The treble clef glyph `'\u{1D11E}'` is composed of the `'\uD834'` and
+`'\uDD1E'` surrogate pair.
 
 You can get an extended string's surrogate pair through its `codeUnits`
 property:
@@ -746,7 +745,7 @@ var found = new RegExp(r'ar[et]').hasMatch(string);
 //  True, 'art' and 'are' match.
 ------------------------------------------------------------------------
 
-=== Finding matches of a RegExp pattern in a string
+=== Finding matches of a regular expression
 
 ==== Problem
 
@@ -787,7 +786,7 @@ print(regExp.stringMatch(neverEatingThat));         // 'fox'
 print(regExp.stringMatch('I like bagels and lox')); // null
 ------------------------------------------------------------
 
-=== Substituting strings based on RegExp matches
+=== Substituting strings using regular expressions
 
 ==== Problem
 
@@ -810,7 +809,7 @@ If you want to replace just the first match, use `replaceFirst()`:
 var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
 -----------------------------------------------------------------------
 
-You can use `replaceAllMatched()` to register a function that modifies the
+You can use `replaceAllMapped()` to register a function that modifies the
 matches:
 
 ---------------------------------------------------------
