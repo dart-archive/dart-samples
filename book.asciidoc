@@ -428,10 +428,10 @@ Accessing a surrogate pair member leads to errors, and you should avoid
 properties and methods that expose it:
 
 -------------------------------------------------------------------------------
-print('\uD834'); // Error: '\uD834' is not a valid string.
-print('\uDD1E'); // Error: '\uDD1E' is not a valid string either.
-clef.split()[1]; // Error: accessing half of a surrogate pair.
-print(clef[i];)  // Again, error: accessing half of a surrogate pair.
+print('\uD834');          // Error: '\uD834' is not a valid string.
+print('\uDD1E');          // Error: '\uDD1E' is not a valid string either.
+print(clef.split('')[1]); // Invalid string. Dart Editor prints '?'
+print(clef[0]);           // Invalid string. Dart Editor prints '?'
 -------------------------------------------------------------------------------
 
 When dealing with strings containing extended characters, you should use the
