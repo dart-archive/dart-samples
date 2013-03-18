@@ -6,7 +6,7 @@ import 'package:unittest/unittest.dart';
 void main() {
   group('converting between string characters and numerical codes', () {
     var smileyFace = '\u263A';
-    var clef = '\u{1F3BC}';
+    var clef = '\u{1D11E}';
     
     group('using runes', () {
       test('', () {
@@ -15,8 +15,8 @@ void main() {
         expect(smileyFace.runes.toList(), equals([9786]));
         expect(smileyFace.runes.first.toRadixString(16), equals('263a'));
 
-        expect(clef.runes.toList(), equals([127932]));
-        expect(clef.runes.first.toRadixString(16), equals('1f3bc'));
+        expect(clef.runes.toList(), equals([119070]));
+        expect(clef.runes.first.toRadixString(16), equals('1d11e'));
       });
     });
     
@@ -27,9 +27,9 @@ void main() {
         expect(smileyFace.codeUnits.toList(), equals([9786]));
         expect(smileyFace.codeUnits.first.toRadixString(16), equals('263a'));
 
-        expect(clef.codeUnits.toList(), equals([55356, 57276]));
+        expect(clef.codeUnits.toList(), equals([55348, 56606]));
         expect(clef.codeUnits.map((codeUnit) => codeUnit.toRadixString(16))
-          .toList(), equals(['d83c', 'dfbc']));
+          .toList(), equals(['d834', 'dd1e']));
       });
     });
     
@@ -40,10 +40,10 @@ void main() {
         expect(smileyFace.codeUnitAt(0), equals(9786)); // 9786
         expect(smileyFace.codeUnitAt(0).toRadixString(16), equals('263a'));
         
-        expect(clef.codeUnitAt(0), equals(55356));
-        expect(clef.codeUnitAt(0).toRadixString(16), equals('d83c'));
-        expect(clef.codeUnitAt(1), equals(57276));
-       expect(clef.codeUnitAt(1).toRadixString(16), equals('dfbc'));
+        expect(clef.codeUnitAt(0), equals(55348));
+        expect(clef.codeUnitAt(0).toRadixString(16), equals('d834'));
+        expect(clef.codeUnitAt(1), equals(56606));
+       expect(clef.codeUnitAt(1).toRadixString(16), equals('dd1e'));
       });
     });
  
@@ -61,11 +61,11 @@ void main() {
       });
       
       test('with surrogate pair codeUnits', () {
-        expect(new String.fromCharCodes([55356, 57276]), equals(clef));
+        expect(new String.fromCharCodes([55348, 56606]), equals(clef));
       });
       
       test('with rune', () {
-        expect(new String.fromCharCode(127932), equals(clef));
+        expect(new String.fromCharCode(119070), equals(clef));
       });
     });
     
@@ -73,7 +73,7 @@ void main() {
       test('', () {
         expect(new String.fromCharCode(68), equals('D'));
         expect(new String.fromCharCode(9786), equals(smileyFace));
-        expect(new String.fromCharCode(127932), equals(clef));
+        expect(new String.fromCharCode(119070), equals(clef));
       });
     });
   });

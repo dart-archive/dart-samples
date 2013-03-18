@@ -3,7 +3,7 @@ library changing_string_case_test;
 import 'package:unittest/unittest.dart';
 
 void main() {
-group('changing string case', () {
+  group('changing string case', () {
     var theOneILove = 'I love Lucy!';
 
     test('with toUpperCase()', () {
