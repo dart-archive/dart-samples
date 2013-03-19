@@ -1,0 +1,189 @@
+= Dart Cookbook
+:author: Shailen Tuli
+:encoding: UTF-8
+
+
+== Lists
+
+=== Creating a fixed width or const list
+
+==== Problem
+
+You want to create a list but don't want to allow it's size to be
+changed.
+
+==== Solution
+
+Create a fixed-length list:
+
+-------------------------------------------------------------------
+var fixedList = new List(3); // fixedList can have exactly 3 items.
+-------------------------------------------------------------------
+
+Attempting to change the size of the list generates an error:
+
+-------------------------------------------
+fixedList.add(2);       // UnsupportedError
+fixedList.removeLast(); // UnsupportedError
+fixedList.length = 10;  // UnsupportedError
+-------------------------------------------
+
+You can change the values in the list:
+
+---------------------------------------------
+fixedList[0] = 'red';
+fixedList[1] = 'green';
+fixedList[2] = 'blue';
+print(fixedList); // ['red', 'green', 'blue']
+---------------------------------------------
+
+If you want a fixed-length list _and_ you don't want the contents of the list
+to change, create a `const` list:
+
+------------------------------------------------------------
+const List<String> vowels = const ['A', 'E', 'I', 'O', 'U'];
+
+vowels.add('Y'); // UnsupportedError
+vowels[0] = 'a'; // UnsupportedError
+------------------------------------------------------------
+
+
+=== Creating a list with default fill values
+
+==== Problem
+
+You want to create a list and fill it with default values.
+
+==== Solution
+
+You can fill a fixed-length list with a static value by using the
+`List.filled()` constructor:
+
+-------------------------------------------------------
+var filledList = new List.filled(3, 'X');
+print(filledList.every((item) => item == 'X')); // true
+-------------------------------------------------------
+
+If you want to generate the fill values dynamically, you can call the
+`List.generate()` constructor and pass it a function that generates the fill
+values:
+
+-------------------------------------------------
+var arr = [1, 2, 3];
+List<List<int>> grid = new List.generate(3, (_) {
+  var temp = arr;
+  arr = arr.map((item) => item += 3).toList();
+  return temp;
+});
+-------------------------------------------------
+
+The code above generates a 3 X 3 grid:
+
+-------------------------------------------------
+print(grid); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+-------------------------------------------------
+
+=== Create a new list with the elements of another list
+
+==== Problem
+
+You want to copy the contents of a list into a new list. 
+
+==== Solution
+
+Use the `List.from()` constructor and pass the list you want to copy from as
+an argument:
+
+-------------------------------------------
+var fruit1 = ['orange', 'banana', 'mango'];
+var fruit2 = new List.from(fruit1);
+-------------------------------------------
+
+By default, the new list created will be growable. This is true even if you
+passed a `const` list as an argument to `List.from()`:
+
+-------------------------------------------------------------
+const List<String> vowels1 = const ['A', 'E', 'I', 'O', 'U'];
+var vowels2 = new List.from(vowels1);
+
+vowels2.add('Y');
+print(vowels2); // ['A', 'E', 'I', 'O', 'U', 'Y']
+
+vowels2[0] = 'Y';
+print(vowels2[0]); // 'Y'
+-------------------------------------------------------------
+
+To create a fixed-width list, pass a second `growable` argument to
+`List.from()` with a value of `false`:
+
+----------------------------------------------------------
+const List<String> vowels1 = const ['A', 'E', 'I', 'O', 'U'];
+var vowelsFixed = new List.from(vowels1, growable: false);
+var fruitFixed = new List.from(fruit1, growable: false);
+
+vowelsFixed.add('Y'); // UnsupportedError
+vowelsFixed.add('Y'); // UnsupportedError
+
+vowelsFixed[0] = 'Y';
+print(vowelsFixed[0]); 'Y'
+----------------------------------------------------------
+
+=== Appending items to a list
+
+==== Problem
+
+You want to add items to the end of a list, and want to know the most
+efficient way to do so.
+
+==== Solution
+
+Dart lists are implemented using dynamic arrays. Adding to the end of a list
+is efficient and fast. 
+
+To add one item at a time, use the `add()` method:
+
+-------------------------------------------------------------
+var names = ['Seth', 'Timothy', 'John'];
+names.add('Kathy');
+names.add('Mary');
+print(names); // ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']
+-------------------------------------------------------------
+
+If the items to be added are already in a list, you can add them all at once
+using the `addAll()` method:
+
+-------------------------------------------------------------
+var names = ['Seth', 'Timothy', 'John'];
+names.addAll(['Kathy', 'Mary']);
+print(names); // ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']
+-------------------------------------------------------------
+
+Or, you can increase the `length` property of a list. Doing this allocates
+space for the new items which are initialized to `null`:
+
+--------------------------------------------------------
+print(names); // ['Seth', 'Timothy', 'John', null, null]
+--------------------------------------------------------
+
+You can then assign elements to the positions with `null` values:
+
+----------------------------------------------------------
+var names = ['Seth', 'Timothy', 'John'];
+var moreNames = ['Kathy', 'Mary'];
+      
+var namesLen = names.length;
+names.length += 2; // Create space for 2 more items created.
+      
+for (var i = 0; i < moreNames.length; i++) {
+  names[i + namesLen] = moreNames[i];
+}
+
+print(names); ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']
+----------------------------------------------------------
+
+Manipulating the length property is a useful optimization strategy: you incur
+the cost of allocating memory for the new items just once. On the author's
+MacBook, appending items in this manner works approximately twice as fast
+as using `add()` or `addAll()`.
+
+
