@@ -742,7 +742,7 @@ asciidoc.install(2);
 <h2 id="_strings">Strings</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_concatenating_strings">Concatenating Strings</h3>
+<h3 id="_concatenating_strings">Concatenating strings</h3>
 <div class="sect3">
 <h4 id="_problem">Problem</h4>
 <div class="paragraph"><p>You want to concatenate strings in Dart. You tried using <span class="monospaced">+</span>, but that
@@ -765,7 +765,7 @@ resulted in an error.</p></div>
 'is'
 'fun!'; // 'Dart is fun!'</pre>
 </div></div>
-<div class="paragraph"><p>They also work when using multiline strings:</p></div>
+<div class="paragraph"><p>They also work when using multi-line strings:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var lunch = '''Peanut
@@ -773,8 +773,7 @@ butter'''
 '''and
 jelly'''; // 'Peanut\nbutter and\njelly'</pre>
 </div></div>
-<div class="paragraph"><p>You can concatenate adjacent single line literals with multiline
-strings:</p></div>
+<div class="paragraph"><p>You can concatenate adjacent single-line literals with multi-line strings:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>var funnyGuys = 'Dewey ' 'Cheatem'
@@ -827,7 +826,7 @@ var whatDoILove = 'I love ${favFood.toUpperCase()}'; // 'I love SUSHI'</pre>
 </div>
 <div class="sect3">
 <h4 id="_discussion_2">Discussion</h4>
-<div class="paragraph"><p>An interpolated string, <span class="monospaced">'string ${expression}</span> is equivalent to the
+<div class="paragraph"><p>The interpolated string, <span class="monospaced">'string ${expression}</span> is equivalent to the
 concatenation of the strings <span class="monospaced">string</span> and <span class="monospaced">expression.toString()</span>.
 Consider this code:</p></div>
 <div class="listingblock">
@@ -841,8 +840,8 @@ var seasons = 'The $four seasons'; // 'The 4 seasons'</pre>
 <pre>var seasons = 'The '.concat(4.toString()).concat(' seasons');
 // 'The 4 seasons'</pre>
 </div></div>
-<div class="paragraph"><p>You should consider implementing a <span class="monospaced">toString()</span> method for user-defined
-objects. Here&#8217;s what happens if you don&#8217;t:</p></div>
+<div class="paragraph"><p>You should consider implementing a <span class="monospaced">toString()</span> method for classes that you
+define. Here&#8217;s what happens if you don&#8217;t:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>class Point {
@@ -878,7 +877,7 @@ print('Point: $point'); // 'Point: x: 3, y: 4'</pre>
 <div class="paragraph"><p>Prefix special characters with a <span class="monospaced">\</span>.</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>  print(Wile\nCoyote');
+<pre>  print('Wile\nCoyote');
   // Wile
   // Coyote</pre>
 </div></div>
@@ -1153,8 +1152,8 @@ range, a pair of strings is used to store values in the 0x10000 to 0x10FFFF
 range. These strings only have semantic meaning as a pair. Individually, they
 are invalid UTF-16 strings. The term <em>surrogate pair</em> is often used to
 describe these strings.</p></div>
-<div class="paragraph"><p>The clef glyph <span class="monospaced">'\u{1D11E}'</span> is composed of the <span class="monospaced">'\uD834'</span> and <span class="monospaced">'\uDD1E'</span>
-surrogate pair.</p></div>
+<div class="paragraph"><p>The treble clef glyph <span class="monospaced">'\u{1D11E}'</span> is composed of the <span class="monospaced">'\uD834'</span> and
+<span class="monospaced">'\uDD1E'</span> surrogate pair.</p></div>
 <div class="paragraph"><p>You can get an extended string&#8217;s surrogate pair through its <span class="monospaced">codeUnits</span>
 property:</p></div>
 <div class="listingblock">
@@ -1166,10 +1165,10 @@ property:</p></div>
 properties and methods that expose it:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>print('\uD834'); // Error: '\uD834' is not a valid string.
-print('\uDD1E'); // Error: '\uDD1E' is not a valid string either.
-clef.split()[1]; // Error: accessing half of a surrogate pair.
-print(clef[i];)  // Again, error: accessing half of a surrogate pair.</pre>
+<pre>print('\uD834');          // Error: '\uD834' is not a valid string.
+print('\uDD1E');          // Error: '\uDD1E' is not a valid string either.
+print(clef.split('')[1]); // Invalid string. Dart Editor prints '?'
+print(clef[0]);           // Invalid string. Dart Editor prints '?'</pre>
 </div></div>
 <div class="paragraph"><p>When dealing with strings containing extended characters, you should use the
 <span class="monospaced">runes</span> getter.</p></div>
@@ -1192,7 +1191,7 @@ print(clef.codeUnits.length); // 2</pre>
 <pre>var clef = '\u{1D11E}'; // 𝄞
 var title = '$clef list:'
 print(subject.runes.map((rune) =&gt; new String.fromCharCode(rune)).toList());
-// ['🎼', ' ', 'l', 'i', 's', 't', ':']</pre>
+// ['𝄞', ' ', 'l', 'i', 's', 't', ':']</pre>
 </div></div>
 </div>
 </div>
@@ -1464,7 +1463,7 @@ is not found within a string, and otherwise returns the matching index:</p></div
 </div>
 </div>
 <div class="sect2">
-<h3 id="_finding_matches_of_a_regexp_pattern_in_a_string">Finding matches of a RegExp pattern in a string</h3>
+<h3 id="_finding_matches_of_a_regular_expression">Finding matches of a regular expression</h3>
 <div class="sect3">
 <h4 id="_problem_14">Problem</h4>
 <div class="paragraph"><p>You want to use RegExp to match a pattern in a string, and want to be
@@ -1504,7 +1503,7 @@ print(regExp.stringMatch('I like bagels and lox')); // null</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_substituting_strings_based_on_regexp_matches">Substituting strings based on RegExp matches</h3>
+<h3 id="_substituting_strings_using_regular_expressions">Substituting strings using regular expressions</h3>
 <div class="sect3">
 <h4 id="_problem_15">Problem</h4>
 <div class="paragraph"><p>You want to match substrings within a string and make substitutions
@@ -1524,7 +1523,7 @@ replacements using <span class="monospaced">replaceAll()</span> method:</p></div
 <pre>// Replace the first match of one or more zeros with an empty string.
 var smallNum = '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'</pre>
 </div></div>
-<div class="paragraph"><p>You can use <span class="monospaced">replaceAllMatched()</span> to register a function that modifies the
+<div class="paragraph"><p>You can use <span class="monospaced">replaceAllMapped()</span> to register a function that modifies the
 matches:</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1540,11 +1539,190 @@ print(newString); // 'I like IKE but I ♡ LUCY'</pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_lists">Lists</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_creating_a_fixed_width_or_const_list">Creating a fixed width or const list</h3>
+<div class="sect3">
+<h4 id="_problem_16">Problem</h4>
+<div class="paragraph"><p>You want to create a list but don&#8217;t want anyone to be able to add or remove
+items.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_16">Solution</h4>
+<div class="paragraph"><p>Create a fixed-length list:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var fixedList = new List(3); // fixedList can have exactly 3 items.</pre>
+</div></div>
+<div class="paragraph"><p>Attempting to change the size of the list generates an error:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>fixedList.add(2);       // UnsupportedError
+fixedList.removeLast(); // UnsupportedError
+fixedList.length = 10;  // UnsupportedError</pre>
+</div></div>
+<div class="paragraph"><p>You can change the values in the list:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>fixedList[0] = 'red';
+fixedList[1] = 'green';
+fixedList[2] = 'blue';
+print(fixedList); // ['red', 'green', 'blue']</pre>
+</div></div>
+<div class="paragraph"><p>If you want a fixed-length list <em>and</em> you don&#8217;t want the contents of the list
+to change, create a <span class="monospaced">const</span> list:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>const List&lt;String&gt; vowels = const ['A', 'E', 'I', 'O', 'U'];
+
+vowels.add('Y'); // UnsupportedError
+vowels[0] = 'a'; // UnsupportedError</pre>
+</div></div>
+<div class="paragraph"><p>A <span class="monospaced">const</span> list is a compile time constant. You code will run faster if you use
+a <span class="monospaced">const</span> list.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_a_list_with_default_fill_values">Creating a list with default fill values</h3>
+<div class="sect3">
+<h4 id="_problem_17">Problem</h4>
+<div class="paragraph"><p>You want to create a list and fill it with default values.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_17">Solution</h4>
+<div class="paragraph"><p>You can fill a fixed-length list with a static value by using the
+<span class="monospaced">List.filled()</span> constructor:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var filledList = new List.filled(3, 'X');
+print(filledList.every((item) =&gt; item == 'X')); // true</pre>
+</div></div>
+<div class="paragraph"><p>If you want to generate the fill values dynamically, you can call the
+<span class="monospaced">List.generate()</span> constructor and pass it a function that generates the fill
+values:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var arr = [1, 2, 3];
+List&lt;List&lt;int&gt;&gt; grid = new List.generate(3, (_) {
+  var temp = arr;
+  arr = arr.map((item) =&gt; item += 3).toList();
+  return temp;
+});</pre>
+</div></div>
+<div class="paragraph"><p>The code above generates a 3 X 3 grid:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>print(grid); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_new_list_with_the_elements_of_another_list">Create a new list with the elements of another list</h3>
+<div class="sect3">
+<h4 id="_problem_18">Problem</h4>
+<div class="paragraph"><p>You want to copy the contents of a list into a new list.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_18">Solution</h4>
+<div class="paragraph"><p>Use the <span class="monospaced">List.from()</span> constructor and pass the list you want to copy from as
+an argument:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var fruit1 = ['orange', 'banana', 'mango'];
+var fruit2 = new List.from(fruit1);</pre>
+</div></div>
+<div class="paragraph"><p>By default, the new list created will be growable. This is true even if you
+passed a <span class="monospaced">const</span> list as an argument to <span class="monospaced">List.from()</span>:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>const List&lt;String&gt; vowels1 = const ['A', 'E', 'I', 'O', 'U'];
+var vowels2 = new List.from(vowels1);
+
+vowels2.add('Y');
+print(vowels2); // ['A', 'E', 'I', 'O', 'U', 'Y']
+
+vowels2[0] = 'Y';
+print(vowels2[0]); // 'Y'</pre>
+</div></div>
+<div class="paragraph"><p>To create a fixed-width list, pass a second <span class="monospaced">growable</span> argument to
+<span class="monospaced">List.from()</span> with a value of <span class="monospaced">false</span>:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>const List&lt;String&gt; vowels1 = const ['A', 'E', 'I', 'O', 'U'];
+var vowelsFixed = new List.from(vowels1, growable: false);
+var fruitFixed = new List.from(fruit1, growable: false);
+
+vowelsFixed.add('Y'); // UnsupportedError
+vowelsFixed.add('Y'); // UnsupportedError
+
+vowelsFixed[0] = 'Y';
+print(vowelsFixed[0]); 'Y'</pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_appending_items_to_a_list">Appending items to a list</h3>
+<div class="sect3">
+<h4 id="_problem_19">Problem</h4>
+<div class="paragraph"><p>You want to add items to the end of a list, and want to know the most
+efficient way to do so.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_solution_19">Solution</h4>
+<div class="paragraph"><p>Dart lists are implemented using dynamic arrays. Adding to the end of a list
+is efficient and fast.</p></div>
+<div class="paragraph"><p>To add one item at a time, use the <span class="monospaced">add()</span> method:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var names = ['Seth', 'Timothy', 'John'];
+names.add('Kathy');
+names.add('Mary');
+print(names); // ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']</pre>
+</div></div>
+<div class="paragraph"><p>If the items to be added are already in a list, you can add them all at once
+using the <span class="monospaced">addAll()</span> method:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var names = ['Seth', 'Timothy', 'John'];
+names.addAll(['Kathy', 'Mary']);
+print(names); // ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']</pre>
+</div></div>
+<div class="paragraph"><p>Or, you can increase the <span class="monospaced">length</span> property of a list, incur the cost of
+allocating memory for the new items just once, and then add the new elements:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>var names = ['Seth', 'Timothy', 'John'];
+var moreNames = ['Kathy', 'Mary'];
+
+var namesLen = names.length;
+names.length += 2; // Space for 2 more items created.
+
+for (var i = 0; i &lt; moreNames.length; i++) {
+  names[i + namesLen] = moreNames[i];
+}
+
+print(names); ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']</pre>
+</div></div>
+<div class="paragraph"><p>Increasing the length of a list by <span class="monospaced">n</span> items allocates space for an additional
+<span class="monospaced">n</span> items. The new items are initialized to <span class="monospaced">null</span>:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>print(names); // ['Seth', 'Timothy', 'John', null, null]</pre>
+</div></div>
+<div class="paragraph"><p>Manipulating the length property is a useful optimization strategy: when
+several items have to be appended, it is better to increase the list size just
+once.</p></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-03-17 18:01:10 PDT
+Last updated 2013-03-18 19:18:43 PDT
 </div>
 </div>
 </body>

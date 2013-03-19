@@ -36,7 +36,7 @@ class Point implements Comparable {
 
 void main() {
   group("a fixed-width list", () {
-    var fixed = new List.fixedLength(10, fill: 0);
+    var fixed = new List(10);
 
     test("should not be extensible", () {
       expect(() => fixed.add(2), throwsUnsupportedError);
