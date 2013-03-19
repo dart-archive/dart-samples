@@ -884,7 +884,7 @@ You can fill a fixed-length list with a static value by using the
 var filledList = new List.filled(3, 'X');
 print(filledList.every((item) => item == 'X')); // true
 -------------------------------------------------------
-    
+
 If you want to generate the fill values dynamically, you can call the
 `List.generate()` constructor and pass it a function that generates the fill
 values:
