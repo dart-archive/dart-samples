@@ -183,7 +183,7 @@ print(names); ['Seth', 'Timothy', 'John', 'Kathy', 'Mary']
 
 Manipulating the length property is a useful optimization strategy: you incur
 the cost of allocating memory for the new items just once. On a MacBook,
-appending items in this manner works approximately twice as fast as using
+appending items in this manner work approximately twice as fast as using
 `add()` or `addAll()`.
 
 
