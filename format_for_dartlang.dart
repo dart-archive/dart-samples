@@ -68,18 +68,18 @@ String generateTOC() {
 }
 
 
-/// Converts asciidoc code delimiters ('-------') to <pre> tags.
+/// Converts asciidoc code delimiters ('-------') to prettify tags.
 void generatePreTags() {
   if (!_headersConverted) {
     throw new StateError('Error inside generatePreTags: $stateErrorMessage');
   }
   var regExp = new RegExp('\n\n-+\n');
   var matches = regExp.allMatches(content);
-  content = content.replaceAll(regExp, '\n\n<pre class="programlisting">\n');
+  content = content.replaceAll(regExp, '\n\n{% prettify dart %}\n');
   
   regExp = new RegExp('\n-+\n\n');
   matches = regExp.allMatches(content); 
-  content = content.replaceAll(regExp, '\n</pre>\n\n');
+  content = content.replaceAll(regExp, '\n{% endprettify %}\n\n');
 }
 
 
@@ -92,13 +92,13 @@ void writeToOutputFile(File outFile, preface, toc) {
 
 
 void main() {  
+  var outFileName = 'index.markdown';
   var args = new Options().arguments;
-  if (args.length != 1) {
-    print("Usage: format_for_dartlang.dart newfile");
-    exit(1);
+  if (args.length > 0) {
+    outFileName = args[0];
   }
   
-  var outFile = new File(args[0]);
+  var outFile = new File(outFileName);
   var sourceFile = 'book.asciidoc';
   var file = new File(sourceFile);
  
