@@ -22,18 +22,9 @@ To isolate a test, change that test's `test()` call to `solo_test()`. Only the
 ------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
-// Returns the quotient and remainder of dividing two numbers. Second number
-// canot be 0.
-List<int> divmod(x, y) {
-  if (y == 0) {
-    throw new ArgumentError('second arg cannot be 0');
-  }
-  return [(x ~/ y), (x % y)];
-}
-
 void main() {
-  test('with y == 0', ()  => expect(() => divmod(22, 0), throwsArgumentError));
-  solo_test('with y != 0', ()  => expect(divmod(9, 2), equals([4, 1])));
+  test('with y == 0', ()  => ... );
+  solo_test('with y != 0', ()  => ... );
 }
 
 Program output:
@@ -49,9 +40,8 @@ thrown. Only the first `solo_test()` will run:
 
 ------------------------------------------------------------------------------
 void main() {
-  solo_test('with y == 0', ()  => expect(() => divmod(22, 0),
-      throwsArgumentError));
-  solo_test('with y != 0', ()  => expect(divmod(9, 2), equals([4, 1])));
+  solo_test('with y == 0', ()  => ... );
+  solo_test('with y != 0', ()  => ... );
 }
 
 Program output:
@@ -70,7 +60,7 @@ Program output:
 You want to run just a subset of all your tests. Maybe you've divided up
 your tests carefully using `group()` and want to run the tests for one or more
 group. Or perhaps you've been carefully placing certain keywords in your test
-descriptions, and want to run only tests who desciption contains a particluar
+descriptions, and want to run only tests whose desciption contains a particluar
 keyword.
 
 ==== Solution
@@ -139,13 +129,13 @@ void main() {
   ArgResults results = argParser.parse(options.arguments);
   List<String> args = results.rest;
 
-  test('one test',     () => expect(1 + 0, equals(1))); 
-  test('another test', () => expect(1 + 1, equals(2)));
-  test('and another',  () => expect(1 + 2, equals(3)));
+  test('one test', () => ... ); 
+  test('crucial test', () => ... );
+  test('another crucial test', =>  ...);
 
   group('case change', () {
-    test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
-    test('to lower', () => expect('THAT'.toLowerCase(), equals('that')));
+    test('to upper', () => ... );
+    test('to lower', () => ... );
   });
 
   if (!args.isEmpty) {
@@ -161,27 +151,27 @@ When the tests are run without any additional arguments, all 5 tests run:
 $ dart simple_test.dart
 
 Program Output:
-   unittest-suite-wait-for-done
-   PASS: one test
-   PASS: another test
-   PASS: and another
-   PASS: case change to upper
-   PASS: case change to lower
+  unittest-suite-wait-for-done
+  PASS: a test
+  PASS: crucial test
+  PASS: another crucial test
+  PASS: case change to upper
+  PASS: case change to lower
 
-   All 5 tests passed.
-   unittest-suite-success
+  All 5 tests passed.
+  unittest-suite-success
 ------------------------------------------------------------------------------
 
-If 'another' is passed as an argument to `filterTests()`, only tests with
-'another' in the description run:
+If 'crucial' is passed as an argument to `filterTests()`, only tests with
+'crucial' in the description run:
 
 ------------------------------------------------------------------------------
 $ dart simple_test.dart another
 
 Program Output:
   unittest-suite-wait-for-done
-  PASS: another test
-  PASS: and another
+  PASS: crucial test
+  PASS: another crucial test
 
   All 2 tests passed.
   unittest-suite-success

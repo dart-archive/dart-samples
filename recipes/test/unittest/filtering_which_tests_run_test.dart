@@ -20,9 +20,9 @@ void main() {
   ArgResults results = argParser.parse(options.arguments);
   List<String> args = results.rest;
 
-  test('one test',     () => expect(1 + 0, equals(1))); 
-  test('another test', () => expect(1 + 1, equals(2)));
-  test('and another',  () => expect(1 + 2, equals(3)));
+  test('a test',     () => expect(1 + 0, equals(1))); 
+  test('crucial test', () => expect(1 + 1, equals(2)));
+  test('another crucial test',  () => expect(1 + 2, equals(3)));
 
   group('case change', () {
     test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
@@ -36,9 +36,9 @@ void main() {
     
 // Output when no args are passed:
 //    unittest-suite-wait-for-done
-//    PASS: one test
-//    PASS: another test
-//    PASS: and another
+//    PASS: a test
+//    PASS: crucial test
+//    PASS: another crucial test
 //    PASS: case change to upper
 //    PASS: case change to lower
 //
@@ -54,10 +54,10 @@ void main() {
 //    unittest-suite-success
     
     
-// with 'another'
+// with 'crucial'
 //    unittest-suite-wait-for-done
-//    PASS: another test
-//    PASS: and another
+//    PASS: crucial test
+//    PASS: another crucial test
 //
 //    All 2 tests passed.
 //    unittest-suite-success
