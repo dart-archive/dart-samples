@@ -1,0 +1,63 @@
+= Dart Cookbook
+:author: Shailen Tuli
+:encoding: UTF-8
+
+== Testing
+
+
+=== Run only the test you are working on with solo_test()
+
+==== Problem
+
+You've been good about writing tests, but don't want to run just the test you
+are working on, not the whole test suite.
+
+==== Solution
+
+The Dart unittest library provides a mechanism to quickly run just one unit
+test. This is useful if you have a failing test that you want to explore in
+the debugger, and you want to remove the distraction of other tests. To
+isolate a test, change the name of the call for that test from test() to
+solo_test(). If there is one solo_test() call then only that test will be run:
+
+
+If you mistakenly have more than one solo_test() then an exception will be
+thrown:
+
+
+
+
+==== Discussion
+
+
+
+=== Filter which tests are run
+
+==== Problem
+
+==== Solution
+
+==== Discussion
+
+
+
+=== Configuring test output
+
+==== Problem
+
+==== Solution
+
+==== Discussion
+
+
+
+=== 
+
+==== Problem
+
+==== Solution
+
+==== Discussion
+
+
+
