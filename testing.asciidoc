@@ -352,3 +352,96 @@ void main() {
 }
 ------------------------------------------------------------------------------
 
+=== Testing synchronous exceptions
+
+==== Problem
+
+You want to test exceptions in your code. Maybe you just want to know if some
+code returns normally, or if it throws. Sometimes you want to test that a
+specific error is raised, and sometimes you want to test that the error message
+is what you intended. What support does the Unittest library have for testing
+exceptions?
+
+==== Solution
+
+To demonstrate exception testing, we'll define a `range()` function that
+generates a list of numbers in the range defined by its two arguments, and
+throws if the first argument is greater or equal to the second
+one:
+
+------------------------------------------------------------------------------
+List<int> range(start, stop) {
+    if (start >= stop) {
+      throw new ArgumentError("arg1 must be less than arg2");
+    }
+    
+    var list = new List<int>();
+    for (var i = start; i < stop; i++) {
+      list.add(i);
+    }
+    return list;
+}
+------------------------------------------------------------------------------
+
+To test whether a some code throws, use the `throws` matcher: 
+
+------------------------------------------------------------------------------
+expect(() => range(10, 5), throws);
+------------------------------------------------------------------------------
+
+To test that your runs without generating an exception, use the
+`returnsNormally` matcher:
+
+------------------------------------------------------------------------------
+expect(() => range(5, 10), returnsNormally);
+------------------------------------------------------------------------------
+  
+You can test for a specific error:
+
+------------------------------------------------------------------------------
+expect(() => range(10, 5), throwsArgumentError);
+------------------------------------------------------------------------------
+
+The Unittest library provides matchers for commonly occuring exceptions and
+errors:
+
+------------------------------------------------------------------------------
+throwsException
+throwsFormatException
+throwsArgumentError
+throwsRangeError
+throwsNoSuchMethodError
+throwsUnimplementedError
+throwsStateError
+throwsUnsupportedError
+------------------------------------------------------------------------------
+
+You can also use `throwsA` with a matcher argument to test the exception type:
+  
+------------------------------------------------------------------------------
+expect(() => range(5, 2), throwsA(new isInstanceOf<ArgumentError>()));
+------------------------------------------------------------------------------
+
+Use `throwsA` to test a custom Exception:
+
+------------------------------------------------------------------------------
+expect(() => throw new TooMuchCoffeeException(), 
+    throwsA(new isInstanceOf<TooMuchCoffeeException>()));
+------------------------------------------------------------------------------
+  
+To test the type of an exception, and the error message, do the following:
+
+------------------------------------------------------------------------------
+expect(() => range(5, 3), throwsA(predicate((e) => (e is ArgumentError &&
+    e.message == 'arg1 must be less than arg2'))));
+------------------------------------------------------------------------------
+
+Here is another way to test the type and the error message:
+  
+------------------------------------------------------------------------------
+throwsA(allOf(isArgumentError,
+  predicate((e) => e.message == 'arg1 must be less than arg2'))));
+------------------------------------------------------------------------------
+
+
+
