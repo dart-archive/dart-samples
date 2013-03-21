@@ -243,7 +243,7 @@ void main() {
     });
     
     test('[](index)', () {
-      Point point = new Point(3, 4);
+      Point point = new Point(3, 4); // REPETITIVE.
       expect(point[0], equals(3));
       expect(point[1], equals(4));
     });
@@ -282,46 +282,36 @@ Note that `point` is instantiated _before_ `setUp()`, and initialized within
 Because `setUp()` simply creates a new Point before every test in the previous
 example, there was no need for an explicit `tearDown()`.
 
-Testing the `createFiles()` function defined below does need a `tearDown()`. 
-
-Calling `createFiles()` writes files into a directory. The first argument to
-`createFiles()` is a Map where the keys store filenames and the values store
-the corresponding file content. The second argument is the target directory.
+Testing the `createFile()` function defined below does need a `tearDown()`:
 
 --------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
 import 'dart:io';
 
-List<String> createFiles(Map data, Directory directory) {
-  var paths = [];
+Path createFile(fileName, fileContent, directory) {
   if  (!directory.existsSync()) {
     throw new ArgumentError('directory does not exist');
   }
-  
-  var fileList = data.keys;
-    
-  fileList.forEach((fileName) {
-    var path = new Path(directory.path).join(new Path(fileName));
-    paths.add(path);
-    new File(path.toString()).writeAsStringSync(data[fileName]);
-  });
-  return paths;
+  var path = new Path(directory.path).join(new Path(fileName));
+  new File(path.toString()).writeAsStringSync(fileContent);
+  return path;
 }
 --------------------------------------------------------------------------------
 
-The tests for `createFiles()` create files and directories that we have no
-reason to retain. After a test concludes, these files and directories should
+Testing `createFiles()` creates a file and a  directory that we have no
+reason to retain. After a test concludes, the file and directory should
 be removed. We place the cleanup code within `tearDown()`.
 
 --------------------------------------------------------------------------------
 void main() {
   group('test createFiles()', () {
     var tempDir;
-    var data = {'a.txt' : 'Contents of a.txt',
-                'b.txt' : 'Contents of b.txt'};
+    var fileName = 'a.txt';
+    var fileContent = 'Content of a.txt';
+    
     setUp(() {
-      tempDir = new Directory('').createTempSync();
+       tempDir = new Directory('').createTempSync();
     });
 
     tearDown(() {
@@ -330,22 +320,16 @@ void main() {
       }
     });
 
-    test('joins paths correctly', () {
-      var paths = createFiles(data, tempDir);
-      expect(new Path(tempDir.path).join(new Path('a.txt')).toString(), 
-          equals(paths.first.toString()));
-    });
-    
-    test('creates titles', () {
-      var paths = createFiles(data, tempDir);  
-      var content = new File.fromPath(paths.first).readAsStringSync();
-      expect(content, equals('Contents of a.txt'));
+    test('creates the correct path', () {
+      var path = createFile(fileName, fileContent, tempDir);
+      expect(new Path(tempDir.path).join(new Path(fileName)).toString(), 
+          equals(path.toString()));
     });
     
     test('throws with a non-existent directory', () {
       tempDir.deleteSync(recursive: true);
       expect(() {
-        var paths = createFiles(data, tempDir);
+        var paths = createFile(fileName, fileContent, tempDir);
       }, throwsArgumentError);
     });
   });
@@ -356,21 +340,20 @@ void main() {
 
 ==== Problem
 
-You want to test exceptions in your code. Maybe you just want to know if some
-code returns normally, or if it throws. Sometimes you want to test that a
-specific error is raised, and sometimes you want to test that the error message
-is what you intended. What support does the Unittest library have for testing
-exceptions?
+You want to test exceptions in your code. You want to know if some code
+returns normally, or if it throws. Or you want to test that a specific error is
+raised, or that the error message is correct. What support does the Unittest
+library have for testing exceptions?
 
 ==== Solution
 
-To test whether a some code throws, use the `throws` matcher: 
+To test whether code throws, use the `throws` matcher: 
 
 --------------------------------------------------------------------------------
 expect(() => 10 ~/ 0, throws);
 --------------------------------------------------------------------------------
 
-To test that your runs without generating an exception, use the
+To test that code runs without generating an exception, use the
 `returnsNormally` matcher:
 
 --------------------------------------------------------------------------------
@@ -412,7 +395,7 @@ expect(() => throw new TooMuchCoffeeException(),
   throwsA(predicate((e) => e is TooMuchCoffeeException)));
 --------------------------------------------------------------------------------
   
-To test the error message, do the following:
+You can test the error message:
 
 --------------------------------------------------------------------------------
 expect(() => throw new ArgumentError('bad argument'), 

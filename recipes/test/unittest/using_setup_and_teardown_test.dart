@@ -2,20 +2,13 @@ import 'package:unittest/unittest.dart';
 
 import 'dart:io';
 
-List<String> createFiles(Map data, Directory directory) {
-  var paths = [];
+Path createFile(fileName, fileContent, directory) {
   if  (!directory.existsSync()) {
     throw new ArgumentError('directory does not exist');
   }
-  
-  var fileList = data.keys;
-    
-  fileList.forEach((fileName) {
-    var path = new Path(directory.path).join(new Path(fileName));
-    paths.add(path);
-    new File(path.toString()).writeAsStringSync(data[fileName]);
-  });
-  return paths;
+  var path = new Path(directory.path).join(new Path(fileName));
+  new File(path.toString()).writeAsStringSync(fileContent);
+  return path;
 }
 
 class Point {
@@ -66,10 +59,11 @@ void main() {
   
   group('test createFiles()', () {
     var tempDir;
-    var data = {'a.txt' : 'Contents of a.txt',
-                'b.txt' : 'Contents of b.txt'};
+    var fileName = 'a.txt';
+    var fileContent = 'Content of a.txt';
+    
     setUp(() {
-      tempDir = new Directory('').createTempSync();
+       tempDir = new Directory('').createTempSync();
     });
 
     tearDown(() {
@@ -79,21 +73,15 @@ void main() {
     });
 
     test('creates the correct path', () {
-      var paths = createFiles(data, tempDir);
-      expect(new Path(tempDir.path).join(new Path('a.txt')).toString(), 
-          equals(paths.first.toString()));
-    });
-    
-    test('writes file content', () {
-      var paths = createFiles(data, tempDir);  
-      var content = new File.fromPath(paths.first).readAsStringSync();
-      expect(content, equals('Contents of a.txt'));
+      var path = createFile(fileName, fileContent, tempDir);
+      expect(new Path(tempDir.path).join(new Path(fileName)).toString(), 
+          equals(path.toString()));
     });
     
     test('throws with a non-existent directory', () {
       tempDir.deleteSync(recursive: true);
       expect(() {
-        var paths = createFiles(data, tempDir);
+        var paths = createFile(fileName, fileContent, tempDir);
       }, throwsArgumentError);
     });
   });
