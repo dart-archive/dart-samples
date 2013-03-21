@@ -1,50 +1,41 @@
 import 'package:unittest/unittest.dart';
 
-List<int> range(start, stop) {
-    if (start >= stop) {
-      throw new ArgumentError("arg1 must be less than arg2");
-    }
-    
-    var list = new List<int>();
-    for (var i = start; i < stop; i++) {
-      list.add(i);
-    }
-    return list;
-}
+
 
 class TooMuchCoffeeException implements Exception {}
 
-void main() {   
+void main() {
   test('an exception is thrown', () {
-    expect(() => range(10, 5), throws);
-  });
-  
-  test('an ArgumentError is thrown', () {
-    expect(() => range(10, 5), throwsArgumentError);
-  });
-  
-  test('getting the type of the exception', () {
-    expect(() => range(5, 2), throwsA(new isInstanceOf<ArgumentError>()));
-  });
-  
-  test('getting the type of a custom exception', () {
-    expect(() => throw new TooMuchCoffeeException(), 
-        throwsA(new isInstanceOf<TooMuchCoffeeException>()));
-  });
-  
-  test('testing the type and message of an exception', () {
-    expect(() => range(5, 3), 
-        throwsA(predicate((e) => (e is ArgumentError &&
-            e.message == 'arg1 must be less than arg2'))));
-  });
-  
-  test('testing the type and message of an exception', () {
-    expect(() => range(5, 3), 
-      throwsA(allOf(isArgumentError,
-          predicate((e) => e.message == 'arg1 must be less than arg2'))));
+    expect(() => 10 ~/ 0, throws);
   });
   
   test('no exception is thrown', () {
-    expect(() => range(5, 10), returnsNormally);
+    expect(() => 10 ~/ 1, returnsNormally);
+  });
+  
+  test('testing the type using a matcher', () {
+    expect(() => throw new StateError('functions called in the wrong order'), 
+        throwsStateError);
+  });
+  
+  test('testing the type using a predicate', () {
+    expect(() => 10 ~/ 0, 
+        throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
+  });
+  
+  test('testing the type of a *custom* exception', () {
+    expect(() => throw new TooMuchCoffeeException(), 
+        throwsA(predicate((e) => e is TooMuchCoffeeException)));
+  });
+  
+  test('testing the error message', () {
+    expect(() => throw new ArgumentError('bad argument'), 
+        throwsA(predicate((e) => e.message == 'bad argument')));
+  });
+  
+  test('testing the error type and the error message', () {
+    expect(() => throw new RangeError('out of range'), 
+        throwsA(predicate((e) => (e is RangeError &&
+            e.message == 'out of range'))));
   });
 }

@@ -2,8 +2,7 @@ import 'package:unittest/unittest.dart';
 import 'dart:math';
 
 class Point {
-  num x;
-  num y;
+  num x, y;
   
   Point(this.x, this.y);
   
@@ -19,7 +18,7 @@ void main() {
   print(2 / 3);
   
   test('distance', () {
-    expect(p1.distanceTo(p2), closeTo(7.28, .0002)); // 7.280109889280518
+    expect(p1.distanceTo(p2), closeTo(7.28, .001)); // 7.280109889280518
   });
 }
 

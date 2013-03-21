@@ -19,7 +19,7 @@ want to deal with the noise from the other tests.
 To isolate a test, change that test's `test()` call to `solo_test()`. Only the
 `solo_test()` will run:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
 void main() {
@@ -33,12 +33,12 @@ Program output:
   
   All 1 tests passed.
   unittest-suite-success
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 If you mistakenly have more than one solo_test() then an exception will be
 thrown. Only the first `solo_test()` will run:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 void main() {
   solo_test('with y == 0', ()  => ... );
   solo_test('with y != 0', ()  => ... );
@@ -51,7 +51,7 @@ Program output:
   
   All 1 tests passed.
   unittest-suite-success
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 === Filtering which tests are run using filterTests()
 
@@ -73,7 +73,7 @@ Before you use `filterTests()`, you need to disable the automatic running of
 tests. Do this by creating and initialize a minimal custom configuration:
 
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 import "package:unittest/unittest.dart";
 import "package:args/args.dart";
 
@@ -85,12 +85,12 @@ void useFilteredTests() {
   configure(new FilterTests());
   ensureInitialized(); // Initializes the test library.  
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Then, you can define tests, call `filteredTests()`, and run your tests using
 `runTests()`:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 void main() {
   useFilteredTests();
   
@@ -99,14 +99,14 @@ void main() {
   filterTests(someStringOrRegExp);
   runTests();
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Here is a complete example that demonstrates how `filterTests()` is used
 to run just a subset of your tests. Run this code from the command line, and
 provide an extra argument that gets passed to `filterTests()` (usage shown
 below the code):
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'dart:io';
@@ -143,11 +143,11 @@ void main() {
   }
   runTests();
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 When the tests are run without any additional arguments, all 5 tests run:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 $ dart simple_test.dart
 
 Program Output:
@@ -160,12 +160,12 @@ Program Output:
 
   All 5 tests passed.
   unittest-suite-success
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 If 'crucial' is passed as an argument to `filterTests()`, only tests with
 'crucial' in the description run:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 $ dart simple_test.dart another
 
 Program Output:
@@ -180,7 +180,7 @@ Program Output:
 If 'case' is passed as an argument to `filterTests()`, only tests within the
 'case change' group run:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 $ dart simple_test.dart case
 
 Program Output:
@@ -190,7 +190,7 @@ Program Output:
   
   All 2 tests passed.
   unittest-suite-success
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 
 === Using setUp() and tearDown() in your tests
@@ -211,7 +211,7 @@ after each test in the group.
 
 Consider the following code for defining a Point:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
 class Point {
@@ -230,11 +230,11 @@ class Point {
 
   ...
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 You want to test each method, and need a Point object in each test:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 void main() {
   group('test Point', () {
     test('toString', () {
@@ -250,11 +250,11 @@ void main() {
   });
  }
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 See all the repetition? Move the Point initialization to a `setUp()`:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 void main() {
   group('test Point with setUp()', () {
     Point point;
@@ -272,7 +272,7 @@ void main() {
     });
   });
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Note that `point` is instantiated _before_ `setUp()`, and initialized within
 `setUp()`. This way, `point` is available to each test.
@@ -288,7 +288,7 @@ Calling `createFiles()` writes files into a directory. The first argument to
 `createFiles()` is a Map where the keys store filenames and the values store
 the corresponding file content. The second argument is the target directory.
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
 import 'dart:io';
@@ -308,13 +308,13 @@ List<String> createFiles(Map data, Directory directory) {
   });
   return paths;
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 The tests for `createFiles()` create files and directories that we have no
 reason to retain. After a test concludes, these files and directories should
 be removed. We place the cleanup code within `tearDown()`.
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 void main() {
   group('test createFiles()', () {
     var tempDir;
@@ -350,7 +350,7 @@ void main() {
     });
   });
 }
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 === Testing synchronous exceptions
 
@@ -364,48 +364,30 @@ exceptions?
 
 ==== Solution
 
-To demonstrate exception testing, we'll define a `range()` function that
-generates a list of numbers in the range defined by its two arguments, and
-throws if the first argument is greater or equal to the second
-one:
-
-------------------------------------------------------------------------------
-List<int> range(start, stop) {
-    if (start >= stop) {
-      throw new ArgumentError("arg1 must be less than arg2");
-    }
-    
-    var list = new List<int>();
-    for (var i = start; i < stop; i++) {
-      list.add(i);
-    }
-    return list;
-}
-------------------------------------------------------------------------------
-
 To test whether a some code throws, use the `throws` matcher: 
 
-------------------------------------------------------------------------------
-expect(() => range(10, 5), throws);
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => 10 ~/ 0, throws);
+--------------------------------------------------------------------------------
 
 To test that your runs without generating an exception, use the
 `returnsNormally` matcher:
 
-------------------------------------------------------------------------------
-expect(() => range(5, 10), returnsNormally);
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => 10 ~/ 1, returnsNormally);
+--------------------------------------------------------------------------------
   
-You can test for a specific error:
+You can test the error type:
 
-------------------------------------------------------------------------------
-expect(() => range(10, 5), throwsArgumentError);
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => throw new StateError('functions called in the wrong order'), 
+        throwsStateError);
+--------------------------------------------------------------------------------
 
 The Unittest library provides matchers for commonly occuring exceptions and
 errors:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 throwsException
 throwsFormatException
 throwsArgumentError
@@ -414,34 +396,35 @@ throwsNoSuchMethodError
 throwsUnimplementedError
 throwsStateError
 throwsUnsupportedError
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-You can also use `throwsA` with a matcher argument to test the exception type:
+You can also use `throwsA` with a predicate matcher to test the exception type:
   
-------------------------------------------------------------------------------
-expect(() => range(5, 2), throwsA(new isInstanceOf<ArgumentError>()));
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => 10 ~/ 0, 
+  throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
+--------------------------------------------------------------------------------
 
 Use `throwsA` to test a custom Exception:
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 expect(() => throw new TooMuchCoffeeException(), 
-    throwsA(new isInstanceOf<TooMuchCoffeeException>()));
-------------------------------------------------------------------------------
+  throwsA(predicate((e) => e is TooMuchCoffeeException)));
+--------------------------------------------------------------------------------
   
-To test the type of an exception, and the error message, do the following:
+To test the error message, do the following:
 
-------------------------------------------------------------------------------
-expect(() => range(5, 3), throwsA(predicate((e) => (e is ArgumentError &&
-    e.message == 'arg1 must be less than arg2'))));
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => throw new ArgumentError('bad argument'), 
+  throwsA(predicate((e) => e.message == 'bad argument')));
+--------------------------------------------------------------------------------
 
-Here is another way to test the type and the error message:
+You can test the error type and the error message together:
   
-------------------------------------------------------------------------------
-throwsA(allOf(isArgumentError,
-  predicate((e) => e.message == 'arg1 must be less than arg2'))));
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+expect(() => throw new RangeError('out of range'), 
+  throwsA(predicate((e) => (e is RangeError && e.message == 'out of range'))));
+--------------------------------------------------------------------------------
 
 
 
