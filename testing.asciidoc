@@ -9,55 +9,356 @@
 
 ==== Problem
 
-You've been good about writing tests, but don't want to run just the test you
-are working on, not the whole test suite.
+You want to run just a single test.  Maybe you want to run the test you are
+currently working on and want to make that pass before running all your tests.
+Or, maybe you want to explore a single failing test in the debugger, and don't
+want to deal with the noise from the other tests. 
 
 ==== Solution
 
-The Dart unittest library provides a mechanism to quickly run just one unit
-test. This is useful if you have a failing test that you want to explore in
-the debugger, and you want to remove the distraction of other tests. To
-isolate a test, change the name of the call for that test from test() to
-solo_test(). If there is one solo_test() call then only that test will be run:
+To isolate a test, change that test's `test()` call to `solo_test()`. Only the
+`solo_test()` will run:
 
+------------------------------------------------------------------------------
+import 'package:unittest/unittest.dart';
+
+// Returns the quotient and remainder of dividing two numbers. Second number
+// canot be 0.
+List<int> divmod(x, y) {
+  if (y == 0) {
+    throw new ArgumentError('second arg cannot be 0');
+  }
+  return [(x ~/ y), (x % y)];
+}
+
+void main() {
+  test('with y == 0', ()  => expect(() => divmod(22, 0), throwsArgumentError));
+  solo_test('with y != 0', ()  => expect(divmod(9, 2), equals([4, 1])));
+}
+
+Program output:
+  unittest-suite-wait-for-done
+  PASS: with y != 0
+  
+  All 1 tests passed.
+  unittest-suite-success
+------------------------------------------------------------------------------
 
 If you mistakenly have more than one solo_test() then an exception will be
-thrown:
+thrown. Only the first `solo_test()` will run:
 
+------------------------------------------------------------------------------
+void main() {
+  solo_test('with y == 0', ()  => expect(() => divmod(22, 0),
+      throwsArgumentError));
+  solo_test('with y != 0', ()  => expect(divmod(9, 2), equals([4, 1])));
+}
 
+Program output:
+  unittest-suite-wait-for-done
+  Exception: Only one test can be soloed right now.
+  PASS: with y == 0
+  
+  All 1 tests passed.
+  unittest-suite-success
+------------------------------------------------------------------------------
 
-
-==== Discussion
-
-
-
-=== Filter which tests are run
-
-==== Problem
-
-==== Solution
-
-==== Discussion
-
-
-
-=== Configuring test output
-
-==== Problem
-
-==== Solution
-
-==== Discussion
-
-
-
-=== 
+=== Filtering which tests are run using filterTests()
 
 ==== Problem
 
+You want to run just a subset of all your tests. Maybe you've divided up
+your tests carefully using `group()` and want to run the tests for one or more
+group. Or perhaps you've been carefully placing certain keywords in your test
+descriptions, and want to run only tests who desciption contains a particluar
+keyword.
+
 ==== Solution
 
-==== Discussion
+Use `filterTests()`. This function takes a String or RegExp argument and
+matches it against each test description.  If the description matches, the
+test runs, otherwise, it doesn’t.
+
+Before you use `filterTests()`, you need to disable the automatic running of
+tests. Do this by creating and initialize a minimal custom configuration:
 
 
+------------------------------------------------------------------------------
+import "package:unittest/unittest.dart";
+import "package:args/args.dart";
+
+class FilterTests extends Configuration {
+  get autoStart => false;
+}
+
+void useFilteredTests() {
+  configure(new FilterTests());
+  ensureInitialized(); // Initializes the test library.  
+}
+------------------------------------------------------------------------------
+
+Then, you can define tests, call `filteredTests()`, and run your tests using
+`runTests()`:
+
+------------------------------------------------------------------------------
+void main() {
+  useFilteredTests();
+  
+  // your tests go here
+
+  filterTests(someStringOrRegExp);
+  runTests();
+}
+------------------------------------------------------------------------------
+
+Here is a complete example that demonstrates how `filterTests()` is used
+to run just a subset of your tests. Run this code from the command line, and
+provide an extra argument that gets passed to `filterTests()` (usage shown
+below the code):
+
+------------------------------------------------------------------------------
+import 'package:unittest/unittest.dart';
+import 'package:args/args.dart';
+import 'dart:io';
+
+class FilterTests extends Configuration {
+  get autoStart => false;
+}
+
+void useFilteredTests() {
+  configure(new FilterTests());
+  ensureInitialized();  
+}
+
+void main() {
+  useFilteredTests();
+  
+  // Get the args from the command line.
+  ArgParser argParser = new ArgParser();
+  Options options = new Options();
+  ArgResults results = argParser.parse(options.arguments);
+  List<String> args = results.rest;
+
+  test('one test',     () => expect(1 + 0, equals(1))); 
+  test('another test', () => expect(1 + 1, equals(2)));
+  test('and another',  () => expect(1 + 2, equals(3)));
+
+  group('case change', () {
+    test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
+    test('to lower', () => expect('THAT'.toLowerCase(), equals('that')));
+  });
+
+  if (!args.isEmpty) {
+    filterTests(args[0]);
+  }
+  runTests();
+}
+------------------------------------------------------------------------------
+
+When the tests are run without any additional arguments, all 5 tests run:
+
+------------------------------------------------------------------------------
+$ dart simple_test.dart
+
+Program Output:
+   unittest-suite-wait-for-done
+   PASS: one test
+   PASS: another test
+   PASS: and another
+   PASS: case change to upper
+   PASS: case change to lower
+
+   All 5 tests passed.
+   unittest-suite-success
+------------------------------------------------------------------------------
+
+If 'another' is passed as an argument to `filterTests()`, only tests with
+'another' in the description run:
+
+------------------------------------------------------------------------------
+$ dart simple_test.dart another
+
+Program Output:
+  unittest-suite-wait-for-done
+  PASS: another test
+  PASS: and another
+
+  All 2 tests passed.
+  unittest-suite-success
+------------------------------------------------------------------------------
+
+If 'case' is passed as an argument to `filterTests()`, only tests within the
+'case change' group run:
+
+------------------------------------------------------------------------------
+$ dart simple_test.dart case
+
+Program Output:
+  unittest-suite-wait-for-done
+  PASS: case change to upper
+  PASS: case change to lower
+  
+  All 2 tests passed.
+  unittest-suite-success
+------------------------------------------------------------------------------
+
+
+=== Using setUp() and tearDown() in your tests
+
+==== Problem
+
+You want initialization code to run before each test, and cleanup code to run
+after each test, but want to avoid code duplication.
+
+==== Solution
+
+Within each `group()`, call `setUp()` for initialization and `tearDown()` for
+cleanup. The function passed as an argument to `setUp()` runs before each
+test, and the function passed as an argument to `tearDown()` runs
+after each test in the group.
+
+===== setUp() example
+
+Consider the following code for defining a Point:
+
+------------------------------------------------------------------------------
+import 'package:unittest/unittest.dart';
+
+class Point {
+  num x, y;
+  
+  Point(this.x, this.y);
+  
+  String toString() => 'Point: x = $x, y = $y';
+  
+  num operator [](index) {
+    if (index < 0 || index > 1) {
+       throw new ArgumentError('only 0 and 1 are valid indices'); 
+    }
+    return (index == 0) ? x : y;
+  }
+
+  ...
+}
+------------------------------------------------------------------------------
+
+You want to test each method, and need a Point object in each test:
+
+------------------------------------------------------------------------------
+void main() {
+  group('test Point', () {
+    test('toString', () {
+      Point point = new Point(3, 4);
+      expect(point.toString(), equals('Point: x = 3, y = 4'));
+    });
+    
+    test('[](index)', () {
+      Point point = new Point(3, 4);
+      expect(point[0], equals(3));
+      expect(point[1], equals(4));
+    });
+  });
+ }
+}
+------------------------------------------------------------------------------
+
+See all the repetition? Move the Point initialization to a `setUp()`:
+
+------------------------------------------------------------------------------
+void main() {
+  group('test Point with setUp()', () {
+    Point point;
+    setUp(() {  
+      point = new Point(3, 4);
+    });
+
+    test('toString', () {
+      expect(point.toString(), equals('Point: x = 3, y = 4'));
+    });
+    
+    test('[](index)', () {
+      expect(point[0], equals(3));
+      expect(point[1], equals(4));
+    });
+  });
+}
+------------------------------------------------------------------------------
+
+Note that `point` is instantiated _before_ `setUp()`, and initialized within
+`setUp()`. This way, `point` is available to each test.
+
+===== tearDown() example
+
+Because `setUp()` simply creates a new Point before every test in the previous
+example, there was no need for an explicit `tearDown()`.
+
+Testing the `createFiles()` function defined below does need a `tearDown()`. 
+
+Calling `createFiles()` writes files into a directory. The first argument to
+`createFiles()` is a Map where the keys store filenames and the values store
+the corresponding file content. The second argument is the target directory.
+
+------------------------------------------------------------------------------
+import 'package:unittest/unittest.dart';
+
+import 'dart:io';
+
+List<String> createFiles(Map data, Directory directory) {
+  var paths = [];
+  if  (!directory.existsSync()) {
+    throw new ArgumentError('directory does not exist');
+  }
+  
+  var fileList = data.keys;
+    
+  fileList.forEach((fileName) {
+    var path = new Path(directory.path).join(new Path(fileName));
+    paths.add(path);
+    new File(path.toString()).writeAsStringSync(data[fileName]);
+  });
+  return paths;
+}
+------------------------------------------------------------------------------
+
+The tests for `createFiles()` create files and directories that we have no
+reason to retain. After a test concludes, these files and directories should
+be removed. We place the cleanup code within `tearDown()`.
+
+------------------------------------------------------------------------------
+void main() {
+  group('test createFiles()', () {
+    var tempDir;
+    var data = {'a.txt' : 'Contents of a.txt',
+                'b.txt' : 'Contents of b.txt'};
+    setUp(() {
+      tempDir = new Directory('').createTempSync();
+    });
+
+    tearDown(() {
+      if (tempDir.existsSync()) {
+        tempDir.deleteSync(recursive: true);
+      }
+    });
+
+    test('joins paths correctly', () {
+      var paths = createFiles(data, tempDir);
+      expect(new Path(tempDir.path).join(new Path('a.txt')).toString(), 
+          equals(paths.first.toString()));
+    });
+    
+    test('creates titles', () {
+      var paths = createFiles(data, tempDir);  
+      var content = new File.fromPath(paths.first).readAsStringSync();
+      expect(content, equals('Contents of a.txt'));
+    });
+    
+    test('throws with a non-existent directory', () {
+      tempDir.deleteSync(recursive: true);
+      expect(() {
+        var paths = createFiles(data, tempDir);
+      }, throwsArgumentError);
+    });
+  });
+}
+------------------------------------------------------------------------------
 

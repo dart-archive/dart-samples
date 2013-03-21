@@ -12,27 +12,27 @@ void useFilteredTests() {
 }
 
 void main() {
-    useFilteredTests();
-    
-    // Get the args from the command line.
-    ArgParser argParser = new ArgParser();
-    Options options = new Options();
-    ArgResults results = argParser.parse(options.arguments);
-    List<String> args = results.rest;
+  useFilteredTests();
+  
+  // Get the args from the command line.
+  ArgParser argParser = new ArgParser();
+  Options options = new Options();
+  ArgResults results = argParser.parse(options.arguments);
+  List<String> args = results.rest;
 
-    test('one test',     () => expect(1 + 0, equals(1))); 
-    test('another test', () => expect(1 + 1, equals(2)));
-    test('and another',  () => expect(1 + 2, equals(3)));
+  test('one test',     () => expect(1 + 0, equals(1))); 
+  test('another test', () => expect(1 + 1, equals(2)));
+  test('and another',  () => expect(1 + 2, equals(3)));
 
-    group('case change', () {
-      test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
-      test('to lower', () => expect('THAT'.toLowerCase(), equals('that')));
-    });
+  group('case change', () {
+    test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
+    test('to lower', () => expect('THAT'.toLowerCase(), equals('that')));
+  });
 
-    if (!args.isEmpty) {
-      filterTests(args[0]);
-    }
-    runTests();
+  if (!args.isEmpty) {
+    filterTests(args[0]);
+  }
+  runTests();
     
 // Output when no args are passed:
 //    unittest-suite-wait-for-done
