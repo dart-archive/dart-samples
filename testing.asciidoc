@@ -410,4 +410,43 @@ expect(() => throw new RangeError('out of range'),
 --------------------------------------------------------------------------------
 
 
+=== Testing for float equality
+
+==== Problem
+
+You need to test that your float-returning function returns the right value,
+but have been warned about the perils of comparing floats directly. So, how do
+you test that your function is computing the float as intended?
+
+
+==== Solution 
+
+Use the `closeTo()` matcher for testing approximate merical equality:
+
+--------------------------------------------------------------------------------
+closeTo(value, delta)
+--------------------------------------------------------------------------------
+
+This matcher checks if the number under test is within delta of some value,
+and the test passes if it is.
+
+Consider this code that computes the distance between two points: 
+
+--------------------------------------------------------------------------------
+Point point1 = new Point(-2, -3);
+Point point2 = new Point(-4, 4);
+
+print(point1.distanceTo(point2)); // 7.280109889280518.  
+--------------------------------------------------------------------------------
+
+Here's one way to test this with `closeTo()`:
+
+--------------------------------------------------------------------------------
+test('distance', () {
+  expect(point1.distanceTo(point2)), closeTo(7.28, .001)); 
+});
+--------------------------------------------------------------------------------
+
+
+
 

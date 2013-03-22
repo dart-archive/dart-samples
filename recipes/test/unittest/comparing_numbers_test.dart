@@ -11,14 +11,17 @@ class Point {
   }
 }
 
+num distance(point1, point2) {
+  return sqrt(pow((point1.x - point2.x), 2) + pow((point1.y - point2.y), 2));
+}
+
 void main() {
-  Point p1 = new Point(-2, -3);
-  Point p2 = new Point(-4, 4);
-  print(p1.distanceTo(p2));
-  print(2 / 3);
-  
+  Point point1 = new Point(-2, -3);
+  Point point2 = new Point(-4, 4);
+
   test('distance', () {
-    expect(p1.distanceTo(p2), closeTo(7.28, .001)); // 7.280109889280518
+    expect(distance(new Point(-2, -3), new Point(-4, 4)), 
+        closeTo(7.28, .001)); // 7.280109889280518
   });
 }
 
