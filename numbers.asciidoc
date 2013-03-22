@@ -1,0 +1,58 @@
+= Dart Cookbook
+:author: Shailen Tuli
+:encoding: UTF-8
+
+== Numbers
+
+=== Converting a string to a number
+
+==== Problem
+
+You want to parse a string and convert it to a number.
+
+
+==== Solution
+
+Use `int.parse` to convert a string to an int:
+
+--------------------------------------------------------------------------------
+print(int.parse('231')); // 231
+--------------------------------------------------------------------------------
+
+The strings can be prefixed with a '+' or a '-':
+
+--------------------------------------------------------------------------------
+print(int.parse('+231')); // 231
+print(int.parse('-231')); // -231
+--------------------------------------------------------------------------------
+    
+You can pass in the radix as a second argument:
+
+--------------------------------------------------------------------------------
+print(int.parse('231', radix: 16));  // 561
+print(int.parse('F34A', radix: 16)); // 62282
+--------------------------------------------------------------------------------
+    
+Strings starting with '0x', '-0x' or '+0x' are assumed to have a radix of 16:
+
+--------------------------------------------------------------------------------
+print(int.parse('0x231')); // 561
+--------------------------------------------------------------------------------
+
+Use `double.parse` to convert a string to a double:
+
+--------------------------------------------------------------------------------
+print(double.parse('3.14')); // 3.14
+--------------------------------------------------------------------------------
+    
+    
+The method accepts scientific notation:
+
+--------------------------------------------------------------------------------
+print(double.parse('3.14e5')); // 314000.0
+--------------------------------------------------------------------------------
+
+Both `int.parse` and `double.parse` throw a FormatException if they are passed
+invalid arguments.
+
+
