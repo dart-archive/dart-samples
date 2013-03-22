@@ -205,54 +205,32 @@ after each test, but want to avoid code duplication.
 Within each `group()`, call `setUp()` for initialization and `tearDown()` for
 cleanup. The function passed as an argument to `setUp()` runs before each
 test, and the function passed as an argument to `tearDown()` runs
-after each test in the group.
+after each test.
 
 ===== setUp() example
 
-Consider the following code for defining a Point:
-
---------------------------------------------------------------------------------
-import 'package:unittest/unittest.dart';
-
-class Point {
-  num x, y;
-  
-  Point(this.x, this.y);
-  
-  String toString() => 'Point: x = $x, y = $y';
-  
-  num operator [](index) {
-    if (index < 0 || index > 1) {
-       throw new ArgumentError('only 0 and 1 are valid indices'); 
-    }
-    return (index == 0) ? x : y;
-  }
-
-  ...
-}
---------------------------------------------------------------------------------
-
-You want to test each method, and need a Point object in each test:
+Assume you have defined a Point class that contains several methods. You want
+to test each method, and need a Point object in each test:
 
 --------------------------------------------------------------------------------
 void main() {
   group('test Point', () {
     test('toString', () {
       Point point = new Point(3, 4);
-      expect(point.toString(), equals('Point: x = 3, y = 4'));
+      ...
     });
     
     test('[](index)', () {
       Point point = new Point(3, 4); // REPETITIVE.
-      expect(point[0], equals(3));
-      expect(point[1], equals(4));
+      ...
     });
   });
  }
 }
 --------------------------------------------------------------------------------
 
-See all the repetition? Move the Point initialization to a `setUp()`:
+See all the repetition? Move the Point initialization to a `setUp()`. The
+Point object will then become available in each test:
 
 --------------------------------------------------------------------------------
 void main() {
@@ -262,50 +240,41 @@ void main() {
       point = new Point(3, 4);
     });
 
-    test('toString', () {
-      expect(point.toString(), equals('Point: x = 3, y = 4'));
-    });
-    
-    test('[](index)', () {
-      expect(point[0], equals(3));
-      expect(point[1], equals(4));
-    });
+    test('toString',  () => expect(point.toString(), equals(...)));
+    test('[](index)', () => expect(point[0], equals(...)));
   });
 }
 --------------------------------------------------------------------------------
 
-Note that `point` is instantiated _before_ `setUp()`, and initialized within
-`setUp()`. This way, `point` is available to each test.
+Note that `point` is _instantiated before_ `setUp()`, and _initialized within_
+`setUp()`. This makes `point` accessible in each test.
 
 ===== tearDown() example
 
 Because `setUp()` simply creates a new Point before every test in the previous
 example, there was no need for an explicit `tearDown()`.
 
-Testing the `createFile()` function defined below does need a `tearDown()`:
+Testing the `createFile()` function shown below does need a `tearDown()`:
 
 --------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 
 import 'dart:io';
 
+
+// Creates a file with some content in the given directory.
 Path createFile(fileName, fileContent, directory) {
-  if  (!directory.existsSync()) {
-    throw new ArgumentError('directory does not exist');
-  }
-  var path = new Path(directory.path).join(new Path(fileName));
-  new File(path.toString()).writeAsStringSync(fileContent);
-  return path;
+  ...
 }
 --------------------------------------------------------------------------------
 
-Testing `createFiles()` creates a file and a  directory that we have no
-reason to retain. After a test concludes, the file and directory should
-be removed. We place the cleanup code within `tearDown()`.
+Testing `createFile()` creates a file and a directory, and we have no
+reason to retain either. After a test concludes, the file and directory should
+be removed. We place the cleanup code for doing this within `tearDown()`.
 
 --------------------------------------------------------------------------------
 void main() {
-  group('test createFiles()', () {
+  group('test createFile()', () {
     var tempDir;
     var fileName = 'a.txt';
     var fileContent = 'Content of a.txt';
@@ -320,18 +289,11 @@ void main() {
       }
     });
 
-    test('creates the correct path', () {
-      var path = createFile(fileName, fileContent, tempDir);
-      expect(new Path(tempDir.path).join(new Path(fileName)).toString(), 
-          equals(path.toString()));
-    });
-    
-    test('throws with a non-existent directory', () {
-      tempDir.deleteSync(recursive: true);
-      expect(() {
-        var paths = createFile(fileName, fileContent, tempDir);
-      }, throwsArgumentError);
-    });
+    // Directory created before each test.
+    // File created when createFile() is called during the test.
+    // The directory and file are removed afte each test.
+    test('creates the correct path', () => ...);
+    test('throws with a non-existent directory', () => ...);
   });
 }
 --------------------------------------------------------------------------------
@@ -342,8 +304,7 @@ void main() {
 
 You want to test exceptions in your code. You want to know if some code
 returns normally, or if it throws. Or you want to test that a specific error is
-raised, or that the error message is correct. What support does the Unittest
-library have for testing exceptions?
+raised, and that the error message is correct. 
 
 ==== Solution
 
@@ -416,8 +377,7 @@ expect(() => throw new RangeError('out of range'),
 
 You need to test that your float-returning function returns the right value,
 but have been warned about the perils of comparing floats directly. So, how do
-you test that your function is computing the float as intended?
-
+you test that your function is returning the right answer?
 
 ==== Solution 
 
@@ -439,14 +399,16 @@ Point point2 = new Point(-4, 4);
 print(point1.distanceTo(point2)); // 7.280109889280518.  
 --------------------------------------------------------------------------------
 
-Here's one way to test this with `closeTo()`:
+Avoid direct comparisons when testing the `distanceTo()` method:
 
 --------------------------------------------------------------------------------
-test('distance', () {
-  expect(point1.distanceTo(point2)), closeTo(7.28, .001)); 
-});
+expect(point1.distanceTo(point2), equals(7.280109889280518));
 --------------------------------------------------------------------------------
 
+Test for approximate equality:
 
+--------------------------------------------------------------------------------
+expect(point1.distanceTo(point2)), closeTo(7.28, .001)); 
+--------------------------------------------------------------------------------
 
 
