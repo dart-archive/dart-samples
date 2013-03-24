@@ -23,6 +23,11 @@ void main() {
         throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
   });
   
+  test('testing the type using a predicate', () {
+    expect(() => 10 ~/ 0, 
+        throwsA(predicate((e) => true)));
+  });
+  
   test('testing the type of a *custom* exception', () {
     expect(() => throw new TooMuchCoffeeException(), 
         throwsA(predicate((e) => e is TooMuchCoffeeException)));

@@ -9,49 +9,48 @@
 
 ==== Problem
 
-You want to run just a single test.  Maybe you want to run the test you are
+You want to run just a single test.  Maybe it is the test you are
 currently working on and want to make that pass before running all your tests.
-Or, maybe you want to explore a single failing test in the debugger, and don't
-want to deal with the noise from the other tests. 
+Or, perhaps it is a failing test that you want to explore in the debugger,
+without dealing with the noise from other tests. 
 
 ==== Solution
 
-To isolate a test, change that test's `test()` call to `solo_test()`. Only the
-`solo_test()` will run:
+To isolate a test, change `test()` to `solo_test()`.
 
 --------------------------------------------------------------------------------
-import 'package:unittest/unittest.dart';
-
-void main() {
-  test('with y == 0', ()  => ... );
-  solo_test('with y != 0', ()  => ... );
-}
-
-Program output:
-  unittest-suite-wait-for-done
-  PASS: with y != 0
-  
-  All 1 tests passed.
-  unittest-suite-success
+test('if y == 0', ()  => expect(() => ...));
+solo_test('if y != 0', () => expect(() => ...));
 --------------------------------------------------------------------------------
 
-If you mistakenly have more than one solo_test() then an exception will be
-thrown. Only the first `solo_test()` will run:
+Only the `solo_test()` will run:
 
 --------------------------------------------------------------------------------
-void main() {
-  solo_test('with y == 0', ()  => ... );
-  solo_test('with y != 0', ()  => ... );
-}
+unittest-suite-wait-for-done
+PASS: if y != 0
 
-Program output:
-  unittest-suite-wait-for-done
-  Exception: Only one test can be soloed right now.
-  PASS: with y == 0
-  
-  All 1 tests passed.
-  unittest-suite-success
+All 1 tests passed.
+unittest-suite-success
 --------------------------------------------------------------------------------
+
+Do not have multiple `only_test()`s:
+
+--------------------------------------------------------------------------------
+solo_test('if y == 0', () => expect(() => ...));
+solo_test('if y != 0', () => expect(() => ...));
+--------------------------------------------------------------------------------
+
+This raises an exception, and only the first `solo_test()` runs:
+
+--------------------------------------------------------------------------------
+unittest-suite-wait-for-done
+Exception: Only one test can be soloed right now.
+PASS: if y == 0
+
+All 1 tests passed.
+unittest-suite-success
+--------------------------------------------------------------------------------
+
 
 === Filtering which tests are run using filterTests()
 
@@ -59,9 +58,9 @@ Program output:
 
 You want to run just a subset of all your tests. Maybe you've divided up
 your tests carefully using `group()` and want to run the tests for one or more
-group. Or perhaps you've been carefully placing certain keywords in your test
-descriptions, and want to run only tests whose desciption contains a particluar
-keyword.
+group. Or perhaps you carefully placed certain keywords in your test
+descriptions, and want to run only tests whose desciption contains a
+specific keyword.
 
 ==== Solution
 
@@ -69,59 +68,67 @@ Use `filterTests()`. This function takes a String or RegExp argument and
 matches it against each test description.  If the description matches, the
 test runs, otherwise, it doesn’t.
 
-Before you use `filterTests()`, you need to disable the automatic running of
-tests. Do this by creating and initialize a minimal custom configuration:
-
+By default, the Unittest library is configured to run _all_ tests defined in a
+file when that file executes. You want to override this behavior. Do that by
+subclassing the default Configuration class, and creating a custom
+configuration:
 
 --------------------------------------------------------------------------------
-import "package:unittest/unittest.dart";
-import "package:args/args.dart";
-
-class FilterTests extends Configuration {
+class CustomConfiguration extends Configuration {
   get autoStart => false;
 }
-
-void useFilteredTests() {
-  configure(new FilterTests());
-  ensureInitialized(); // Initializes the test library.  
-}
 --------------------------------------------------------------------------------
 
-Then, you can define tests, call `filteredTests()`, and run your tests using
-`runTests()`:
+Then, tell the test runner to use the new configuration:
+
+--------------------------------------------------------------------------------
+configure(new CustomConfiguration());
+--------------------------------------------------------------------------------
+
+And then, initialize the test library (you need to explicitly do this when using
+a custom configuration): 
+
+--------------------------------------------------------------------------------
+ensureInitialized();
+--------------------------------------------------------------------------------
+
+After this is done, you can define groups and tests, call `filteredTests()`,
+and run your tests using `runTests()`:
 
 --------------------------------------------------------------------------------
 void main() {
-  useFilteredTests();
+  configure(new CustomConfiguration());
+  ensureInitialized();
   
-  // your tests go here
+  // Your tests go here.
 
   filterTests(someStringOrRegExp);
   runTests();
 }
 --------------------------------------------------------------------------------
 
-Here is a complete example that demonstrates how `filterTests()` is used
-to run just a subset of your tests. Run this code from the command line, and
-provide an extra argument that gets passed to `filterTests()` (usage shown
-below the code):
+A complete example that uses `filterTests()` is shown below. You can run the
+code from the command line, adding a keyword argument that is then passed on
+to `filterTests()`: 
+
+--------------------------------------------------------------------------------
+$ dart filter_tests.dart <keyword>
+--------------------------------------------------------------------------------
+
+Here is the code:
 
 --------------------------------------------------------------------------------
 import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'dart:io';
 
-class FilterTests extends Configuration {
+class CustomConfiguration extends Configuration {
   get autoStart => false;
 }
 
-void useFilteredTests() {
-  configure(new FilterTests());
-  ensureInitialized();  
-}
-
 void main() {
-  useFilteredTests();
+  configure(new CustomConfiguration());
+  ensureInitialized();  
   
   // Get the args from the command line.
   ArgParser argParser = new ArgParser();
@@ -141,55 +148,57 @@ void main() {
   if (!args.isEmpty) {
     filterTests(args[0]);
   }
+
   runTests();
 }
 --------------------------------------------------------------------------------
 
-When the tests are run without any additional arguments, all 5 tests run:
+Run the tests with 'crucial' as an argument:
 
 --------------------------------------------------------------------------------
-$ dart simple_test.dart
-
-Program Output:
-  unittest-suite-wait-for-done
-  PASS: a test
-  PASS: crucial test
-  PASS: another crucial test
-  PASS: case change to upper
-  PASS: case change to lower
-
-  All 5 tests passed.
-  unittest-suite-success
+$ dart filter_tests.dart crucial
 --------------------------------------------------------------------------------
 
-If 'crucial' is passed as an argument to `filterTests()`, only tests with
-'crucial' in the description run:
+Only tests with 'crucial' in the description run:
 
 --------------------------------------------------------------------------------
-$ dart simple_test.dart another
+unittest-suite-wait-for-done
+PASS: crucial test
+PASS: another crucial test
 
-Program Output:
-  unittest-suite-wait-for-done
-  PASS: crucial test
-  PASS: another crucial test
-
-  All 2 tests passed.
-  unittest-suite-success
+All 2 tests passed.
+unittest-suite-success
 ------------------------------------------------------------------------------
 
-If 'case' is passed as an argument to `filterTests()`, only tests within the
-'case change' group run:
+Run the tests with 'case' as an argument: 
 
 --------------------------------------------------------------------------------
-$ dart simple_test.dart case
+$ dart filter_tests.dart case
+--------------------------------------------------------------------------------
 
-Program Output:
-  unittest-suite-wait-for-done
-  PASS: case change to upper
-  PASS: case change to lower
-  
-  All 2 tests passed.
-  unittest-suite-success
+Only tests within the 'case change' group run:
+
+--------------------------------------------------------------------------------
+unittest-suite-wait-for-done
+PASS: case change to upper
+PASS: case change to lower
+
+All 2 tests passed.
+unittest-suite-success
+--------------------------------------------------------------------------------
+
+The keyword argument is optional. If you omit it, all tests in the file run:
+
+--------------------------------------------------------------------------------
+unittest-suite-wait-for-done
+PASS: a test
+PASS: crucial test
+PASS: another crucial test
+PASS: case change to upper
+PASS: case change to lower
+
+All 5 tests passed.
+unittest-suite-success
 --------------------------------------------------------------------------------
 
 
@@ -204,33 +213,14 @@ after each test, but want to avoid code duplication.
 
 Within each `group()`, call `setUp()` for initialization and `tearDown()` for
 cleanup. The function passed as an argument to `setUp()` runs before each
-test, and the function passed as an argument to `tearDown()` runs
-after each test.
+test, and that passed to `tearDown()` runs after each test.
 
 ===== setUp() example
 
 Assume you have defined a Point class that contains several methods. You want
-to test each method, and need a Point object in each test:
-
---------------------------------------------------------------------------------
-void main() {
-  group('test Point', () {
-    test('toString', () {
-      Point point = new Point(3, 4);
-      ...
-    });
-    
-    test('[](index)', () {
-      Point point = new Point(3, 4); // REPETITIVE.
-      ...
-    });
-  });
- }
-}
---------------------------------------------------------------------------------
-
-See all the repetition? Move the Point initialization to a `setUp()`. The
-Point object will then become available in each test:
+to test each method, and need a Point object in each test. Place the Point
+initialization code inside `setUp()`, and the Point object becomes available in
+each test:
 
 --------------------------------------------------------------------------------
 void main() {
@@ -246,38 +236,25 @@ void main() {
 }
 --------------------------------------------------------------------------------
 
-Note that `point` is _instantiated before_ `setUp()`, and _initialized within_
-`setUp()`. This makes `point` accessible in each test.
+===== setUp() and tearDown() example
 
-===== tearDown() example
-
-Because `setUp()` simply creates a new Point before every test in the previous
-example, there was no need for an explicit `tearDown()`.
-
-Testing the `createFile()` function shown below does need a `tearDown()`:
+Tests that create files and directories need to clean up after themselves.
+Here is a function that creates a file inside a given directory: 
 
 --------------------------------------------------------------------------------
-import 'package:unittest/unittest.dart';
-
-import 'dart:io';
-
-
-// Creates a file with some content in the given directory.
-Path createFile(fileName, fileContent, directory) {
+// Writes a file in 'dir' directory.
+Path writeFileToDirectory(dir) {
   ...
 }
 --------------------------------------------------------------------------------
 
-Testing `createFile()` creates a file and a directory, and we have no
-reason to retain either. After a test concludes, the file and directory should
-be removed. We place the cleanup code for doing this within `tearDown()`.
+The code to create the directory goes in `setUp()`. The code to remove the
+directory and its contents goes in `tearDown()`:
 
 --------------------------------------------------------------------------------
 void main() {
-  group('test createFile()', () {
+  group('test writeFileToDirectory()', () {
     var tempDir;
-    var fileName = 'a.txt';
-    var fileContent = 'Content of a.txt';
     
     setUp(() {
        tempDir = new Directory('').createTempSync();
@@ -289,21 +266,86 @@ void main() {
       }
     });
 
-    // Directory created before each test.
-    // File created when createFile() is called during the test.
-    // The directory and file are removed afte each test.
     test('creates the correct path', () => ...);
     test('throws with a non-existent directory', () => ...);
   });
 }
 --------------------------------------------------------------------------------
 
+The code inside `tearDown()` runs regardless of whether `setUp()` sets up a
+resource successfully or not, and regardless of whether a test passes or
+fails. If there is an error inside a test, code within `tearDown()` still runs:
+
+--------------------------------------------------------------------------------
+group('tearDown behavior when', () {
+  var tempDir;
+
+  setUp(() {
+    print('setting up');
+    tempDir = new Directory('').createTempSync();
+  });
+
+  tearDown(() {
+    print('tearing down');
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
+  });
+
+  test('test has error in it', () {
+    22 ~/ 0; // Trigger an IntegerDivisionByZeroException.
+    ...
+  });
+});
+--------------------------------------------------------------------------------
+
+Here is the (truncated) test run output:
+
+--------------------------------------------------------------------------------
+unittest-suite-wait-for-done
+setting up
+tearing down
+
+FAIL: tearDown behavior when test has error in it
+  Caught IntegerDivisionByZeroException
+  ...
+
+0 PASSED, 1 FAILED, 0 ERRORS
+Uncaught Error: Exception: Some tests failed.
+Stack Trace:
+...
+--------------------------------------------------------------------------------
+
+===== setUp() and tearDown() in nested group()s
+
+The `setUp()` and `tearDown()` functions reset with the start of a new `group()`.
+This applies to nested `group()`s, which do not inherit these functions:
+
+--------------------------------------------------------------------------------
+group('test Point with nested setUp()', () {
+  Point point;
+  setUp(() {  
+    point = new Point(3, 4);
+  });
+  
+  group('[]()', () {
+    // setUp() from outer group() does not run here. point is null.
+    test('with valid index', () => ... );
+    test('with invalid index', () => ... );
+  });
+});
+--------------------------------------------------------------------------------
+
+You can fix this problem by assigning each nested `group()` its own `setUp()`
+and `tearDown()`.
+
+
 === Testing synchronous exceptions
 
 ==== Problem
 
 You want to test exceptions in your code. You want to know if some code
-returns normally, or if it throws. Or you want to test that a specific error is
+returns normally, or if it throws. Or, you want to test that a specific error is
 raised, and that the error message is correct. 
 
 ==== Solution
@@ -325,7 +367,7 @@ You can test the error type:
 
 --------------------------------------------------------------------------------
 expect(() => throw new StateError('functions called in the wrong order'), 
-        throwsStateError);
+    throwsStateError);
 --------------------------------------------------------------------------------
 
 The Unittest library provides matchers for commonly occuring exceptions and
@@ -342,18 +384,13 @@ throwsStateError
 throwsUnsupportedError
 --------------------------------------------------------------------------------
 
-You can also use `throwsA` with a predicate matcher to test the exception type:
-  
+You can also use `throwsA` with a `predicate()` to test the exception type.
+A `predicate()` returns a matcher using a function that returns true or
+false:
+
 --------------------------------------------------------------------------------
 expect(() => 10 ~/ 0, 
   throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
---------------------------------------------------------------------------------
-
-Use `throwsA` to test a custom Exception:
-
---------------------------------------------------------------------------------
-expect(() => throw new TooMuchCoffeeException(), 
-  throwsA(predicate((e) => e is TooMuchCoffeeException)));
 --------------------------------------------------------------------------------
   
 You can test the error message:
@@ -371,24 +408,22 @@ expect(() => throw new RangeError('out of range'),
 --------------------------------------------------------------------------------
 
 
-=== Testing for float equality
+=== Testing for double equality
 
 ==== Problem
 
-You need to test that your float-returning function returns the right value,
-but have been warned about the perils of comparing floats directly. So, how do
-you test that your function is returning the right answer?
+Arithmetic involving doubles is inexact. You want to compare two doubles to
+determine if they are acceptably close.
 
 ==== Solution 
 
-Use the `closeTo()` matcher for testing approximate merical equality:
+Use the `closeTo()` matcher for testing approximate numerical equality:
 
 --------------------------------------------------------------------------------
 closeTo(value, delta)
 --------------------------------------------------------------------------------
 
-This matcher checks if the number under test is within delta of some value,
-and the test passes if it is.
+This matcher checks if the number under test is within delta of some value.
 
 Consider this code that computes the distance between two points: 
 
@@ -399,13 +434,7 @@ Point point2 = new Point(-4, 4);
 print(point1.distanceTo(point2)); // 7.280109889280518.  
 --------------------------------------------------------------------------------
 
-Avoid direct comparisons when testing the `distanceTo()` method:
-
---------------------------------------------------------------------------------
-expect(point1.distanceTo(point2), equals(7.280109889280518));
---------------------------------------------------------------------------------
-
-Test for approximate equality:
+Here's how you can test for approximate equality:
 
 --------------------------------------------------------------------------------
 expect(point1.distanceTo(point2)), closeTo(7.28, .001)); 

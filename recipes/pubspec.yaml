@@ -1,6 +1,6 @@
 name: recipes
 description: A collection of Dart recipes
-dependencies:
+dev_dependencies:
   unittest: any
   browser: any
   meta: any
