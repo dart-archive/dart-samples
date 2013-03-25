@@ -25,7 +25,7 @@ void main() {
     test('with implicit toString()', () {
       var four = 4;
       expect('The $four seasons', equals('The 4 seasons'));
-      expect('The '.concat(4.toString()).concat(' seasons'), equals('The 4 seasons'));
+      expect('The ' + 4.toString() + ' seasons', equals('The 4 seasons'));
        
       var point = new Point(3, 4);
       expect('Point: $point', equals("Point: Instance of 'Point'"));

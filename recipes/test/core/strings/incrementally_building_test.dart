@@ -24,19 +24,19 @@ String assembleUrlsUsingStringBuffer(data) {
   return sb.toString();
 }
 
-String assembleUrlsUsingConcat(data) {
+String assembleUrlsUsingConcatenation(data) {
   var urls = '';
   for (final item in data) {
-    urls = urls.concat(item['scheme'] != null ? item['scheme']  : 'http');
-    urls = urls.concat("://");
-    urls = urls.concat(item['domain']);
-    urls = urls.concat('/');
-    urls = urls.concat(item['path'] != null ? item['path']  : '');
+    urls += item['scheme'] != null ? item['scheme']  : 'http';
+    urls += "://";
+    urls += item['domain'];
+    urls += '/';
+    urls += item['path'] != null ? item['path']  : '';
     if (item['params'] != null) {
-      urls = urls.concat('?');
-      urls = urls.concat(item['params']);
+      urls += '?';
+      urls += item['params'];
     }
-    urls = urls.concat('\n');
+    urls += '\n';
   }
   return urls;
 }
@@ -59,9 +59,9 @@ http://reddit.com/search?q=dart
       });
     });
     
-    group('using concat()', () {
+    group('using concatenation', () {
       test('', () {  
-        expect(assembleUrlsUsingConcat(data), equals('''https://news.ycombinator.com/
+        expect(assembleUrlsUsingConcatenation(data), equals('''https://news.ycombinator.com/
 http://www.google.com/
 http://reddit.com/search?q=dart
 '''));
