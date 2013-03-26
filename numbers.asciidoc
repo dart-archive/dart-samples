@@ -45,8 +45,7 @@ Use `double.parse` to convert a string to a double:
 print(double.parse('3.14')); // 3.14
 --------------------------------------------------------------------------------
     
-    
-The method accepts scientific notation:
+The method accepts exponential notation:
 
 --------------------------------------------------------------------------------
 print(double.parse('3.14e5')); // 314000.0
@@ -54,5 +53,49 @@ print(double.parse('3.14e5')); // 314000.0
 
 Both `int.parse` and `double.parse` throw a FormatException if they are passed
 invalid arguments.
+
+
+=== Converting a number to a string
+
+==== Problem
+
+You want to convert a number to a string.
+
+==== Solution
+
+Use `toString()` to convert a number to a string:
+
+--------------------------------------------------------------------------------
+1234.toString();   // '1234'
+3.1519.toString(); // '3.1519'
+--------------------------------------------------------------------------------
+  
+To convert the number to decimal exponential notation, use the
+`toStringAsExponential()` method: 
+
+--------------------------------------------------------------------------------
+1234.toStringAsExponential();   // '1.234e+3'
+--------------------------------------------------------------------------------
+    
+You can specify the number of digits after the decimal:
+
+--------------------------------------------------------------------------------
+3.1519.toStringAsExponential(5); // '3.15190e+0'
+--------------------------------------------------------------------------------
+  
+To specify the number of digits after the decimal without using exponential
+notation, use `toStringAsFixed()`:
+
+--------------------------------------------------------------------------------
+1234.toStringAsFixed(2);   // '1234.00'
+3.1519.toStringAsFixed(2); // '3.15'
+--------------------------------------------------------------------------------
+  
+You can also specify the number of signficant digits:
+
+--------------------------------------------------------------------------------
+1234.toStringAsPrecision(5);   // '1234.0'
+3.1519.toStringAsPrecision(8); // '3.1519000'
+--------------------------------------------------------------------------------
 
 
