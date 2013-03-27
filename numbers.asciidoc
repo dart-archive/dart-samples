@@ -10,7 +10,6 @@
 
 You want to parse a string and convert it to a number.
 
-
 ==== Solution
 
 Use `int.parse` to convert a string to an int:
@@ -63,7 +62,7 @@ You want to convert a number to a string.
 
 ==== Solution
 
-Use `toString()` to convert a number to a string:
+Use `toString()` for a no-frills number to string conversion:
 
 --------------------------------------------------------------------------------
 1234.toString();   // '1234'
@@ -90,6 +89,14 @@ To convert the number to decimal exponential notation, use the
 
 --------------------------------------------------------------------------------
 1234.toStringAsExponential();   // '1.234e+3'
+--------------------------------------------------------------------------------
+
+You can specify the radix when converting an integer to a string:
+
+--------------------------------------------------------------------------------
+64.toRadixString(2);  // '1000000'
+64.toRadixString(8);  // '100'
+64.toRadixString(16); // '40'
 --------------------------------------------------------------------------------
 
 

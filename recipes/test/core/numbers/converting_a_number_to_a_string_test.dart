@@ -23,4 +23,12 @@ void main() {
     expect(1234.toStringAsPrecision(5), equals('1234.0'));
     expect(3.1519.toStringAsPrecision(8), equals('3.1519000'));
   });
+  
+  test('specify radix', () {
+    expect(64.toRadixString(2), equals('1000000'));
+    expect(64.toRadixString(8), equals('100'));
+    expect(64.toRadixString(16), equals('40'));
+  });
+  
+  
 }
