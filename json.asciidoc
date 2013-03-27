@@ -1,0 +1,133 @@
+= Dart Cookbook
+:author: Shailen Tuli
+:encoding: UTF-8
+
+== Json
+
+=== Encoding JSON
+
+==== Problem
+
+You want to convert a Dart object into JSON.
+
+
+==== Solution
+
+Use `json.stringify()` to encode a Dart object into a JSON-formatted string.
+
+The following Dart objects are automatically encoded into JSON by
+`json.stringify()`:
+
+* int
+* double
+* String
+* bool
+* null
+* List
+* Map
+
+--------------------------------------------------------------------------------
+var person = {'name': 'joe', 
+              'born':  2002,
+              'into': {'films' : ['crime', 'noir']},
+              'aliases': null
+             };
+
+json.stringify(person);
+// '{"name":"joe","born":2002,"into":{"films":["crime","noir"]},"aliases":null}'
+--------------------------------------------------------------------------------
+
+Note that `json.stringify()` encodes List and Map objects recursively.
+
+If an object of a type not in the list above is passed to `json.stringify()`,
+it calls that objects `toJson()` method:
+
+--------------------------------------------------------------------------------
+class Person {
+  String name;
+  num age;
+  
+  Person(this.name, this.age);
+ 
+  String toJson() => json.stringify({"name": name, "age": age});
+}
+
+var person = new Person('john', 32);
+json.stringify(person); // '"{\"name\":\"john\",\"age\":32}"'
+--------------------------------------------------------------------------------
+
+If the `toJson()` method is not defined, `json.stringify()` throws an exception:
+
+--------------------------------------------------------------------------------
+class Book {
+  String title;
+  num numPages;
+ 
+  Book(this.title, this.numPages);
+}
+
+var book = new Book('War and Peace', 1089);
+json.stringify(book); // json.JsonUnsupportedObjectError
+--------------------------------------------------------------------------------
+
+It is possible that `json.stringify()` calls `toJson()` on several objects,
+and if any one of those objects lacks a `toJson()`, it triggers an exception.
+Use ` JsonUnsupportedObjectError`'s `cause` property to see which object
+triggered the exception:
+
+--------------------------------------------------------------------------------
+var person = new Person('john', 32);          // Has a toJson().
+var book = new Book('War and Peace', 1089);   // Lacks a toJson().
+var object = {'person': person, 'reads' : book};
+
+try {
+  json.stringify(object);
+} catch(e) {
+  print(e.cause.toString());
+  // "Class 'Book' has no instance method 'toJson'..."
+}
+--------------------------------------------------------------------------------
+
+
+=== Decoding JSON
+
+==== Problem
+
+You want to convert a JSON string into a Dart object.
+
+==== Solution
+
+Use `json.parse()` to decode a JSON-encoded string into a Dart object:
+
+--------------------------------------------------------------------------------
+var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+  
+var person = json.parse(jsonPerson);
+
+person['name'];         // 'joe'
+person['date'];         // [2013, 3, 10]
+person['date'] is List; // true
+    
+Sometimes you want to transform the data parsed by `json.parse`. For
+example, you may prefer to express a date field as a DateTime object, and not
+as a list of numbers representing the year, month and day. Specify a 'reviver'
+function as a second argument to `json.parse`. 
+
+This function is called once for each object or list property parsed. The return
+value of the reviver function is used instead of the parsed value:
+
+--------------------------------------------------------------------------------
+var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+
+var person = json.parse(jsonPerson, (k, v) {
+  if (k == "date") {
+    return new DateTime(2012, 10, 3);
+  }
+  return v;
+});
+      
+person['name']; // 'joe'
+person['date'] is DateTime; // true
+--------------------------------------------------------------------------------
+
+
