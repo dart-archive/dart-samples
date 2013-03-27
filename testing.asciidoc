@@ -5,7 +5,7 @@
 == Testing
 
 
-=== Run only the test you are working on with solo_test()
+=== Running only a single test
 
 ==== Problem
 
@@ -52,7 +52,7 @@ unittest-suite-success
 --------------------------------------------------------------------------------
 
 
-=== Filtering which tests are run using filterTests()
+=== Filtering which tests are run
 
 ==== Problem
 
@@ -202,7 +202,7 @@ unittest-suite-success
 --------------------------------------------------------------------------------
 
 
-=== Using setUp() and tearDown() in your tests
+=== Running code before and after each test
 
 ==== Problem
 
