@@ -10,7 +10,6 @@
 
 You want to convert a Dart object into JSON.
 
-
 ==== Solution
 
 Use `json.stringify()` to encode a Dart object into a JSON-formatted string.
@@ -71,7 +70,7 @@ json.stringify(book); // json.JsonUnsupportedObjectError
 --------------------------------------------------------------------------------
 
 It is possible that `json.stringify()` calls `toJson()` on several objects,
-and if any one of those objects lacks a `toJson()`, it triggers an exception.
+and if any one of those objects lacks a `toJson()`, an exception gets thrown.
 Use ` JsonUnsupportedObjectError`'s `cause` property to see which object
 triggered the exception:
 
@@ -113,8 +112,8 @@ example, you may prefer to express a date field as a DateTime object, and not
 as a list of numbers representing the year, month and day. Specify a 'reviver'
 function as a second argument to `json.parse`. 
 
-This function is called once for each object or list property parsed. The return
-value of the reviver function is used instead of the parsed value:
+This function is called once for each object or list property parsed, and the 
+return value of the reviver function is used instead of the parsed value:
 
 --------------------------------------------------------------------------------
 var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
@@ -126,7 +125,7 @@ var person = json.parse(jsonPerson, (k, v) {
   return v;
 });
       
-person['name']; // 'joe'
+person['name'];             // 'joe'
 person['date'] is DateTime; // true
 --------------------------------------------------------------------------------
 
