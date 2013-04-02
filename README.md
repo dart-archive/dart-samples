@@ -1,5 +1,7 @@
 This is the site for the Dart Cookbook project.
 
+![Alt drone.io status](https://drone.io/shailen/Cookbook/status.png)
+
 The Dart Cookbook is being authored by Shailen Tuli.
 
 An very preliminary (ALPHA -) HTML version of this book is online:
