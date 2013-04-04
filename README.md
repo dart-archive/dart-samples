@@ -28,7 +28,7 @@ Here are the samples we've created so far:
 * [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webaudio/intro)
 * [WebGL](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webgl)
 * [WebSockets](https://github.com/dart-lang/dart-html5-samples/tree/master/web/websockets/basics)
-
+* [WebWorkers](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webworkers/basics)
 Setup
 -----
 
