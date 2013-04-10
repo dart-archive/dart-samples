@@ -2,17 +2,12 @@ import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'dart:io';
 
-class FilterTests extends Configuration {
+class CustomConfiguration extends Configuration {
   get autoStart => false;
 }
 
-void useFilteredTests() {
-  configure(new FilterTests());
-  ensureInitialized();  
-}
-
 void main() {
-  useFilteredTests();
+  configure(new CustomConfiguration());
   
   // Get the args from the command line.
   ArgParser argParser = new ArgParser();
@@ -21,8 +16,8 @@ void main() {
   List<String> args = results.rest;
 
   test('a test',     () => expect(1 + 0, equals(1))); 
-  test('crucial test', () => expect(1 + 1, equals(2)));
-  test('another crucial test',  () => expect(1 + 2, equals(3)));
+  test('crucial test', () => expect('crucial'.length, 7));
+  test('another crucial test',  () => expect('crucial'.startsWith('c'), isTrue));
 
   group('case change', () {
     test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
