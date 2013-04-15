@@ -106,6 +106,7 @@ var person = json.parse(jsonPerson);
 person['name'];         // 'joe'
 person['date'];         // [2013, 3, 10]
 person['date'] is List; // true
+--------------------------------------------------------------------------------
     
 Sometimes you want to transform the data parsed by `json.parse`. For
 example, you may prefer to express a date field as a DateTime object, and not
