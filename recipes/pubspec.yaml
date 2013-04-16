@@ -1,7 +1,7 @@
 name: recipes
 description: A collection of Dart recipes
 dev_dependencies:
-  unittest: any
+  args: any
   browser: any
   meta: any
-  args: any
+  unittest: any
