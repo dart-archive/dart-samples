@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+  <h3>Post</h3>
+  <p>{{post}}</p>
+  <p><em>Post Length:</em>  {{post.length}}</p>
+
+  <p>
+    <em>Edit Post:</em><br>
+    <textarea rows='4' cols='40' bind-value="post"></textarea>
+  </p>
+  <p><em>Chars remaining:</em> {{MAXLENGTH - post.length}}</p>
+
+  <script type="application/dart">
+    import 'package:web_ui/web_ui.dart';
+
+    @observable
+    var post = 'This is my very first post about Dart, and the' + 
+               ' only thing I have to say is ...it is awesome!!!';
+    const num MAXLENGTH = 140;
+
+    main() {}
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <select bind-value="selectedColor">
+      <option value=''>Pick a color</option>
+      <option template repeat="color in colors">{{color}}</option>
+    </select>
+ 
+    <template if='!selectedColor.isEmpty'>
+      <p>selectedColor = {{selectedColor}}</p>
+    </template>
+ 
+    <script type="application/dart">
+      import 'package:web_ui/web_ui.dart';
+      
+      const List<String> colors = const ['red', 'green', 'blue', 'orange'];
+      
+      @observable
+      String selectedColor = '';
+  
+      void main() {}
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

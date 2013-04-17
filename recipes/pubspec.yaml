@@ -1,5 +1,7 @@
 name: recipes
 description: A collection of Dart recipes
+dependencies:
+  web_ui: any
 dev_dependencies:
   args: any
   browser: any
