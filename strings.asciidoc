@@ -48,7 +48,7 @@ If the string fragments you wish to concatenate are already in a list, use
 `join()`:
 
 -----------------------------------------------------------------------
-var film = ['The', 'Big', 'Lebowski']).join(' '); // 'The Big Lebowski'
+var film = ['The', 'Big', 'Lebowski'].join(' '); // 'The Big Lebowski'
 -----------------------------------------------------------------------
 
 If you want to incrementally build a longish string from its parts, a
@@ -179,6 +179,19 @@ If you escape a non-special character, the `\` is ignored:
 -------------------------------------------
 print('Wile \E Coyote'); // 'Wile E Coyote'
 -------------------------------------------
+
+===== Raw strings
+
+You can turn off string interpolation by using raw strings. Prefix the starting
+quote of a string with `r` to make a regular string into a raw string:
+
+--------------------------------------------------------------------------------
+print(r'Wile \E Coyote');               // 'Wile \E Coyote'
+print(r'$superGenius and Road Runner'); // '$superGenius and Road Runner'
+--------------------------------------------------------------------------------
+
+Special characters and the `$` symbol are stripped of any special meaning in raw
+strings.
 
 
 === Incrementally building a string using a StringBuffer
