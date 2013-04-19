@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <div><em>{{currentQuote.quote}}</em> - {{currentQuote.saidBy}}</div>
+  
+    <script type="application/dart">
+      
+      import 'dart:async';
+      import 'package:web_ui/web_ui.dart';
+      
+      class Quote {
+        final String quote, saidBy; 
+        Quote(this.quote, this.saidBy);
+      }
+      
+      @observable 
+      Quote currentQuote;
+        
+      void main() {
+        List<Quote> quotes = [
+          new Quote('This agression will not stand, man.', 'The Dude'),
+          new Quote('You are entering a world of pain', 'Walter'),
+          new Quote('The rug really tied the room together.', 'The Dude'),
+          new Quote('Sometimes you get the bar, sometimes the bar gets you.', 
+          'The Stranger'),
+          new Quote('Mark it zero, dude', 'Walter')
+        ];
+            
+        var i = 0;
+        currentQuote = quotes[i];
+        
+        new Timer.periodic(new Duration(seconds: 2), (_) {
+          i = (i == quotes.length - 1) ? 0 : i + 1;
+          currentQuote = quotes[i];
+        });
+        
+      }   
+    </script>
+  </body>
+</html>
