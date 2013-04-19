@@ -1,7 +1,5 @@
 import 'package:unittest/unittest.dart';
 
-
-
 class TooMuchCoffeeException implements Exception {}
 
 void main() {
@@ -17,20 +15,19 @@ void main() {
     expect(() => throw new StateError('functions called in the wrong order'), 
         throwsStateError);
   });
-  
+
+    
   test('testing the type using a predicate', () {
-    expect(() => 10 ~/ 0, 
-        throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
-  });
-  
-  test('testing the type using a predicate', () {
-    expect(() => 10 ~/ 0, 
-        throwsA(predicate((e) => true)));
+    Matcher isIntegerDivisionByZeroException = 
+        predicate((e) => e is IntegerDivisionByZeroException);
   });
   
   test('testing the type of a *custom* exception', () {
+    Matcher isTooMuchCoffeeException = 
+        predicate((e) => e is TooMuchCoffeeException);
+    
     expect(() => throw new TooMuchCoffeeException(), 
-        throwsA(predicate((e) => e is TooMuchCoffeeException)));
+        throwsA(isTooMuchCoffeeException));
   });
   
   test('testing the error message', () {

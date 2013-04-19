@@ -7,7 +7,7 @@ class CustomConfiguration extends Configuration {
 }
 
 void main() {
-  configure(new CustomConfiguration());
+  unittestConfiguration = new CustomConfiguration();
   
   // Get the args from the command line.
   ArgParser argParser = new ArgParser();

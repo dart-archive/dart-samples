@@ -33,7 +33,7 @@ All 1 tests passed.
 unittest-suite-success
 --------------------------------------------------------------------------------
 
-Do not have multiple `only_test()`s:
+Do not have multiple `solo_test()`s:
 
 --------------------------------------------------------------------------------
 solo_test('if y == 0', () => expect(() => ...));
@@ -56,22 +56,21 @@ unittest-suite-success
 
 ==== Problem
 
-You want to run just a subset of all your tests. Maybe you've divided up
-your tests carefully using `group()` and want to run the tests for one or more
-group. Or perhaps you carefully placed certain keywords in your test
-descriptions, and want to run only tests whose desciption contains a
-specific keyword.
+You want to run just a subset of all your tests. Maybe you've divided up your
+tests into `group()`s and want to run the tests for one or more group. Or
+perhaps you carefully placed certain keywords in your test descriptions, and
+want to run only tests whose desciption contains a specific keyword.
 
 ==== Solution
 
-Use `filterTests()`. This function takes a String or RegExp argument and
-matches it against each test description.  If the description matches, the
-test runs, otherwise, it doesn’t.
+Use the `filterTests()` function provided by the Unittest library. This
+function takes a String or RegExp argument and matches it against each test
+description.  If the description matches, the test runs, otherwise, it doesn’t.
 
-By default, the Unittest library is configured to run _all_ tests defined in a
-file when that file executes. You want to override this behavior. Do that by
-subclassing the default Configuration class, and creating a custom
-configuration:
+By default, the Unittest library is configured to run _all_ tests called
+within `main()`. You want to override this behavior. Subclass the default
+Configuration class to create a custom configuration, and disable the
+auto-running of all tests:
 
 --------------------------------------------------------------------------------
 class CustomConfiguration extends Configuration {
@@ -79,26 +78,13 @@ class CustomConfiguration extends Configuration {
 }
 --------------------------------------------------------------------------------
 
-Then, tell the test runner to use the new configuration:
-
---------------------------------------------------------------------------------
-configure(new CustomConfiguration());
---------------------------------------------------------------------------------
-
-And then, initialize the test library (you need to explicitly do this when using
-a custom configuration): 
-
---------------------------------------------------------------------------------
-ensureInitialized();
---------------------------------------------------------------------------------
-
-After this is done, you can define groups and tests, call `filteredTests()`,
-and run your tests using `runTests()`:
+Then, after telling the test runner to use the new configuration, you can
+define groups and tests, call `filteredTests()`, and run your tests using
+`runTests()`:
 
 --------------------------------------------------------------------------------
 void main() {
-  configure(new CustomConfiguration());
-  ensureInitialized();
+  unittestConfiguration = new CustomConfiguration();
   
   // Your tests go here.
 
@@ -127,8 +113,7 @@ class CustomConfiguration extends Configuration {
 }
 
 void main() {
-  configure(new CustomConfiguration());
-  ensureInitialized();  
+  unittestConfiguration = new CustomConfiguration();
   
   // Get the args from the command line.
   ArgParser argParser = new ArgParser();
@@ -136,19 +121,19 @@ void main() {
   ArgResults results = argParser.parse(options.arguments);
   List<String> args = results.rest;
 
-  test('one test', () => ... ); 
-  test('crucial test', () => ... );
-  test('another crucial test', =>  ...);
+  test('a test',     () => expect(1 + 0, equals(1))); 
+  test('crucial test', () => expect('crucial'.length, 7));
+  test('another crucial test',  () => expect('crucial'.startsWith('c'),
+    isTrue));
 
   group('case change', () {
-    test('to upper', () => ... );
-    test('to lower', () => ... );
+    test('to upper', () => expect('this'.toUpperCase(), equals('THIS'))); 
+    test('to lower', () => expect('THAT'.toLowerCase(), equals('that')));
   });
 
   if (!args.isEmpty) {
     filterTests(args[0]);
   }
-
   runTests();
 }
 --------------------------------------------------------------------------------
@@ -187,19 +172,7 @@ All 2 tests passed.
 unittest-suite-success
 --------------------------------------------------------------------------------
 
-The keyword argument is optional. If you omit it, all tests in the file run:
-
---------------------------------------------------------------------------------
-unittest-suite-wait-for-done
-PASS: a test
-PASS: crucial test
-PASS: another crucial test
-PASS: case change to upper
-PASS: case change to lower
-
-All 5 tests passed.
-unittest-suite-success
---------------------------------------------------------------------------------
+The keyword argument is optional. If you omit it, all tests in the file run.
 
 
 === Running code before and after each test
@@ -344,11 +317,14 @@ and `tearDown()`.
 
 ==== Problem
 
-You want to test exceptions in your code. You want to know if some code
-returns normally, or if it throws. Or, you want to test that a specific error is
-raised, and that the error message is correct. 
+You want to test exceptions in your code. You want to know if some code returns
+normally, or if it throws. Or, you want to test that a specific error is raised,
+and that the error message is correct. 
 
 ==== Solution
+
+The Matcher library, bundled together with the Unittest package, provides
+several handy assertion shortcuts that you can use in your tests. 
 
 To test whether code throws, use the `throws` matcher: 
 
@@ -363,13 +339,6 @@ To test that code runs without generating an exception, use the
 expect(() => 10 ~/ 1, returnsNormally);
 --------------------------------------------------------------------------------
   
-You can test the error type:
-
---------------------------------------------------------------------------------
-expect(() => throw new StateError('functions called in the wrong order'), 
-    throwsStateError);
---------------------------------------------------------------------------------
-
 The Unittest library provides matchers for commonly occuring exceptions and
 errors:
 
@@ -384,23 +353,41 @@ throwsStateError
 throwsUnsupportedError
 --------------------------------------------------------------------------------
 
-You can also use `throwsA` with a `predicate()` to test the exception type.
-A `predicate()` returns a matcher using a function that returns true or
-false:
+You can use one of these matchers to test the type of the error thrown by your
+code:
 
 --------------------------------------------------------------------------------
-expect(() => 10 ~/ 0, 
-  throwsA(predicate((e) => e is IntegerDivisionByZeroException)));
+expect(() => throw new StateError('functions called in the wrong order'), 
+    throwsStateError);
 --------------------------------------------------------------------------------
-  
-You can test the error message:
+
+You can also use the `throwsA()` and `predicate()` functions for more granular
+testing of exceptions.
+
+The `predicate()` function returns a Matcher based on an assertion about the
+error object:
+
+--------------------------------------------------------------------------------
+Matcher isIntegerDivisionByZeroException =
+  predicate((e) => e is IntegerDivisionByZeroException);
+--------------------------------------------------------------------------------
+
+The `throwsA()` function takes the Matcher returned by `predicate()` and
+matches the exception thrown by the code under test against it:
+
+--------------------------------------------------------------------------------
+expect(() => 10 ~/ 0, throwsA(isIntegerDivisionByZeroException));
+--------------------------------------------------------------------------------
+
+You can test the error message using a combination of `throwsA()` and
+`predicate()`:
 
 --------------------------------------------------------------------------------
 expect(() => throw new ArgumentError('bad argument'), 
   throwsA(predicate((e) => e.message == 'bad argument')));
 --------------------------------------------------------------------------------
 
-You can test the error type and the error message together:
+You can also test the error type and the error message together:
   
 --------------------------------------------------------------------------------
 expect(() => throw new RangeError('out of range'), 
@@ -439,5 +426,4 @@ Here's how you can test for approximate equality:
 --------------------------------------------------------------------------------
 expect(point1.distanceTo(point2)), closeTo(7.28, .001)); 
 --------------------------------------------------------------------------------
-
 
