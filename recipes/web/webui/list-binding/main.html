@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ul>
+      <li template repeat='color in colors'>color = {{color}}</li>
+    </ul>
+    
+    <script type="application/dart">
+       import 'package:web_ui/web_ui.dart';
+       import 'dart:async';
+       
+       List<String> colors = toObservable(new List());
+       
+       // Something, *anything* needs to be @observable, or list.add() does not 
+       // work. If you remove the @observable, the items in the Timer don't
+       // show up in the display of the list.
+       // @observable
+       String completelyMeaninglessString = '';
+       
+       void main() {
+         new Timer(new Duration(seconds: 1), () {
+           colors.add('blue');
+         });   
+       }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
