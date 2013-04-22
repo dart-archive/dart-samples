@@ -8,18 +8,18 @@ void main() {
   group('concatenating strings', () {
     group('using +', () {
       test('', () {
-        expect('Dart' + ' is' + ' fun!', equals('Dart is fun!'));
+        expect('Dart ' + 'is ' + 'fun!', equals('Dart is fun!'));
       });
       
       test('over many lines', () {
-        expect('Dart' + 
-            ' is' 
-            ' fun!', equals('Dart is fun!'));
+        expect('Dart ' + 
+            'is ' 
+            'fun!', equals('Dart is fun!'));
       });
       
       test('over one or many lines', () {
-        expect('Dart' + ' is' + 
-            ' fun!', equals('Dart is fun!'));
+        expect('Dart ' + 'is ' + 
+            'fun!', equals('Dart is fun!'));
       });
       
       test('using multiline strings', () {
@@ -38,18 +38,18 @@ Howe''', equals('Dewey Cheatem and\nHowe'));
       
     group('using adjacent string literals', () {
       test('on one line', () {
-        expect('Dart' ' is' ' fun!', equals('Dart is fun!'));
+        expect('Dart ' 'is ' 'fun!', equals('Dart is fun!'));
       });
       
       test('over many lines', () {
-        expect('Dart' 
-            ' is' 
-            ' fun!', equals('Dart is fun!'));
+        expect('Dart ' 
+            'is ' 
+            'fun!', equals('Dart is fun!'));
       });
       
       test('over one or many lines', () {
-        expect('Dart' ' is' 
-            ' fun!', equals('Dart is fun!'));
+        expect('Dart ' 'is ' 
+            'fun!', equals('Dart is fun!'));
       });
       
       test('using multiline strings', () {

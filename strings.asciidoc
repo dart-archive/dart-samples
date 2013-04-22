@@ -15,7 +15,7 @@ You want to concatenate strings in Dart.
 Use the `+` operator:
 
 --------------------------------------------------------------------------------
-var fact = 'Dart' + 'is' + ' fun!'; // 'Dart is fun!'
+var fact = 'Dart ' + 'is ' + 'fun!'; // 'Dart is fun!'
 --------------------------------------------------------------------------------
 
 You can use the `+` operator to concatenate single-line and multi-line
@@ -32,14 +32,14 @@ Howe'''; // 'Dewey Cheatem and\n Howe'
 You can also use adjacent string literals:
 
 --------------------------------------------------------------------------------
-var fact = 'Dart'  'is'  ' fun!'; // 'Dart is fun!'
+var fact = 'Dart '  'is '  'fun!'; // 'Dart is fun!'
 --------------------------------------------------------------------------------
 
 Adjacent literals work over multiple lines:
 
 -------------------------
-var fact = 'Dart'
-'is'
+var fact = 'Dart '
+'is '
 'fun!'; // 'Dart is fun!'
 -------------------------
 
