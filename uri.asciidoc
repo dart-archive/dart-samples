@@ -37,7 +37,7 @@ print(params); // '%3Fparam1%3D10%26param2%3D20'
 encodeUri('http://www.example.com/') + params;
 // 'http://www.example.com/%3Fparam1%3D10%26param2%3D20'));
 --------------------------------------------------------------------------------
-      
+
 Don't call `encodeUriComponent()` on the complete URI. It escapes characters
 like : and / and renders the URI unusable:
 
@@ -55,14 +55,13 @@ decodeUri(encodedUri) == uri; // true
 --------------------------------------------------------------------------------
 
 To decode a URI component previously encoded using `encodeUriComponent()`, use
-`decodeUriComponent()`: 
+`decodeUriComponent()`:
 
 --------------------------------------------------------------------------------
 var params = encodeUriComponent('?param1=10&param2=20');
 var encodedParams = encodeUriComponent(params);
 decodeUriComponent(encodedParams) == params; // true
 --------------------------------------------------------------------------------
-
 
 === Parsing URIs
 
@@ -73,7 +72,7 @@ You want to access the parts of a URI.
 ==== Solution
 
 The properties of a URI created using the `Uri()` constructor can be directly
-accessed in the following manner: 
+accessed in the following manner:
 
 --------------------------------------------------------------------------------
 var uri = new Uri('http://example.org:8080/content/a.html#intro');
@@ -117,7 +116,7 @@ relative:
 --------------------------------------------------------------------------------
 new Uri('http//example.org:8080/content/#intro').isAbsolute; // false
 --------------------------------------------------------------------------------
-    
+
 The `scheme` and `domain` properties for  relative URIs are empty. Instead, a 
 relative URI starts with the path component:
 
@@ -142,7 +141,6 @@ try {
   print(e); // 'Illegal argument(s): Cannot use origin without a scheme'
 }
 --------------------------------------------------------------------------------
-      
 
 === Building URIs
 
@@ -175,8 +173,7 @@ var uri = new Uri.fromComponents(domain: '/content/a.html');
 uri.isAbsolute;       // false
 print(uri.toString(); // '//content/a.html'
 --------------------------------------------------------------------------------
- 
-You should remove the leading '//' before using the URI.
 
+You should remove the leading '//' before using the URI.
 
 
