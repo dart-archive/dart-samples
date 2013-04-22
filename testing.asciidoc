@@ -333,7 +333,7 @@ To test that code runs without generating an exception, use the
 --------------------------------------------------------------------------------
 expect(() => 10 ~/ 1, returnsNormally);
 --------------------------------------------------------------------------------
-  
+
 The Unittest library provides matchers for commonly occuring exceptions and
 errors:
 
@@ -383,7 +383,7 @@ expect(() => throw new ArgumentError('bad argument'),
 --------------------------------------------------------------------------------
 
 You can also test the error type and the error message together:
-  
+
 --------------------------------------------------------------------------------
 expect(() => throw new RangeError('out of range'), 
   throwsA(predicate((e) => (e is RangeError && e.message == 'out of range'))));
