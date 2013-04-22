@@ -1,7 +1,3 @@
-= Dart Cookbook
-:author: Shailen Tuli
-:encoding: UTF-8
-
 == URIs
 
 Note: all examples require that you load 'dart:uri':
