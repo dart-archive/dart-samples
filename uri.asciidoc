@@ -17,7 +17,7 @@ import 'dart:uri';
 Use `encodeUri()` to encode a fully qualified URI:
 
 --------------------------------------------------------------------------------
-encodeURI('http://www.example.com/file with spaces.html')
+encodeUri('http://www.example.com/file with spaces.html')
 // 'http://www.example.com/file+with+spaces.html'
 --------------------------------------------------------------------------------
 
