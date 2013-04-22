@@ -1,4 +1,4 @@
-== Json
+== JSON
 
 === Encoding JSON
 
@@ -83,7 +83,6 @@ try {
 }
 --------------------------------------------------------------------------------
 
-
 === Decoding JSON
 
 ==== Problem
@@ -103,7 +102,7 @@ person['name'];         // 'joe'
 person['date'];         // [2013, 3, 10]
 person['date'] is List; // true
 --------------------------------------------------------------------------------
-    
+
 Sometimes you want to transform the data parsed by `json.parse`. For
 example, you may prefer to express a date field as a DateTime object, and not
 as a list of numbers representing the year, month and day. Specify a 'reviver'
