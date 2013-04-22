@@ -4,6 +4,7 @@ import 'dart:json' as json;
 
 main() {
   group('json.parse()', () {
+    
     var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
     
     test('simple parse', () {
@@ -14,11 +15,11 @@ main() {
     });
     
     test('with reviver', () {
-      var person = json.parse(jsonPerson, (key, parsedValue) {
+      var person = json.parse(jsonPerson, (key, value) {
         if (key == "date") {
-          return new DateTime(2012, 10, 3);
+          return new DateTime(value[0], value[1], value[2]);
         }
-        return parsedValue;
+        return value;
       });
       
       expect(person['name'], equals('joe'));

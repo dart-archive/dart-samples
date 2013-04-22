@@ -6,7 +6,7 @@ class Person {
   num age;
   
   Person(this.name, this.age);
-  String toJson() => json.stringify({"name": name, "age": age});
+  dynamic toJson() => {"name": name, "age": age};
 }
 
 class Book {
@@ -21,17 +21,16 @@ main() {
     var person = {'name': 'joe', 
                   'born':  2002,
                   'into': {'films' : ['crime', 'noir']},
-                  'aliases': null
-                 };
+                  'aliases': []};
     
     test('simple', () {
-      expect(json.stringify(person) == '{"name":"joe","born":2002,"into":{"films":["crime","noir"]},"aliases":null}', isTrue);
+      expect(json.stringify(person) == '{"name":"joe","born":2002,"into":{"films":["crime","noir"]},"aliases":[]}', isTrue);
     });
     
     test('with object with a toJson() defined', () {
       var person = new Person('john', 32);
       // JSON only deals with double quotes.
-      expect(json.stringify(person), equals(r'"{\"name\":\"john\",\"age\":32}"'));
+      expect(json.stringify(person), equals('{"name":"john","age":32}'));
     });
     
     test('with object lacking toJson()', () {
@@ -46,8 +45,8 @@ main() {
         json.stringify(object);
         throw "managed to stringify an object without a toJson()";
       } catch(e) {
-          expect(e.cause.toString().startsWith(
-              "Class 'Book' has no instance method 'toJson'."), isTrue);
+        expect(e.cause.toString().startsWith(
+          "Class 'Book' has no instance method 'toJson'."), isTrue);
       }
     });
   });  
