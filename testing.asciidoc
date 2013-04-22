@@ -1,9 +1,4 @@
-= Dart Cookbook
-:author: Shailen Tuli
-:encoding: UTF-8
-
 == Testing
-
 
 === Running only a single test
 
