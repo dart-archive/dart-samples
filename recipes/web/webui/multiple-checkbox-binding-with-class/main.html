@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      th, td {border: 1px solid black; padding: 20px}  
+    </style>
+  </head>
+  <body>
+    <div>
+      Edit record for student <em>{{student.studentId}}:</em><br>
+      <input type="checkbox" bind-checked="student.isGraduating" />
+          Graduating?<br>
+      <input type="checkbox" bind-checked="student.isHonorStudent" />
+          Honor Student?<br>
+    </div> 
+    
+    <br>
+    
+    <table>
+      <tr><th>Student Id</th><th>Graduating?</th><th>Honor Student?</th></tr>
+      <tr>
+        <td>{{student.studentId}}</td>
+        <td>{{student.isGraduating ?   'Yes' : 'No'}}</td>
+        <td>{{student.isHonorStudent ? 'Yes' : 'No'}}</td>
+      </tr>
+    </table>  
+    
+    <script type="application/dart">
+      import 'package:web_ui/web_ui.dart';
+
+      class Student {
+        final String studentId;
+        
+        @observable
+        bool isGraduating;
+        
+        @observable
+        bool isHonorStudent;
+        
+        Student(this.studentId, this.isGraduating, this.isHonorStudent);
+      }
+      
+      Student student;
+      
+      void main() {
+        student = new Student("12345678", false, true);
+      }
+   
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
