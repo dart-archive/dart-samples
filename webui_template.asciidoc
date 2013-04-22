@@ -111,7 +111,7 @@ List<Quote> quotes = [ ... ];
 @observable 
 Quote currentQuote;
 --------------------------------------------------------------------------------
-  
+
 Wrap the observable variable inside `{{ }}` in the UI to get its value:
 
 --------------------------------------------------------------------------------
