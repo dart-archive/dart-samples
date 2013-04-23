@@ -23,7 +23,7 @@ Here are the samples we've created so far:
 * [Local Storage Basics](https://github.com/dart-lang/dart-html5-samples/tree/master/web/localstorage/basics)
 * [Using the Notifications API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/notifications/quick)
 * [Pointer Lock And First Person Shooter Controls](https://github.com/dart-lang/dart-html5-samples/tree/master/web/pointerlock/fps)
-* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-html5-amples/tree/master/web/speed/animations)
+* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-html5-samples/tree/master/web/speed/animations)
 * [HTML5 Video](https://github.com/dart-lang/dart-html5-samples/tree/master/web/video/basics)
 * [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webaudio/intro)
 * [WebGL](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webgl)
