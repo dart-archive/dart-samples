@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>selectors_hierarchy</title>
+  </head>
+ 
+  <body>   
+    <ul>
+      <li id='first'>Item 1</li>
+      <li>Item 2
+        <ul>
+          <li>Nested Item 1</li>
+          <li>Nested Item 2</li>
+        </ul>
+      </li>
+      <li>Item 3</li>
+    </ul>    
+    
+    <script type="application/dart">
+     
+      import 'dart:html';
+      
+      void main() {
+      
+        // Child elements.
+        List<Element> elements = queryAll('li > ul');
+        assert(elements.length == 1);
+        
+        // Descendant elements.
+        elements = queryAll('li li');
+        assert(elements.length == 2);
+    
+            
+        // Next adjacent selectors.
+        elements = queryAll('#first + li');
+        assert(elements.length == 1);
+        elements.forEach((el) => el.style.color = 'red');
+        
+        // Next adjacent selectors.
+        elements = queryAll('#first ~ li');
+        assert(elements.length == 2);
+        elements.forEach((el) => el.style.textDecoration = 'underline');
+      }
+      
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
