@@ -1,0 +1,47 @@
+=== Using CSS selectors within a limited scope
+
+==== Problem
+
+You have a handle on a selected DOM element and want to search for other
+elements within it.
+
+==== Solution
+
+Use the `query()` and `queryAll()` functions as methods of the currently
+selected element. This restricts the scope of the query to the currently
+selected element's descendants:
+
+--------------------------------------------------------------------------------
+currentlySelectedElement.query(cssSelector);
+currentlySelectedElement.queryAll(cssSelector);
+--------------------------------------------------------------------------------
+
+==== Examples
+
+Consider the following table of user records:
+
+--------------------------------------------------------------------------------
+<table>
+  <tr><td>Jose</td><td class='status'>Accepted</td></tr>
+  <tr><td>Marie</td><td class='status'>Accepted</td></tr>
+  <tr><td>Kwame</td><td class='status'>Accepted</td></tr>
+  <tr><td>Rohan</td><td class='status'>Accepted</td></tr>
+</table>
+--------------------------------------------------------------------------------
+
+The following code attaches an event handler to each <tr>. When a <tr> is
+clicked, the text within the matching descendant <td> toggles:
+
+--------------------------------------------------------------------------------
+queryAll('tr').forEach((element) {
+  element.onClick.listen((event) {
+    var record = event.currentTarget.query('.status');
+    record.innerHtml = record.innerHtml == 'Accepted' ? 'Declined' : 'Accepted';
+  });
+});
+--------------------------------------------------------------------------------
+
+Because of the scoped query, non-descendant <td>s with the '.status' class are
+not affected.
+
+
