@@ -1,47 +1,42 @@
 <!DOCTYPE html>
 
 <html>
-  <ul>
+  <ol>
     <li>Head</li>
     <li>Shoulders</li>
     <li>Knees</li>
     <li>Toes</li>
-  </ul>
+  </ol>
     
   <body>   
     <script type="application/dart">
       import 'dart:html';
       
-      nextSiblings(item) {
+      List<Element> nextSiblings(item) {
         Element nextElement = item.nextElementSibling;
         return item.parent.children.skipWhile((i) => i != nextElement).toList();
       }
       
-      previousSiblings(item) {
+      List<Element> previousSiblings(item) {
         return item.parent.children.takeWhile((i) => i != item).toList();
       }
-      
-      List prevAll(item) {
-        var results = [];
-        var children = item.parent.children;
-        
-        for (var i = 0; i < children.length; i++) {
-          if (children[i] == item) break;
-          results.add(children[i]); 
-        }   
-        return results;
-      }
-      
+
       void main() {
-        LIElement knees = query('ul > li:nth-child(3)');
-        assert(knees.nextElementSibling.innerHtml == 'Toes');
-        assert(knees.previousElementSibling.innerHtml == 'Shoulders');
-        assert(knees.parent.tagName == 'UL');
+        LIElement knees = query('ol > li:nth-child(3)');
+        
+        // Parent.
+        assert(knees.parent.tagName == 'OL');
         assert(knees.parent.children.length == 4);
+        
+        // Immediate neighbors.
+        assert(knees.nextElementSibling.text == 'Toes');
+        assert(knees.previousElementSibling.text == 'Shoulders');
+        
+        // Siblings.
         List<Element> prev = previousSiblings(knees);
-        assert(prev.first.innerHtml == 'Head');
-        assert(prev.last.innerHtml == 'Shoulders');
-        assert(nextSiblings(knees).first.innerHtml == 'Toes');
+        assert(prev.first.text == 'Head');
+        assert(prev.last.text == 'Shoulders');
+        assert(nextSiblings(knees).first.text == 'Toes');
       }
     </script>
     <script src="packages/browser/dart.js"></script>
