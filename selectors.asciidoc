@@ -1,0 +1,149 @@
+=== Using CSS selectors to find DOM elements
+
+=== Problem
+
+You want to find DOM elements on a web page.
+
+=== Solution
+
+Use the top level `query()` and `queryAll()` functions provided in the
+`dart:html` library. Both functions take CSS selectors as arguments. The
+`query()` function returns the first matching element, and the `queryAll()`
+function returns all matching elements.
+
+=== Example
+
+Here are a few examples of the using `query()` and `queryAll()` with CSS
+selectors to find DOM elements:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <h1>Breakfast</h1> 
+    <ul>
+      <li id='first' class='mustHave'>Milk</li>
+      <li class='mustHave'>Cereal
+        <ul>
+          <li>Bran Flakes</li>
+          <li><a href='https://en.wikipedia.org/wiki/Nut_(fruit)'>Nuts</a></li>
+        </ul>
+      </li>
+      <li>Juice</li>
+    </ul>    
+    
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void main() {
+    
+        // Find by id.
+        Element element = query('#first');
+        window.console.log(element.id);                 // 'first'
+        window.console.log(element.innerHtml);          // 'Milk'
+        
+        // Find by class.
+        List<Element> elements = queryAll('.mustHave');
+        window.console.log(elements.length);            // 2
+        
+        // Find by ID and class.
+        elements = queryAll('#first, .mustHave');
+        window.console.log(elements.length);            // 2
+        
+        // Find by tag.
+        elements = queryAll('li');
+        window.console.log(elements.length);            // 5
+        
+        // Use hierarchical selectors.
+        elements = queryAll('li > ul > li');
+        window.console.log(elements.first.innerHtml);   // 'Bran Flakes'
+        
+        // Use pseudo-elements.
+        element = query('li:nth-child(1)');
+        window.console.log(element.innerHtml);          // 'Milk'
+        
+        // Find by attribute.
+        elements = queryAll('[href *= Nut]');
+        window.console.log(elements.length);            // 1
+      
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+--------------------------------------------------------------------------------
+
+For a comprehensive list of selectors that you can use for querying, see the 
+http://www.w3.org/TR/css3-selectors/[The CSS Selector Specification guide].
+
+==== Discussion
+
+Calling `queryAll()` returns a readonly list of DOM elements:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ol>
+      <li>Google</li>
+      <li>StackOverflow</li>
+      <li>Reddit</li>
+      <li>Github</li>
+    </ol>
+     
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void doSomethingWith(element) {}
+      
+      void main() {
+        List<Element> elements = queryAll('li');
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+
+--------------------------------------------------------------------------------
+
+You can perform regular List operations on the results of `queryAll()`:
+
+--------------------------------------------------------------------------------
+// Index.
+window.console.log(elements[2].innerHtml);   // 'Reddit'
+window.console.log(elements.last.innerHtml); // 'Github'
+
+// Iterate.
+for (var element in elements) {
+   doSomethingWith(element);
+}
+
+// Map results to create a new list.
+var sites = elements.map((site) => site.innerHtml);
+window.console.log(sites.join(', ')); // "Google, StackOverflow, Reddit, Github"
+
+// Filter results.
+sites = elements.reversed.where((site) => site.innerHtml.length != 6);
+window.console.log(
+  sites.map((site) => site.innerHtml).first); // "StackOverflow"
+        
+// Get a subset of the results.
+var sublist = elements.sublist(1, 3);
+window.console.log(sublist.first.innerHtml); // 'StackOverflow'
+window.console.log(sublist.last.innerHtml);  // 'Reddit'
+
+// Call predicates.
+window.console.log(
+  elements.any((element) => element.innerHtml.length == 6)); // true
+--------------------------------------------------------------------------------
+
+Trying to modify the results of `queryAll()` generates an error:
+
+--------------------------------------------------------------------------------
+elements.length = 2; // Error message: 'Cannot resize immutable List.'
+--------------------------------------------------------------------------------
+
+

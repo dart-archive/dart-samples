@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <ul>
+      <li>Has been naughtly</li>
+      <li>Has been nice</li>
+    </ul>
+    
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void main() {
+        var ul = query('ul');
+        
+        ul.insertAdjacentHtml('beforeBegin', '<p>Making a list.</p>');
+        ul.insertAdjacentHtml('afterEnd', '<p>Checking it twice.</p>');
+      }
+    </script>
+
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

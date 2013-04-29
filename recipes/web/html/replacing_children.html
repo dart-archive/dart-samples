@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <h2>Business plan</h2>
+    <ul>
+      <li>Get crazy startup idea</li>
+      <li>Set up company
+        <ul>
+           <li>Build something</li>
+           <li>Raise money</li>
+           <li>Get users</li>
+        </ul>
+      <li>Buy private jet!</li>
+    </ul>
+    
+    <p><a href='#'>Change to ordered list</a></p>
+    
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void changeToOrderedList(items) {
+        items.forEach((item) {
+          var ol = new Element.tag('ol');
+          ol.children.addAll(item.children);
+          item.replaceWith(ol);
+        });
+      }
+      
+      void main() {
+        var link = query('a');
+        link.onClick.listen((event) {
+          changeToOrderedList(queryAll('ul'));
+          event.preventDefault();
+          event.stopPropagation();
+          event.target.replaceWith(new Element.html('<p>Done!</p>'));
+        });        
+      }
+    </script>
+
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+  <style>
+    .out-of-stock {color: #aaa};  
+  </style>  
+</head>
+<html>
+  <body>
+    <ul>
+      <li>Selection:
+       <ul>
+          <li>Toyota
+            <ul>
+              <li>Prius</li>
+              <li class='out-of-stock'>Camry Hybrid</li>
+              <li>Rav 4</li>
+            </ul>
+          </li>
+          
+          <li>Honda
+            <ul>
+              <li class='out-of-stock'>Civic</li>
+              <li>Accord</li>
+            </ul>
+          </li>
+          
+          <li>Nissan
+            <ul>
+              <li>Altima</li>
+              <li class='out-of-stock'>Pathfinder</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  
+    <p><a href='#'>Show only in-stock</a></p>
+   
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void main() {
+        
+        query('a').onClick.listen((event) {
+          queryAll('.out-of-stock').forEach((item) {
+            item.remove();
+          });
+          
+          event.preventDefault();
+          event.stopPropagation();
+          event.target.remove();
+        });
+      }
+      
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
