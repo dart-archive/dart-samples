@@ -16,7 +16,7 @@
         queryAll('tr').forEach((element) {
           element.onClick.listen((event) {
             var record = event.currentTarget.query('.status');
-            record.innerHtml = record.innerHtml == 'Accepted' ? 'Declined' : 'Accepted';
+            record.text = record.text == 'Accepted' ? 'Declined' : 'Accepted';
           });
         });
       }

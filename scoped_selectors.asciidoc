@@ -2,18 +2,17 @@
 
 ==== Problem
 
-You have a handle on a selected DOM element and want to search for other
-elements within it.
+You want to find elements that are contained by a particular element.
 
 ==== Solution
 
-Use the `query()` and `queryAll()` functions as methods of the currently
-selected element. This restricts the scope of the query to the currently
-selected element's descendants:
+Call the `query()` or `queryAll()` methods on a DOM element. Invoking one of
+these methods on an element restricts the scope of the query to the that
+element's descendants:
 
 --------------------------------------------------------------------------------
-currentlySelectedElement.query(cssSelector);
-currentlySelectedElement.queryAll(cssSelector);
+containerElement.query(cssSelector);
+containerElement.queryAll(cssSelector);
 --------------------------------------------------------------------------------
 
 ==== Examples
@@ -41,7 +40,8 @@ queryAll('tr').forEach((element) {
 });
 --------------------------------------------------------------------------------
 
-Because of the scoped query, non-descendant <td>s with the '.status' class are
-not affected.
+Because the query is scoped to the just-clicked row, cells with the 'status'
+class in in other rows are not affected.
 
-
+Note the use of `queryAll()` as a top-level function in the code above. Used
+in this manner, `queryAll()` is scoped to the entire document.
