@@ -33,9 +33,10 @@
         assert(knees.previousElementSibling.text == 'Shoulders');
         
         // Siblings.
-        List<Element> prev = previousSiblings(knees);
-        assert(prev.first.text == 'Head');
-        assert(prev.last.text == 'Shoulders');
+        List<Element> previousSiblings = previousSiblings(knees);
+        assert(previousSiblings.first.text == 'Head');
+        assert(previousSiblings.last.text == 'Shoulders');
+        
         assert(nextSiblings(knees).first.text == 'Toes');
       }
     </script>

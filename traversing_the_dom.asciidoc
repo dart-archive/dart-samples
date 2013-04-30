@@ -1,0 +1,88 @@
+=== Traversing the DOM starting from a selected element
+
+==== Problem
+
+You've selected an element in the DOM and want to traverse over other elements
+in the DOM tree structure.
+
+==== Solution
+
+The dart:html API provides methods for DOM traversal based on your current
+position in the DOM.
+
+Consider the example below. You select an <li> element from an ordered list
+using the top-level `query()` function:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <ol>
+    <li>Head</li>
+    <li>Shoulders</li>
+    <li>Knees</li>
+    <li>Toes</li>
+  </ol>
+    
+  <body>   
+    <script type="application/dart">
+      import 'dart:html';
+
+      void main() {
+        LIElement knees = query('ol > li:nth-child(3)');       
+        print(knees.text); // 'Knees'
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+
+--------------------------------------------------------------------------------
+
+Use the `nextElementSibling` and `previousElementSibling` properties to get the
+currently selected element's immediate siblings:
+
+--------------------------------------------------------------------------------
+print(knees.nextElementSibling.text);     // 'Toes'
+print(knees.previousElementSibling.text); // 'Shoulders'
+--------------------------------------------------------------------------------
+        
+Get the selected element's parent through the `parent` attribute:
+
+--------------------------------------------------------------------------------
+print(knees.parent.tagName);              // 'OL'
+--------------------------------------------------------------------------------
+
+Use the parent's `children` property to get the original element, along with
+all of its siblings:
+
+--------------------------------------------------------------------------------
+print(knees.parent.children.length);      // 4
+--------------------------------------------------------------------------------
+
+Invoking the `children` property on an element returns a list, and you can
+define functions to filter this list to get all the element's previous or next
+siblings:
+
+--------------------------------------------------------------------------------
+List<Element> previousSiblings(item) {
+  return item.parent.children.takeWhile((i) => i != item).toList();
+}
+
+List<Element> nextSiblings(item) {
+  Element nextElement = item.nextElementSibling;
+  return item.parent.children.skipWhile((i) => i != nextElement).toList();
+}
+--------------------------------------------------------------------------------
+
+The `knees` element has two previous siblings, and a single next sibling:
+
+--------------------------------------------------------------------------------
+List<Element> previousSiblings = previousSiblings(knees);
+print(previousSiblings.first.text);    // 'Head'
+print(previousSiblings.last.text);     // 'Shoulders'
+
+print(nextSiblings(knees).first.text); // 'Toes'
+--------------------------------------------------------------------------------
+
+
