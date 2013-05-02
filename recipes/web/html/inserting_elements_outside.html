@@ -2,20 +2,28 @@
 
 <html>
   <body>
+    <p>Para 1</p>
+    <p id='secondPara'>Para 2</p>
     <ul>
-      <li>Has been naughtly</li>
-      <li>Has been nice</li>
+      <li>first</li>
+      <li>second</li>
+      <li>third</li>
     </ul>
-    
     <script type="application/dart">
       
       import 'dart:html';
       
       void main() {
-        var ul = query('ul');
+        var secondPara = query('#secondPara');
+        int index = document.body.children.indexOf(secondPara);
+        document.body.insertBefore(new HRElement(), document.body.children[index]);
         
-        ul.insertAdjacentHtml('beforeBegin', '<p>Making a list.</p>');
-        ul.insertAdjacentHtml('afterEnd', '<p>Checking it twice.</p>');
+        var ul = query('ul');
+        ul.insertBefore(new Element.html('<li>added before</li>'), 
+          ul.children[1]);
+          
+        ul.insertBefore(new Element.html('<li>Dynamically added after</li>'), 
+          ul.children[3]);
       }
     </script>
 

@@ -2,61 +2,55 @@
 
 <html>
   <body>
-    <ol>
-      <li>One</li>
-      <li>Two</li>
-    </ol>
+    <ul></ul>
     
     <script type="application/dart">
       
       import 'dart:html';
       
       void main() {
+        var ul = query('ul');
 
-        var ol = query('ol');
-        ol.insertAdjacentHtml('beforeBegin', '<p>Starting the ol</p>');
-        ol.insertAdjacentHtml('afterEnd', '<p>Done with the ol</p>');
+        assert(ul.children.isEmpty);
         
-           
-        UListElement ul = new Element.tag('ul');
-
         // Append using element.append()
         ul.append(new Element.html('<li>One</li>'));
+        assert(ul.children.last.outerHtml == '<li>One</li>');
         
         // Append using element.appendHtml()
         ul.appendHtml('<li>Two</li>');
+        assert(ul.children.last.outerHtml == '<li>Two</li>');
         
         // Append using List#add()
         ul.children.add(new Element.html('<li>Three</li>'));
+        assert(ul.children.last.outerHtml == '<li>Three</li>');
             
         // Append using List#addAll()
         ul.children.addAll([
           new Element.html('<li>Four</li>'), 
           new Element.html('<li>Five</li>')
         ]); 
+        
+        assert(ul.children[3].outerHtml == '<li>Four</li>');
+        assert(ul.children[4].outerHtml == '<li>Five</li>');
                 
         // Inserting in the middle
         ul.children.insert(1, new Element.html('<li>One And A Half</li>'));
+        assert(ul.children[1].outerHtml == '<li>One And A Half</li>');
                
         // Prepending using list method.
         ul.children.insert(0, new Element.html('<li>Zero</li>'));
-        // Less good.
+        assert(ul.children.first.outerHtml == '<li>Zero</li>');
+  
+  
+        // Using insertAdjacentHtml()
         ul.insertAdjacentHtml('afterBegin', '<li>Less than Zero</li>'); 
-        
-        // Append using insertAdjacentHtml()
-        ul.insertAdjacentHtml('beforeEnd', '<li>Last</li>'); 
-
-        // Don't work.
-        ul.insertAdjacentHtml('beforeBegin', '<div>Before the UL</div>');
-        ul.insertAdjacentHtml('afterEnd', '<div>After the UL</div>');
+        assert(ul.children.first.outerHtml == '<li>Less than Zero</li>');
+         
+        ul.insertAdjacentHtml('beforeEnd', '<li>Last</li>');
+        assert(ul.children.last.outerHtml == '<li>Last</li>');
          
         document.body.children.add(ul);
-        
-        document.body.insertAdjacentHtml('afterBegin', '<p>Starting the body</p>');
-        document.body.insertAdjacentHtml('beforeEnd',  '<p>Ending the body</p>');
-        
-        // insertBefore() // prepend
-        // insertAllBefore() // prepend several
       }
     </script>
 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ul>
+      <li>First item</li>
+      <li id='target'>Target item</li>
+      <li>Last item</li>
+    </ul>
+    
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void main() {
+        var ul = query('ul');
+        assert(ul.children.length == 3);
+        
+        var targetItem = query('#target');
+        targetItem.insertAdjacentElement('beforeBegin',
+            new Element.html('<li>Added before</li>'));
+            
+        assert(ul.children.length == 4);
+        assert(targetItem.previousElementSibling.outerHtml == '<li>Added before</li>');
+        
+        targetItem.insertAdjacentElement('afterEnd', 
+            new Element.html('<li>Added after</li>'));
+        assert(targetItem.nextElementSibling.outerHtml == '<li>Added after</li>');
+      }
+      
+    </script>
+    
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

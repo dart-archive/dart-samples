@@ -1,0 +1,73 @@
+=== Inserting elements before or after an existing DOM element
+
+==== Problem
+
+You want to insert an element adjacent to an existing DOM element.
+
+==== Solution
+
+Use the `insertAdjacentElement()` method:
+
+--------------------------------------------------------------------------------
+Element insertAdjacentElement(String where, Element element)
+--------------------------------------------------------------------------------
+
+The first parameter to `insertAdjacentElement()` indicates where the new
+element is inserted. If the first parameter is `beforeBegin', the new element
+is inserted immediately before the original element. If it is 'afterEnd', the
+new element is inserted immediately after the original element.
+
+The second parameter to `insertAdjacentElement()` is the new element that is
+inserted into the DOM.
+
+==== Example
+
+This simple example illustrates the use `insertAdjacentElement()` to add
+elements to the DOM:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ul>
+      <li>First item</li>
+      <li id='target'>Target item</li>
+      <li>Last item</li>
+    </ul>
+    
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void main() {
+        // Find DOM element.
+        var targetItem = query('#target');
+
+        // Insert before.
+        targetItem.insertAdjacentElement('beforeBegin',
+            new Element.html('<li>Added before</li>')); 
+
+        // Insert after.
+        targetItem.insertAdjacentElement('afterEnd', 
+            new Element.html('<li>Added after</li>'));
+      }
+    </script>
+    
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+--------------------------------------------------------------------------------
+
+You can also use the `insertAdjacentHtml()` method. This functions the same
+way as `insertAdjacentElement()`, but instead of taking an element as a second
+argument, takes a String HTML fragment.
+
+You could replace the calls to `insertAdjacentElement()` in the example above
+with `insertAdjacentHtml()` in the following way:
+
+--------------------------------------------------------------------------------
+targetItem.insertAdjacentHtml('beforeBegin', '<li>Added before</li>');
+targetItem.insertAdjacentHtml('afterEnd', '<li>Added after</li>');
+--------------------------------------------------------------------------------
+
+
