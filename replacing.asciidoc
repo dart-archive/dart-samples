@@ -1,3 +1,21 @@
+=== Replacing DOM elements
+
+==== Problem
+
+You want to replace one or more DOM elements with other elements.
+
+==== Solution
+
+Call the `replaceWith()` method on a DOM element and pass to it the new
+element as an argument.
+
+==== Example
+
+The following example allows the user to edit a snippet of text. A text input
+replaces a span when the user starts editing. When the editing is done, the
+span replaces the text input:
+
+--------------------------------------------------------------------------------
 <!DOCTYPE html>
 
 <html>
@@ -29,7 +47,6 @@
             input.replaceWith(span);
             link.innerHtml = 'Edit';
           }
-          
           event.preventDefault();
         });     
       }
@@ -38,3 +55,7 @@
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>
+--------------------------------------------------------------------------------
+
+
+

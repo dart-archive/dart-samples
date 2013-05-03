@@ -3,40 +3,39 @@
 <html>
   <body>
     <ol>
-      <li>Google</li>
-      <li>Wikipedia</li>
-      <li>Reddit</li>
-      <li class='news'>New York Times</li>
-      <li>Hacker News</li>
-    </ol>  
+      <li>Africa</li>
+      <li>Antarctica</li>
+      <li class='largest'>Asia</li>
+      <li>Australia</li>
+      <li>Europe</li>
+      <li>North America</li>
+      <li>South America</li>
+    </ol> 
     
     <script type="application/dart">
       
       import 'dart:html';
-      
+   
       void main() {
-        var children = query('ol').children;
-        
+          
+        var ol = query('ol'); 
+        List<Element> children = ol.children;
         
         // RemoveAt()
-        assert(children[1].innerHtml == 'Wikipedia');
+        assert(children[1].innerHtml == 'Antarctica');
         children.removeAt(1);
-        assert(children[1].innerHtml == 'Reddit');
-        
-        print(children.runtimeType);
+        assert(children[1].innerHtml == 'Asia');
         
         // removeLast()
         children.removeLast();
-        assert(children.last.innerHtml == 'New York Times');
+        assert(children.last.innerHtml == 'North America');
         
-        var news = query('.news');
+        // remove()
+        assert(children[1].innerHtml == 'Asia');
+        children.remove(ol.query('.largest'));
+        assert(children[1].innerHtml == 'Australia');
         
-        children.remove(news);
-        assert(children.last.innerHtml == 'Reddit');
-        
-        // BUG: RemoveWhere: does not work. retainWhere() also does not work.
-        // children.removeWhere((child) => child.innerHtml.length == 5);
-        
+        // Remove all.
         children.clear();
         assert(children.isEmpty);
       }
