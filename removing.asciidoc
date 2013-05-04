@@ -6,15 +6,14 @@ You want to remove an element from the DOM.
 
 ==== Solution
 
-Call the `remove()` method on an element. Doing so removes the element
-from the DOM.
+Call the `remove()` method on the element. Doing so removes it from the DOM.
 
 ==== Example
 
 The following example shows a list of items, some of which are out of stock.
-If the user decides that she does not want to see the out of stock items, she
-can click on a link that triggers a callback that remove those items from the
-DOM: 
+The program allows the user to click a link to stop displaying the out of
+stock items. Clicking the link triggers a callback that remove the items from
+the DOM:
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
@@ -83,14 +82,15 @@ DOM:
 ==== Discussion
 
 Using `remove()` works well if you have a reference to the DOM element you
-want to remove. But sometimes, you only have a reference to the element's
-parent.  For example, you may want to remove an <li> that you don't have a
-direct reference to. If you have a reference to the <ul> or <ol> that
-contains the <li>, you can use list methods to remove the <li> from the list
-of its parent's children. Doing so removes the <li> from the DOM.
+want to remove. But sometimes, you have a reference to the element's
+parent, not to the element itself. For example, you may want to remove an <li>, 
+but only have a reference to the <ul> or <ol> that contains the <li>. 
 
-You can obtain a list of an element's children through its `children`
-property:
+In such cases, get a list of the parent element's children, and remove one or
+more child elements from it. The list of an element's children is synced to the
+DOM: removing elements from it removes them from the DOM.
+
+Use an element's `children` property to get its children:
 
 --------------------------------------------------------------------------------
 List<Element> children = query('ol').children;
@@ -120,6 +120,5 @@ You can remove all child elements using the `clear()` method:
 --------------------------------------------------------------------------------
 element.children.clear();
 --------------------------------------------------------------------------------
-
 
 

@@ -11,9 +11,10 @@ element as an argument.
 
 ==== Example
 
-The following example allows the user to edit a snippet of text. A text input
-replaces a span when the user starts editing. When the editing is done, the
-span replaces the text input:
+The following example allows the user to edit a snippet of text. The text is
+displayed within a <span> element. A text <input> replaces the <span> when the
+user wants to edit the text. When the user is done editing, the <span> replaces
+the <input>:
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
@@ -56,6 +57,5 @@ span replaces the text input:
   </body>
 </html>
 --------------------------------------------------------------------------------
-
 
 
