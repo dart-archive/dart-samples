@@ -16,7 +16,7 @@
       
       void main() {
         List<Element> elements = queryAll('li');
-        
+
         // Index.
         assert(elements[2].text == 'Reddit');
         assert(elements.last.text == 'Github');
@@ -27,7 +27,7 @@
            doSomethingWith(element);
         }
         
-        var sites = elements.map((site) => site.text);
+        Iterable sites = elements.map((site) => site.text);
         assert(sites.join(', ') == "Google, StackOverflow, Reddit, Github");
         
         sites = elements.where((site) => site.text.length != 6);

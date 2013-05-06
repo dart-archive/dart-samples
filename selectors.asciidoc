@@ -23,8 +23,8 @@ selectors to find DOM elements:
   <body>
     <h1>Breakfast</h1> 
     <ul>
-      <li id='first' class='mustHave'>Milk</li>
-      <li class='mustHave'>Cereal
+      <li id='first' class='must-have'>Milk</li>
+      <li class='must-have'>Cereal
         <ul>
           <li>Bran Flakes</li>
           <li><a href='https://en.wikipedia.org/wiki/Nut_(fruit)'>Nuts</a></li>
@@ -41,14 +41,14 @@ selectors to find DOM elements:
         // Find by ID.
         Element element = query('#first');
         print(element.id);                 // 'first'
-        print(element.text);          // 'Milk'
+        print(element.text);               // 'Milk'
         
         // Find by class.
-        List<Element> elements = queryAll('.mustHave');
+        List<Element> elements = queryAll('.must-have');
         print(elements.length);            // 2
         
-        // Find by ID and class.
-        elements = queryAll('#first, .mustHave');
+        // Find by ID or class.
+        elements = queryAll('#first, .must-have');
         print(elements.length);            // 2
         
         // Find by tag.
@@ -57,11 +57,11 @@ selectors to find DOM elements:
         
         // Use hierarchical selectors.
         elements = queryAll('li > ul > li');
-        print(elements.first.text);   // 'Bran Flakes'
+        print(elements.first.text);        // 'Bran Flakes'
         
         // Use pseudo-elements.
         element = query('li:nth-child(1)');
-        print(element.text);          // 'Milk'
+        print(element.text);               // 'Milk'
         
         // Find by attribute.
         elements = queryAll('[href *= Nut]');
@@ -106,8 +106,6 @@ Calling `queryAll()` returns a list of DOM elements:
 
 --------------------------------------------------------------------------------
 
-You can perform regular List operations on the results of `queryAll()`.
-
 Use the `[]` operator to access individual elements. You can also use the
 `first` and `last` getters:
 
@@ -125,14 +123,14 @@ for (var element in elements) {
    doSomethingWith(element);
 }
 
-var sites = elements.map((site) => site.text);
+Iterable sites = elements.map((site) => site.text);
 print(sites.join(', ')); // "Google, StackOverflow, Reddit, Github"
 
 sites = elements.where((site) => site.text.length != 6);
 print(sites.first.text); // "StackOverflow"
 --------------------------------------------------------------------------------
 
-You can slice `queryAll()` results to obtain a sublist:
+You can slice the list to obtain a sublist:
         
 --------------------------------------------------------------------------------
 var sublist = elements.sublist(1, 3); // Get the elements at positions 1 and 2.
@@ -140,11 +138,15 @@ print(sublist.first.text);            // 'StackOverflow'
 print(sublist.last.text);             // 'Reddit'
 --------------------------------------------------------------------------------
 
-The List returned by `queryAll()` is read-only, and attempting to modify it
-generates an error:
+Since the list returned by `queryAll()` is read only, you cannot add, modify,
+or remove list elements. Attempting to change the list in any way generates an
+error:
 
 --------------------------------------------------------------------------------
 elements.length = 2; // Error message: 'Cannot resize immutable List.'
 --------------------------------------------------------------------------------
+
+Other recipes in this chapter show how you can create elements and insert them
+into the DOM, add modify existing DOM elements.
 
 
