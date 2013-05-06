@@ -1,4 +1,4 @@
-=== Traversing the DOM starting from a selected element
+=== Traversing the DOM starting from your current context
 
 ==== Problem
 
