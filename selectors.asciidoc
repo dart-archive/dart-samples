@@ -138,7 +138,7 @@ print(sublist.first.text);            // 'StackOverflow'
 print(sublist.last.text);             // 'Reddit'
 --------------------------------------------------------------------------------
 
-Since the list returned by `queryAll()` is read-only, you cannot add, modify,
+Since the list returned by `queryAll()` is read only, you cannot add, modify,
 or remove list elements. Attempting to change the list in any way generates an
 error:
 
