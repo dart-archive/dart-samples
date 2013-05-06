@@ -9,19 +9,6 @@
       
       void main() {
              
-        // Using the Element.tag() constructor
-        var item = new Element.tag('li');
-        assert(item is LIElement);
-        
-        item.text = 'learn Dart';
-        assert(item.outerHtml == '<li>learn Dart</li>');
-        
-        // Using an invalid tag. 
-        var newElement = new Element.tag('bogusTag');
-        assert(newElement is UnknownElement);
-        
-        assert(Element.isTagSupported('bogusTag') == false);
-
         // Using typed constructors.        
         AnchorElement anchor = new AnchorElement();
         anchor.href = 'http://dartlang.org';
@@ -34,10 +21,24 @@
         
         FormElement form = new FormElement();
         form.method = 'PUT';
-        assert(form.outerHtml == '<form method="PUT"></form>');
+        assert(form.outerHtml == '<form method="PUT"></form>');            
+              
+             
+        // Using the Element.tag() constructor
+        LIElement item = new Element.tag('li');
+        assert(item.tagName == 'LI');
         
+        item.text = 'learn Dart';
+        assert(item.outerHtml == '<li>learn Dart</li>');
+        
+        // Using an invalid tag. 
+        var newElement = new Element.tag('bogusTag');
+        assert(newElement is UnknownElement);        
+        assert(Element.isTagSupported('bogusTag') == false);
+
+
         // Using the Element.html() constructor.
-        var div = new Element.html('<div>I love Strawberries.</div>') ;
+        DivElement div = new Element.html('<div>I love Strawberries.</div>') ;
         assert(div is DivElement);
         
         // Using another element's outerHtml.

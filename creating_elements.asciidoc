@@ -6,13 +6,40 @@ You want to create new DOM elements.
 
 ==== Solution
 
-The dart:html library provides several ways to create new DOM elemnts.
+The dart:html library provides several ways to create new DOM elements.
+
+You can use constructors provided by specialized element classes:
+
+--------------------------------------------------------------------------------
+var item = new LIElement();
+--------------------------------------------------------------------------------
+
+These classes inherit from Element, and provide special properties and methods
+beyond those provided by Element. Here are a few examples:
+
+--------------------------------------------------------------------------------
+var anchor = new AnchorElement();
+anchor.href = 'http://dartlang.org';
+print(anchor.outerHtml); // '<a href="http://dartlang.org"></a>'
+
+var label = new LabelElement();
+label.htmlFor = 'color';
+label.text = 'Color';
+print(label.outerHtml); // '<label for="color">Color</label>'
+
+var form = new FormElement();
+form.method = 'PUT';
+print(form.outerHtml); // '<form method="PUT"></form>'
+--------------------------------------------------------------------------------
+
+You can also use constructors provided by the Element class.
+elements.
 
 Use the `Element.tag()` constructor to create an element with a specified tag:
 
 --------------------------------------------------------------------------------
-var item = new Element.tag('li');
-print(item is LIElement); // true
+LIElement item = new Element.tag('li');
+print(item.tagName); // 'LI'
 --------------------------------------------------------------------------------
         
 You can then assign content to the element using the element's text property:
@@ -35,47 +62,16 @@ to test whether a tag is valid:
 --------------------------------------------------------------------------------
 print(Element.isTagSupported('bogusTag')); // false
 --------------------------------------------------------------------------------
-
-A second way of creating new elements is through the use of specialized element
-classes:
-
---------------------------------------------------------------------------------
-LIElement item = new LIElement();
---------------------------------------------------------------------------------
-
-These classes inherit from Element and provide special properties and methods
-beyond those provided by Element. Here are a few examples:
-
---------------------------------------------------------------------------------
-AnchorElement anchor = new AnchorElement();
-anchor.href = 'http://dartlang.org';
-print(anchor.outerHtml); // '<a href="http://dartlang.org"></a>'
-
-LabelElement label = new LabelElement();
-label.htmlFor = 'color';
-label.text = 'Color';
-print(label.outerHtml); // '<label for="color">Color</label>'
-
-FormElement form = new FormElement();
-form.method = 'PUT';
-print(form.outerHtml); // '<form method="PUT"></form>'
---------------------------------------------------------------------------------
         
 Another way of creating elements is through the use of the `Element.html()`
 constructor. This constuctor takes a String argument representing a valid HTML
 fragment:
 
 --------------------------------------------------------------------------------
-var div = new Element.html('<div>I love Strawberries.</div>');
-print(div is DivElement); // true
+DivElement div = new Element.html('<div>I love Strawberries.</div>');
 --------------------------------------------------------------------------------
 
-Care must be taken if the String argument passed to `Element.html()` contains
-data from the user. Such data must first undergo strict validation. Failure to
-do this can make your application succeptible to script injection exploits.
-
 Note that creating an element does not insert it into the DOM. Other recipes
-in this chapter discuss different ways in which you can add a new element to
-the DOM.
+in this chapter discuss different ways in which you can add elements to the DOM.
 
 
