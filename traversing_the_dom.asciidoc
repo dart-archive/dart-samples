@@ -1,4 +1,4 @@
-=== Traversing the DOM starting from your current context
+=== Traversing the DOM starting from a particular element
 
 ==== Problem
 
@@ -42,7 +42,7 @@ Using the top level `query()` function, you obtain a reference to an <li>
 element. This is your starting point within the DOM structure.
 
 Use the `nextElementSibling` and `previousElementSibling` properties to locate
-locate an element's immediate siblings:
+an element's immediate siblings:
 
 --------------------------------------------------------------------------------
 print(knees.nextElementSibling.text);     // 'Toes'
