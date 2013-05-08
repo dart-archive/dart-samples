@@ -13,7 +13,6 @@ attribute.
 
 To assign style properties directly to an element, use the `style` field.
 
-
 ==== Examples
  
 The examples below assume the following HTML:
@@ -77,7 +76,7 @@ print(element.getComputedStyle(':after').content); // "' rocks!'"
 
 ===== Accessing the classes associated with an element
 
-Use the `classes` field to get a list of an element's CSS classes:
+Use the `classes` field to get a set of an element's CSS classes:
 
 --------------------------------------------------------------------------------
 print(element.classes.first); // 'bold'
@@ -113,14 +112,14 @@ print(element.classes.contains('underlined')); // false
 ===== Directly applying a style property
 
 While using classes is a common way of associating an element with a set of
-styles, you can attach a style property directly to the element:
+styles, you can also attach a style property directly to the element:
 
 --------------------------------------------------------------------------------
 element.style.color = 'rgb(120, 120, 120)';
 element.style.border = '1px solid rgb(0, 0, 0)';
 --------------------------------------------------------------------------------
 
-It is idiomatic Dart to write the above code using the cascade operator (`..`):
+It is idiomatic Dart to write the above code using the cascade operator (..):
 
 --------------------------------------------------------------------------------
 element.style
