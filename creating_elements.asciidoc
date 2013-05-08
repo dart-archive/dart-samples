@@ -14,8 +14,8 @@ You can use constructors provided by specialized element classes:
 var item = new LIElement();
 --------------------------------------------------------------------------------
 
-These classes inherit from Element, and provide special properties and methods
-beyond those provided by Element. Here are a few examples:
+These classes inherit from Element. Here are a few examples of specialized
+properties that these classes provide:
 
 --------------------------------------------------------------------------------
 var anchor = new AnchorElement();
@@ -33,7 +33,6 @@ print(form.outerHtml); // '<form method="PUT"></form>'
 --------------------------------------------------------------------------------
 
 You can also use constructors provided by the Element class.
-elements.
 
 Use the `Element.tag()` constructor to create an element with a specified tag:
 
