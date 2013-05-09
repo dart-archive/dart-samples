@@ -9,70 +9,99 @@ You want to insert one or more elements inside an existing DOM element.
 Get the list of the DOM element's children. Add new child elements to that list.
 This inserts the child elements into the DOM.
 
-Consider this sparse web page with an empty <ul>. You want to add <li>
-elements to the <ul>:
+Consider this sparse web page with an empty <ul>. You want to use Dart code to 
+dynamically add <li> elements to the <ul>:
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
+
 <html>
   <body>
     <ul></ul>
     
-    <script type="application/dart">
-      
-      import 'dart:html';
-
-      void main() {
-        // Dart code for adding child elements goes here.
-      }
-
-    </script>
+    <script type="application/dart" src='main.dart'></script>
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>
 --------------------------------------------------------------------------------
 
-Begin by getting a reference to the parent element:
+In the corresponding Dart file, begin by getting a reference to the parent
+element:
 
 --------------------------------------------------------------------------------
-var ul = query('ul');
+import 'dart:html';
+
+void main() {
+  var ul = query('ul');
+  // Code for inserting elements goes here.
+}
 --------------------------------------------------------------------------------
 
 Use `add()` to append a new element to the parent's children:
 
 --------------------------------------------------------------------------------
-ul.children.add(new Element.html('<li>Three</li>'));    
+var li = new LIElement();
+li.text = 'One banana';
+ul.children.add(li);
+
+print(ul.children.last.outerHtml); '<li>One banana</li>'
 --------------------------------------------------------------------------------
 
-User `addAll()` to add several elements:
+The code for creating a new <li> and adding it to the <ul> can be more
+succinctly written using the cascade operator, and we will use this synax for
+subsequent examples:
 
 --------------------------------------------------------------------------------
-ul.children.addAll([
-  new Element.html('<li>Four</li>'), 
-  new Element.html('<li>Five</li>')
-]); 
+items.add(new LIElement()..text = 'Three banana');                                       
+--------------------------------------------------------------------------------
+
+Use `addAll()` to add several elements to the list:
+
+--------------------------------------------------------------------------------
+List<LIElement> items = [];                                                      
+items.add(new LIElement()..text = 'Three banana');                                       
+items.add(new LIElement()..text = 'Four banana');
+ul.children.addAll(items);  
 --------------------------------------------------------------------------------
                 
-Use `insert()` to add an element at a specific position:
+This is what the list looks like:
 
 --------------------------------------------------------------------------------
-// Add the new element before the second element.
-ul.children.insert(1, new Element.html('<li>One And A Half</li>'));
+One banana
+Three banana
+Four banana
 --------------------------------------------------------------------------------
-               
+
+Looks like we skipped an item. Use `insert()` to place the missing item in the
+list:
+
+--------------------------------------------------------------------------------
+ul.children.insert(1, new LIElement()..text = 'Two banana');
+--------------------------------------------------------------------------------
+
+This adds the new <li>  after the second item. The list now looks like this:
+
+--------------------------------------------------------------------------------
+One banana
+Two banana
+Three banana
+Four banana
+--------------------------------------------------------------------------------
+
 You can use `insert()` to prepend to a list:
 
 --------------------------------------------------------------------------------
-ul.children.insert(0, new Element.html('<li>Zero</li>'));
+ul.children.insert(0, new LIElement()..text = 'Zero banana');
+print(ul.children.first.outerHtml == '<li>Zero banana</li>');
 --------------------------------------------------------------------------------
 
 The Element class defines a couple of helpful methods that provide additional
 ways of adding child elements to a parent element.
 
-Use the `append()` method to add a single element to a parent:
+Use `append()` to add a single element to a parent:
 
 --------------------------------------------------------------------------------
-ul.append(new Element.html('<li>One</li>'));
+ul.append(new LIElement()..text = 'Five banana');
 --------------------------------------------------------------------------------
 
 Or, you can use the `appendHtml()` method. This method parses the String
@@ -80,7 +109,20 @@ argument passed to it as HTML and adds the resulting node as the last child of
 the parent:
 
 --------------------------------------------------------------------------------
-ul.appendHtml('<li>Two</li>');
+ul.appendHtml('<li>Six banana</li>');
 --------------------------------------------------------------------------------
+
+Here is the final version of the list:
+
+--------------------------------------------------------------------------------
+Zero banana
+One banana
+Two banana
+Three banana
+Four banana
+Five banana
+Six banana
+--------------------------------------------------------------------------------
+
 
 
