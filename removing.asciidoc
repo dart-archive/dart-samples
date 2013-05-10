@@ -10,112 +10,87 @@ Call the `remove()` method on the element. Doing so removes it from the DOM.
 
 ==== Example
 
-The following example shows a list of items, some of which are out of stock.
-The program allows the user to click a link to stop displaying the out of
-stock items. Clicking the link triggers a callback that remove the items from
-the DOM:
+The following example shows a list of exotic fruits, some of which are out of
+stock.  The application allows the user to click a link to stop displaying the out
+of stock items. Clicking the link triggers a callback that removes the items from
+the DOM. Here is the HTML file:
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
 <head>
-  <style>
-    .out-of-stock {color: #aaa};  
-  </style>  
+  <style> .out-of-stock {color: #aaa}; </style>  
 </head>
 <html>
   <body>
     <ul>
-      <li>Selection:
-       <ul>
-          <li>Toyota
-            <ul>
-              <li>Prius</li>
-              <li class='out-of-stock'>Camry Hybrid</li>
-              <li>Rav 4</li>
-            </ul>
-          </li>
-          
-          <li>Honda
-            <ul>
-              <li class='out-of-stock'>Civic</li>
-              <li>Accord</li>
-            </ul>
-          </li>
-          
-          <li>Nissan
-            <ul>
-              <li>Altima</li>
-              <li class='out-of-stock'>Pathfinder</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
+      <li>Rambutan</li>
+      <li>Jackfruit</li>
+      <li class='out-of-stock'>Passion Fruit</li> 
+      <li>Lychee</li>
+      <li class='out-of-stock'>Kumquat</li>           
     </ul>
   
     <p><a href='#'>Show only in-stock</a></p>
    
-    <script type="application/dart">
-      
-      import 'dart:html';
-      
-      void main() {
-        
-        query('a').onClick.listen((event) {
-        
-          // Remove all out of stock items from the DOM.
-          queryAll('.out-of-stock').forEach((item) {
-            item.remove();
-          });
-          
-          event.preventDefault();
-          event.target.remove();
-        });
-      }
-      
-    </script>
+    <script type="application/dart" src='main.dart'></script>
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>
 --------------------------------------------------------------------------------
 
+And here is the Dart code that handles the element removal:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+      
+void main() {
+  
+  query('a').onClick.listen((event) {
+  
+    // Find all out of stock items and remove them from the DOM.
+    queryAll('.out-of-stock').forEach((item) {
+      item.remove();
+    });
+    
+    event.preventDefault();
+    
+    // Remove the link from the DOM.
+    event.target.remove();
+  });
+}
+--------------------------------------------------------------------------------
 
 ==== Discussion
 
 Using `remove()` works well if you have a reference to the DOM element you
 want to remove. But sometimes, you have a reference to the element's
 parent, not to the element itself. For example, you may want to remove an <li>, 
-but only have a reference to the <ul> or <ol> that contains the <li>. 
+but you only have a reference to the <ul> or <ol> that contains the <li>. 
 
-In such cases, get a list of the parent element's children, and remove one or
-more child elements from it. The list of an element's children is synced to the
-DOM: removing elements from it removes them from the DOM.
+In such cases, get a list of the parent element's children. Removing elements
+from this list removes them from the DOM.
 
-Use an element's `children` property to get its children:
-
---------------------------------------------------------------------------------
-List<Element> children = query('ol').children;
---------------------------------------------------------------------------------
-
-Use `removeAt()` to remove an element by its index position:
+Use `removeAt()` to remove a child by its index position:
 
 --------------------------------------------------------------------------------
-element.children.removeAt(1);
+element.children.removeAt(1); // Removes the second child.
 --------------------------------------------------------------------------------
 
-Remove the last child element using `removeLast()`: 
+Remove the last child using `removeLast()`: 
 
 --------------------------------------------------------------------------------
 element.children.removeLast();
 --------------------------------------------------------------------------------
 
-You can query the collection of children and remove a matching element using
-`remove()`:
+You can query the collection of children and remove a matching child using
+`remove()`. The code below finds the first child with the class `largest`,
+and removes it from the DOM:
 
 --------------------------------------------------------------------------------
 element.children.remove(element.query('.largest'));
 --------------------------------------------------------------------------------
 
-You can remove all child elements using the `clear()` method:
+You can remove all of an element's children using the `clear()` method:
 
 --------------------------------------------------------------------------------
 element.children.clear();
