@@ -7,7 +7,7 @@ You want to find elements that are contained by a particular element.
 ==== Solution
 
 Call the `query()` or `queryAll()` methods on a DOM element. Invoking one of
-these methods on an element restricts the scope of the query to the that
+these methods on an element restricts the scope of the query to that
 element's descendants:
 
 --------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ queryAll('tr').forEach((element) {
 --------------------------------------------------------------------------------
 
 Because the query is scoped to the just-clicked row, cells with the 'status'
-class in in other rows are not affected.
+class in other rows are not affected.
 
 Note the use of `queryAll()` as a top-level function in the code above. Used
 in this manner, `queryAll()` is scoped to the entire document.
