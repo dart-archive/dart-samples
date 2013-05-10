@@ -6,24 +6,14 @@ You want to insert an element adjacent to an existing DOM element.
 
 ==== Solution
 
-Use the `insertAdjacentElement()` method:
+Use an element's `insertAdjacentElement()` method to insert another element
+adjacent to it. Or, use the 'insertBefore()` method.  Examples of both
+are shown below.
 
---------------------------------------------------------------------------------
-Element insertAdjacentElement(String where, Element element)
---------------------------------------------------------------------------------
+==== Examples
 
-The first parameter to `insertAdjacentElement()` indicates where the new
-element is inserted. If the first parameter is `beforeBegin', the new element
-is inserted immediately before the original element. If it is 'afterEnd', the
-new element is inserted immediately after the original element.
-
-The second parameter to `insertAdjacentElement()` is the new element that is
-inserted into the DOM.
-
-==== Example
-
-This simple example illustrates the use `insertAdjacentElement()` to add
-elements to the DOM:
+Consider this HTML file. You want to insert two new <li> elements into the <ul>,
+one before the <li> with the 'target' ID, and one after it:
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
@@ -36,38 +26,71 @@ elements to the DOM:
       <li>Last item</li>
     </ul>
     
-    <script type="application/dart">
-      import 'dart:html';
-      
-      void main() {
-        // Find DOM element.
-        var targetItem = query('#target');
-
-        // Insert before.
-        targetItem.insertAdjacentElement('beforeBegin',
-            new Element.html('<li>Added before</li>')); 
-
-        // Insert after.
-        targetItem.insertAdjacentElement('afterEnd', 
-            new Element.html('<li>Added after</li>'));
-      }
-    </script>
+    <script type='application/dart' src='main.dart'></script>
     
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>
 --------------------------------------------------------------------------------
 
-You can also use the `insertAdjacentHtml()` method. This functions the same
-way as `insertAdjacentElement()`, but instead of taking an element as a second
-argument, takes a String HTML fragment.
-
-You could replace the calls to `insertAdjacentElement()` in the example above
-with `insertAdjacentHtml()` in the following way:
+In the accompanying Dart file, get a reference to the target <li>.  Then,
+invoke the 'insertAdjacentElement()` method on that <li> to insert new
+elements adjacent to it:
 
 --------------------------------------------------------------------------------
-targetItem.insertAdjacentHtml('beforeBegin', '<li>Added before</li>');
-targetItem.insertAdjacentHtml('afterEnd', '<li>Added after</li>');
+import 'dart:html';
+
+void main() {
+  var targetItem = query('#target');
+
+  var li = new LIElement();
+  li.text = 'Added before target';
+  targetItem.insertAdjacentElement('beforeBegin', li);
+  
+  li = new LIElement();
+  li.text = 'Added after target';
+  targetItem.insertAdjacentElement('afterEnd', li);
+}
+
+--------------------------------------------------------------------------------
+
+
+The first argument to `insertAdjacentElement()` indicates where the new
+element is inserted, with 'beforeBegin' inserting it before the target element
+
+The first argument to `insertAdjacentElement()` indicates where the new
+element is inserted. If it is 'beforeBegin', the new element is inserted
+immediately before the target element. If it is 'afterEnd', the new element is
+inserted immediately after the target element.
+
+The list looks like this after the new elements have been inserted:
+
+--------------------------------------------------------------------------------
+First item
+Added before target
+Target item
+Added after target
+Last item
+--------------------------------------------------------------------------------
+
+You can also use the `insertBefore()` method to insert an element into the
+DOM. Call `insertBefore()` on the target element's parent node:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+      
+void main() {
+  var targetItem = query('#target');
+
+  var li = new LIElement();
+  li.text = 'Added before target';
+  targetItem.parent.insertBefore(li, targetItem);
+  
+  li = new LIElement();
+  li.text = 'Added after target';
+  // Insert after the target element.
+  targetItem.parent.insertBefore(li, targetItem.nextElementSibling);
+}
 --------------------------------------------------------------------------------
 
 
