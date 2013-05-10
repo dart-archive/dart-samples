@@ -6,9 +6,9 @@ You want to duplicate a DOM element.
 
 === Solution
 
-Call the `clone()` method on a DOM element.
+Call the `clone()` method on the element.
 
-Assume that you have the following HTML, and you want to clone the <ul>:
+Assume you have the following HTML, and want to clone the <ul>:
 
 --------------------------------------------------------------------------------
 <ul>
@@ -18,14 +18,14 @@ Assume that you have the following HTML, and you want to clone the <ul>:
 </ul>
 --------------------------------------------------------------------------------
 
-First, obtain a reference to that element:
+First, obtain a reference to the original element:
 
 --------------------------------------------------------------------------------
 UListElement ul = query('ul');
 --------------------------------------------------------------------------------
 
-Then call `clone()` with a boolean argument that indicates whether you want to
-make a deep or a shallow copy. 
+Then, call `clone()` with a boolean argument. This argument determines whether
+you create a deep or a shallow copy. 
 
 If the argument to `clone()` is `true`, a deep copy is created, and the entire
 subtree of the original node is cloned:
@@ -70,14 +70,18 @@ void main() {
 
 ==== Example
 
-We want to display Google logos on a page, but don't want to load up all the
-images when the page loads. We provide a link that the user can click to see the 
-logos.
+We want to display Google Doodle logos on a page (www.google.com/doodles), but
+don't want to load up all the images when the page loads. We provide a link that
+the user can click to see the logos.
 
 We use a <template> element to store the barebones structure for displaying each
-logo and an accompanying caption. The <template> element allows us to declare
+logo and the accompanying caption. The <template> element allows us to declare
 fragments of markup. These fragments are not rendered when the page loads, but
-can be activated at runtime.
+they can be activated at runtime.
+
+The <template> element is new and not supported by every modern browser. For
+an excellent introduction to this new element, see
+[HTML's New Template Tag](http://www.html5rocks.com/en/tutorials/webcomponents/template/)
 
 The <template> in the HTML below contains <img>, <div> and <hr> tags. The <img>
 tag has no src and alt properties, and the <div> element contains no text. These
@@ -104,7 +108,7 @@ tags are placeholders:
 --------------------------------------------------------------------------------
 
 Once the user clicks the link to see the logos, we fill in the missing fields
-using hard-coded data. Then, we clone the template contents and insert them
+using hard-coded data. Then, we clone the template contents, and we insert them
 into the document:
 
 --------------------------------------------------------------------------------
@@ -129,31 +133,40 @@ void main() {
   link.onClick.listen((event) { 
     event.preventDefault();
 
-    // Get the <template> contents.
     var content = document.query('#myTemplate').content;
     ImageElement img = content.query('img');
     DivElement div = content.query('div');
 
     for (Map item in data) {
-      // Add data to tags.
       img.src = item['src'];
       img.alt = item['alt'];
       div.text = item['caption'];
 
-      // Clone the content and append to the page.
       document.body.append(content.clone(true));
     }
     event.target.remove();
   });
 }
-
 --------------------------------------------------------------------------------
 
-The <template> element is new and not supported by every modern browser. For
-an excellent introduction to the <template> element, and the pros and cons of
-cloning and using template elements, see
-[HTML's New Template Tag](http://www.html5rocks.com/en/tutorials/webcomponents/template/)
+We get the template contents using the template element's `content` property.
 
-Once the template is activated, and a clone inserted into the DOM, the element
-content becomes visible to the user.
+--------------------------------------------------------------------------------
+var content = document.query('#myTemplate').content;
+--------------------------------------------------------------------------------
+
+We get references to the <img> and <div> elements using scoped queries:
+
+--------------------------------------------------------------------------------
+ImageElement img = content.query('img');
+DivElement div = content.query('div');
+--------------------------------------------------------------------------------
+
+Cloning the template contents activates the <template> element's inert HTML, and
+inserting it into the DOM makes the logos visible to the user:
+
+--------------------------------------------------------------------------------
+document.body.append(content.clone(true));
+--------------------------------------------------------------------------------
+
 
