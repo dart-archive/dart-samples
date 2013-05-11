@@ -6,7 +6,7 @@ You want to get and set an element's CSS style properties.
 
 ==== Solution
 
-To read an element's style properties, use the `getComputedStyle()` method.
+To get an element's style properties, use the `getComputedStyle()` method.
 
 To get or set the classes associated with an element, use the `classes`
 attribute.
@@ -18,8 +18,6 @@ To assign style properties directly to an element, use the `style` field.
 The examples below assume the following HTML:
 
 --------------------------------------------------------------------------------
-// main.html
-
 <!DOCTYPE html>
 
 <html>
@@ -60,10 +58,10 @@ import 'dart:html';
 void main() {
   DivElement element = query('div');
 
-  print(element.getComputedStyle().fontFamily);      // 'sans-serif'
+  print(element.getComputedStyle().fontFamily); // 'sans-serif'
 
   // Inherited style.
-  print(element.getComputedStyle().fontWeight);      // 'bold'
+  print(element.getComputedStyle().fontWeight); // 'bold'
 }
 --------------------------------------------------------------------------------
 
