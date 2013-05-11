@@ -2,18 +2,30 @@
 
 ==== Problem
 
-You have selected a DOM element and want to get or set the value of its
-attributes.
+You have a DOM element and want to get or set the value of its attributes.
 
 ==== Solution
 
+Most attributes have a corresponding property that you can use to get or set
+the attribute value. 
+
+You can also use the an element's `attributes` map.
+
+In general, using properties is more Darty, since properties allow tools to
+check the attribute name and type.
+
+==== Examples
+
 Consider the following element:
 
+// TODO: better data-* example
+
 --------------------------------------------------------------------------------
-<input type='text' name='fname' id='fname' data-some-random-key='someValue' />
+<input type='text' name='fname' id='fname' data-purpose='informational' />
 --------------------------------------------------------------------------------
 
-You can access an attribute directly as an element property.
+The Element class defines several properties that correspond to element
+attributes. Here are some examples:
 
 --------------------------------------------------------------------------------
 print(element.id);                 // 'fname'
@@ -22,40 +34,40 @@ element.classes.add('first-name');
 print(element.classes.first);      // 'first-name'
 --------------------------------------------------------------------------------
 
-The Element class defines several properties that are common to all elements.
-For example, all elements have id and classes properties.
-
 Subclasses of Element define additional properties, such as the href property of
 AnchorElement, or the size and maxLength properties of InputElement:
 
 --------------------------------------------------------------------------------
 element.size = 30;
-print(element.size); // 30
+element.maxLength = 10;
 --------------------------------------------------------------------------------
 
-When an attribute is not available as a property, you can use the element's
-`attributes` property to get its attributes map:
+When an element attribute does not have a corresponding property, or when
+using a property is not convenient, you can use an element's attributes map:
 
 --------------------------------------------------------------------------------
 print(element.attributes['id']);                   // 'fname'
 print(element.attributes['name']);                 // 'fname'
 --------------------------------------------------------------------------------
 
-You can access data-* attributes the same way as any other attribute:
+Use the attributes map to access an element's data-* attributes:
 
 --------------------------------------------------------------------------------
-print(element.attributes['data-some-random-key']); // 'someValue'
+print(element.attributes['data-purpose']); // 'informational'
 --------------------------------------------------------------------------------
         
 If you want to get or set _only_ the data-* attributes, use the `dataset`
 property:
 
 --------------------------------------------------------------------------------
-print(element.dataset.length);             // 1
-print(element.dataset['some-random-key'] ) // 'someValue'
+print(element.dataset.length);     // 1
 
-element.dataset['some-random-key'] = 'someOtherValue';
-print(element.dataset['some-random-key']); // 'someOtherValue');
+// The key is 'purpose', not 'data-purpose'.
+print(element.dataset.keys.first); // 'purpose'
+print(element.dataset['purpose']); // 'informational'
+
+element.dataset['purpose'] = 'biographical';
+print(element.dataset['purpose']); // 'biographical'
 --------------------------------------------------------------------------------
 
 Both the `attributes` and the `dataset` properties return Map objects. Any

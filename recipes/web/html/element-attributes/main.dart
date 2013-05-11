@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:svg';
 
 void main() {
   InputElement element = query('input');
@@ -16,7 +15,7 @@ void main() {
   // Get a value. 
   assert(element.attributes['id'] == 'fname');
   assert(element.attributes['name'] == 'fname');
-  assert(element.attributes['data-some-random-key'] == 'someValue');
+  assert(element.attributes['data-purpose'] == 'informational');
   
   // Set a value
   element.attributes['id'] = 'first-name';
@@ -34,16 +33,8 @@ void main() {
   
   // data-* attributes
   assert(element.dataset.length == 1);
-  assert(element.dataset.keys.first == 'some-random-key');
-  assert(element.dataset['some-random-key'] == 'someValue');
-  element.dataset['some-random-key'] = 'someOtherValue';
-  assert(element.dataset['some-random-key'] == 'someOtherValue');
-  print(element.dataset.runtimeType);
-  print(element.attributes.runtimeType);
-  
-  
-  // namespaced attributes
-  var img = new SvgElement.tag("image");
-  img.attributes = {"x":"140", "y":"140", "width":"320", "height":"240"};
-  img.attributes["xlink:href"] = 'http://dartlang.org/';
+  assert(element.dataset.keys.first == 'purpose');
+  assert(element.dataset['purpose'] == 'informational');
+  element.dataset['purpose'] = 'biographical';
+  assert(element.dataset['purpose'] == 'biographical');
 }
