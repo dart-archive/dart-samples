@@ -18,14 +18,12 @@ check the attribute name and type.
 
 Consider the following element:
 
-// TODO: better data-* example
-
 --------------------------------------------------------------------------------
 <input type='text' name='fname' id='fname' data-purpose='informational' />
 --------------------------------------------------------------------------------
 
-The Element class defines several properties that correspond to element
-attributes. Here are some examples:
+The Element class defines several properties, such as `id` and `classes`, that
+correspond to element attributes. Here are some examples:
 
 --------------------------------------------------------------------------------
 print(element.id);                 // 'fname'
