@@ -81,11 +81,11 @@ they can be activated at runtime.
 
 The <template> element is new and not supported by every modern browser. For
 an excellent introduction to this new element, see
-[HTML's New Template Tag](http://www.html5rocks.com/en/tutorials/webcomponents/template/)
+[HTML's New Template Tag](http://www.html5rocks.com/en/tutorials/webcomponents/template/).
 
 The <template> in the HTML below contains <img>, <div> and <hr> tags. The <img>
 tag has no src and alt properties, and the <div> element contains no text. These
-tags are placeholders:
+tags are placeholders.
 
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
