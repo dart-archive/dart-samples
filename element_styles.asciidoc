@@ -6,12 +6,14 @@ You want to get and set an element's CSS style properties.
 
 ==== Solution
 
-To get an element's style properties, use the `getComputedStyle()` method.
+You have three options:
 
-To get or set the classes associated with an element, use the `classes`
-attribute.
+* To get an element's style properties, use the `getComputedStyle()` method.
 
-To assign style properties directly to an element, use the `style` field.
+* To get or set the classes associated with an element, use the `classes`
+field.
+
+* To assign style properties directly to an element, use the `style` field.
 
 ==== Examples
  
@@ -45,10 +47,10 @@ div:after {content: ' rocks!';}
 .underlined {text-decoration: underline;}
 --------------------------------------------------------------------------------
 
-===== Getting CSS styles applied to an element
+===== Getting an element's CSS styles
 
 Use the `getComputedStyle()` method to get a collection of all CSS styles
-applied to an element. This includes inherited styles:
+applied to an element:
 
 --------------------------------------------------------------------------------
 // main.dart
