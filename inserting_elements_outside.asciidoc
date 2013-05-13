@@ -34,7 +34,8 @@ one before the <li> with the 'target' ID, and one after it:
 --------------------------------------------------------------------------------
 
 In the accompanying Dart file, get a reference to the target <li>.  Then,
-invoke the `insertAdjacentElement()` method on that <li> to insert new elements next to it:
+invoke the `insertAdjacentElement()` method on that <li> to insert new elements
+next to it:
 
 --------------------------------------------------------------------------------
 import 'dart:html';
