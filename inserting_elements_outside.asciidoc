@@ -1,8 +1,8 @@
-=== Inserting elements before or after an existing DOM element
+=== Inserting elements next to an existing DOM element
 
 ==== Problem
 
-You want to insert an element adjacent to an existing DOM element.
+You want to insert an element before or after an existing DOM element.
 
 ==== Solution
 
