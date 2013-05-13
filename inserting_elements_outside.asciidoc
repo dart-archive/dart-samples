@@ -1,15 +1,15 @@
-=== Inserting elements before or after an existing DOM element
+=== Inserting elements adjacent to an existing DOM element
 
 ==== Problem
 
-You want to insert an element adjacent to an existing DOM element.
+You want to insert an element before or after another element.
 
 ==== Solution
 
 Use an element's `insertAdjacentElement()` method to insert another element
-adjacent to it. Or, use the 'insertBefore()` method.  Examples of both
-are shown below.
-
+immediately before or immediately after it. Or, use the `insertBefore()` method.
+Examples of both are shown below.
+ 
 ==== Examples
 
 Consider this HTML file. You want to insert two new <li> elements into the <ul>,
@@ -34,8 +34,7 @@ one before the <li> with the 'target' ID, and one after it:
 --------------------------------------------------------------------------------
 
 In the accompanying Dart file, get a reference to the target <li>.  Then,
-invoke the 'insertAdjacentElement()` method on that <li> to insert new
-elements adjacent to it:
+invoke the `insertAdjacentElement()` method on that <li> to insert new elements next to it:
 
 --------------------------------------------------------------------------------
 import 'dart:html';
