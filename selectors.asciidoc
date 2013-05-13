@@ -147,6 +147,6 @@ elements.length = 2; // Error message: 'Cannot resize immutable List.'
 --------------------------------------------------------------------------------
 
 Other recipes in this chapter show how you can create elements and insert them
-into the DOM, add modify existing DOM elements.
+into the DOM, add how to modify existing DOM elements.
 
 
