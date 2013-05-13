@@ -2,7 +2,7 @@
 
 ====  Problem
 
-You want to remove an element from the DOM.
+You want to find an element and remove it from the DOM structure.
 
 ==== Solution
 
