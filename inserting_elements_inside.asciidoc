@@ -6,8 +6,8 @@ You want to insert one or more elements inside an existing DOM element.
 
 ==== Solution
 
-Get the list of the DOM element's children. Add new child elements to that list.
-This inserts the child elements into the DOM.
+Get the list of the DOM element's children, and add new child elements to that
+list.
 
 Consider this sparse web page with an empty <ul>. You want to use Dart code to 
 dynamically add <li> elements to the <ul>:
