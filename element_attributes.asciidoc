@@ -7,12 +7,9 @@ You have a DOM element and want to get or set the value of its attributes.
 ==== Solution
 
 Most attributes have a corresponding property that you can use to get or set
-the attribute value. 
-
-You can also use the an element's `attributes` map.
-
-In general, using properties is more Darty, since properties allow tools to
-check the attribute name and type.
+the attribute value. You can also use the an element's `attributes` map.  In
+general, using properties is more Darty, since properties allow tools to check
+the attribute name and type.
 
 ==== Examples
 
