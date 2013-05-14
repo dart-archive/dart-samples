@@ -1,0 +1,109 @@
+=== Consuming data from a Stream
+
+==== Problem
+
+You are using a method or a function that returns a Stream. You want to use
+the data sent out by the Stream.
+
+==== Solution
+
+Invoke the `listen()` method on the Stream and implement an `onData` callback
+to handle the Stream data.
+
+==== Examples
+
+The File class in the dart:io library provides an `openRead()` method for
+reading a file's contents. The `openRead()` method returns a Stream that holds 
+the file contents, and you can use `listen()` to subscribe to the Stream:
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+import 'dart:async';
+
+void main() {
+  Stream<List<int>> stream = new File('README.md').openRead();
+  StreamSubscription subscription;
+  subscription = stream.listen((data) {
+    print(new String.fromCharCodes(data));
+  });
+}
+--------------------------------------------------------------------------------
+
+Calling `listen()` returns a StreamSubscription object:
+
+--------------------------------------------------------------------------------
+abstract StreamSubscription<T> listen(void onData(T event),
+{void onError(error), void onDone(), bool cancelOnError})
+--------------------------------------------------------------------------------
+
+When using `listen()`, you _must_ define the `onData` callback. The `onError`,
+`onDone` and `cancelOnError` callbacks are optional, and we discuss their use in
+other recipes in this chapter.
+
+==== Discussion
+
+There are two kinds of streams, 'single-subscription' and 'broadcast'.
+
+By default, a Stream permits only a single subscriber, and attempting to add
+multiple subscribers to it generates an error:
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+import 'dart:async';
+
+void main() {
+  Stream<List<int>> stream = new File('pubspec.lock').openRead();
+  StreamSubscription subscription;
+  subscription = stream.listen((data) {
+    print(new String.fromCharCodes(data));
+  });
+  
+  try {  
+    // This throws.
+    stream.listen((data) {
+      print(new String.fromCharCodes(data));
+    });
+  } catch (e) {
+    print(e.toString()); // 'Bad state: Stream already has subscriber.'
+  }
+}
+--------------------------------------------------------------------------------
+
+Single subscription streams are common when doing file I/O.
+
+Broadcast streams are used when working with independent events and observers.
+These streams allow mulitple subscribers.  For example, the `onClick` property
+of an HTML DOM element returns a broadcast stream:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+import 'dart:async';
+
+void main() {
+  // Create and add a button to the document body.
+  var button = new ButtonElement();
+  document.body.children.add(button);
+  button.text = "Click me";
+  
+  // Attach multiple event listeners.
+  button.onClick.listen(someCallback);
+  button.onClick.listen(anotherCallback);
+  ...
+}
+--------------------------------------------------------------------------------
+
+You can use a Stream's `isBroadcast` property to see if it can have multiple
+listeners:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+import 'dart:async';
+
+void main() {
+  var button = new ButtonElement();
+  print(button.onClick.isBroadcast); // true
+  ...
+}
+--------------------------------------------------------------------------------
+
+
