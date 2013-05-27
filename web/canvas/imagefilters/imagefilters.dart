@@ -8,6 +8,7 @@
 
 import 'dart:html';
 import 'dart:math';
+import 'dart:typed_data';
 
 class Filters {
   ImageData pixels;
@@ -140,7 +141,7 @@ class Filters {
 
     //Create data structure to store the filtered data of type double.
     var output =
-        new ImageDataFloat32(new Float32Array(width * height * 4), width, height);
+        new ImageDataFloat32(new Float32List(width * height * 4), width, height);
     var dest = output.data;
 
     //Loop over the image.
@@ -173,7 +174,7 @@ class Filters {
 
 // Create a class to hold image data in a 32 bit float array.
 class ImageDataFloat32 {
-  final Float32Array data;
+  final Float32List data;
   final width, height;
 
   ImageDataFloat32(this.data, this.width, this.height);
@@ -226,7 +227,7 @@ void main() {
   // Click listener for custom.
   query('[name = "custom"]').onClick.listen(
       (e) => toggleFilter('custom', () {
-        List matrix = query('#customMatrix').queryAll('input');
+        var matrix = query('#customMatrix').queryAll('input');
         var mask = new List();
         for (var i = 0; i < matrix.length; i++) {
           mask.add(double.parse(matrix[i].value));
