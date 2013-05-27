@@ -1,20 +1,22 @@
+== Streams
+
 === Consuming data from a Stream
 
 ==== Problem
 
-You are using a method or a function that returns a Stream. You want to use
-the data sent out by the Stream.
+You are using a method or a function that returns a stream. You want to get
+the data sent through the stream.
 
 ==== Solution
 
-Invoke the `listen()` method on the Stream and implement an `onData` callback
-to handle the Stream data.
+Invoke the `listen()` method on the stream and implement an `onData` callback
+to handle the stream data.
 
 ==== Examples
 
 The File class in the dart:io library provides an `openRead()` method for
-reading a file's contents. The `openRead()` method returns a Stream that holds 
-the file contents, and you can use `listen()` to subscribe to the Stream:
+reading a file's contents. This method returns a Stream that holds the file
+contents, and you can use `listen()` to subscribe to the Stream:
 
 --------------------------------------------------------------------------------
 import 'dart:io';
@@ -37,15 +39,14 @@ abstract StreamSubscription<T> listen(void onData(T event),
 --------------------------------------------------------------------------------
 
 When using `listen()`, you _must_ define the `onData` callback. The `onError`,
-`onDone` and `cancelOnError` callbacks are optional, and we discuss their use in
-other recipes in this chapter.
+`onDone` and `cancelOnError` callbacks are optional. 
 
 ==== Discussion
 
 There are two kinds of streams, 'single-subscription' and 'broadcast'.
 
-By default, a Stream permits only a single subscriber, and attempting to add
-multiple subscribers to it generates an error:
+By default, a stream permits only a single subscriber, and attempting to add
+multiple subscribers to a single subscriber stream generates an error:
 
 --------------------------------------------------------------------------------
 import 'dart:io';
@@ -59,7 +60,7 @@ void main() {
   });
   
   try {  
-    // This throws.
+    // Cannot add a second subscriber to the stream.
     stream.listen((data) {
       print(new String.fromCharCodes(data));
     });
@@ -96,14 +97,548 @@ You can use a Stream's `isBroadcast` property to see if it can have multiple
 listeners:
 
 --------------------------------------------------------------------------------
-import 'dart:html';
+print(button.onClick.isBroadcast); // true
+--------------------------------------------------------------------------------
+
+In all the examples of the use of `listen()` so far, we have assumed that a
+stream provides data events. This is not always the case, and streams can also
+provide error events. We discuss error handling with streams later in this
+chapter. 
+
+
+=== Filtering stream data
+
+==== Problem
+
+You want to consume only a subset of the data transmitted through a stream.
+
+==== Solution
+
+You can use Stream class methods like `where()`, `take()`, `takeWhile()`,
+`skip()`, and `skipWhile()` to filter Stream data. Each of these methods return
+a new Stream object. 
+
+Examples of the use of filtering methods are shown below. First, let us create
+a stream:
+
+--------------------------------------------------------------------------------
 import 'dart:async';
 
 void main() {
-  var button = new ButtonElement();
-  print(button.onClick.isBroadcast); // true
+  List<String> beatles = ['john', 'paul', 'george', 'ringo'];
+  Stream stream = new Stream.fromIterable(beatles).asBroadcastStream();
   ...
+}  
+--------------------------------------------------------------------------------
+
+In a real-world application, we would most likely create a StreamController
+object and add data events to it. We will discuss how that can be done later
+in this chapter. For the purposes of this recipe, it is sufficient to use the
+`fromIterable()` constructor and create a stream from a list. The call
+to `asBroadcastStream()` ensures that the stream can have multiple listeners.
+
+You can filter stream data based on a condition:
+
+--------------------------------------------------------------------------------
+stream.where((item) => item.length == 4).listen(print); // 'john', 'paul'
+--------------------------------------------------------------------------------
+ 
+You can skip or take a subset of the stream:
+
+--------------------------------------------------------------------------------
+stream.skip(2).listen(print); // 'george', 'ringo'
+stream.take(3).listen(print); // 'john', 'paul', 'george'
+--------------------------------------------------------------------------------
+  
+You can filter stream data based on a condition becoming true or false:
+
+--------------------------------------------------------------------------------
+stream.takeWhile((item) => item.endsWith('n')).listen(print); // 'john'
+stream.skipWhile((item) => item.length == 4)
+    .listen(print);   // 'george', 'ringo'
+--------------------------------------------------------------------------------
+  
+You can use the `distinct()` method to filter out consecutively repeated data:
+
+--------------------------------------------------------------------------------
+new Stream.fromIterable(['t', 'h', 'e', '', 'h', 'o', 'b', 'b', 'i', 't'])
+  .distinct()
+  .listen(print); // 't', 'h', 'e', 'h', 'o', 'b', 'i', 't'
+--------------------------------------------------------------------------------
+
+Filtering a stream returns another stream, which provides a sequence of data or
+error events. Sometimes, however, you only want one specific event in the stream.
+The Stream class provides methods that return a single stream item as a
+Future:
+
+--------------------------------------------------------------------------------
+stream.first.then(print);                                 // 'john'
+stream.last.then(print);                                  // 'ringo'
+stream.firstWhere((item) => item.length > 4).then(print); // 'george'
+stream.lastWhere((item) => item.length > 4).then(print);  // 'ringo'
+stream.elementAt(2).then(print);                          // 'george'
+--------------------------------------------------------------------------------
+
+=== Handling Stream errors
+
+==== Problem
+
+You are consuming events provided by a stream. You have registered an `onData`
+handler to process data events. But a stream can also send error events, and you
+want to ensure that errors are properly handled.
+
+==== Solution
+
+Provide an `onError` handler as an argument when calling `listen()`:
+
+--------------------------------------------------------------------------------
+void main() {
+  StreamSubscription subscription;
+  subscription = streamReturningFunction().listen(print, onError: handleError);
 }
 --------------------------------------------------------------------------------
+
+If the stream sends a data event, the data is passed to `print()`, and if the
+stream sends an error event, the error is passed to `handleError()`.
+
+It is a common pattern to register the `onData` and `onError` handlers on the
+StreamSubscription object returned by `listen()`. The code above can be
+rewritten as follows:
+ 
+--------------------------------------------------------------------------------
+void main() {
+  StreamSubscription subscription;
+  subscription = streamReturningFunction().listen(null);
+  subscription.onData(print);
+  subscription.onError(handleError);
+}
+--------------------------------------------------------------------------------
+
+
+=== Cancelling a stream subscription
+
+==== Problem
+
+You are consuming data from a stream and want to stop receiving events.
+
+==== Solution
+
+Calling `listen()` on a Stream returns a StreamSubscription object. Call
+`cancel()` on this object to cancel the subscription. After the call to 
+`cancel()`, the subscription no longer receives events.
+
+--------------------------------------------------------------------------------
+StreamSubscription subscription = streamReturningFunction.listen((data) {
+  ...
+  subscription.cancel();    
+});
+--------------------------------------------------------------------------------
+
+==== Example
+
+The example below uses the `list()` method found in the dart:io Directory
+class. This method returns a Stream object that sends the current directory's
+files and sub-directories as data events.
+
+The `list()` method optionally recurses into sub-directories and can return a
+large number of listings. We set a limit for the number of listings received,
+and cancel the stream subscription when that limit is reached.
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+import 'dart:async';
+
+void main() {
+  Directory directory = new Directory(Directory.current.path);
+  StreamSubscription subscription;
+  const int MAXLISTINGS = 25;
+  
+  int counter = 0;
+  subscription = directory.list(recursive: true).listen((data) {
+    print(data);
+    counter++;
+    if (counter >= MAXLISTINGS) {
+      subscription.cancel();
+    }
+  });
+}
+--------------------------------------------------------------------------------
+
+If you cancel a subscription while a stream event is firing, the cancellation
+only becomes effective after a stream's listeners have received
+the event. 
+
+
+=== Pausing and Resuming a stream
+
+==== Problem
+
+You are receiving data from a stream and you want to stop listening to events.
+Or, you want to resume listening to events after having previously paused your
+subscription.
+
+==== Solution
+
+To pause listening for events, use the StreamSubscription's `pause()` method. To
+resume a previously paused subscription, use the StreamSubscription`'s 
+`resume()` method.
+
+Or, when requesting a pause to a subscription, you can pass a Future as an
+argument to `pause()`. When the Future completes with a value, the subscription
+resumes.
+
+==== Examples
+
+The example below implements a counter that returns a stream of steadily
+incrementing integers. The integers are streamed every tenth of a second.
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+
+void main() {
+  int counter = 0;
+  Stream stream = new Stream.periodic(
+      new Duration(milliseconds: 100), (_) => ++counter);
+  
+  StreamSubscription subscription; 
+  subscription = stream.listen(print);
+  
+  new Timer.periodic(const Duration(seconds: 2), (_) {
+    subscription.pause();
+    new Timer(new Duration(seconds: 1), subscription.resume);
+  });
+}
+--------------------------------------------------------------------------------
+
+Every two seconds, we pause the subscription using the subscription's
+`pause()` method. Then, we use a Timer to resume the subscription one second
+later.
+
+We can rewrite the code above without using the StreamSubscription `resume()`
+method. When pausing the subcription, we pass a Future as an argument to
+`pause()`. When that future completes, the paused subscription resumes.
+
+--------------------------------------------------------------------------------
+void main() {
+  int counter = 0;
+  Stream stream = new Stream.periodic(
+      new Duration(milliseconds: 100), (_) => ++counter);
+  
+  StreamSubscription subscription; 
+  subscription = stream.listen(print);
+  
+  new Timer.periodic(const Duration(seconds: 2), (_) {
+    subscription.pause(futureReturningFunction());
+  });
+}
+--------------------------------------------------------------------------------
+
+But watch out: if the Future passed to `pause()` as an argument completes with
+an error, that error is not handled.
+
+When writing code for pausing or resuming a stream subscription, you will
+sometimes want to query the pause state of a subscription. Use the
+subscription's `isPaused` property to do this:
+
+
+--------------------------------------------------------------------------------
+if (subscription.isPaused) {
+  subscription.resume();
+} else {
+  subscription.pause();
+}
+--------------------------------------------------------------------------------
+
+
+=== Transforming an existing stream
+
+==== Problem
+
+You want to modify the contents of a stream.
+
+==== Solution
+
+You can use stream transforming methods such as `map()`, `where()`, `skip()` or
+`take()`. If you want more granular control of the event transformations, use
+the Stream `transform()` method.
+
+==== Examples
+
+The use of stream filtering methods has been discussed earlier in this chapter.
+Here is a useful recap:
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+
+void main() {
+  List data = [1, 2, 3, 4, 5, 6];
+
+  Stream<int> stream  = new Stream.fromIterable(data);
+  stream .where((int x) => x % 2 == 0) // 2, 4, 6
+         .map((int x) => x * 2)        // 4, 8, 12
+         .skip(1)                      // 8, 12
+         .listen(print);               // prints 8 and 12
+}
+--------------------------------------------------------------------------------
+
+The remainder of this recipe focuses on the `transform()` method. This method
+takes a StreamTransformer object as an argument, passes the current stream as
+an input to it, and returns a new stream.
+
+--------------------------------------------------------------------------------
+Stream transform(StreamTransformer<T, dynamic> streamTransformer)
+--------------------------------------------------------------------------------
+
+To use `transform()`, you must create the StreamTransformer object and pass a
+`handleData()` function to the constructor. The `handleData()`  function
+takes two arguments, the original stream data, and an EventSink object, and it
+is called on each original stream event. The transformed events are added to the
+EventSink, and delivered by a new stream that is returned by `transform()`. 
+Subscribers can then `listen()` to those events. 
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+import 'dart:io';
+
+void main() {
+  List<List<String>> birds = [['quetzal', 'Central America'], 
+                              ['peacock', 'India'], 
+                              ['macaw', 'Brazil']];
+  
+  Stream stream = new Stream.fromIterable(birds);
+  
+  var transformer = new StreamTransformer(handleData: (value, sink) {
+    sink.add("Name: ${value.first}, Found in: ${value.last}");
+  });
+  
+  stream.transform(transformer).listen(print);
+}
+--------------------------------------------------------------------------------
+
+Running the code above produces the following output:
+
+--------------------------------------------------------------------------------
+Name: quetzal, Found in: Central America
+Name: peacock, Found in: India
+Name: macaw, Found in: Brazil
+--------------------------------------------------------------------------------
+
+The StreamTransformer constructor also lets you add functions to handle error
+and done events:
+
+--------------------------------------------------------------------------------
+factory StreamTransformer({void handleData(S data, EventSink<T> sink), void
+handleError(error, EventSink<T> sink), void handleDone(EventSink<T> sink)})
+--------------------------------------------------------------------------------
+
+See the API documentation for more details.
+
+The example below shows a common use of `transform()`. The dart:io File class
+provides an `openRead()` method. This method returns a Stream object that
+sends the file contents as a list of integers. 
+
+The `transform()` method is called twice in the example below. The first
+`transform()` uses a StringDecoder to convert the integers to a String, and the
+second `transform()` adds line numbers to each line:
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+import 'dart:io';
+
+void main() {
+  int counter = 1;  
+  new File('README.md')
+    .openRead()
+    .transform(new StringDecoder())    // Decodes from bytes to characters.
+    .transform(new LineTransformer())  // Applied transformation to each line.
+    .listen((value) => print("${counter++}: $value"));
+}
+--------------------------------------------------------------------------------
+
+The program produces outcome that resembles the following:
+
+--------------------------------------------------------------------------------
+1: This is the site for the Dart Cookbook project.
+2: 
+3: ![Alt drone.io status](https://drone.io/shailen/Cookbook/status.png)
+...
+--------------------------------------------------------------------------------
+
+
+=== Creating a Stream
+
+==== Problem
+
+You want to create a Stream and add events to it.
+
+==== Solution
+
+Create a StreamController and push events to its stream:
+
+--------------------------------------------------------------------------------
+StreamController controller = new StreamController();
+controller.add(data);
+--------------------------------------------------------------------------------
+
+Others can then subscribe to the controller's stream, and consume stream events:
+
+--------------------------------------------------------------------------------
+StreamSubscription subscription = controller.stream.listen(...);
+--------------------------------------------------------------------------------
+
+A StreamController allows you to check whether there are any subscribers to
+its stream, whether the stream is closed for adding more events, or whether any
+of the stream's subscribers have requested a pause.
+
+When creating a StreamController, you must ensure that its stream does not
+produce events before it has subscribers, or while a subscriber has requested a
+pause in its subscription. Failure to follow this advice can lead to
+potentially undesirable buffering behavior and memory leaks. We will discuss
+that in greater detail later in this recipe.
+
+It is a common pattern to register four handlers as arguments when constructing
+a StreamController:
+
+--------------------------------------------------------------------------------
+new StreamController({
+  void onListen(),
+  void onPause(),
+  void onResume(),
+  void onCancel()
+})
+--------------------------------------------------------------------------------
+
+Here is a summary of what each handler does:
+
+* The `onListen()` handler runs once a stream has subscribers. You should
+place the code for pushing events to the StreamController here.
+* The `onPause()` handler runs when a subscriber has paused listening for
+events.
+* The `onResume()` handler runs when a subscriber has resumed listening for
+events after a pause.
+* The `onCancel()` handler runs when a subscriber cancels its stream
+subscription.
+
+
+==== Example
+
+The following code implements a StreamController that streams a series of
+fibonacci numbers at a regular time interval (the code for the fibonacci()
+function has been omitted for the sake of brevity):
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+
+Stream<int> timedFibonacci(Duration interval) {                    
+  StreamController<int> controller;                                              
+  Timer timer;                                                                   
+  int counter = 0;
+                                                                            
+  void start() {                              
+    timer = new Timer.periodic(interval, (_) {                                                                                                                             
+      controller.add(fibonacci(counter++));
+      if (counter == 25) {                                                       
+        controller.close();                                                      
+      }
+    });                                  
+  }                                              
+
+  void stop() {                                                             
+    if (timer != null) {                                                         
+      timer.cancel();                       
+      timer = null;                                                              
+    }                                                                            
+  }                                                                 
+
+  controller = new StreamController<int>(                                        
+      onListen: start,                                                    
+      onPause:  stop,                                                      
+      onResume: start,                                                      
+      onCancel: stop);  
+                                                                                 
+  return controller.stream;                                                      
+}
+
+--------------------------------------------------------------------------------
+
+Let's walk through the code:
+
+We create a controller, and within the `start()` function, we use a Timer to 
+periodically add fibonacci numbers to the controller's stream. The `start()`
+function runs when the stream first gets a subscriber. It also runs when a
+subscriber resumes listening on events after a pause. The `stop()` function runs
+when a subscriber requests a pause in the stream subscription. It also runs
+when the subscriber cancels the subscription.
+
+We can subscribe to the stream returned by `timedFibonacci()` and consume the
+data events:
+
+--------------------------------------------------------------------------------
+void main() {  
+  StreamSubscription<int> subscription;
+  Stream stream = timedFibonacci(new Duration(milliseconds: 250));
+  subscription = stream.listen(print);
+}
+--------------------------------------------------------------------------------
+
+To test that the `onListen()`, `onPause()`, and `onResume()` handlers work
+correcty, let us modify the code within `main()`. Let us call `timedFibonacci()`
+as before, but add a subscriber only after a four second delay. Let us also
+add code to pause and resume the stream subscription periodically.
+
+--------------------------------------------------------------------------------
+void main() {  
+  StreamSubscription<int> subscription;
+  Stream stream = timedFibonacci(new Duration(milliseconds: 250));
+  new Timer(new Duration(seconds: 2), () {
+    subscription = stream.listen(print);
+    
+    new Timer.periodic(new Duration(seconds: 1), (_) {
+      if (subscription.isPaused) {
+        subscription.resume();
+      } else {
+        subscription.pause();
+      }
+    });
+  });
+}
+--------------------------------------------------------------------------------
+
+Our program now streams fibonacci numbers after a delay, and the streaming
+pauses and resumes periodically. But because our StreamController implementation
+is resilient against undersirable buffering, and the data streams smoothly.
+
+==== Discussion
+
+Consider now this stripped down and BAD version of `timedFibonacci()`. We
+remove the `onListen()` handler, and push events to the controller without
+waiting for the controller's stream to have subscribers. We also remove the
+`onPause()` handler, and we now no longer honor a subscriber's pause requests.
+
+--------------------------------------------------------------------------------
+// THIS IS BAD. DON'T DO THIS.
+Stream<int> timedFibonacci(Duration interval) {                    
+  StreamController<int> controller = new StreamController();                                              
+  Timer timer;                                                                   
+  int counter = 0;                           
+  timer = new Timer.periodic(interval, (_) {
+    controller.add(fibonacci(counter++));
+    if (counter == 25) {
+      timer.cancel();
+      controller.close();                             
+    }
+  });                                                                                                                                                                
+  return controller.stream;                                                      
+}
+--------------------------------------------------------------------------------
+
+Once `timedFibonacci()` is called, the stream returned by it starts buffering
+events. If a subscriber is added after a delay, the buffer empties, and
+several fibonacci numbers print all at once.
+
+The controller also buffers events during any pause requested by the subscriber.
+If the subscriber resumes listening, the buffer once again empties and prints
+numbers all at once. If the subscriber never resumes listening after a pause,
+the buffer grows indefinitely.
 
 
