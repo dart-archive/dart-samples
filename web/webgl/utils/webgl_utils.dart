@@ -1,13 +1,15 @@
 library utils;
 import 'dart:html';
+import 'dart:typed_data';
 import 'dart:math' as Math;
+import 'dart:web_gl' as WebGL;
 
-WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]) {
+WebGL.Program createProgram(WebGL.RenderingContext gl, [List<WebGL.Shader> shaders]) {
   // Create program
   var program = gl.createProgram();
 
   // Iterate the shaders list
-  if (shaders is List<WebGLShader>) {
+  if (shaders is List<WebGL.Shader>) {
     shaders.forEach((var shader) => gl.attachShader(program, shader));
   }
 
@@ -15,7 +17,7 @@ WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]
   gl.linkProgram(program);
 
   // Check the linked status
-  var linked = gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS);
+  var linked = gl.getProgramParameter(program, WebGL.RenderingContext.LINK_STATUS);
   if (!linked) {
     throw "Not able to link shader(s) ${shaders}";
   }
@@ -23,7 +25,7 @@ WebGLProgram createProgram(WebGLRenderingContext gl, [List<WebGLShader> shaders]
   return program;
 }
 
-WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shaderType) {
+WebGL.Shader loadShader(WebGL.RenderingContext gl, String shaderSource, int shaderType) {
   // Create the shader object
   var shader = gl.createShader(shaderType);
 
@@ -35,7 +37,7 @@ WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shader
 
   // Check the compile status
   // NOTE: getShaderParameter maybe borken in minfrog or frog compiler.
-  var compiled = gl.getShaderParameter(shader, WebGLRenderingContext.COMPILE_STATUS);
+  var compiled = gl.getShaderParameter(shader, WebGL.RenderingContext.COMPILE_STATUS);
   if (!compiled) {
     throw "Not able to compile shader $shaderSource";
   }
@@ -43,14 +45,14 @@ WebGLShader loadShader(WebGLRenderingContext gl, String shaderSource, int shader
   return shader;
 }
 
-WebGLShader createShaderFromScriptElement(WebGLRenderingContext gl, String id) {
+WebGL.Shader createShaderFromScriptElement(WebGL.RenderingContext gl, String id) {
   ScriptElement shaderScript = query(id);
   String shaderSource = shaderScript.text;
   int shaderType;
   if (shaderScript.type == "x-shader/x-vertex") {
-    shaderType = WebGLRenderingContext.VERTEX_SHADER;
+    shaderType = WebGL.RenderingContext.VERTEX_SHADER;
   } else if (shaderScript.type == "x-shader/x-fragment") {
-    shaderType = WebGLRenderingContext.FRAGMENT_SHADER;
+    shaderType = WebGL.RenderingContext.FRAGMENT_SHADER;
   } else {
     throw new Exception('*** Error: unknown shader type');
   }
@@ -58,7 +60,7 @@ WebGLShader createShaderFromScriptElement(WebGLRenderingContext gl, String id) {
   return loadShader(gl, shaderSource, shaderType);
 }
 
-WebGLRenderingContext getWebGLContext(CanvasElement canvas) {
+WebGL.RenderingContext getWebGLContext(CanvasElement canvas) {
   return canvas.getContext("experimental-webgl");
 }
 
@@ -74,5 +76,5 @@ void setRectangle(gl, x, y, width, height) {
                   x1, y2,
                   x2, y1,
                   x2, y2];
-  gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array.fromList(vertices), WebGLRenderingContext.STATIC_DRAW);
+  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
 }
