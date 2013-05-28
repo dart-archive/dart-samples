@@ -1,10 +1,12 @@
 import 'dart:html';
+import 'dart:typed_data';
+import 'dart:web_gl' as WebGL;
 import '../utils/webgl_utils.dart';
 
 void main() {
   var canvas = query("canvas");
   var gl = getWebGLContext(canvas);
-  if (canvas is! CanvasElement || gl is! WebGLRenderingContext) {
+  if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");
     return;
   }
@@ -19,17 +21,17 @@ void main() {
 
   // Create a buffer and put a single clipspace rectangle in it (2 triangles)
   var buffer = gl.createBuffer();
-  gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, buffer);
+  gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, buffer);
   var vertices = [-1.0, -1.0,
                    1.0, -1.0,
                   -1.0,  1.0,
                   -1.0,  1.0,
                    1.0, -1.0,
                    1.0,  1.0];
-  gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array.fromList(vertices), WebGLRenderingContext.STATIC_DRAW);
+  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
   gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(positionLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 
   // draw
-  gl.drawArrays(WebGLRenderingContext.TRIANGLES, 0, 6);
+  gl.drawArrays(WebGL.RenderingContext.TRIANGLES, 0, 6);
 }

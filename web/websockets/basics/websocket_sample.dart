@@ -30,7 +30,7 @@ void initWebSocket([int retrySeconds = 2]) {
 
   void scheduleReconnect() {
     if (!reconnectScheduled) {
-      new Timer(const Duration(milliseconds: 1000 * retrySeconds), (timer) => initWebSocket(retrySeconds * 2));
+      new Timer(new Duration(milliseconds: 1000 * retrySeconds), () => initWebSocket(retrySeconds * 2));
     }
     reconnectScheduled = true;
   }

@@ -27,7 +27,7 @@ class Monitoring {
     _progressBar.style.width = '${value}%';
     _progressBar.text = '${value}%';
     if (value == 0 || value == 100) {
-      new Timer(const Duration(milliseconds: 2000), (timer) => _progressBar.classes.remove('loading'));
+      new Timer(const Duration(milliseconds: 2000), () => _progressBar.classes.remove('loading'));
     }
   }
 
