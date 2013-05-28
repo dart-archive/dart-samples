@@ -24,7 +24,7 @@ void sayHello() {
   if (window.notifications.checkPermission() == PERMISSION_ALLOWED) {
     scheduleNotification();
   } else {
-    window.notifications.requestPermission(scheduleNotification);
+    window.notifications.requestPermission().then((_) => scheduleNotification);
   }
 }
 
@@ -37,7 +37,7 @@ void sayHello() {
  * I'm providing that I requested permission ahead of time.
  */
 void scheduleNotification() {
-  new Timer(const Duration(milliseconds: 1000), (timer) => showNotification());
+  new Timer(const Duration(milliseconds: 1000), () => showNotification());
 }
 
 void showNotification() {

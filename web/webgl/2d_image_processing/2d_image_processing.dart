@@ -1,4 +1,6 @@
 import 'dart:html';
+import 'dart:typed_data';
+import 'dart:web_gl' as WebGL;
 import '../utils/webgl_utils.dart';
 
 List neffects = new List();
@@ -12,7 +14,7 @@ void render(image) {
   // Get a WebGL context
   var canvas = query("canvas");
   var gl = getWebGLContext(canvas);
-  if (canvas is! CanvasElement || gl is! WebGLRenderingContext) {
+  if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");
     return;
   }
@@ -29,34 +31,34 @@ void render(image) {
 
   // provide texture coordinates for the rectangle.
   var texCoordBuffer = gl.createBuffer();
-  gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, texCoordBuffer);
+  gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, texCoordBuffer);
   var vertices = [0.0,  0.0,
                   1.0,  0.0,
                   0.0,  1.0,
                   0.0,  1.0,
                   1.0,  0.0,
                   1.0,  1.0];
-  gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array.fromList(vertices), WebGLRenderingContext.STATIC_DRAW);
+  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
   gl.enableVertexAttribArray(texCoordLocation);
-  gl.vertexAttribPointer(texCoordLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(texCoordLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 
-  WebGLTexture createAndSetupTexture() {
+  WebGL.Texture createAndSetupTexture() {
     // Create a texture.
     var texture = gl.createTexture();
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture);
+    gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, texture);
 
     // Set the parameters so we can render any size image.
-    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE);
-    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE);
-    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.NEAREST);
-    gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.NEAREST);
+    gl.texParameteri(WebGL.RenderingContext.TEXTURE_2D, WebGL.RenderingContext.TEXTURE_WRAP_S, WebGL.RenderingContext.CLAMP_TO_EDGE);
+    gl.texParameteri(WebGL.RenderingContext.TEXTURE_2D, WebGL.RenderingContext.TEXTURE_WRAP_T, WebGL.RenderingContext.CLAMP_TO_EDGE);
+    gl.texParameteri(WebGL.RenderingContext.TEXTURE_2D, WebGL.RenderingContext.TEXTURE_MIN_FILTER, WebGL.RenderingContext.NEAREST);
+    gl.texParameteri(WebGL.RenderingContext.TEXTURE_2D, WebGL.RenderingContext.TEXTURE_MAG_FILTER, WebGL.RenderingContext.NEAREST);
 
     return texture;
   };
 
   // Create a texture and put the image in it.
   var originalImageTexture = createAndSetupTexture();
-  gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, image);
+  gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, image);
 
   // Create 2 textures and attach them to framebuffers.
   var textures = [];
@@ -66,17 +68,17 @@ void render(image) {
     textures.add(texture);
 
     // make the texture the same size as the image
-    gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, image.width,
-      image.height, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, null);
+    gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, image.width,
+      image.height, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, null);
 
     // Create a framebuffer
     var fbo = gl.createFramebuffer();
     framebuffers.add(fbo);
-    gl.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER, fbo);
+    gl.bindFramebuffer(WebGL.RenderingContext.FRAMEBUFFER, fbo);
 
     // Attach a texture to it.
-    gl.framebufferTexture2D(WebGLRenderingContext.FRAMEBUFFER,
-      WebGLRenderingContext.COLOR_ATTACHMENT0, WebGLRenderingContext.TEXTURE_2D, texture, 0);
+    gl.framebufferTexture2D(WebGL.RenderingContext.FRAMEBUFFER,
+      WebGL.RenderingContext.COLOR_ATTACHMENT0, WebGL.RenderingContext.TEXTURE_2D, texture, 0);
 
   }
 
@@ -195,12 +197,12 @@ void render(image) {
 
   // Create a buffer for the position of the rectangle corners.
   var positionBuffer = gl.createBuffer();
-  gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, positionBuffer);
+  gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, positionBuffer);
   gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation, 2, WebGLRenderingContext.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(positionLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 
   // Set a rectangle the same size as the image.
-  setRectangle(gl, 0, 0, image.width, image.height);
+  setRectangle(gl, 0.0, 0.0, image.width.toDouble(), image.height.toDouble());
 
   var effects = [
                  { "name": "normal", "on": true },
@@ -230,7 +232,7 @@ void render(image) {
 
   setFramebuffer(l_fbo, l_width, l_height) {
     // make this the framebuffer we are rendering to.
-    gl.bindFramebuffer(WebGLRenderingContext.FRAMEBUFFER, l_fbo);
+    gl.bindFramebuffer(WebGL.RenderingContext.FRAMEBUFFER, l_fbo);
 
     // Tell the shader the resolution of the framebuffer.
     gl.uniform2f(resolutionLocation, l_width, l_height);
@@ -242,15 +244,16 @@ void render(image) {
   // Setup method to draw arrays
   drawWithKernel(name) {
     // set the kernel
-    gl.uniform1fv(kernelLocation, new Float32Array.fromList(kernels[name]));
+    gl.uniform1fv(kernelLocation,
+        new Float32List.fromList(kernels[name].map((n)=>n.toDouble()).toList()));
 
     // Draw the rectangle.
-    gl.drawArrays(WebGLRenderingContext.TRIANGLES, 0, 6);
+    gl.drawArrays(WebGL.RenderingContext.TRIANGLES, 0, 6);
   };
 
   drawEffects() {
     // start with the original image
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, originalImageTexture);
+    gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, originalImageTexture);
 
     // don't y flip images while drawing to the textures
     gl.uniform1f(flipYLocation, 1);
@@ -264,7 +267,7 @@ void render(image) {
         drawWithKernel(effect);
 
         // for the next draw, use the texture we just rendered to.
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, textures[count%2]);
+        gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, textures[count%2]);
 
         // increment count so we use the other texture next time.
         ++count;
@@ -298,7 +301,7 @@ void render(image) {
   List sss = selects; // Avoid bug with closure over selects
   selects.forEach((s) {
     ui.nodes.add(s);
-    s.on.change.add((event) {
+    s.onChange.listen((event) {
       neffects.clear();
       int ncount=0;
       sss.forEach((select) {

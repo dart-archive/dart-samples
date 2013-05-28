@@ -38,7 +38,7 @@ void drawImage(CanvasElement canvas, ImageElement image,
     context.scale(ratio, ratio);
   }
 
-  context.drawImage(image, srcX, srcY, srcW, srcH, desX, desY, desW, desH);
+  context.drawImageScaledFromSource(image as CanvasImageSource, srcX, srcY, srcW, srcH, desX, desY, desW, desH);
 }
 
 void main() {

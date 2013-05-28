@@ -22,7 +22,7 @@ class BufferLoader {
   List<AudioBuffer> _bufferList;
 
   BufferLoader(this.audioCtx, this.urlList, this.callback) {
-    _bufferList = new List<AudioBuffer>.fixedLength(urlList.length);
+    _bufferList = new List<AudioBuffer>(urlList.length);
   }
 
   void load() {
@@ -34,12 +34,12 @@ class BufferLoader {
   void _loadBuffer(String url, int index) {
     // Load the buffer asynchronously.
     var request = new HttpRequest();
-    request.open("GET", url, true);
+    request.open("GET", url, async: true);
     request.responseType = "arraybuffer";
-    request.on.load.add((e) => _onLoad(request, url, index));
+    request.onLoad.listen((e) => _onLoad(request, url, index));
 
     // Don't use alert in real life ;)
-    request.on.error.add((e) => window.alert("BufferLoader: XHR error"));
+    request.onError.listen((e) => window.alert("BufferLoader: XHR error"));
 
     request.send();
   }

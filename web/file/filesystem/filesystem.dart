@@ -14,8 +14,9 @@ class FileSystemExample {
 
   FileSystemExample() {
     _fileList = query('#example-list-fs-ul');
-    window.requestFileSystem(Window.TEMPORARY, 1024 * 1024,
-        _requestFileSystemCallback, _handleError);
+
+    window.requestFileSystem(1024 * 1024, persistent: false)
+    .then(_requestFileSystemCallback, onError: _handleError);
   }
 
   void _requestFileSystemCallback(FileSystem filesystem) {
@@ -51,15 +52,15 @@ class FileSystemExample {
   }
 
   void _addFiles() {
-    _filesystem.root.getFile('log.txt', options: {"create": true}, errorCallback: _handleError);
-    _filesystem.root.getFile('song.mp3', options: {"create": true}, errorCallback: _handleError);
-    _filesystem.root.getDirectory('mypictures', options: {"create": true}, errorCallback: _handleError);
+    _filesystem.root.createFile('log.txt').catchError(_handleError);
+    _filesystem.root.createFile('song.mp3').catchError(_handleError);
+    _filesystem.root.createDirectory('mypictures').catchError(_handleError);
     _fileList.text = 'Files created.';
   }
 
   void _listFiles() {
     var dirReader = _filesystem.root.createReader();
-    dirReader.readEntries((entries) {
+    dirReader.readEntries().then((entries) {
       if (entries.length == 0) {
         _fileList.text = 'Filesystem is empty.';
       } else {
@@ -75,21 +76,21 @@ class FileSystemExample {
         fragment.nodes.add(li);
       });
       _fileList.nodes.add(fragment);
-    }, _handleError);
+    }, onError: _handleError);
   }
 
   void _removeFiles() {
     var dirReader = _filesystem.root.createReader();
-    dirReader.readEntries((entries) {
+    dirReader.readEntries().then((entries) {
       entries.forEach((entry) {
         if (entry.isDirectory) {
-          entry.removeRecursively(() {}, _handleError);
+          entry.removeRecursively().then((_) {}, onError: _handleError);
         } else {
-          entry.remove(() {}, _handleError);
+          entry.remove().then((_) {}, onError: _handleError);
         }
       });
       _fileList.text = 'Directory emptied.';
-    }, _handleError);
+    }, onError: _handleError);
   }
 }
 

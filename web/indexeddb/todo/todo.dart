@@ -46,7 +46,7 @@ class TodoList {
   void _onUpgradeNeeded(idb.VersionChangeEvent e) {
     idb.Database db = e.target.result;
     if (!db.objectStoreNames.contains(_TODOS_STORE)) {
-      db.createObjectStore(_TODOS_STORE, {'keyPath': 'timeStamp'});
+      db.createObjectStore(_TODOS_STORE, keyPath: 'timeStamp');
     }
   }
 
@@ -72,8 +72,7 @@ class TodoList {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
     var store =  trans.objectStore(_TODOS_STORE);
     var request = store.delete(id);
-    request.onSuccess.listen((e) => _getAllTodoItems());
-    request.onError.listen(_onError);
+    request.then((e) => _getAllTodoItems(), onError: _onError);
   }
 
   void _getAllTodoItems() {

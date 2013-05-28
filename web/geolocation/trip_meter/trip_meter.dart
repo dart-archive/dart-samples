@@ -38,13 +38,14 @@ void alertError(PositionError error) {
 void main(){
   Geoposition startPosition;
 
-  window.navigator.geolocation.getCurrentPosition((Geoposition position) {
+  window.navigator.geolocation.getCurrentPosition()
+  .then((Geoposition position) {
     startPosition = position;
     query("#start-lat").text = "${startPosition.coords.latitude}";
     query("#start-lon").text = "${startPosition.coords.longitude}";
-  }, (error) => alertError(error));
+  }, onError: (error) => alertError(error));
 
-  window.navigator.geolocation.watchPosition((Geoposition position) {
+  window.navigator.geolocation.watchPosition().listen((Geoposition position) {
     query("#current-lat").text = "${position.coords.latitude}";
     query("#current-lon").text = "${position.coords.longitude}";
     num distance = calculateDistance(
@@ -53,5 +54,5 @@ void main(){
         position.coords.latitude,
         position.coords.longitude);
     query("#distance").text = "$distance";
-  }, (error) => alertError(error));
+  }, onError: (error) => alertError(error));
 }
