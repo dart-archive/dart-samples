@@ -143,8 +143,8 @@ class Terminal {
     writeOutput('<div>Welcome to ${htmlEscape(document.title)}! (v$version)</div>');
     writeOutput(new DateTime.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
-    var type = persistent ? Window.PERSISTENT : Window.TEMPORARY;
-    window.requestFileSystem(type, size, filesystemCallback, errorHandler);
+    window.requestFileSystem(size, persistent: persistent)
+    .then(filesystemCallback, onError: errorHandler);
   }
 
   void filesystemNotInitialized(String cmd, List<String> args) {
@@ -170,20 +170,18 @@ class Terminal {
     }
 
     // Attempt to create a folder to test if we can.
-    cwd.getDirectory('testquotaforfsfolder',
-        options: {'create': true},
-        successCallback: (DirectoryEntry dirEntry) {
-          dirEntry.remove(() {}); // If successfully created, just delete it.
-        },
-        errorCallback: (error) {
-          if (error.code == FileError.QUOTA_EXCEEDED_ERR) {
-            writeOutput('ERROR: Write access to the filesystem is '
-                        'unavailable. Are you running Google Chrome with '
-                        '--unlimited-quota-for-files?');
-          } else {
-            errorHandler(error);
-          }
-        });
+    cwd.createDirectory('testquotaforfsfolder')
+    .then((DirectoryEntry dirEntry) {
+      dirEntry.remove().then((_) {}); // If successfully created, just delete it.
+    }, onError: (error) {
+      if (error.code == FileError.QUOTA_EXCEEDED_ERR) {
+        writeOutput('ERROR: Write access to the filesystem is '
+            'unavailable. Are you running Google Chrome with '
+        '--unlimited-quota-for-files?');
+      } else {
+        errorHandler(error);
+      }
+    });
   }
 
   void errorHandler(error) {
@@ -243,37 +241,32 @@ class Terminal {
 
   void addDroppedFiles(List<File> files) {
     files.forEach((file) {
-      cwd.getFile(file.name,
-          options: {'create': true, 'exclusive': true},
-          successCallback: (FileEntry fileEntry) {
-            fileEntry.createWriter((FileWriter fileWriter) {
+      cwd.createFile(file.name, exclusive: true)
+      .then((FileEntry fileEntry) {
+            fileEntry.createWriter().then((FileWriter fileWriter) {
               fileWriter.onError.listen(errorHandler);
               fileWriter.write(file);
-            }, errorHandler);
-          },
-          errorCallback: errorHandler);
+            }, onError: errorHandler);
+          }, onError: errorHandler);
     });
   }
 
   void read(String cmd, String path, var callback) {
-    cwd.getFile(path,
-        options: {},
-        successCallback: (FileEntry fileEntry) {
-          fileEntry.file((file) {
-            var reader = new FileReader();
-            reader.onLoadEnd.listen((ProgressEvent event) => callback(reader.result));
-            reader.readAsText(file);
-          }, errorHandler);
-        },
-        errorCallback: (error) {
-          if (error.code == FileError.INVALID_STATE_ERR) {
-            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}): is a directory<br>');
-          } else if (error.code == FileError.NOT_FOUND_ERR) {
-            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
-          } else {
-            errorHandler(error);
-          }
-        });
+    cwd.getFile(path).then((FileEntry fileEntry) {
+      fileEntry.file().then((file) {
+        var reader = new FileReader();
+        reader.onLoadEnd.listen((ProgressEvent event) => callback(reader.result));
+        reader.readAsText(file);
+      }, onError: errorHandler);
+    }, onError: (error) {
+      if (error.code == FileError.INVALID_STATE_ERR) {
+        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}): is a directory<br>');
+      } else if (error.code == FileError.NOT_FOUND_ERR) {
+        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
+      } else {
+        errorHandler(error);
+      }
+    });
   }
 
   void clearCommand(String cmd, List<String> args) {
@@ -308,15 +301,13 @@ class Terminal {
       dest = '/';
     }
 
-    cwd.getDirectory(dest,
-        options: {},
-        successCallback: (DirectoryEntry dirEntry) {
-          cwd = dirEntry;
-          writeOutput('<div>${htmlEscape(dirEntry.fullPath)}</div>');
-        },
-        errorCallback: (FileError error) {
-          invalidOpForEntryType(error, cmd, dest);
-        });
+    cwd.getDirectory(dest)
+    .then((DirectoryEntry dirEntry) {
+      cwd = dirEntry;
+      writeOutput('<div>${htmlEscape(dirEntry.fullPath)}</div>');
+    }, onError: (FileError error) {
+      invalidOpForEntryType(error, cmd, dest);
+    });
   }
 
   void dateCommand(String cmd, var args) {
@@ -363,15 +354,15 @@ class Terminal {
     DirectoryReader reader = cwd.createReader();
 
     void readEntries() {
-      reader.readEntries(
-          (List<Entry> results) {
-            if (results.length == 0) {
-              displayFiles(entries);
-            } else {
-              entries.addAll(results);
-              readEntries();
-            }
-          }, errorHandler);
+      reader.readEntries()
+      .then((List<Entry> results) {
+        if (results.length == 0) {
+          displayFiles(entries);
+        } else {
+          entries.addAll(results);
+          readEntries();
+        }
+      }, onError: errorHandler);
     };
 
     readEntries();
@@ -383,35 +374,26 @@ class Terminal {
     }
 
     if (createFromDir.isEmpty) {
-      rootDirEntry.getDirectory(folders[0],
-          options: {'create': true},
-          successCallback: (dirEntry) {
-            // Recursively add the new subfolder if we still have a subfolder to create.
-            if (folders.length != 0) {
-                folders.removeAt(0);
-                createDir(dirEntry, folders);
-            }
-          }, errorCallback: errorHandler);
+      rootDirEntry.createDirectory(folders[0])
+      .then((dirEntry) {
+        // Recursively add the new subfolder if we still have a subfolder to create.
+        if (folders.length != 0) {
+          folders.removeAt(0);
+          createDir(dirEntry, folders);
+        }
+      }, onError: errorHandler);
     } else {
       var fullPath = cwd.fullPath;
-      cwd.getDirectory(createFromDir,
-          options: {},
-          successCallback: (DirectoryEntry dirEntry) {
-            cwd = dirEntry;
-            // Create the folders
-            createDir(cwd, folders);
-            cwd.getDirectory(fullPath,
-                options: {},
-                successCallback: (DirectoryEntry dirEntry) {
-                  cwd = dirEntry;
-                },
-                errorCallback: (FileError error) {
-                  invalidOpForEntryType(error, cmd, fullPath);
-                });
-          },
-          errorCallback: (FileError error) {
-            invalidOpForEntryType(error, cmd, createFromDir);
-          });
+      cwd.getDirectory(createFromDir)
+      .then((DirectoryEntry dirEntry) {
+        cwd = dirEntry;
+        // Create the folders
+        createDir(cwd, folders);
+
+        cwd.getDirectory(fullPath)
+        .then((DirectoryEntry dirEntry) => cwd = dirEntry,
+        onError: (FileError error) => invalidOpForEntryType(error, cmd, fullPath));
+      }, onError: (FileError error) => invalidOpForEntryType(error, cmd, createFromDir));
     }
   }
 
@@ -446,12 +428,10 @@ class Terminal {
           createDir(cwd, folders);
         }
       } else {
-        cwd.getDirectory(dirName,
-            options: {'create': true, 'exclusive': true},
-            successCallback: (_) {},
-            errorCallback: (FileError error) {
-              invalidOpForEntryType(error, cmd, dirName);
-            });
+        cwd.createDirectory(dirName, exclusive: true)
+        .then((_) {}, onError: (FileError error) {
+          invalidOpForEntryType(error, cmd, dirName);
+        });
       }
     }
   }
@@ -469,26 +449,29 @@ class Terminal {
 
     // Moving to a folder? (e.g. second arg ends in '/').
     if (dest[dest.length - 1].endsWith('/')) {
-      cwd.getDirectory(src,
-          options: {},
-          successCallback: (DirectoryEntry srcDirEntry) {
+      cwd.getDirectory(src)
+      .then((DirectoryEntry srcDirEntry) {
             // Create blacklist for dirs we can't re-create.
             var create = ['.', './', '..', '../', '/'].indexOf(dest) != -1 ? false : true;
 
-            cwd.getDirectory(dest,
-                options: {'create': create},
-                successCallback: (DirectoryEntry destDirEntry) => action(srcDirEntry, destDirEntry),
-                errorCallback: errorHandler);
-          },
-          errorCallback: errorHandler);
+            if (create) {
+              cwd.createDirectory(dest)
+              .then((DirectoryEntry destDirEntry) => action(srcDirEntry, destDirEntry),
+              onError: errorHandler);
+            } else {
+              cwd.getDirectory(dest)
+              .then((DirectoryEntry destDirEntry) => action(srcDirEntry, destDirEntry),
+              onError: errorHandler);
+            }
+          }, onError: errorHandler);
     } else {
       // Treat src/destination as files.
-      cwd.getFile(src, options: {},
-          successCallback: (FileEntry srcFileEntry) {
-            srcFileEntry.getParent((DirectoryEntry parentDirEntry) => action(srcFileEntry, parentDirEntry, dest),
-                errorHandler);
+      cwd.getFile(src).then((FileEntry srcFileEntry) {
+            srcFileEntry.getParent()
+            .then((DirectoryEntry parentDirEntry) => action(srcFileEntry, parentDirEntry, dest),
+                onError: errorHandler);
           },
-          errorCallback: errorHandler);
+          onError: errorHandler);
     }
   }
 
@@ -529,10 +512,8 @@ class Terminal {
   }
 
   void open(String cmd, String path, successCallback) {
-    cwd.getFile(path,
-        options: {},
-        successCallback: successCallback,
-        errorCallback: (error) {
+
+    cwd.getFile(path).then(successCallback, onError: (error) {
           if (error.code == FileError.NOT_FOUND_ERR) {
             writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
           } else {
@@ -561,16 +542,14 @@ class Terminal {
     });
 
     args.forEach((fileName) {
-      cwd.getFile(fileName, options: {},
-          successCallback: (fileEntry) {
-            fileEntry.remove(() {}, errorHandler);
+      cwd.getFile(fileName).then((fileEntry) {
+            fileEntry.remove().then((_) {}, onError: errorHandler);
           },
-          errorCallback: (error) {
+          onError: (error) {
             if (recursive && error.code == FileError.TYPE_MISMATCH_ERR) {
-              cwd.getDirectory(fileName,
-                  options: {},
-                  successCallback: (DirectoryEntry dirEntry) => dirEntry.removeRecursively(() {}, errorHandler),
-                  errorCallback: errorHandler);
+              cwd.getDirectory(fileName)
+              .then((DirectoryEntry dirEntry) => dirEntry.removeRecursively().then((_) {}, onError: errorHandler),
+                  onError: errorHandler);
             } else if (error.code == FileError.INVALID_STATE_ERR) {
               writeOutput('${htmlEscape(cmd)}: ${htmlEscape(fileName)}: is a directory<br>');
             } else {
@@ -582,10 +561,9 @@ class Terminal {
 
   void rmdirCommand(String cmd, List<String> args) {
     args.forEach((dirName) {
-      cwd.getDirectory(dirName,
-          options: {},
-          successCallback: (dirEntry) {
-            dirEntry.remove(() {}, (error) {
+      cwd.getDirectory(dirName)
+      .then((dirEntry) {
+            dirEntry.remove().then((_) {}, onError: (error) {
               if (error.code == FileError.INVALID_MODIFICATION_ERR) {
                 writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dirName)}: Directory not empty<br>');
               } else {
@@ -593,7 +571,7 @@ class Terminal {
               }
             });
           },
-          errorCallback: (error) => invalidOpForEntryType(error, cmd, dirName));
+          onError: (error) => invalidOpForEntryType(error, cmd, dirName));
     });
   }
 
