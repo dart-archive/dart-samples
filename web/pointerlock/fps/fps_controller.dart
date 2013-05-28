@@ -47,7 +47,7 @@ class MouseKeyboardCameraController {
       return;
     }
     scale = scale * dt * floatVelocity;
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
+    vec3 upDirection = new vec3(0.0, 1.0, 0.0);
     upDirection.scale(scale);
     cam.lookAtPosition.add(upDirection);
     cam.eyePosition.add(upDirection);
@@ -61,7 +61,7 @@ class MouseKeyboardCameraController {
     scale = scale * dt * strafeVelocity;
     vec3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
+    vec3 upDirection = new vec3(0.0, 1.0, 0.0);
     vec3 strafeDirection = frontDirection.cross(upDirection);
     strafeDirection.scale(scale);
     cam.lookAtPosition.add(strafeDirection);
@@ -85,7 +85,7 @@ class MouseKeyboardCameraController {
   void _rotateView(num dt, Camera cam) {
     vec3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
+    vec3 upDirection = new vec3(0.0, 1.0, 0.0);
     vec3 strafeDirection = frontDirection.cross(upDirection);
     strafeDirection.normalize();
 
@@ -114,7 +114,7 @@ class MouseKeyboardCameraController {
   }
 
   void _rotateEyeAndLook(num delta_angle, vec3 axis, Camera cam) {
-    quat q = new quat(axis, delta_angle);
+    quat q = new quat.axisAngle(axis, delta_angle);
     vec3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
     q.rotate(frontDirection);
