@@ -50,8 +50,8 @@ class VideoExample {
     _canvasCopy.width = _canvasDraw.width = _videoDom.videoWidth;
     _canvasCopy.height = _videoDom.videoHeight;
     _canvasDraw.height = _videoDom.videoHeight + _outPadding;
-    _ctxCopy = _canvasCopy.context2d;
-    _ctxDraw = _canvasDraw.context2d;
+    _ctxCopy = _canvasCopy.context2D;
+    _ctxDraw = _canvasDraw.context2D;
   }
 
   void _onPlay() {
@@ -73,14 +73,14 @@ class VideoExample {
       var dy = _offsets[i] + sy + _outPadding;
       var dw = sw;
       var dh = sh;
-      _ctxDraw.drawImage(_canvasCopy, sx, sy, sw, sh, dx, dy, dw, dh);
+      _ctxDraw.drawImageScaledFromSource(_canvasCopy, sx, sy, sw, sh, dx, dy, dw, dh);
       if ((_offsets[i] + _inertias[i]).abs() < _outPadding) {
         _offsets[i] += _inertias[i];
       } else {
         _inertias[i] = -_inertias[i];
       }
     }
-    window.requestAnimationFrame((int time) {
+    window.requestAnimationFrame((double time) {
       _processEffectFrame();
       return false;
     });
