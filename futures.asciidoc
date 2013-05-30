@@ -1,0 +1,419 @@
+= Dart Cookbook
+:author: Shailen Tuli
+:encoding: UTF-8
+
+== Futures
+
+=== Getting the value of a Future
+
+==== Problem
+
+You are using an API where a function or method returns a Future, and you want
+to get that Future's value.
+
+==== Solution
+
+Invoke the `then()` method on the Future returned by the function or method.
+Within `then()`, register a callback to handle the value of the Future when it
+becomes available.
+
+==== Example
+
+The File class in the `dart:io` library provides a `readAsString()` method
+for reading the contents of a file. When `readAsString()` is invoked, it
+begins the task of reading the file contents and returns an uncompleted
+Future. We invoke the `then()` method on this Future.
+
+When `readAsString()` is done reading the file contents, it completes the
+Future it returned earlier with those contents. The callback registered
+within `then()` fires and process the value of the Future.
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+
+void main() {
+  String filename = 'README.md';
+  File file = new File(filename);
+  file.readAsString()
+    .then(print);
+}
+--------------------------------------------------------------------------------
+
+==== Discussion
+
+Calling `then()` returns a new Future. This means that `then()` calls can be
+chained:
+
+--------------------------------------------------------------------------------
+futureReturningFunction()
+  .then((value) => doSomethingWith(value))
+  .then((anotherValue) => doSomethingElseWith(anotherValue)
+  .then((_) ...)
+  ...
+--------------------------------------------------------------------------------
+
+The Future returned by `then()` completes with the value returned by its
+callback:
+
+--------------------------------------------------------------------------------
+futureReturningFunction()
+  .then((value) => 42)            // Future completes with 42.
+  .then((value) => print(value)); // 42
+--------------------------------------------------------------------------------
+
+If `then()`'s callback itself returns a Future, that Future's value completes
+the Future returned by `then()`:
+
+--------------------------------------------------------------------------------
+futureReturningFunc().
+  .then((content) => new Future.of(() => 42)) // Callback returns 42 wrapped
+                                              // in a Future. then()'s Future
+                                              // completes with _value_ of the
+                                              // callback's Future (42).
+  .then((value) => print(value));             // 42
+--------------------------------------------------------------------------------
+
+If `then()`'s callback throws, the Future returned by `then()` completes with
+an error. We discuss async error handling in the next recipe.
+
+=== Handling a Future that completes with an error
+
+==== Problem
+
+You are using a function or method that returns a Future, and that Future
+could complete either with a value or with an error. You want to make sure
+that if the Future completes with an error, you handle that error.
+
+==== Solution
+
+Use the Future object's `catchError()` method for handling async errors. Within
+`catchError()`, register a callback. If the Future completes with an error,
+this callback fires and handles that error.
+
+==== Example
+
+In the previous recipe, we used the `readAsString()` method to get the contents
+of a file. This method returns a Future, and it completes the Future with the
+file contents once they become available.
+
+But if the file whose contents we want to read does not exist, or if it is
+unavailable for reading, `readAsString()` completes its Future with an error.
+That error propagates unless it is handled.
+
+We add the error handling code in this new and improved version of the recipe.
+We implement two callbacks: if the Future returned by `readAsString()` completes
+with a value, `then()`'s callback fires and processes that value, and if it
+completes with an error, `catchError()`'s callback fires and handles the error:
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+
+void handleSuccess(value) {
+  print('File read successfully: ');
+  print(value);
+}
+
+void handleError(error) {
+  print('File not read: ');
+  print(error.message);
+}
+
+void main() {
+  String filename = 'somefile.txt';
+  File file = new File(filename);
+  file.readAsString()
+    .then(handleSuccess)
+    .catchError(handleError);
+}
+--------------------------------------------------------------------------------
+
+The pairing of `then()` followed by `catchError()` is a common pattern in Dart
+async programming, and can be thought of as the asynchronous equivalent of a
+synchronous try-catch.
+
+To further expand that comparison, let us look at an example of synchronous
+code that uses try-catch blocks:
+
+--------------------------------------------------------------------------------
+try {
+ var value = syncFunc();
+ print(anotherSyncFunc(value));
+} catch(e) {
+  handleError(e);
+}
+--------------------------------------------------------------------------------
+
+If `syncFunc()` throws, the exception is caught within the catch block. If
+`syncFunc()` executes normally, but `anotherSyncFunc()` subsequently throws,
+that exception is also caught within the catch block.
+
+Here is the async equivalent of the same code:
+
+--------------------------------------------------------------------------------
+asyncFunc()
+  .then((value) => anotherAsyncFunc(value))
+  .catchError(errorCallback);
+--------------------------------------------------------------------------------
+
+If `asyncFunc()` completes its Future with an error, `then()` forwards that
+error, and `catchError()`'s handles the error.
+
+If `asyncFunc()` completes normally with a value, `then()`'s callback fires.
+If `anotherAsyncFunc()` throws, `then()`'s Future completes with an
+error. That error is also handled by `catchError()`'s callback.
+
+It is quite common to use `catchError()` as a comprehensive error handler.
+For example, you can catch errors generated from any part of chain of `then()`
+calls using `catchError()`:
+
+--------------------------------------------------------------------------------
+void main() {
+  func1()
+    .then((_) => func2())
+    .then((_) => func3())
+    .then((_) => func4())
+    .catchError((e) {
+      print("Got error: ${e.error}");
+      return 42;
+    });
+}
+--------------------------------------------------------------------------------
+
+If the Future returned by `func1()` completes with an error, `catchError()`
+handles that error. And if code within any of the `then()` calls chained to
+`func1()` throws, the error generated is also handled by `catchError()`.
+
+
+=== Waiting for multiple futures to complete
+
+==== Problem
+
+You want to run several asynchronous functions or methods, wait for each one to
+complete, and then process the values returned.
+
+==== Solution
+
+Use the `Future.wait()` static method, and pass to it the futures you want to
+run as an argument:
+
+--------------------------------------------------------------------------------
+Future<List> wait(Iterable<Future> futures)
+--------------------------------------------------------------------------------
+
+The `Future.wait()` method returns a new Future. It waits for the futures given
+to it to complete, collects their value in a list, and then completes its own
+Future with that list.
+
+==== Example
+
+Earlier in this chapter, we have used the async `readAsString()` method found in
+the `dart:io` File class to read the contents of a file. Our earlier examples
+all involved reading a single file. Here, we use `Future.wait()` and the
+`readAsString()` method to read the content of several files:
+
+--------------------------------------------------------------------------------
+import 'dart:async';
+import 'dart:io';
+
+void main() {
+  List<String> filenames = ['AUTHORS', 'README.md', 'LICENSEsadf'];
+  List<File> files = filenames.map((filename) => new File(filename)).toList();
+
+  Future.wait(files.map((file) => file.readAsString()).toList())
+    .then((contents) {
+      print("${contents.join('').length} characters read");
+    })
+    .catchError((error) {
+      print('Encountered an ${error.runtimeType}. '
+            'Check to make sure that the files exist. '
+            'Also make sure that you have read permissions');
+    });
+}
+--------------------------------------------------------------------------------
+
+We use `Future.wait()` to initiate calls to `readAsString()` in rapid
+succession. When all the files are read, the Future returned by `Future.wait()`
+completes with a list of the results.
+
+Use `Future.wait()` to run multiple async tasks that are indepenedent of each
+other (i.e., no task relies on the value returned by another task), and the
+order of completion of the tasks is not important.
+
+If even a single Future passed to `Future.wait()` completes with an error,
+the Future returned by `Future.wait()` also completes with an error. To
+prevent such an error from propagating, use `catchError()` with an appropriate
+error handler.
+
+
+=== Implementing an async try-catch-finally
+
+==== Problem
+
+You are using chained `then()` and `catchError()` calls to process a Future.
+If the Future completes with a value, `then()` processes that value, and if the
+Future completes with an error, `catchError()` handles the error. You want some
+code to run regardless of whether the Future completes with a value or with an
+error.
+
+==== Solution
+
+Use the `whenComplete()` method provided by the Future class. If
+`then().catchError()` mirrors  try-catch blocks, `whenComplete()` is the async
+equivalent of a 'finally' block. Register a callback inside `whenComplete()`.
+This callback fires when `whenComplete()`’s receiver completes, whether it does
+so with a value or with an error:
+
+--------------------------------------------------------------------------------
+future
+  .then(successCallback)
+  .catchError(errorCallback)
+  .whenComplete(defaultActionCallback); // The callback will always fire.
+--------------------------------------------------------------------------------
+
+==== Example
+
+In the example below, we use a HttpClient to make an HTTP request to a server,
+process the response received, and then close the HttpClient connection:
+
+--------------------------------------------------------------------------------
+import 'dart:io';
+import 'dart:uri';
+
+void processResponse(HttpClientResponse response) => ...;
+void processError(error) => ...;
+
+main() {
+  var url = new Uri('http://example.com?foo==bar');
+  var httpClient = new HttpClient();
+
+  httpClient.postUrl(url)
+    .then((HttpClientRequest request) => request.close())
+    .then((HttpClientResponse response) => processResponse)
+    .catchError(processError)
+    .whenComplete(() => httpClient.close());
+}
+--------------------------------------------------------------------------------
+
+We implement a `then()` callback to handle the server response. We implement a
+`catchError()` callback to handle errors that are triggered either by the
+server response or by our code inside `then()`.
+
+Regardless of whether we encounter an error or not, we want to shut down the
+HTTP connection. We place the code responsible for closing the connection
+inside a `whenComplete()`.
+
+Using `whenComplete()` returns a Future. If no error is emitted from within
+`whenComplete()`, its Future completes the same way as the Future that
+`whenComplete()` is invoked on. This is easiest to understand through examples.
+
+In the code below, `then()`’s Future completes with an error, so
+`whenComplete()`’s Future also completes with that error:
+
+--------------------------------------------------------------------------------
+new Future(() => throw 'an error')
+
+   // Forwards error. Callback does not fire.
+  .then(successCallback)
+
+  // Forwards error. Callback does fire.
+  .whenComplete(() => print("inside whenComplete()"))
+
+  // Forwards error. Callback does not fire.
+  .then((_) => print("Won't reach here either."))
+
+  // Handles error.
+  .catchError(print);
+--------------------------------------------------------------------------------
+
+In the code below, `then()`’s Future completes with an error, which is handled
+by `catchError()`. Because `catchError()`’s Future completes with someObject,
+`whenComplete()`’s Future completes with that same object.
+
+--------------------------------------------------------------------------------
+new Future(() => throw 'an error')
+
+   // Forwards error. Callback does not fire.
+  .then(successCallback)
+
+  // Handles error. Completes its Future with a value, 42.
+  .catchError((error) {
+    print(error);
+    return 42;
+  })
+
+  // Completes its Future with 42. Callback fires.
+  .whenComplete(() => print("inside whenComplete()"))
+
+  // Prints 42.
+  .then(print);
+--------------------------------------------------------------------------------
+
+If `whenComplete()`’s callback throws an error, then `whenComplete()`’s Future
+completes with that error:
+
+--------------------------------------------------------------------------------
+new Future(() => throw 'an error')
+
+   // Handles error.
+  .catchError(handleError)
+
+   // Future completes with a new error.
+  .whenComplete(() => throw "new error")
+
+   // Handles error.
+  .catchError(handleError);
+--------------------------------------------------------------------------------
+
+
+=== Handling specific errors
+
+==== Problem
+
+You are using `catchError()` to handle async errors, and you want to customize
+your error handling based on the type of error caught.
+
+==== Solution
+
+To query the type of error thrown, use the optional named argument, `test`,
+within `catchError()`:
+
+--------------------------------------------------------------------------------
+abstract Future catchError(onError(Object error), {bool test(Object error)})
+--------------------------------------------------------------------------------
+
+Here is an example:
+
+--------------------------------------------------------------------------------
+void handleFormatException() => ...;
+void handleStateError() => ...;
+void handleArgumentError() => ...;
+
+void main() {
+  futureReturningFunc()
+    .then(successCallback)
+    .catchError(handleFormatException, test: (e) => e is FormatException)
+    .catchError(handleStateError, test: (e) => e is StateError)
+    .catchError(handleArgumentError, test: (e) => e is ArgumentError);
+  }
+}
+--------------------------------------------------------------------------------
+
+If you invoke `catchError()` on a Future that completes with an error, and you
+don't pass it a `test` argument, `catchError()` handles the error. If you
+pass it a `test` argument, and it returns false, `catchError()` lets the
+error go unhandled. This means that you can use the `test` argument to rethrow
+errors you don't want to handle:
+
+--------------------------------------------------------------------------------
+catchError((Object error) ..., test: testPredicate);
+--------------------------------------------------------------------------------
+
+This is equivalent to doing the following:
+
+--------------------------------------------------------------------------------
+catchError((Object error) {
+    if (!testPredicate(error.error)) throw error;  // rethrow
+        ...
+}
+--------------------------------------------------------------------------------
+
