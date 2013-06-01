@@ -417,3 +417,109 @@ catchError((Object error) {
 }
 --------------------------------------------------------------------------------
 
+=== Preventing synchronous errors in async code
+
+==== Problem
+
+You are writing a function that returns a Future. Your function contains
+synchronous code that could potentially throw. Clients of this function are
+forced to implement dual error handlers: `catchError()` for asynchronous errors,
+and a second handler for synchronous errors. You want to prevent the need for
+multiple error handlers.
+
+Let us look at an example of how synchronous errors could easily leak out of a
+Future-returning function:
+
+--------------------------------------------------------------------------------
+Future<int> parseAndRead(data) {
+  String filename = obtainFilename(data);         // Could throw.
+  File file = new File(filename);
+  return file.readAsString()
+    .then((contents) => parseFileData(contents)); // Could also throw.
+}
+--------------------------------------------------------------------------------
+
+Two functions in the code above could potentially throw synchronously:
+`obtainFileName()` and `parseFileData()`. Because `parseFileData()` executes
+inside a `then()` callback, its error does not leak out of the function.
+Instead, `then()`’s Future completes with `parseFileData()`’s error, the error
+eventually completes `parseAndRead()`’s Future, and the error can be
+successfully handled by `catchError()`.
+
+But `obtainFileName()` is not called within a `then()` callback; if _it_
+throws, a synchronous error gets thrown:
+
+--------------------------------------------------------------------------------
+parseAndReadWrapped(data)
+  .then(print)
+  .catchError((error) => print('Error: $error'));
+--------------------------------------------------------------------------------
+
+In the abscence of any synchronous error handler, the error propagates to the
+global error handler:
+
+--------------------------------------------------------------------------------
+Unhandled exception:
+<error from obtainFilename>
+...
+--------------------------------------------------------------------------------
+
+==== Solution
+
+Wrap the function body in a new Future. This ensures that no synchronous error
+leaks out of your code:
+
+--------------------------------------------------------------------------------
+Future<int> parseAndReadWrapped(data) {
+  return new Future(() {
+    String filename = obtainFilename(data);         // Could throw.
+    File file = new File(filename);
+    return file.readAsString()
+      .then((contents) => parseFileData(contents)); // Could also throw.
+  });
+}
+--------------------------------------------------------------------------------
+
+The old function code is now the callback passed to the `new Future()`
+constructor. Running your code produces the following results:
+
+* If the callback returns a non-Future value, `new Future()`’s Future completes
+with that value.
+
+* If the callback throws, `new Future()`'s Future completes with an error.
+
+* If the callback itself returns a Future, the value or the error of that
+Future completes `Future()`'s Future.
+
+With your old code wrapped within a `new Future()`, `catchError()` can handle
+all errors:
+
+--------------------------------------------------------------------------------
+parseAndReadWrapped(data)
+  .then(print)
+  .catchError((error) => print('Error: $error'));
+--------------------------------------------------------------------------------
+
+The output from running the code above looks something like this:
+
+--------------------------------------------------------------------------------
+Error: <error from obtainFilename>
+--------------------------------------------------------------------------------
+
+Wrapping your code in a `new Future()` makes your code resilient against
+uncaught exceptions. If your function has a lot of code packed into it,
+chances are that you could be doing something dangerous without realizing it:
+
+--------------------------------------------------------------------------------
+Future myFunc() {
+  return new Future(() {
+    var x = someFunc();     // Unexpectedly throws in some rare cases.
+    var y = 10 ~/ x;        // Throws if x is 0.
+    ...
+  });
+}
+--------------------------------------------------------------------------------
+
+This approach allows you to handle errors you know might occur, but also
+prevents errors from accidentally leaking out of your code.
+
