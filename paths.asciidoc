@@ -1,0 +1,65 @@
+=== Parsing Paths
+
+==== Problem
+
+You want to parse a path into its components.
+
+==== Solution
+
+Use the `segments()` method to split a path into its components:
+
+--------------------------------------------------------------------------------
+new Path('/usr/local/bin/').segments(); // ['usr', 'local', 'bin']
+new Path('../../file.txt').segments(); //  ['..', '..', 'file.txt']
+--------------------------------------------------------------------------------
+
+The `segments()` method splits the path on `/` characters, ignoring leading or
+trailing '/' characters.
+
+Use the the `directoryPath` field to get a path up to the last '/'. The final
+'/' and the segment following it is dropped by `directoryPath`:
+
+--------------------------------------------------------------------------------
+new Path('/path/to/file.txt').directoryPath.segments(); // ['path', 'to']
+new Path('../img/logo.png').directoryPath.segments();   // ['..', 'img']
+--------------------------------------------------------------------------------
+
+If there is no '/' in the Path, `directoryPath` returns an empty string:
+
+--------------------------------------------------------------------------------
+new Path('book.txt').directoryPath.segments(); // ['']
+--------------------------------------------------------------------------------
+
+If the only '/' in this Path is the first character, `directoryPath` returns
+'/':
+
+--------------------------------------------------------------------------------
+new Path('/src').directoryPath.toString(); // '/'
+new Path('/').directoryPath.toString();    // '/'
+--------------------------------------------------------------------------------
+
+To get just the path after the last '/', use the `filename` field. This returns
+the entire path if it contains no '/', and it returns an empty string if the
+path ends with a '/':
+
+--------------------------------------------------------------------------------
+new Path('imgs/logo.png').filename; // 'logo.png'
+new Path('logo.png').filename;      // 'logo.png'
+new Path('/usr/local/').filename;   // ''
+--------------------------------------------------------------------------------
+
+Use the `extension` field to get the part of the filename after the last '.':
+
+--------------------------------------------------------------------------------
+new Path('imgs/logo.png').extension; // 'png'
+--------------------------------------------------------------------------------
+
+To get just the filename, use the `filenameWithoutExtension` field:
+
+--------------------------------------------------------------------------------
+new Path('/c:/docs/book.txt').filenameWithoutExtension; // 'book'
+--------------------------------------------------------------------------------
+
+===
+
+
