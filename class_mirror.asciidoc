@@ -45,6 +45,103 @@ var classMirror = libraryMirror.classes[const Symbol('StringBuffer')];
 MirrorSystem.getName(classMirror.simpleName); // 'StringBuffer'
 --------------------------------------------------------------------------------
 
+=== Querying the inhertance hierarchy of a class
 
+==== Problem
+
+You want to obtain information about the inheritance hierarchy of a class at
+runtime. You want to find the superclass of a class, and you want to determine
+whether a class is found in the inheritance hierarchy of another class.
+
+==== Solution
+
+For the examples below, assume the following class definitions:
+
+--------------------------------------------------------------------------------
+class A {}
+class B extends A {}
+class C extends B {}
+--------------------------------------------------------------------------------
+
+To find the superclass of a class, first obtain a mirror on the class:
+
+--------------------------------------------------------------------------------
+var classMirror = reflect(new C()).type;
+--------------------------------------------------------------------------------
+
+Then, use the mirror's `superclass` property to get the superclass:
+
+--------------------------------------------------------------------------------
+var classMirror = reflect(new C()).type;
+MirrorSystem.getName(classMirror.superclass.simpleName); 'B'
+--------------------------------------------------------------------------------
+
+Using `superclass` returns a new ClassMirror object. This means that you can
+use `superclass` to move higher in the inheritance hierarchy:
+
+--------------------------------------------------------------------------------
+classMirror = classMirror.superclass;
+MirrorSystem.getName(classMirror.superclass.simpleName); 'A'
+--------------------------------------------------------------------------------
+
+All Dart objects have the Object class as the highest class in the inheritance
+hierarchy. Because we never explicitly defined a superclass for A, A's
+superclass is Object:
+
+--------------------------------------------------------------------------------
+classMirror = classMirror.superclass;
+MirrorSystem.getName(classMirror.superclass.simpleName); 'Object'
+--------------------------------------------------------------------------------
+
+The superclass of Object is also Object:
+
+--------------------------------------------------------------------------------
+classMirror = reflect(new Object()).type;
+MirrorSystem.getName(classMirror.superclass.simpleName); // 'Object'
+--------------------------------------------------------------------------------
+
+Using the `superclass` property, it is quite easy to get the entire inheritance
+hierarchy of a class:
+
+-------------------------------------------------------------------------------
+import 'dart:mirrors';
+
+Iterable classHierarchy(object) {
+  List<Symbol> ancestorClasses = [];
+  ClassMirror classMirror = reflect(object).type;
+  while (classMirror.simpleName != const Symbol('Object')) {
+    classMirror = classMirror.superclass;
+    ancestorClasses.add(classMirror.simpleName);
+  }
+  return ancestorClasses;
+}
+
+void main() {
+  List<String> hierarchy = classHierarchy(new C()).map((symbol) {
+    return MirrorSystem.getName(symbol)
+  }).toList();
+
+  print(hierarchy); // ['B', 'A', 'Object']
+}
+--------------------------------------------------------------------------------
+
+You can use the `classHierarchy()` function defined above to find out if a
+class lies in the inheritance hierarchy of another class:
+
+--------------------------------------------------------------------------------
+void main() {
+  List<String> hierarchy = classHierarchy(new B()).map((symbol) {
+    return MirrorSystem.getName(symbol)
+  }).toList();
+
+  print(hierarchy); // ['C', 'Object']
+  print(hierarchy.indexOf(new A().runtimeType.toString())); //  1
+  print(hierarchy.indexOf(new C().runtimeType.toString())); // -1
+}
+--------------------------------------------------------------------------------
+
+The String `indexOf` method used above returns -1 if a match is not found.
+Otherwise, it returns the index at which the match is found. The code above
+shows that A is found in the inheritance hierarchy of B, but C is not.
 
 
