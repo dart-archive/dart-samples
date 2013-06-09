@@ -1,0 +1,247 @@
+Recipes:
+  InstanceMirror:
+    *Get an instance mirror and run getters, setters, etc. on the instance
+    Find out if a an object responds to a field, getter, setter or method
+
+  LibraryMirror:
+    * Get a library mirror and find the classes, top level functions etc. (John Evans)
+    Find out which libraries are loaded
+
+  ClassMirror:
+    * Get a class mirror from an instance or a library
+    What library is the class defined in ????
+    Create a new instance of a class (Y)
+    Call static class functions (Y)
+    Find out the inheritance hierarchy of a class
+    Which interfaces does the class implement?
+    Constructors
+
+  MethodMirror:
+    Methods in a class
+
+  ParameterMirror:
+    How many params does a method or function take?
+
+Things to know:
+  import 'dart:mirrors'
+  MirrorSystem.getName(symbol)
+  const Symbol
+  Maps
+  Caveats
+
+=== Creating an instance mirror
+
+==== Problem
+
+You want to perform introspection on a Dart object at runtime, and you want to
+dynamically get and set fields, call getters and setters, and invoke methods
+on that object.
+
+==== Solution
+
+First, use the top level `reflect()` function to get an InstanceMirror on the
+object:
+
+--------------------------------------------------------------------------------
+MyClass myObj = new MyClass(3, 4, 20, 30);
+InstanceMirror myObjMirror = reflect(myObj);
+--------------------------------------------------------------------------------
+
+You can get a reference to the object being reflected by using the
+InstanceMirror's `reflectee` property:
+
+--------------------------------------------------------------------------------
+myObjMirror.reflectee; // myObj
+--------------------------------------------------------------------------------
+
+Once the InstanceMirror for an object is obtained, you can perform operations on
+the reflectee. This is explained through examples below. All examples use the
+following Rectangle class:
+
+--------------------------------------------------------------------------------
+class Rectangle {
+  num left;
+  num top;
+  num width;
+  num height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  Rectangle.square(num dimension) {
+    left = dimension;
+    top = dimension;
+    width = dimension;
+    height = dimension;
+  }
+
+  num get right             => left + width;
+      set right(num value)  => left = value - width;
+  num get bottom            => top + height;
+      set bottom(num value) => top = value - height;
+
+  String toString() => 'left=$left, right=$right, top=$top, bottom=$bottom';
+}
+--------------------------------------------------------------------------------
+
+First, create and Rectangle instance and obtain an InstanceMirror for that
+instance:
+
+--------------------------------------------------------------------------------
+Rectangle rectangle = new Rectangle(3, 4, 20, 30);
+InstanceMirror im = reflect(rectangle);
+--------------------------------------------------------------------------------
+
+To get and set field values, use the `getField()` and `setField()` methods:
+
+--------------------------------------------------------------------------------
+im.getField(new Symbol('left')).reflectee; // 3
+
+im.setField(new Symbol('left'), 10);
+im.getField(new Symbol('left')).reflectee; // 10
+--------------------------------------------------------------------------------
+
+You can also use `getField()` and `setField()` to invoke getters and setters:
+
+--------------------------------------------------------------------------------
+im.getField(const Symbol('right')).reflectee; // 23
+
+im.setField(const Symbol('right'));           // 21
+im.getField(const Symbol('right')).reflectee; // 21
+--------------------------------------------------------------------------------
+
+Use the `invoke()` method to invoke a method on the reflectee:
+
+--------------------------------------------------------------------------------
+im.invoke(const Symbol('toString'), []).reflectee;
+// 'left=3, right=23, top=4, bottom=34'
+--------------------------------------------------------------------------------
+
+==== Getting information about a library
+
+==== Problem
+
+You want to obtain information about a Dart library at runtime and want to get
+a LibraryMirror.
+
+==== Solution
+
+First, use the MirrorSystem interface to reflect on libraries associated with
+your program. Use the top level 'currentMirrorSystem()` function to get the
+MirrorSystem associated with the current isolate:
+
+--------------------------------------------------------------------------------
+final MirrorSystem mirrorSystem = currentMirrorSystem();
+--------------------------------------------------------------------------------
+
+Use the MirrorSystem's `findLibrary()` method to get the mirror for a specific
+library:
+
+--------------------------------------------------------------------------------
+var libraryMirror = mirrorSystem.findLibrary(const Symbol('dart.core')).first;
+print(MirrorSystem.getName(libraryMirror.simpleName)); // 'dart.core'
+--------------------------------------------------------------------------------
+
+The `findLibrary()` method returns returns an iterable of all matching libraries
+in the mirror system. Note that to obtain a mirror for the 'dart:core' library,
+you must pass a symbol constructed using the 'dart.core' string.
+
+
+
+=== Class mirror
+
+
+
+
+
+
+
+
+
+
+
+
+=== Finding out if an object responds to a field, getter, setter, or method
+
+==== Problem
+
+You want to dynamically dispatch a method, getter or a setter on an object and
+want to know if the object .......
+
+You want to perform an operation on an object, and you want to know if that
+operation is legal or if it is going to result in a call to NoSuchMethod.
+
+==== Solution
+
+`members` property
+
+var memberList = im.type.members.keys.toList().map((item) {
+  return MirrorSystem.getName(item);
+}).toList();
+
+expect(memberList.indexOf('left'), greaterThan(-1));
+expect(memberList.indexOf('foo'), equals(-1));
+
+
+==== Solution
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=== Creating a class mirror
+
+==== Problem
+
+You want to get mirror on a class. ????
+
+==== Solution
+
+You will need an instance of the class, or the library where the class is
+defined to get a ClassMirror.
+
+If you have an instance, you can use the top level `reflectClass()` function to
+get a ClassMirror:
+
+--------------------------------------------------------------------------------
+var classMirror = reflectClass(myObj.runtimeType);
+MirrorSystem.getName(classMirror.simpleName); // 'MyClass'
+--------------------------------------------------------------------------------
+
+If you have an InstanceMirror, use the InstanceMirror's `type` property to get
+the ClassMirror:
+
+--------------------------------------------------------------------------------
+var myObj = new MyClass();
+var instanceMirror = reflect(myObj);
+var classMirror = instanceMirror.type;
+MirrorSystem.getName(classMirror.simpleName); // 'MyClass'
+--------------------------------------------------------------------------------
+
+[TODO: how to get an InstanceMirror]
+
+If you have a LibraryMirror, use its `classes` map to get a Mirror on the a
+class:
+
+--------------------------------------------------------------------------------
+var mirrorSystem = currentMirrorSystem();
+var libraryMirror = mirrorSystem.findLibrary(const Symbol('dart.core')).first;
+var classMirror = libraryMirror.classes[const Symbol('StringBuffer')];
+MirrorSystem.getName(classMirror.simpleName); // 'StringBuffer'
+--------------------------------------------------------------------------------
+
+Using `classes` returns an immutable map where the keys are class names
+(expressed as Symbols), and the values are the associated ClassMirror objects.
+
+
