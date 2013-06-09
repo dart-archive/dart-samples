@@ -144,4 +144,63 @@ The String `indexOf` method used above returns -1 if a match is not found.
 Otherwise, it returns the index at which the match is found. The code above
 shows that A is found in the inheritance hierarchy of B, but C is not.
 
+=== Dynamically creating a new class instance
+
+==== Problem
+
+You have a mirror on a class and want to create a new instance using that
+mirror.
+
+==== Solution
+
+Assume the following Point class:
+
+--------------------------------------------------------------------------------
+class Point {
+  num x, y;
+  Point(this.x, this.y);
+  Point.fromJson(String json) {
+    // ...
+  }
+}
+--------------------------------------------------------------------------------
+
+You can obtain a mirror on the Point class through a point instance, and you can
+create a new Point instance using the ClassMirror's `newInstance()` method. This
+method invokes constructor passed to it as an argument, and returns a mirror on
+the result.
+
+--------------------------------------------------------------------------------
+var point = new Point(1, 2);
+var classMirror = reflect(point).type;
+var point2 = classMirror.newInstance(new Symbol(''), [3, 4]).reflectee;
+expect(point2.x, equals(3));
+expect(point2.y, equals(4));
+--------------------------------------------------------------------------------
+
+Passing a Symbol created from an empty string to `newInstance()` invokes the
+generative Point constructor.
+
+To invoke a named constructor, pass the constructor's name to `newInstance()`:
+
+--------------------------------------------------------------------------------
+var point2 = classMirror.newInstance(new Symbol('fromJson'),
+  ['{"x":3,"y":4}']).reflectee;
+point2.x; // 3
+point2.y; // 4
+--------------------------------------------------------------------------------
+
+You can also invoke the `newInstanceAsync()` method. The syntax for
+`newInstanceAsync()` is the same as `newInstance()`, but `newInstanceAsync()`
+works asynchronously and returns the mirror on the newly created  instance via a
+Future:
+
+--------------------------------------------------------------------------------
+var point2;
+classMirror.newInstanceAsync(new Symbol('fromJson'), ['{"x":3,"y":4}'])
+  .then((mirror) {
+    point2 = mirror.reflectee;
+  });
+--------------------------------------------------------------------------------
+
 
