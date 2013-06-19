@@ -11,11 +11,13 @@ class SomeClass {
   }
 }
 
+
 class ExampleClass implements Comparable {
   int compareTo(ExampleClass obj) {}
 }
 
 class ChildExampleClass extends ExampleClass {}
+
 
 class MyClass {
   static int get getSomeStaticValue => _someStaticValue;
@@ -24,6 +26,7 @@ class MyClass {
   static int someStaticMethod() => 42;
   String someMethod() => '';
 }
+
 
 class Person {
   String firstName, lastName;
@@ -36,13 +39,13 @@ class Person {
   bool sameNameAs(Person other) => firstName == other.firstName && lastName == other.lastName;
 }
 
+
 class Student {
   String studentId;
   Student(this.studentId);
   bool hasRegistered() => false;
   bool enrolledIn(String classId) => false;
 }
-
 
 
 class Point {
@@ -55,6 +58,7 @@ class Point {
     y = data['y'];
   }
 }
+
 
 class Parent{static int foo() => 42;}
 class Child extends Parent {}
@@ -304,7 +308,6 @@ void main() {
     });
   });
 
-
   group('class mirrors', () {
     setUp(() {
       rectangle = new Rectangle(3, 4, 20, 30);
@@ -358,12 +361,7 @@ void main() {
       expect(classMirror.constructors[new Symbol(className)], isNotNull);
     });
 
-    test('getting a list of instance variables', () {});
-
-
     group('getting the interfaces implemented by a class', () {
-
-
       test('', () {
         ClassMirror classMirror = reflect(new ExampleClass()).type;
         expect(classMirror.superinterfaces.map((interface) {
@@ -406,7 +404,6 @@ void main() {
         expect(MirrorSystem.getName(classMirror.superclass.simpleName),
             equals('Object'));
       });
-
 
       test('map', () {
         classMirror = reflect(new Map()).type;
@@ -530,16 +527,20 @@ void main() {
     });
 
     test('classes defined', () {
-      expect(libraryMirror.classes.keys.map((key) => MirrorSystem.getName(key)).toList(),
-          equals(['JsonListener', 'JsonParser', 'JsonUnsupportedObjectError',
-                  'BuildJsonListener', '_JsonStringifier', 'JsonCyclicError',
-                  '_Reviver@0x3a1d726e', 'ReviverJsonListener']));
+      List<String>classes = libraryMirror.classes.keys.map(
+          (key) => MirrorSystem.getName(key)).toList();
+
+      classes.sort();
+      print(classes);
+      expect(classes, equals([
+        'BuildJsonListener', 'JsonCyclicError', 'JsonListener', 'JsonParser',
+        'JsonUnsupportedObjectError', 'ReviverJsonListener', '_JsonStringifier',
+        '_Reviver@0x3a1d726e']));
     });
 
     test('isPrivate', () {
       expect(libraryMirror.classes[const Symbol('JsonListener')].isPrivate,
           isFalse);
-
     });
 
 
