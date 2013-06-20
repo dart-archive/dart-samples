@@ -140,9 +140,7 @@ void main() {
     });
 
     test('class mirror from instance mirror', () {
-      var instanceMirror = reflect(rectangle);
-      var classMirror = instanceMirror.type;
-      expect(classMirror is ClassMirror, isTrue);
+      var classMirror = reflectClass(Rectangle);
       expect(MirrorSystem.getName(classMirror.simpleName), 'Rectangle');
     });
 
@@ -214,15 +212,13 @@ void main() {
       });
 
       test('static getter', () {
-        var myObj = new MyClass();
-        var classMirror = reflect(myObj).type;
+        ClassMirror classMirror = reflectClass(MyClass);
         expect(classMirror.getField(const Symbol('getSomeStaticValue')).reflectee,
             equals(MyClass._someStaticValue));
       });
 
       test('static setter', () {
-        var myObj = new MyClass();
-        var classMirror = reflect(myObj).type;
+        ClassMirror classMirror = reflectClass(MyClass);
         classMirror.setField(const Symbol('setSomeStaticValue'), -420);
         expect(classMirror.getField(const Symbol('getSomeStaticValue')).reflectee,
             equals(-420));
@@ -238,15 +234,14 @@ void main() {
       });
 
       test('using class mirror', () {
-        var myObject = new MyClass();
-        var classMirror = reflect(myObject).type;
+        ClassMirror classMirror = reflectClass(MyClass);
         expect(classMirror.invoke(const Symbol('someStaticMethod'), []).reflectee,
             equals(42));
       });
 
       test('using library mirror', () {
-        final MirrorSystem ms = currentMirrorSystem();
-        var libraryMirror = ms.findLibrary(const Symbol('dart.json')).first;
+        final MirrorSystem mirrorSystem = currentMirrorSystem();
+        var libraryMirror = mirrorSystem.findLibrary(const Symbol('dart.json')).first;
         var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
         var person = parse(jsonPerson);
         expect(person['name'], equals('joe'));
@@ -258,8 +253,7 @@ void main() {
 
     group('ClassMirror#members', () {
       test('', () {
-        var person = new Person('Jeff', 'Lebowski', 50);
-        var classMirror = reflect(person).type;
+        ClassMirror classMirror = reflectClass(Person);
         var memberList = classMirror.members.keys.toList().map((item) {
           return MirrorSystem.getName(item);
         }).toList();
@@ -273,8 +267,7 @@ void main() {
 
     group('checking instance method exists', () {
       test('using the methods map', () {
-        Person person = new Person('Jeff', 'Lebowski', 50);
-        ClassMirror classMirror = reflect(person).type;
+        ClassMirror classMirror = reflectClass(Person);
         expect(classMirror.methods[const Symbol('firstName')], isNull);
         expect(classMirror.methods[const Symbol('name')], isNull);
         expect(classMirror.methods[const Symbol('somethingBogus')], isNull);
@@ -298,27 +291,23 @@ void main() {
       test('using hasMethod() with static members', () {
         Parent x = new Parent();
         Child y = new Child();
-        ClassMirror classMirror = reflect(x).type;
+        ClassMirror classMirror = reflectClass(Parent);
         expect(classMirror.members[const Symbol('foo')], isNotNull);
         expect(hasMethod(x, const Symbol('foo')), isFalse);
         expect(hasMethod(y, const Symbol('foo')), isFalse);
         expect(hasMethod(y, const Symbol('toString')), isTrue);
-
       });
     });
   });
 
   group('class mirrors', () {
     setUp(() {
-      rectangle = new Rectangle(3, 4, 20, 30);
-      instanceMirror = reflect(rectangle);
-      classMirror = instanceMirror.type;
+      classMirror = reflectClass(Rectangle);
     });
 
     group('creating new instance', () {
       test('using the normal constructor', () {
-        var point = new Point(1, 2);
-        var classMirror = reflect(point).type;
+        ClassMirror classMirror = reflectClass(Point);
 
         var point2 = classMirror.newInstance(const Symbol(''), [3, 4]).reflectee;
         expect(point2.x, equals(3));
@@ -326,8 +315,7 @@ void main() {
       });
 
       test('using a named constructor', () {
-        var point = new Point(1, 2);
-        var classMirror = reflect(point).type;
+        ClassMirror classMirror = reflectClass(Point);
         var point2 = classMirror.newInstance(const Symbol('fromJson'),
             ['{"x":3,"y":4}']).reflectee;
         expect(point2.x, equals(3));
@@ -335,8 +323,7 @@ void main() {
       });
 
       test('using a newInstanceAsync()', () {
-        var point = new Point(1, 2);
-        var classMirror = reflect(point).type;
+        ClassMirror classMirror = reflectClass(Point);
         var point2;
         classMirror.newInstanceAsync(const Symbol('fromJson'), ['{"x":3,"y":4}'])
           .then((mirror) {
@@ -347,15 +334,13 @@ void main() {
     });
 
     test('responding to a constructor', () {
-      Point point = new Point(3, 4);
-      ClassMirror classMirror = reflect(point).type;
+      ClassMirror classMirror = reflectClass(Point);
       expect(classMirror.constructors[const Symbol('Point.fromJson')], isNotNull);
       expect(classMirror.constructors[const Symbol('Point')], isNotNull);
     });
 
     test('responding to a constructor using simpleName', () {
-      Point point = new Point(3, 4);
-      ClassMirror classMirror = reflect(point).type;
+      ClassMirror classMirror = reflectClass(Point);
       String className = MirrorSystem.getName(classMirror.simpleName);
       expect(classMirror.constructors[new Symbol('${className}.fromJson')], isNotNull);
       expect(classMirror.constructors[new Symbol(className)], isNotNull);
@@ -363,14 +348,14 @@ void main() {
 
     group('getting the interfaces implemented by a class', () {
       test('', () {
-        ClassMirror classMirror = reflect(new ExampleClass()).type;
+        ClassMirror classMirror = reflectClass(ExampleClass);
         expect(classMirror.superinterfaces.map((interface) {
           return MirrorSystem.getName(interface.simpleName);
         }).toList(), equals(['Comparable']));
       });
 
       test('inheritance', () {
-        ClassMirror classMirror = reflect(new ChildExampleClass()).type;
+        ClassMirror classMirror = reflectClass(ChildExampleClass);
         expect(classMirror.superinterfaces.map((interface) {
           return MirrorSystem.getName(interface.simpleName);
         }).toList(), equals([]));
@@ -379,7 +364,7 @@ void main() {
 
     group('getting the superclass of a class', () {
       test('', () {
-        classMirror = reflect(new C()).type;
+        classMirror = reflectClass(C);
 
         expect(MirrorSystem.getName(classMirror.superclass.simpleName),
             equals('B'));
@@ -399,14 +384,14 @@ void main() {
       });
 
       test('object', () {
-        classMirror = reflect(new Object()).type;
+        classMirror = reflectClass(Object);
 
         expect(MirrorSystem.getName(classMirror.superclass.simpleName),
             equals('Object'));
       });
 
       test('map', () {
-        classMirror = reflect(new Map()).type;
+        classMirror = reflectClass(Map);
 
         expect(MirrorSystem.getName(classMirror.superclass.simpleName),
             equals('Object'));
@@ -414,7 +399,6 @@ void main() {
 
       test('set', () {
         classMirror = reflect(new Set()).type;
-
         expect(MirrorSystem.getName(classMirror.superclass.simpleName),
             equals('_HashSetBase'));
 
@@ -432,7 +416,7 @@ void main() {
 
     group('getting interfaces implemented by this class', () {
       test('getting a list of interfaces implemented', () {
-        classMirror = reflect([]).type;
+        classMirror = reflectClass(List);
         expect(MirrorSystem.getName(classMirror.superinterfaces.first.simpleName),
             equals('Iterable'));
       });
@@ -466,9 +450,7 @@ void main() {
 
   group('constructors', () {
     test('', () {
-      var point = new Point(3, 4);
-      var instanceMirror = reflect(point);
-      var classMirror = instanceMirror.type;
+      ClassMirror classMirror = reflectClass(Point);
       expect(classMirror.constructors.keys.map((symbol) {
         return MirrorSystem.getName(symbol);
       }), equals(['Point', 'Point.fromJson']));
@@ -531,7 +513,6 @@ void main() {
           (key) => MirrorSystem.getName(key)).toList();
 
       classes.sort();
-      print(classes);
       expect(classes, equals([
         'BuildJsonListener', 'JsonCyclicError', 'JsonListener', 'JsonParser',
         'JsonUnsupportedObjectError', 'ReviverJsonListener', '_JsonStringifier',
@@ -542,7 +523,6 @@ void main() {
       expect(libraryMirror.classes[const Symbol('JsonListener')].isPrivate,
           isFalse);
     });
-
 
     test('get a class mirror', () {
       var classMirror = libraryMirror.classes[const Symbol('JsonListener')];

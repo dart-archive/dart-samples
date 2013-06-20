@@ -62,18 +62,19 @@ print(MirrorSystem.getName(libraryMirror.simpleName)); // 'dart.core'
 Note that to obtain a mirror for the 'dart:core' library, you must pass a symbol
 constructed using the 'dart.core' string (use a '.' instead of a ':').
 
-===== Obtaining a class mirror from an instance or an InstanceMirror
+===== Obtaining a class mirror
 
 To obtain information about a class, you need a ClassMirror. To obtain a
-ClassMirror, you first need an instance of the class, or the name of the
-library where the class is defined.
-
-If you have an instance, you can use the top level `reflectClass()` function
-defined in the `dart:mirrors` library. This function returns a ClassMirror
-object:
+ClassMirror, use the top level `reflectClass()` function:
 
 --------------------------------------------------------------------------------
-var classMirror = reflectClass(myObj.runtimeType);
+ClassMirror classMirror = reflectClass(MyClass);
+--------------------------------------------------------------------------------
+
+If you have an instance, you can invoke `reflectClass()` on the objects Type:
+
+--------------------------------------------------------------------------------
+classMirror = reflectClass(someObject.runtimeType);
 MirrorSystem.getName(classMirror.simpleName); // 'MyClass'
 --------------------------------------------------------------------------------
 
@@ -123,7 +124,7 @@ small.
 ===== Converting a symbol into a string
 
 To convert a Symbol to a string, use the static `getName()` method provided by
-the MirrorSystem class.
+the MirrorSystem class:
 
 --------------------------------------------------------------------------------
 var myObjAsString = MirrorSystem.getName(myObjectAsSymbol);
@@ -164,8 +165,7 @@ class implements that constructor.
 
 ==== Solution
 
-For this recipes, assume you've defined a class that implements both a
-generative and a named constructor:
+For this recipes, assume you've defined the following class:
 
 --------------------------------------------------------------------------------
 class Point {
@@ -175,20 +175,11 @@ class Point {
 }
 --------------------------------------------------------------------------------
 
-To reflectively check if a class implements a constructor, first obtain a
-mirror on the class:
-
---------------------------------------------------------------------------------
-Point point = new Point(3, 4);
-ClassMirror classMirror = reflect(point).type;
---------------------------------------------------------------------------------
-
-Then, use the mirror's `constructors` property to obtain a constructors map
-for the class. The keys of this map are constructor names expressed as
-Symbols, and the values of the map are mirrors on the associated constructors.
-
-You can search for a key in this constructors map to see if the
-class implements a constructor:
+To reflectively check if a class implements a constructor, obtain a mirror on
+the class, and then use the mirror's `constructors` property to obtain a
+constructors map for the class. The keys of this map are constructor names
+expressed as Symbols, and the values of the map are mirrors on the associated
+constructors.
 
 Searching this map for a constructor implemented by the class returns a mirror
 on that constructor:
@@ -205,13 +196,12 @@ classMirror.constructors[const Symbol('Point.XML')];     // null
 --------------------------------------------------------------------------------
 
 Note that you must prefix the name of the class to the name of the constructor
-when checking if a constructor is supported by the class. But sometimes, the
+when checking if a constructor is supported by the class. Sometimes, though, the
 name of the class is not available to you beforehand.  This could happen, for
 example, if you are iterating over several classes and reflectively determining
 which of those classes support a specific constructor and which do not.
 
-When the name of the class is not available, use the ClassMirror's
-`simpleName` getter to obtain the name:
+You can use the ClassMirror's `simpleName` getter to obtain the class name:
 
 --------------------------------------------------------------------------------
 String className = MirrorSystem.getName(classMirror.simpleName);
@@ -244,7 +234,7 @@ point2.y; // 4
 --------------------------------------------------------------------------------
 
 Passing a Symbol created from an empty string to `newInstance()` invokes the
-generative Point constructor (the constructor with the same name as the class).
+constructor with the same name as the class.
 
 To invoke a named constructor, pass the constructor's name to `newInstance()`:
 
@@ -272,8 +262,8 @@ classMirror.newInstanceAsync(new Symbol('fromJson'), ['{"x":3,"y":4}'])
 
 ==== Problem
 
-You have the name of an object's field as a string and you want to reflectively
-get or set the value of that field.
+You have the name of an object's field as a string and you want to get or set
+the value of that field.
 
 ==== Solution
 
@@ -357,8 +347,8 @@ instanceMirror.setFieldAsync(const Symbol('right'), 21)
 
 ==== Problem
 
-You have the name of an instance method as a string and you want to invoke it
-reflectively.
+You have the name of an instance method as a string and you want to invoke
+that method on an object.
 
 
 ==== Solution
@@ -366,9 +356,7 @@ reflectively.
 First obtain a mirror on the instance:
 
 --------------------------------------------------------------------------------
-var myObject = new MyClass();
-var instanceMirror = reflect(myObject);
-var data = instanceMirror.invoke(const Symbol('someMethod'), []).reflectee;
+var instanceMirror = reflect(new MyClass());
 --------------------------------------------------------------------------------
 
 Then, call the  `invoke()` method on the mirror, passing it the instance
@@ -376,14 +364,13 @@ method's name, a list of positional arguments, and (optionally) a map of named
 arguments:
 
 --------------------------------------------------------------------------------
-var myObject = new MyClass();
-var instanceMirror = reflect(myObject);
 var data = instanceMirror.invoke(const Symbol('someMethod'), []).reflectee;
 --------------------------------------------------------------------------------
 
 The async equivalent of `invoke()` is `invokeAsync()`. Calling `invoke()`
 returns a mirror on the result, and calling `invokeAsync()` returns the mirror
 wrapped in a Future.
+
 
 === Checking if an object supports a method
 
@@ -395,8 +382,8 @@ first know if the object supports that method.
 
 ==== Solution
 
-To determine if an object supports a method, you need to determine if that
-method is defined in the object's class, or an ancestor of that class.
+You need to determine if that method is defined in the object's class, or an
+ancestor of that class.
 
 For this recipe, assume you have defined the following class:
 
@@ -410,42 +397,36 @@ class Person {
 --------------------------------------------------------------------------------
 
 To determine if a method is defined in a class, first obtain a ClassMirror on
-that class:
+that class. Then, use the ClassMirror's `methods` property to get a method-name
+to method-mirror map for the class.
+
+Searching the `methods` map for a method that has been implemented by the class
+returns a mirror on that method:
 
 --------------------------------------------------------------------------------
-Person person = new Person(...);
-ClassMirror classMirror = reflect(person).type;
+ClassMirror classMirror = reflectClass(Person);
+classMirror.methods[const Symbol('canVote')]; // Returns mirror.
 --------------------------------------------------------------------------------
 
-Then, use the ClassMirror's `methods` property to get a method-name to
-method-mirror map for the class.
-
-Searching the `methods` map for a method implemented by the class returns a
-mirror on that method:
-
---------------------------------------------------------------------------------
-classMirror.methods[const Symbol('canVote')];       // Returns mirror.
---------------------------------------------------------------------------------
-
-Searching the map for a method not implemented by the class returns `null`:
+Searching the map for an unimplemented method returns `null`:
 
 --------------------------------------------------------------------------------
 classMirror.methods[const Symbol('somethingBogus')]; // null
 --------------------------------------------------------------------------------
 
-The `methods` map includes static methods:
+The `methods` map includes static methods, and you can use a mirror's `isStatic`
+property to determine if a member is static:
 
 --------------------------------------------------------------------------------
-classMirror.members[const Symbol('personsNamedBob')]; // Returns mirror.
+classMirror.members[const Symbol('personsNamedBob')];
+classMirror.members[const Symbol('personsNamedBob')].isStatic; // true
 --------------------------------------------------------------------------------
-
-You can use a mirror's `isStatic` property to determine if a member is static.
 
 If a method is defined in a class and it isn't a static method, you can invoke
 that method on a class instance without automatically triggering a
 NoSuchMethodError.
 
-If the method isn't defined in the class, you should query the inheritance
+If a method isn't defined in the class, you should query the inheritance
 hierarchy of the class to see if an ancestor class defines the method. The
 `methods` map only contains methods that are explicitly defined in the reflected
 class. It does not include inherited methods:
@@ -513,7 +494,8 @@ mirror on the result.  The getter can be the implicit getter for a class
 field, or it can be a user defined getter method:
 
 --------------------------------------------------------------------------------
-classMirror.getField(const Symbol('someNum')).reflectee; // 42
+ClassMirror classMirror = reflectClass(SomeClass);
+classMirror.getField(const Symbol('someNum')).reflectee;
 classMirror.getField(const Symbol('staticGetter')).reflectee;
 --------------------------------------------------------------------------------
 
@@ -549,7 +531,7 @@ See the ClassMirror API docs for more details.
 
 ==== Problem
 
-You want to reflectively obtain information about the inheritance hierarchy of a
+You want to obtain information about the inheritance hierarchy of a
 class. Perhaps you want to find the superclass of a class, or maybe you want to
 determine whether a class is an ancestor of another class.
 
@@ -567,8 +549,7 @@ To find the superclass of a class, obtain a mirror on the class, and then use
 the mirror's `superclass` property to get the superclass:
 
 --------------------------------------------------------------------------------
-var classMirror = reflect(new C()).type;
-var classMirror = reflect(new C()).type;
+var classMirror = reflectClass(C);
 MirrorSystem.getName(classMirror.superclass.simpleName); 'B'
 --------------------------------------------------------------------------------
 
@@ -646,12 +627,12 @@ Using the `superinterfaces` property, you can see that the parent class
 implements `Comprarable`, but the child class does not:
 
 --------------------------------------------------------------------------------
-ClassMirror classMirror = reflect(new ExampleClass()).type;
+ClassMirror classMirror = reflectClass(ExampleClass);
 classMirror.superinterfaces.map((interface) {
   return MirrorSystem.getName(interface.simpleName);
 }).toList(); // ['Comparable']
 
-classMirror = reflect(new ChildExampleClass()).type;
+classMirror = reflectClass(ChildExampleClass);
 classMirror.superinterfaces.map((interface) {
   return MirrorSystem.getName(interface.simpleName);
 }).toList(); // []
@@ -667,7 +648,7 @@ You want to know the number of parameters taken by a function or method.
 ==== Solution
 
 Get a MethodMirror on the function or method, and use its `parameters`
-property to get information about the expected parameters. Despite the name, a
+property to get information about the defined parameters. Despite the name, a
 MethodMirror allows you to reflect on both functions and methods.
 
 Assume that you have defined the following class:
@@ -683,8 +664,7 @@ You can reflectively confirm that the `hasRegistered()` is defined with no
 parameters:
 
 --------------------------------------------------------------------------------
-Student student = new Student('8dj3kd12L');
-ClassMirror classMirror = reflect(student).type;
+ClassMirror classMirror = reflectClass(Student);
 
 MethodMirror methodMirror = classMirror.methods[const Symbol('hasRegistered')];
 methodMirror.parameters.length; // 0
