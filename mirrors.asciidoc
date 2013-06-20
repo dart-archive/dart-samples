@@ -1,5 +1,23 @@
 == Mirrors and reflection
 
+// reflection is the ability of a computer program to examine (see type
+// introspection) and modify the structure and behavior (specifically the values,
+// meta-data, properties and functions) of an object at runtime.[1]
+
+// In Computer programming, a Mirror is a Reflection mechanism that is completely
+// decoupled from the object whose structure is being introspected. This is as
+// opposed to traditional reflection, for example in Java, where one introspects
+// an object using methods from the object itself (e.g. getClass()).
+//
+// Mirrors adhere to the qualities of encapsulation, stratification, and
+// ontological correspondence. [1]
+
+Reflection is the abiltity of a computer program to examine (and possibly
+modify) the structure and behavior of an object at runtime. In some languages,
+for example Java or Ruby, you can introspect an object directly using methods
+defined on that object. Dart, on the other hand, decouples information about an
+object from the object itself. Dart uses Mirrors for reflection.
+
 Mirrors in Dart are objects that reflect other objects.  If you want to reflect
 on an object in Dart, you must first obtain a mirror on that object, and then
 use the mirror to obtain information about the reflectee.
@@ -17,9 +35,11 @@ example, ClassMirrors reflect on classes, LibraryMirrors on libraries, and
 InstanceMirrors on class instances. Look at the API docs to get a complete list
 of the types of Mirrors provided in the `dart:mirrors` library.
 
+
+=== Prerequisites
+
 Here are some things you should read before you dive into the recipes. Knowledge
 of this material is assumed in the recipes.
-
 
 ===== Obtaining an instance mirror
 
@@ -155,6 +175,12 @@ print(methodMirror.simpleName);    // Symbol('parseNumber')
 print(methodMirror.qualifiedName); // Symbol('dart.json.JsonParser.parseNumber')
 --------------------------------------------------------------------------------
 
+=== Warning
+
+The Mirrors API is not yet complete, although it has largely been implemented
+on the Dart VM. The dart2js version is in progress and is expected to be ready
+soon. The recipes in this chapter have been tested on the Dart VM, and not
+everything works on dart2js yet.
 
 === Checking if a class implements a particular constructor
 
