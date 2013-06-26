@@ -1,6 +1,6 @@
 import 'package:unittest/unittest.dart';
 import 'dart:mirrors';
-import 'dart:json' as JSON;
+import 'dart:json';
 
 
 // Getters and Setters
@@ -19,6 +19,32 @@ class Rectangle {
       set bottom(num value) => top = value - height;
 }
 
+
+// Getter and setters to replace original fields
+class Game {
+  bool isBoardLoaded = false;
+}
+
+class Game2 {
+  bool isBoardLoaded = false;
+  Board board;
+}
+
+class Board {
+  bool isLoaded = false;
+  bool hasAllPieces = true;
+  // ...
+}
+
+class Game3 {
+  Board board;
+
+  bool get isBoardLoaded => board.isLoaded;
+
+  void set isBoardLoaded(bool isLoaded) {
+    board.isLoaded = isLoaded;
+  }
+}
 
 // Examples for overloading constructors.
 class Point {
@@ -39,6 +65,12 @@ class PointWithNamedConstructor {
   PointWithNamedConstructor.zero(){
     x = 0;
     y = 0;
+  }
+
+  PointWithNamedConstructor.fromJsonString(String jsonString) {
+    var _json = parse(jsonString);
+    x = _json['x'];
+    y = _json['y'];
   }
 }
 
@@ -71,14 +103,19 @@ class Widget extends Item {
 // Example for initializing final fields.
 class Book {
   final String ISBN;
-  Book(String ISBN) : ISBN = ISBN {}
+  Book(this.ISBN);
+}
+
+class Tool {
+  final String brand;
+  Tool([brand = 'Makita']) : brand = brand;
 }
 
 // NoSuchMethod
 class JsonWithAccessors {
   Map<String, Object> _jsonData;
   JsonWithAccessors(String jsonString) {
-    _jsonData = JSON.parse(jsonString);
+    _jsonData = parse(jsonString);
   }
 
   noSuchMethod(Invocation invocation) {
@@ -113,19 +150,8 @@ Map<String, dynamic> _symbolMapToStringMap(Map<Symbol, dynamic> map) {
   return result;
 }
 
-class Counter {
-  int value = 0;
-
-  Counter(this.value);
-
-  call() {
-    return value++;
-  }
-}
-
 // Implementing getters and setters
 // Use Rectangle class
-
 
 // Overloading +
 class Complex {
@@ -137,29 +163,57 @@ class Complex {
   }
 }
 
-// Factory constructors (CHANGE ALL THE variable names: from Bob Nystrom)
-class MyClass {
-  final String name;
-  static Map<String, MyClass> _cache;
+class GamePiece {
+  final String pieceName;
+  static Map<String, GamePiece> _cache = {};
+  GamePiece._create(this.pieceName);
 
-  factory MyClass(String name) {
-    if (_cache == null) {
-      _cache = {};
-    }
-
-    if (_cache.containsKey(name)) {
-      return _cache[name];
+  factory GamePiece(String pieceName) {
+    GamePiece piece = _cache[pieceName];
+    if (piece != null) {
+      return piece;
     } else {
-      final myObject = new MyClass._internal(name);
-      _cache[name] = myObject;
-      return myObject;
+      piece = new GamePiece._create(pieceName);
+      _cache[pieceName] = piece;
+      return piece;
     }
   }
-
-  MyClass._internal(this.name);
 }
 
+
 void main() {
+  group('named constructor', () {
+    test('', () {
+      GamePiece piece1 = new GamePiece('monster');
+      GamePiece piece2 = new GamePiece('monster');
+      expect(identical(piece1, piece2), isTrue);
+    });
+  });
+
+//  class Book {
+//    final String ISBN;
+//    Book(String ISBN) : ISBN = ISBN {}
+//  }
+//
+//
+//  class Tool {
+//    final String brand;
+//    Tool([brand = 'Makita']) : brand = brand;
+//  }
+
+  group('final field', () {
+    test('', () {
+      Book book = new Book('99921-58-10-7');
+      print(book.ISBN);
+      // book.ISBN = 'asdf';
+    });
+
+    test('with default value', () {
+      Tool tool = new Tool();
+      expect(tool.brand, equals('Makita'));
+    });
+  });
+
   group('Point', () {
     test('default x and y', () {
       Point point = new Point();
@@ -206,6 +260,12 @@ void main() {
       expect(point.x, equals(0));
       expect(point.y, equals(0));
     });
+
+    test('', () {
+      point = new PointWithNamedConstructor.fromJsonString('{"x":3, "y":4}');
+      expect(point.x, equals(3));
+      expect(point.y, equals(4));
+    });
   });
 
   group('Calling super constructor', () {
@@ -213,6 +273,52 @@ void main() {
       Employee employee = new Employee('John Smith', 'd9d8sfdo');
       expect(employee.name, equals('John Smith'));
       expect(employee.employeeID, 'd9d8sfdo');
+    });
+  });
+
+  group('noSuchMethod()', () {
+    JsonWithAccessors person;
+    var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+
+    setUp(() {
+      person = new JsonWithAccessors(jsonPerson);
+    });
+
+    test('getter', () {
+      expect(person.name, equals('joe'));
+    });
+
+    test('setter', () {
+      person.name = 'mark';
+      expect(person.name, equals('mark'));
+    });
+
+    test('non-existent field', () {
+      expect(person.height, isNull);
+    });
+
+    test('method', () {
+      expect(() => person.name(), throws);
+    });
+  });
+
+  group('converting a field to an accessor', () {
+    test('game1', () {
+       var game = new Game();
+       expect(game.isBoardLoaded, isFalse);
+    });
+
+    test('game2', () {
+      var game = new Game2();
+      game.board = new Board();
+      expect(game.isBoardLoaded, isFalse);
+      expect(game.board.isLoaded, isFalse);
+    });
+
+    test('game3 getter', () {
+      var game = new Game3();
+      game.board = new Board();
+      expect(game.isBoardLoaded, isFalse);
     });
   });
 }

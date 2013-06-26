@@ -1,21 +1,67 @@
-== Dart basics (????)
+== Functions, Classes, and Libraries
 
-[[3.08]]
+=== Using typedef to declare a function signature
+
+==== Problem
+
+You want to declare a custom function type and then check that functions of
+the matching type are used in your application.
+
+==== Solution
+
+Use a `typedef` to declare a function's signature and declare a custom function
+type. Here is an example:
+
+--------------------------------------------------------------------------------
+typedef void LogOutputFunc(String logData);
+--------------------------------------------------------------------------------
+
+This `typedef` declaration specifies that `LogOutputFunc` takes a String
+argument and returns void.  With the type definition in place, you can specify
+uses for a function that matches the signature of `LogOutputFunc`. Here is an
+example:
+
+--------------------------------------------------------------------------------
+typedef void LogOutputFunc(String logData);
+
+class Logger {
+  LogOutputFunc func;
+  Logger(this.func);
+
+  void log(String logData) {
+    func(logData);
+  }
+}
+
+void timestampedPrint(String msg) => print('${new DateTime.now()}: $msg');
+
+void main() {
+  Logger l = new Logger(print);
+  l.log('some log data');
+  l.func = timestampedPrint;
+  l.log('some log data');
+}
+--------------------------------------------------------------------------------
+
+The `Logger` class accepts a function as a field, and that function must match
+the signature of `LogOutputFunc`.  Two functions, `print()` and
+`timestampedPrint()` match that signature (both accept String arguments and
+return void) and can be used by the `Logger` class.
+
+A `typedef` is always used as a  top-level declaration. You cannot specify a
+`typedef` within a class or a function.
+
 
 === Defining a constructor with default parameters
 
-Problem
+==== Problem
 
-You want to know the syntax for providing default positional and named
-arguments to a constructor.
+You want to define a constructor that allows parameters with default values.
 
-You want to know how to define a constructor with positional or named parameters
-with default values.
+==== Solution
 
-Solution
-
-In the constructor signature, wrap default positional arguments in a `[]`, and
-wrap default named arguments in a `{}`:
+In the constructor signature, wrap default positional parameters in a `[]`, and
+wrap default named parameters in a `{}`:
 
 Here is an example of a class with a constructor that takes positional
 parameters with default values:
@@ -72,19 +118,18 @@ point.y; // 4
 
 === Implementing named constructors
 
-Problem
+==== Problem
 
-// You want you class to be instantiable using a variety of parameters. You want
+You want to implement multiple constuctors for a class.
 
-// Therefore the only way to differentiate between the various constructors of a
-// class is by the parameter list. But if there are lots of constructors, the
-// differences between them become somewhat subtle and error prone.
+==== Solution
 
-http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Named_Constructor
+Use named constructors to implement different ways of instantiating a class.
+Give these constructors descriptive names that make their purpose clear to
+users of your class.
 
-Solution
-
-Use named constructors
+The example below shows a class with a standard constructor (with the same
+name as the class), and two named constructors:
 
 --------------------------------------------------------------------------------
 class Point {
@@ -92,28 +137,352 @@ class Point {
 
   Point(this.x, this.y);
 
+  // A named constructor.
   Point.zero(){
     x = 0;
     y = 0;
   }
+
+  // Another named constructor.
+  Point.fromJsonString(String jsonString) {
+    var _json = parse(jsonString);
+    x = _json['x'];
+    y = _json['y'];
+  }
 }
 --------------------------------------------------------------------------------
+
+You can use named constructors with the new keyword:
+
+--------------------------------------------------------------------------------
+Point point = new Point.zero();
+Point anotherPoint = new Point.fromJsonString('{"x":3, "y":4}');
+--------------------------------------------------------------------------------
+
+
+=== Assigning value to final fields
+
+==== Problem
+
+You have a declared a field in a class private, and you want to assign it a
+value in the constructor.
+
+==== Solution
+
+Assign value to the field marked final using an initializer list:
+
+--------------------------------------------------------------------------------
+class Book {
+  final String ISBN;
+  Book(String ISBN) : ISBN = ISBN {}
+}
+--------------------------------------------------------------------------------
+
+The initializer list runs before the body of the constructor.
+
+
+The following syntax provides a handy shortcut that you can use to initialize
+final fields:
+
+--------------------------------------------------------------------------------
+class Book {
+  final String ISBN;
+  Book(this.ISBN);
+}
+--------------------------------------------------------------------------------
+
+You cannot assign value to a final field within the body of the constructor.
+
+
+=== Implementing a const constructor
+
+==== Problem
+
+You want to define a constructor that generates a compile time constant.
+
+==== Solution
+
+Dart allows you to make a constructor const, but places the following
+restrictions:
+
+* A const constructor cannot have a body
+* All the fields of the class must be declared final. This means that they
+get assigned values once, and cannot be changed after that.
+* The constructor initializer list must contain only compile time constants as
+values.
+* A const constructor must be explicitly prefixed with the `const` keyword/
+
+Here is an example:
+
+--------------------------------------------------------------------------------
+class Point {
+  final int x;
+  final int y;
+  const Point(this.x, this.y);
+  const Point.zero() : x = 0, y = 0;
+
+  // Non-const: initializer list has to contain non-constants.
+  Point.fromOther(Point other): x = other.x, y = other.y;
+}
+--------------------------------------------------------------------------------
+
+There are restrictions on inovking a `const` constructor as well. In order to
+create a compile-time constant, you must replace the `new` with `const` in the
+constructor invocation:
+
+--------------------------------------------------------------------------------
+const Point point0 = const Point.zero();
+const Point point1 = const Point(0, 0);
+point0 == point1;          // true
+identical(point0, point1); // true
+--------------------------------------------------------------------------------
+
+There is no error if you use `new` instead of `const`, but the object created
+is not a compile-time constant. This means that if you wish, you can use a const
+constructor to create non-const objects.
+
+--------------------------------------------------------------------------------
+Point point3 = new Point.zero();
+Point point4 = new Point(0, 0);
+point3 == point4; // false
+--------------------------------------------------------------------------------
+
+
+=== Specifying a default implementation for an abstract class
+
+==== Problem
+
+You have defined an abstract class that you want others to implement.  But
+sometimes a particular implementation of the class makes so much sense
+that you would like to provide that as a default. You want to know how to do
+that.
+
+==== Solution
+
+Use a factory constructor to give your abstract class a default
+implementation. A factory constructor is defined using the `factory` keyword
+and is responsible for creating and returning a valid object. Here is an
+example:
+
+--------------------------------------------------------------------------------
+abstract class Book {
+  ...
+
+  factory Book() {
+    return new _Book();
+  }
+}
+
+// Default implementation.
+class _Book implements Book {
+  ...
+}
+--------------------------------------------------------------------------------
+
+While you cannot instantiate an abstract class, using a factory constructor
+makes your abstract class appear instantiable:
+
+--------------------------------------------------------------------------------
+// You are creating a _Book, but that implemention detail is hidden from the
+// user.
+var book = new Book();
+book.runtimeType.toString(); // '_Book'
+book is Book;                // true
+book is _Book;               // true
+--------------------------------------------------------------------------------
+
+Defining factory constructors to provide default implemetation for abstract
+classes is a familiar pattern in Dart. For example, when you call the
+`new List()` or `new String.fromCharCode()` factory constructors, you are using
+default implementation provided by the  List and String abstract classes.
 
 
 === Implementing caching using a factory constructor
 
-=== Invoking a superclass constructor
+==== Problem
+
+You want to implement a constructor that returns a new object only if it is not
+present in a cache.
+
+==== Solution
+
+Use a factory constuctor that examines the contents of a cache for an object
+matching a description. If the matching object is found, the constructor returns
+that object. If it isn't found, the constructor creates a new object.
+
+Here is an example of class that implements a factory constructor:
 
 --------------------------------------------------------------------------------
+class GamePiece {
+  final String pieceName;
+  static Map<String, GamePiece> _cache = {};
+  GamePiece._create(this.pieceName);
+
+  factory GamePiece(String pieceName) {
+    GamePiece piece = _cache[pieceName];
+    if (piece != null) {
+      return piece;
+    } else {
+      piece = new GamePiece._create(pieceName);
+      _cache[pieceName] = piece;
+      return piece;
+    }
+  }
+}
+--------------------------------------------------------------------------------
+
+You can invoke a factory constructor like any other constructor:
+
+GamePiece piece1 = new GamePiece('monster');
+GamePiece piece2 = new GamePiece('monster');
+
+Calling this factory constructor with the same string argument returns the same
+object:
+
+--------------------------------------------------------------------------------
+identical(piece1, piece2); // true
+--------------------------------------------------------------------------------
+
+=== Implementing a redirecting constructor
+
+==== Problem
+
+So that you don't have to implement multiple constuctors with overlapping logic,
+you want some of your constructors to delegate their work to other constructors.
+
+==== Solution
+
+Use the redirecting constructor syntax provided by Dart. A redirecting
+constructor has no body; instead, it has a redirect clause that appears after a
+colon:
+
+--------------------------------------------------------------------------------
+class Rectangle {
+  static const int DEFAULT_SIZE = 4;
+  num length, width;
+
+  Rectangle(this.length, this.width);
+
+  // Redirecting constructors.
+  Rectangle.square(num side) : this(side, side);
+  Rectangle.defaultSize() : this(DEFAULT_SIZE, DEFAULT_SIZE);
+
+  String toString() => '${this.length}, ${this.width}';
+}
+--------------------------------------------------------------------------------
+
+A redirecting constructor is an implementation detail, and you can use such a
+constructor like any other:
+
+--------------------------------------------------------------------------------
+var rect = new Rectangle(3, 4);
+rect.toString(); // '3, 4'
+
+var square = new Rectangle.square(5);
+square.toString(); // '5, 5'
+
+var defaultRect = new Rectangle.defaultSize();
+defaultRect.toString(); // '4, 4'
+--------------------------------------------------------------------------------
+
+
+=== Replacing a class field with a getter and a setter
+
+==== Problem
+
+You defined a field in a class:
+
+--------------------------------------------------------------------------------
+class Game {
+  bool isBoardLoaded = false;
+}
+--------------------------------------------------------------------------------
+
+Over time, the API evolved, and the field's functionality got replaced by
+something else:
+
+--------------------------------------------------------------------------------
+class Game {
+  bool isBoardLoaded = false;
+  Board board;
+}
+
+class Board {
+  bool isLoaded = false;
+  bool hasAllPieces = true;
+  // ...
+}
+--------------------------------------------------------------------------------
+
+There is no longer any reason to use the original field:
+
+--------------------------------------------------------------------------------
+// The old way.
+game.isBoardLoaded;
+
+// The new way.
+game.board.isLoaded;     // false
+game.board.hasAllPieces; // true
+--------------------------------------------------------------------------------
+
+You don't want to remove the original field because a lot of existing code
+depends on it, and you don't want to break backwards compatibility.
+
+What should you do?
+
+==== Solution
+
+Replace the original field with a getter and setter:
+
+--------------------------------------------------------------------------------
+class Game {
+  Board board;
+
+  bool get isLoaded => board.isLoaded;
+
+  void set isLoaded(bool isLoaded) {
+    board.isLoaded = isLoaded;
+  }
+}
+--------------------------------------------------------------------------------
+
+This way, clients of your class will not be exposed to implementation changes,
+and they can continue to use your class as before:
+
+--------------------------------------------------------------------------------
+var game = new Game();
+game.board = new Board();
+game.isBoardLoaded; // false
+--------------------------------------------------------------------------------
+
+
+=== Invoking a superclass constructor
+
+==== Problem
+
+You want to extend a class and want to invoke the constructor of the superclass.
+
+==== Solution
+
+Specify the superclass constructor right before the constructor body using the
+`super` keyword:
+
+--------------------------------------------------------------------------------
+class Person {
+  String name;
+  Person(this.name);
+}
+
 class Employee extends Person {
   String employeeID;
 
   Employee(name, employeeID) : super(name) {
     this.employeeID = employeeID;
   }
-  String toString() => '$name, $employeeID';
 }
 --------------------------------------------------------------------------------
+
+You can call a named superclass constructor in the same way:
 
 --------------------------------------------------------------------------------
 class Item {
@@ -128,20 +497,127 @@ class Widget extends Item {
 }
 --------------------------------------------------------------------------------
 
-=== Assigning value to final fields
+
+=== Calling static members from a superclass
+
+==== Problem
+
+You want to invoke a static member of a superclass, and using super results in
+an error.
+
+==== Solution
+
+Static members do not inherit in Dart. If you want to use them outside of
+their declaring class, you must prefix them with their class name:
 
 --------------------------------------------------------------------------------
-class Book {
-  final String ISBN;
-  Book(String ISBN) : ISBN = ISBN {}
+abstract class Parent {
+  static int theAnswer() => 42;
+}
+
+class Child extends Parent {
+  String getTheAnswer() => "The answer is: ${Parent.theAnswer()}";
+}
+
+void main() {
+  Child child = new Child();
+  print(child.getTheAnswer());
 }
 --------------------------------------------------------------------------------
 
-=== Does something with NoSuchMethod
+Don't do this:
+
+--------------------------------------------------------------------------------
+// DON'T DO THIS.
+class Child extends Parent {
+  String getTheAnswer() => "The answer is: ${super.theAnswer()}";
+}
+--------------------------------------------------------------------------------
+
+
+=== Handling calls to NoSuchMethod
+
+==== Problem
+
+You want to implement a custom response when an member not defined in a class
+is invoked on an instance of that class.
+
+==== Solution
+
+Implement a custom version of the `noSuchMethod()` method in your class.
+
+When you invoke a member that is not defined in a class, Dart looks for that
+member in the inheritance hierarchy of that class.  If no class in the
+inheritance hierarchy implements the member, Dart looks for a `noSuchMethod()`
+method that defines behavior that should occur if an invoked member is not
+found. If `noSuchMethod()` is not defined within a class or any of its parent
+classes, Dart invokes the default `noSuchMethod()` provided by the Object class,
+which throws a `NoSuchMethodError`.
+
+Implementing a custom `noSuchMethod()` gives you flexibility in how you handle
+method invocations that are not defined in a class.  Here is the
+`noSuchMethod()` syntax:
+
+--------------------------------------------------------------------------------
+class MyClass {
+  ...
+
+  noSuchMethod(Invocation invocation) {
+   // Get information about the invocation and execute some code.
+  }
+}
+--------------------------------------------------------------------------------
+
+When `noSuchMethod()` is invoked, an `Invocation` object is passed to it. You
+can query that `Invocation` object to get the name of the invoked member, find
+out whether it was a method, getter or setter, and get the list of arguments
+passed to it. Then, you can choose to either run some aribitrary code and return
+a value, or you can explicitly raise a `NoSuchMethodError` yourself. If you
+return a value, that value becomes the result of the original invocation.
+
+==== Example
+
+The example below is inspired by the creative use of `noSuchMethod()` in Chris
+Buckett's JsonObject Pub package (http://pub.dartlang.org/packages/json_object)
+to implement dot notation access for properties of a JSON object.
+
+When you parse JSON strings using the `dart:json` library, you get a map of
+name/value pairs. You can access properties of the JSON object using the
+obj[name] notation:
+
+--------------------------------------------------------------------------------
+import 'dart:json';
+
+void main() {
+  var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+  var person = parse(jsonPerson);
+  print(person['name']);  // 'joe'
+  print(person['date']);  // [2013, 3, 10]
+}
+--------------------------------------------------------------------------------
+
+But you cannot do so using dot notation:
+
+--------------------------------------------------------------------------------
+// THIS DOES NOT WORK.
+person.name;          // No 'name' getter defined
+person.name = 'mark'; // No 'name' setter defined
+--------------------------------------------------------------------------------
+
+This is because the `person` object has no `name` getter or setter, and the code
+above triggers a call to `noSuchMethod()`, which results in a
+`NoSuchMethodError`.
+
+The approach that the JsonObject package takes, and that we demonstrate here,
+is to implement the missing getters and a setters through a wrapper class that
+defines a `noSuchMethod()`. When an invocation triggers a call to
+`noSuchMethod(), we get its name. Then, we access the associated property
+within the JSON map:
 
 --------------------------------------------------------------------------------
 class JsonWithAccessors {
   Map<String, Object> _jsonData;
+
   JsonWithAccessors(String jsonString) {
     _jsonData = JSON.parse(jsonString);
   }
@@ -150,6 +626,7 @@ class JsonWithAccessors {
     if (invocation.isAccessor) {
       var key = MirrorSystem.getName(invocation.memberName);
       key = key.replaceFirst('=', '');
+
       if (_jsonData.containsKey(key)) {
         if (invocation.isSetter) {
           _jsonData[key] = invocation.positionalArguments[0];
@@ -166,9 +643,8 @@ class JsonWithAccessors {
         _symbolMapToStringMap(invocation.namedArguments));
   }
 }
---------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
+// Convenience functions for converting symbols to strings.
 String _symbolToString(Symbol symbol) => MirrorSystem.getName(symbol);
 
 Map<String, dynamic> _symbolMapToStringMap(Map<Symbol, dynamic> map) {
@@ -181,55 +657,254 @@ Map<String, dynamic> _symbolMapToStringMap(Map<Symbol, dynamic> map) {
 }
 --------------------------------------------------------------------------------
 
+In our implementation of `noSuchMethod()`, we use the Invocation object's
+`isAccessor` property to check if the invoked member is an accessor, and we
+use the `memberName` property to get the invoked member's name.  If the
+accessor is a setter, we update its values in the JSON map, and if it is a
+getter, we get its value from the JSON map.
 
-Usage:
+If the invocation is an accessor, but does not represent a key in the JSON
+map, we return a null value. And if the invocation is not an accessor, we throw
+a `NoSuchMethodError`, passing to it the name of the member invoked, and its
+positional and named arguments.
+
+You can use the class defined above in this manner:
 
 --------------------------------------------------------------------------------
+var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+var person = new JsonWithAccessors(jsonPerson);
+person.name;          // 'joe'
+person.name = 'mark';
+person.name;          // 'mark'
+person.height;        // null
+person.name();        // throws NoSuchMethodError
+
 --------------------------------------------------------------------------------
 
-=== Implementing getters and setters
+When defining a `noSuchMethod()`, it is important to clearly define the cases
+that trigger some arbitrary code, and then explicity throw a `NoSuchMethodError`
+for all other cases. This ensures that only invocations you want to explicitly
+handle get special treatment, and all other undefined members continue to
+generate the expected `NoSuchMethodError`.
+
+
+=== Checking the type of an object at runtime
+
+==== Problem
+
+You want to check the type of an object at runtime.
+
+==== Solution
+
+Use the `is`, `is!`, and `as` operators for checking types at runtime.
 
 --------------------------------------------------------------------------------
-class Rectangle {
-  num left;
-  num top;
-  num width;
-  num height;
+var list = new List();
+list is List; // true
+--------------------------------------------------------------------------------
 
-  Rectangle(this.left, this.top, this.width, this.height);
+The `is` and `is!` operators go beyond just checking if an object's
+runtimeType matches a type.  The result of using `is` is true if the object
+implements an interface specified by the type. So, since Lists implement the
+Iterable interface, `list` is also an Iterable:
 
-  // Define two calculated properties: right and bottom.
-  num get right             => left + width;
-      set right(num value)  => left = value - width;
-  num get bottom            => top + height;
-      set bottom(num value) => top = value - height;
+--------------------------------------------------------------------------------
+list is Iterable; // true
+--------------------------------------------------------------------------------
+
+Both `is` and `is!` work with superclasses as well:
+
+--------------------------------------------------------------------------------
+class Animal {}
+class Dog extends Animal {}
+
+new Dog() is Animal; // true
+new Dog() is Object; // true, Animal implicitly extends Object
+--------------------------------------------------------------------------------
+
+
+It is a common pattern to test the type of an object, and then use an
+expresson involving that object. For example:
+
+--------------------------------------------------------------------------------
+if (obj is Book) {
+  obj.available = false;
 }
 --------------------------------------------------------------------------------
 
+You can make the code shorter using the `as` operator:
+
 --------------------------------------------------------------------------------
-main() {
-  var rect = new Rectangle(3, 4, 20, 15);
-  assert(rect.left == 3);
-  rect.right = 12;
-  assert(rect.left == -8);
-}
+(obj as Book).available = false;
 --------------------------------------------------------------------------------
 
 
-=== Overloading operators
+=== Comparing Dart objects for equality
+
+==== Problem
+
+You want find out if two objects are equal.
+
+==== Solution
+
+For testing object equivalence, use the `==` and `!=` operators:
 
 --------------------------------------------------------------------------------
-class Complex {
-  double real, imag;
+'hello'.toUpperCase() == 'HELLO'; // true
+--------------------------------------------------------------------------------
 
-  Complex(this.real, this.imag);
-  Complex operator+(Complex other) {
-    return new Complex(this.real + other.real,this.imag + other.imag);
+For the rare times when you need to test object identity, use the
+`identical()` function. This function returns true only if the two objects are
+the same object in memory:
+
+--------------------------------------------------------------------------------
+const List<int> list1 = const [1, 2, 3];
+const List<int> list2 = const [1, 2, 3];
+
+list1 ==  list2;         // true
+identical(list1, list2); // true
+--------------------------------------------------------------------------------
+
+You can implement `==` for your own types:
+
+--------------------------------------------------------------------------------
+class Employee {
+  String name, employeeID;
+
+  Employee(this.employeeID, this.name);
+
+  bool operator ==(Employee other) {
+    if (identical(other, this)) return true;
+    return (other.employeeID == employeeID);
+  }
+
+  int get hashCode {
+    int result = 17;
+    result = 37 * result + employeeID.hashCode;
+    return result;
   }
 }
+
+void main() {
+  var mike = new Employee('019583', 'Mike');
+  var michael = new Employee('019583', 'Michael');
+
+  mike == michael;          // isTrue
+  identical(mike, michael); // isFalse
+}
 --------------------------------------------------------------------------------
 
-=== Making a class callable
+You don't have to implememnt `!=`, since Dart infers that from your definition
+of `==`:
+
+--------------------------------------------------------------------------------
+mike != michael; // false
+--------------------------------------------------------------------------------
+
+If you override the `==` operator, you must also override the `hasCode`
+getter. This is because if two objects are equal using `==`, then calling the
+`hashCode` getter for the two objects should return the same int:
+
+--------------------------------------------------------------------------------
+mike.hashCode == michael.hashCode; // true
+--------------------------------------------------------------------------------
+
+If you do not override `hashCode` when overriding `==` (or vice verse), two
+distinct instances of your class may well evaluate as equal, but they will end
+up with distinct hash values. If you, say, wanted to insert a `Person`
+instance into a hash, you may be stuck dealing with inconsistent hash values.
+Always override the `hashCode` property if you override `==`.
+
+
+=== Overloading the [] operator
+
+==== Problem
+
+You have defined a class that implements a Map interface. In fact, the class is
+little more than a thin wrapper around a single Map field:
+
+--------------------------------------------------------------------------------
+class User implements Map {
+  Map<String, dynamic> data = {};
+  // ...
+}
+--------------------------------------------------------------------------------
+
+Given that the class is a Map, you want to treat the class instance directly as
+a Map object.
+
+==== Solution
+
+Overload `[]` and `[]=` operators in your class. Overloading the `[]` operator
+lets you read a value from the underlying Map directly. Overloading the
+`[]=` operator lets you write a value to the underlying Map.
+
+Overloading these operators lets you treat a class instance as if it were
+itself a map object:
+
+--------------------------------------------------------------------------------
+user[key];         // Get a Map value.
+user[key] = value; // Set a Map value.
+--------------------------------------------------------------------------------
+
+Here is the class definition (the list of the implemented Map members
+has been truncated for brevity).
+
+--------------------------------------------------------------------------------
+class User implements Map {
+  Map<String, dynamic> data = {};
+
+  static int userCount = 0;
+
+  User(this.data) {
+    userCount++;
+  }
+
+  String toString() {
+    return 'data: ${this.data}';
+  }
+
+  // Implementation of a Map
+  bool containsKey(String key) => data.keys.contains(key);
+
+  operator[](String key) => data[key];
+
+  void operator[]=(String key, var value) {
+    data[key] = value;
+  }
+
+  Iterable<dynamic> get keys => data.keys;
+
+  Iterable get values => data.values;
+
+  // ...
+
+}
+--------------------------------------------------------------------------------
+
+Overloadin the `[]` and `[]=` operators lets you treat a class instance as a
+Map:
+
+--------------------------------------------------------------------------------
+var user1 = new User({'name': 'bob', 'age': 24});
+var user2 = new User({'name': 'robert', 'age': 23, 'username': 'robert234'});
+user1['age'] = 25;
+--------------------------------------------------------------------------------
+
+
+=== Making a class instance callable
+
+==== Problem
+
+You want to make an instance of a class callable. Maybe you've defined a class
+that wraps a single method, and instead of calling that method on a
+class instance, you prefer to directly invoke the class instance, and have the
+wrapped method get called automatically.
+
+==== Solution
+
+Define a `call()` method in the class. Doing this allows instances of that class
+to be invoked as if they were functions:
 
 --------------------------------------------------------------------------------
 class Counter {
@@ -241,126 +916,181 @@ class Counter {
     return value++;
   }
 }
+
+void main() {
+  var c = new Counter(10);
+  print(c());  // 10
+  print(c());  // 11
+
+}
 --------------------------------------------------------------------------------
 
-=== Calling static members from a superclass
+
+=== Using libraries in your code
+
+==== Problem
+
+You want to use the contents of library in your code.
+
+==== Solution
+
+Use `import` to import the contents of a library into your code. Here is how
+you can import the `dart:json` library in your code:
+
+--------------------------------------------------------------------------------
+import 'dart:json';
+--------------------------------------------------------------------------------
+
+Importing a library in this manner allows gives you access to the namespace of
+the imported library and you can use members of the imported library as if
+they had been defined in the current scope:
+
+--------------------------------------------------------------------------------
+void main() {
+  var jsonString = stringify(string);
+  parse(jsonString);
+}
+--------------------------------------------------------------------------------
+
+Built-in Dart libraries are imported using the `dart:` syntax. Libraries from
+a package manger such as Pub are imported using the `package:` import syntax:
+
+--------------------------------------------------------------------------------
+import 'package:unittest/unittest.dart';
+--------------------------------------------------------------------------------
+
+You can also import a library and specify a prefix:
+
+--------------------------------------------------------------------------------
+import 'dart:json' as json;
+
+void main() {
+  var jsonString = json.stringify(string);
+  json.parse(jsonString);
+}
+--------------------------------------------------------------------------------
+
+Specifying a prefix not only clarifies the origins of a an imported identifier
+in your code, it helps prevent name collisions if two libraries have
+conflicting identifiers.
+
+For example, if library1 and library2 both define a top level `parse()`
+function, then you might structure your imports like this:
+
+--------------------------------------------------------------------------------
+import 'package:library1/library1.dart' as library1;
+import 'package:library2/library2.dart' as library2;
+
+library1.parse();
+library2.parse();
+--------------------------------------------------------------------------------
+
+You can selectively import the contents of a library. This import declaration
+imports only the `parse()` and `invoke()` functions from a library:
+
+--------------------------------------------------------------------------------
+import 'package:library1/lib.dart' show parse, invoke;
+--------------------------------------------------------------------------------
+
+And this declaration import everything except the `parse()` function:
+
+--------------------------------------------------------------------------------
+import 'package:library1/lib.dart' hide parse;
+--------------------------------------------------------------------------------
 
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+=== Declaring a library
 
+==== Problem
 
-=== Using Libraries
-Use import to specify how a namespace from one library is used in the scope of
-another library.
+You want the code you are writing to be reusable in other parts of your
+application, and you want to declare a library.
 
-For example, Dart web apps generally use the dart:html library, which they can
-import like this:
+==== Solution
 
-import 'dart:html';
+Use a `library` declaration at the top of a file to name a library and use a
+`part of` declaration to distribute the library over several files.
 
+This is how most libraries in Dart are structured. For example, the Unittest
+library is spread over several files. The `unittest.dart` file contains the
+following library declaration:
 
-The only required argument to import is a URI[1] specifying the library. For
-built-in libraries, the URI has the special dart: scheme. For other libraries,
-you can use a file system path or the package: scheme. The package: scheme
-specifies libraries provided by a package manager such as the pub tool. For
-example:
+--------------------------------------------------------------------------------
+library unittest;
+--------------------------------------------------------------------------------
 
-import 'dart:io';
-import 'package:mylib/mylib.dart';
-import 'package:utils/utils.dart';
-Specifying a library prefix
+And it also contains these two `part` declarations:
 
-If you import two libraries that have conflicting identifiers, then you can
-specify a prefix for one or both libraries. For example, if library1 and
-library2 both have an Element class, then you might have code like this:
+--------------------------------------------------------------------------------
+part 'src/config.dart';
+part 'src/test_case.dart';
+--------------------------------------------------------------------------------
 
-import 'package:lib1/lib1.dart';
-import 'package:lib2/lib2.dart' as lib2;
-// ...
-var element1 = new Element();      // Uses Element from lib1.
-var element2 = new lib2.Element(); // Uses Element from lib2.
-Importing only part of a library
+This specifies that the library name is unittest, and parts of the library are
+distributed in two files located in the src directory.
 
-If you want to use only part of a library, you can selectively import the
-library. For example:
+The `test_case.dart` and `config.dart` files in turn contain the following
+declaration that specifies that they are part of the unittest library:
 
-import 'package:lib1/lib1.dart' show foo, bar; // Import only foo and bar.
-import 'package:lib2/lib2.dart' hide foo;      // Import all names EXCEPT foo.
+--------------------------------------------------------------------------------
+part of unittest;
+--------------------------------------------------------------------------------
 
-=== Implementing Libraries
-
-Use library to name a library, and part to specify additional files in the
-library.
-
-Note
-You don’t have to use library in an app (a file that has a top-level main()
-function), but doing so lets you implement the app in multiple files.
-
-Declaring a library
-
-Use library identifier to specify the name of the current library:
-
-library ballgame;   // Declare that this is a library named ballgame.
-
-import 'dart:html'; // This app uses the HTML library.
-// ...Code goes here...
-
-
-Associating a file with a library
-
-To add an implementation file, put part fileUri in the file that has the library
-statement, where fileUri is the path to the implementation file. Then in the
-implementation file, put part of identifier, where identifier is the name of
-the library. The following example uses part and part of to implement a library
-in three files.
-
-The first file, ballgame.dart, declares the ballgame library, imports other
-libraries it needs, and specifies that ball.dart and util.dart are parts of
-this library:
-
-library ballgame;
-
-import 'dart:html';
-// ...Other imports go here...
-
-part 'ball.dart';
-part 'util.dart';
-
-// ...Code might go here...
-The second file, ball.dart, implements part of the ballgame library:
-
-part of ballgame;
-
-// ...Code goes here...
-The third file, util.dart, implements the rest of the ballgame library:
-
-part of ballgame;
-
-// ...Code goes here...
 
 === Re-exporting libraries
 
-You can combine or repackage libraries by re-exporting part or all of them.
-For example, you might have a huge library that you implement as a set of
-smaller libraries. Or you might create a library that provides a subset of
-methods from another library.
+==== Problem
 
-// In french.dart:
-library french;
-hello() => print('Bonjour!');
-goodbye() => print('Au Revoir!');
+You have imported libraries in your libraries and you would like all or part
+of the imported libraries to be made available to clients of your library.
 
-// In togo.dart:
-library togo;
-import 'french.dart';
-export 'french.dart' show hello;
+==== Solution
 
-// In another .dart file:
-import 'togo.dart';
+Re-export part or all of any libraries that you have imported using the
+`export` keyword.
 
+Assume that there exists a `parser` library with a couple of top-level
+functions:
+
+--------------------------------------------------------------------------------
+// In parser.dart:
+library parser;
+parse()    => ...;
+tokenize() => ...;
+--------------------------------------------------------------------------------
+
+You can import `parser` in your own library using the `import` keyword. This
+allows you to use the `parse()` and `tokensize()` functions defined in `parser`.
+You can then choose to make one or both of those functions available to clients
+of your library. This is what the `import` and `export` syntax looks like:
+
+--------------------------------------------------------------------------------
+// In some my_lib.dart file
+library myLib;
+import 'parser.dart';
+export 'parser.dart' show parse;
+--------------------------------------------------------------------------------
+
+Anyone who imports `myLib` can now use the `parse()` function that your library
+imported from the `parser` library, and then re-exported:
+
+// In your_lib.dart file:
+import 'my_lib.dart';
+
+--------------------------------------------------------------------------------
 void main() {
-  hello();   //print bonjour
-  goodbye(); //FAIL
+  parse();
 }
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+--------------------------------------------------------------------------------
+
+Since `myLib` exported `parse()`, but not `tokenize()`, invoking `tokenize()`
+generates an error:
+
+--------------------------------------------------------------------------------
+void main() {
+  parse();    // OK.
+  tonenize(); // NoSuchMethodError
+}
+--------------------------------------------------------------------------------
+
 
