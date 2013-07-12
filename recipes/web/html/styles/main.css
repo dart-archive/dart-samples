@@ -1,0 +1,7 @@
+body {font-family: sans-serif;}
+
+div:after {content: ' rocks!';}
+
+.bold {font-weight: bold;}
+
+.underlined {text-decoration: underline;}    
