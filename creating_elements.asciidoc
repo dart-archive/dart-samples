@@ -1,0 +1,76 @@
+=== Creating DOM elements
+
+==== Problem
+
+You want to create new DOM elements.
+
+==== Solution
+
+The dart:html library provides several ways to create new DOM elements.
+
+You can use constructors provided by specialized element classes:
+
+--------------------------------------------------------------------------------
+var item = new LIElement();
+--------------------------------------------------------------------------------
+
+These classes inherit from Element. Here are a few examples of specialized
+properties that these classes provide:
+
+--------------------------------------------------------------------------------
+var anchor = new AnchorElement();
+anchor.href = 'http://dartlang.org';
+print(anchor.outerHtml); // '<a href="http://dartlang.org"></a>'
+
+var label = new LabelElement();
+label.htmlFor = 'color';
+label.text = 'Color';
+print(label.outerHtml); // '<label for="color">Color</label>'
+
+var form = new FormElement();
+form.method = 'PUT';
+print(form.outerHtml); // '<form method="PUT"></form>'
+--------------------------------------------------------------------------------
+
+You can also use constructors provided by the Element class.
+
+Use the `Element.tag()` constructor to create an element with a specified tag:
+
+--------------------------------------------------------------------------------
+LIElement item = new Element.tag('li');
+print(item.tagName); // 'LI'
+--------------------------------------------------------------------------------
+        
+You can then assign content to the element using the element's text property:
+
+--------------------------------------------------------------------------------
+item.text = 'learn Dart';
+print(item.outerHtml); //  '<li>learn Dart</li>'
+--------------------------------------------------------------------------------
+
+An invalid HTML tag passed to `Element.tag()` creates an UnknownElement object:
+
+--------------------------------------------------------------------------------
+var newElement = new Element.tag('bogusTag');
+print(newElement is UnknownElement); // true
+--------------------------------------------------------------------------------
+
+You can use the 'isTagSupported' static method provided by the Element class
+to test whether a tag is valid:
+
+--------------------------------------------------------------------------------
+print(Element.isTagSupported('bogusTag')); // false
+--------------------------------------------------------------------------------
+        
+Another way of creating elements is through the use of the `Element.html()`
+constructor. This constuctor takes a String argument representing a valid HTML
+fragment:
+
+--------------------------------------------------------------------------------
+DivElement div = new Element.html('<div>I love Strawberries.</div>');
+--------------------------------------------------------------------------------
+
+Note that creating an element does not insert it into the DOM. Other recipes
+in this chapter discuss different ways in which you can add elements to the DOM.
+
+

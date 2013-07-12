@@ -8,33 +8,46 @@
       import 'dart:html';
       
       void main() {
-      
-        // Creating a specific element
-        LIElement item = new LIElement();
-        item.text = 'Mango';
-        assert(item is LIElement);
-        assert(item.innerHtml == 'Mango');
-
-        // Using the Element.html() constructor.
-        assert(new Element.html('<div>I love Strawberries.</div>') is DivElement);
+             
+        // Using typed constructors.        
+        AnchorElement anchor = new AnchorElement();
+        anchor.href = 'http://dartlang.org';
+        assert(anchor.outerHtml == '<a href="http://dartlang.org"></a>');
         
+        LabelElement label = new LabelElement();
+        label.htmlFor = 'color';
+        label.text = 'Color';
+        assert(label.outerHtml == '<label for="color">Color</label>');
+        
+        FormElement form = new FormElement();
+        form.method = 'PUT';
+        assert(form.outerHtml == '<form method="PUT"></form>');            
+              
+             
         // Using the Element.tag() constructor
-        var td = new Element.tag('td');
-        td.text = 'guava';
-        assert(td is TableCellElement);
+        LIElement item = new Element.tag('li');
+        assert(item.tagName == 'LI');
+        
+        item.text = 'learn Dart';
+        assert(item.outerHtml == '<li>learn Dart</li>');
         
         // Using an invalid tag. 
-        assert(new Element.tag('bogusTag') is UnknownElement);
+        var newElement = new Element.tag('bogusTag');
+        assert(newElement is UnknownElement);        
         assert(Element.isTagSupported('bogusTag') == false);
-       
+
+
+        // Using the Element.html() constructor.
+        DivElement div = new Element.html('<div>I love Strawberries.</div>') ;
+        assert(div is DivElement);
+        
         // Using another element's outerHtml.
         var containerDiv = query('div.container');
         var newDiv = new Element.html(containerDiv.outerHtml);
         assert(newDiv is DivElement);
-        assert(newDiv.innerHtml == containerDiv.innerHtml);
+        assert(newDiv.text == containerDiv.text);
       }
     </script>
-
 
     <script src="packages/browser/dart.js"></script>
   </body>
