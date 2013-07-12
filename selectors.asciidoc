@@ -1,0 +1,152 @@
+=== Using CSS selectors to find DOM elements
+
+=== Problem
+
+You want to find DOM elements on a web page.
+
+=== Solution
+
+Use the top-level `query()` and `queryAll()` functions provided by the
+`dart:html` library. Both functions take CSS selectors as arguments. The
+`query()` function returns the first matching element, and the `queryAll()`
+function returns all matching elements.
+
+=== Example
+
+Here are a few examples of the using `query()` and `queryAll()` with CSS
+selectors to find DOM elements:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <h1>Breakfast</h1> 
+    <ul>
+      <li id='first' class='must-have'>Milk</li>
+      <li class='must-have'>Cereal
+        <ul>
+          <li>Bran Flakes</li>
+          <li><a href='https://en.wikipedia.org/wiki/Nut_(fruit)'>Nuts</a></li>
+        </ul>
+      </li>
+      <li>Juice</li>
+    </ul>    
+    
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void main() {
+    
+        // Find by ID.
+        Element element = query('#first');
+        print(element.id);                 // 'first'
+        print(element.text);               // 'Milk'
+        
+        // Find by class.
+        List<Element> elements = queryAll('.must-have');
+        print(elements.length);            // 2
+        
+        // Find by ID or class.
+        elements = queryAll('#first, .must-have');
+        print(elements.length);            // 2
+        
+        // Find by tag.
+        elements = queryAll('li');
+        print(elements.length);            // 5
+        
+        // Use hierarchical selectors.
+        elements = queryAll('li > ul > li');
+        print(elements.first.text);        // 'Bran Flakes'
+        
+        // Use pseudo-elements.
+        element = query('li:nth-child(1)');
+        print(element.text);               // 'Milk'
+        
+        // Find by attribute.
+        elements = queryAll('[href *= Nut]');
+        print(elements.length);            // 1
+      
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+--------------------------------------------------------------------------------
+
+For a comprehensive list of selectors that you can use for querying, see
+http://www.w3.org/TR/css3-selectors/[The CSS Selector Specification guide].
+
+==== Discussion
+
+Calling `queryAll()` returns a list of DOM elements:
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ol>
+      <li>Google</li>
+      <li>StackOverflow</li>
+      <li>Reddit</li>
+      <li>Github</li>
+    </ol>
+     
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void main() {
+        List<Element> elements = queryAll('li');
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+
+--------------------------------------------------------------------------------
+
+Use the `[]` operator to access individual elements. You can also use the
+`first` and `last` getters:
+
+--------------------------------------------------------------------------------
+print(elements[2].text);    // 'Reddit'
+print(elements.first.text); // 'Google'
+print(elements.last.text);  // 'Github'
+--------------------------------------------------------------------------------
+
+You can iterate over the list, map list elements to a new list, and filter list
+contents:
+
+--------------------------------------------------------------------------------
+for (var element in elements) {
+   doSomethingWith(element);
+}
+
+Iterable sites = elements.map((site) => site.text);
+print(sites.join(', ')); // "Google, StackOverflow, Reddit, Github"
+
+sites = elements.where((site) => site.text.length != 6);
+print(sites.first.text); // "StackOverflow"
+--------------------------------------------------------------------------------
+
+You can slice the list to obtain a sublist:
+        
+--------------------------------------------------------------------------------
+var sublist = elements.sublist(1, 3); // Get the elements at positions 1 and 2.
+print(sublist.first.text);            // 'StackOverflow'
+print(sublist.last.text);             // 'Reddit'
+--------------------------------------------------------------------------------
+
+Since the list returned by `queryAll()` is read only, you cannot add, modify,
+or remove list elements. Attempting to change the list in any way generates an
+error:
+
+--------------------------------------------------------------------------------
+elements.length = 2; // Error message: 'Cannot resize immutable List.'
+--------------------------------------------------------------------------------
+
+Other recipes in this chapter show how you can create elements and insert them
+into the DOM, add modify existing DOM elements.
+
+

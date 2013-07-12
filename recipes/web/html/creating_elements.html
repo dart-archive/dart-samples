@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <div class='container'></div>
+  <body>  
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void main() {
+      
+        // Creating a specific element
+        LIElement item = new LIElement();
+        item.text = 'Mango';
+        assert(item is LIElement);
+        assert(item.innerHtml == 'Mango');
+
+        // Using the Element.html() constructor.
+        assert(new Element.html('<div>I love Strawberries.</div>') is DivElement);
+        
+        // Using the Element.tag() constructor
+        var td = new Element.tag('td');
+        td.text = 'guava';
+        assert(td is TableCellElement);
+        
+        // Using an invalid tag. 
+        assert(new Element.tag('bogusTag') is UnknownElement);
+        assert(Element.isTagSupported('bogusTag') == false);
+       
+        // Using another element's outerHtml.
+        var containerDiv = query('div.container');
+        var newDiv = new Element.html(containerDiv.outerHtml);
+        assert(newDiv is DivElement);
+        assert(newDiv.innerHtml == containerDiv.innerHtml);
+      }
+    </script>
+
+
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

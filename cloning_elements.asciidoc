@@ -1,0 +1,172 @@
+=== Cloning DOM elements
+
+=== Problem
+
+You want to duplicate a DOM element.
+
+=== Solution
+
+Call the `clone()` method on the element.
+
+Assume you have the following HTML, and want to clone the <ul>:
+
+--------------------------------------------------------------------------------
+<ul>
+  <li>Sam</li>
+  <li>Green Eggs</li>
+  <li>Ham</li>
+</ul>
+--------------------------------------------------------------------------------
+
+First, obtain a reference to the original element:
+
+--------------------------------------------------------------------------------
+UListElement ul = query('ul');
+--------------------------------------------------------------------------------
+
+Then, call `clone()` with a boolean argument. This argument determines whether
+you create a deep or a shallow copy. 
+
+If the argument to `clone()` is `true`, a deep copy is created, and the entire
+subtree of the original node is cloned:
+
+--------------------------------------------------------------------------------
+UListElement deepCopy = ul.clone(true);
+print(deepCopy.children.length); // 3
+--------------------------------------------------------------------------------
+
+If the argument to `clone()` is `false`, a shallow copy is created, and the
+original element's child nodes are not copied:
+
+--------------------------------------------------------------------------------
+UListElement shallowCopy = ul.clone(false);
+print(shallowCopy.children.length); // 0
+--------------------------------------------------------------------------------
+
+Cloning a node copies all of the node's attributes, as well as the values of 
+those attributes.
+
+Assume a page contains the following HTML:
+
+--------------------------------------------------------------------------------
+<input type="text" name="username" maxlength="10">
+--------------------------------------------------------------------------------
+
+The clone of the <input> element contains the same attributes as the original:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+
+void main() {
+  var original = query('input');
+  var clone = original.clone(true);
+
+  print(original.attributes['type'] == original.attributes['type']); // true
+  print(original.attributes['name'] == original.attributes['name']); // true
+  print(original.attributes['size'] == original.attributes['size']); // true
+}
+--------------------------------------------------------------------------------
+
+
+==== Example
+
+We want to display Google Doodle logos on a page (www.google.com/doodles), but
+don't want to load up all the images when the page loads. We provide a link that
+the user can click to see the logos.
+
+We use a <template> element to store the barebones structure for displaying each
+logo and the accompanying caption. The <template> element allows us to declare
+fragments of markup. These fragments are not rendered when the page loads, but
+they can be activated at runtime.
+
+The <template> element is new and not supported by every modern browser. For
+an excellent introduction to this new element, see
+[HTML's New Template Tag](http://www.html5rocks.com/en/tutorials/webcomponents/template/).
+
+The <template> in the HTML below contains <img>, <div> and <hr> tags. The <img>
+tag has no src and alt properties, and the <div> element contains no text. These
+tags are placeholders.
+
+--------------------------------------------------------------------------------
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <template id='myTemplate'>
+      <img width='150px'>
+      <div class='caption'></div>
+      <hr>
+    </template> 
+    
+    <div><a href=''>Click to see Google Doodles</a></div>
+      
+    <script type='application/dart' src='main.dart'></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
+
+--------------------------------------------------------------------------------
+
+Once the user clicks the link to see the logos, we fill in the missing fields
+using hard-coded data. Then, we clone the template contents, and we insert them
+into the document:
+
+--------------------------------------------------------------------------------
+import 'dart:html';
+
+void main() {
+  
+  var data = [
+    {'src': 'http://www.google.com/logos/2013/parents_day_2013-1508005-hp.jpg', 
+      'alt': "Parent's Day",
+      'caption': "Parent's Day"},
+    {'src': 'http://www.google.com/logos/2013/new_years_day_2013-983008-hp.jpg',
+     'alt': "New Year's Day",
+     'caption': "New Year's Day"},
+    {'src': 'http://www.google.com/logos/2013/zamboni-1005006-hp.jpg',
+     'alt': 'Zamboni',
+     'caption': 'Zamboni'}
+  ];
+
+  AnchorElement link = query('a');
+  
+  link.onClick.listen((event) { 
+    event.preventDefault();
+
+    var content = document.query('#myTemplate').content;
+    ImageElement img = content.query('img');
+    DivElement div = content.query('div');
+
+    for (Map item in data) {
+      img.src = item['src'];
+      img.alt = item['alt'];
+      div.text = item['caption'];
+
+      document.body.append(content.clone(true));
+    }
+    event.target.remove();
+  });
+}
+--------------------------------------------------------------------------------
+
+We get the template contents using the template element's `content` property.
+
+--------------------------------------------------------------------------------
+var content = document.query('#myTemplate').content;
+--------------------------------------------------------------------------------
+
+We get references to the <img> and <div> elements using scoped queries:
+
+--------------------------------------------------------------------------------
+ImageElement img = content.query('img');
+DivElement div = content.query('div');
+--------------------------------------------------------------------------------
+
+Cloning the template contents activates the <template> element's inert HTML, and
+inserting it into the DOM makes the logos visible to the user:
+
+--------------------------------------------------------------------------------
+document.body.append(content.clone(true));
+--------------------------------------------------------------------------------
+
+

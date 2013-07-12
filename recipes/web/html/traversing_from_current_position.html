@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+  <ol>
+    <li>Head</li>
+    <li>Shoulders</li>
+    <li>Knees</li>
+    <li>Toes</li>
+  </ol>
+    
+  <body>   
+    <script type="application/dart">
+      import 'dart:html';
+      
+      List<Element> nextSiblings(item) {
+        Element nextElement = item.nextElementSibling;
+        return item.parent.children.skipWhile((i) => i != nextElement).toList();
+      }
+      
+      List<Element> previousSiblings(item) {
+        return item.parent.children.takeWhile((i) => i != item).toList();
+      }
+
+      void main() {
+        LIElement knees = query('ol > li:nth-child(3)');
+        
+        // Parent.
+        assert(knees.parent.tagName == 'OL');
+        assert(knees.parent.children.length == 4);
+        
+        // Immediate neighbors.
+        assert(knees.nextElementSibling.text == 'Toes');
+        assert(knees.previousElementSibling.text == 'Shoulders');
+        
+        // Siblings.
+        List<Element> prev = previousSiblings(knees);
+        assert(prev.first.text == 'Head');
+        assert(prev.last.text == 'Shoulders');
+        assert(nextSiblings(knees).first.text == 'Toes');
+      }
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

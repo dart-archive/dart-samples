@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+
+    <ul>
+      <li>Get crazy startup idea</li>
+      <li>Set up company
+        <ul>
+           <li>Build something</li>
+           <li>Raise money</li>
+           <li>Get users</li>
+        </ul>
+      <li>Profit!!!</li>
+    </ul>
+    
+    <script type="application/dart">
+      
+      import 'dart:html';
+      
+      void main() {
+      
+        
+        var span = new Element.html("<span>You can edit this.&nbsp;</span>");
+        var link = new Element.html("<a href='#'>Edit</a>");
+        var input = new Element.html(
+          "<input type='text' value='${span.innerHtml}' />");
+          
+        document.body.children.addAll([span, link]);
+        bool editing = false;
+        
+        link.onClick.listen((event) {
+          editing = !editing; 
+          if (editing) {
+            span.replaceWith(input);
+            link.innerHtml = 'Done';
+          } else {
+            input.replaceWith(span);
+            link.innerHtml = 'Edit';
+          }
+
+          event.preventDefault();
+          event.stopPropagation();  
+        }); 
+        
+        queryAll('ul').forEach((item) {
+          var ol = new Element.tag('ol');
+          ol.children.addAll(item.children);
+          item.replaceWith(ol);
+        });      
+      }
+    </script>
+
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
