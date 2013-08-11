@@ -28,13 +28,13 @@ void main() {
   // Create a buffer and put a single clipspace rectangle in it (2 triangles)
   var buffer = gl.createBuffer();
   gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, buffer);
-  var vertices = [10, 20,
-                  80, 20,
-                  10, 30,
-                  10, 30,
-                  80, 20,
-                  80, 30].map((n)=>n.toDouble()).toList();
-  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
+  var vertices = [10.0, 20.0,
+                  80.0, 20.0,
+                  10.0, 30.0,
+                  10.0, 30.0,
+                  80.0, 20.0,
+                  80.0, 30.0];
+  gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
   gl.enableVertexAttribArray(positionLocation);
   gl.vertexAttribPointer(positionLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 

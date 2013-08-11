@@ -36,7 +36,7 @@ void render(image) {
                   0.0,  1.0,
                   1.0,  0.0,
                   1.0,  1.0];
-  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
+  gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
   gl.enableVertexAttribArray(texCoordLocation);
   gl.vertexAttribPointer(texCoordLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 
@@ -51,7 +51,7 @@ void render(image) {
   gl.texParameteri(WebGL.RenderingContext.TEXTURE_2D, WebGL.RenderingContext.TEXTURE_MAG_FILTER, WebGL.RenderingContext.NEAREST);
 
   // Upload the image into the texture.
-  gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, image);
+  gl.texImage2DImage(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, image);
 
   // lookup uniforms
   var resolutionLocation = gl.getUniformLocation(program, "u_resolution");

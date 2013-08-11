@@ -14,7 +14,7 @@ class TodoList {
   static final String _TODOS_STORE = "todos";
 
   idb.Database _db;
-  int _version = 1;
+  int _version = 2;
   InputElement _input;
   Element _todoItems;
 
@@ -44,7 +44,7 @@ class TodoList {
   }
 
   void _onUpgradeNeeded(idb.VersionChangeEvent e) {
-    idb.Database db = e.target.result;
+    idb.Database db = (e.target as idb.OpenDBRequest).result;
     if (!db.objectStoreNames.contains(_TODOS_STORE)) {
       db.createObjectStore(_TODOS_STORE, keyPath: 'timeStamp');
     }
