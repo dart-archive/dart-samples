@@ -8,6 +8,7 @@
 library fps;
 import 'dart:html';
 import 'dart:web_gl';
+import 'dart:typed_data';
 import 'dart:math' as Math;
 import 'package:vector_math/vector_math.dart';
 part 'fps_camera.dart';
@@ -21,12 +22,12 @@ class FpsControllerView {
   Camera camera;
   MouseKeyboardCameraController controller;
   bool ownMouse;
-  WebGLRenderingContext webGL;
-  WebGLShader vertexShader;
-  WebGLShader fragmentShader;
-  WebGLProgram shaderProgram;
-  WebGLBuffer vertexBuffer;
-  Float32Array cameraTransform;
+  RenderingContext webGL;
+  Shader vertexShader;
+  Shader fragmentShader;
+  Program shaderProgram;
+  Buffer vertexBuffer;
+  Float32List cameraTransform;
   int numVertices;
   double lastTime;
 
@@ -38,7 +39,7 @@ class FpsControllerView {
     controller = new MouseKeyboardCameraController();
     canvas = query(elementId);
     ownMouse = false;
-    cameraTransform = new Float32Array(16);
+    cameraTransform = new Float32List(16);
   }
 
   void _generateLine(List<num> vertexBuffer, vec3 b, vec3 e, vec4 color) {
@@ -110,10 +111,10 @@ class FpsControllerView {
     _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
 
     numVertices = vertexBufferData.length~/7;
-    webGL.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    webGL.bufferData(WebGLRenderingContext.ARRAY_BUFFER,
-                     new Float32Array.fromList(vertexBufferData),
-                     WebGLRenderingContext.STATIC_DRAW);
+    webGL.bindBuffer(RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    webGL.bufferData(RenderingContext.ARRAY_BUFFER,
+                     new Float32List.fromList(vertexBufferData),
+                     RenderingContext.STATIC_DRAW);
   }
 
   void initWebGL() {
@@ -126,8 +127,8 @@ class FpsControllerView {
     if (webGL == null) {
       throw new Exception('WebGL is not supported');
     }
-    vertexShader = webGL.createShader(WebGLRenderingContext.VERTEX_SHADER);
-    fragmentShader = webGL.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
+    vertexShader = webGL.createShader(RenderingContext.VERTEX_SHADER);
+    fragmentShader = webGL.createShader(RenderingContext.FRAGMENT_SHADER);
     shaderProgram = webGL.createProgram();
 
     webGL.shaderSource(vertexShader, '''
@@ -165,7 +166,7 @@ class FpsControllerView {
   }
 
   /* Returns true if the pointer is owned by our canvas element */
-  bool get _pointerLocked => canvas == document.webkitPointerLockElement;
+  bool get _pointerLocked => canvas == document.pointerLockElement;
 
   void pointerLockChange(Event event) {
     // Check if we own the mouse.
@@ -253,16 +254,16 @@ class FpsControllerView {
     webGL.viewport(0, 0, canvas.width, canvas.height);
     webGL.clearColor(0.0, 0.0, 0.0, 1.0);
     webGL.clearDepth(1.0);
-    webGL.clear(WebGLRenderingContext.COLOR_BUFFER_BIT |
-                WebGLRenderingContext.DEPTH_BUFFER_BIT);
-    webGL.disable(WebGLRenderingContext.DEPTH_TEST);
+    webGL.clear(RenderingContext.COLOR_BUFFER_BIT |
+                RenderingContext.DEPTH_BUFFER_BIT);
+    webGL.disable(RenderingContext.DEPTH_TEST);
 
     webGL.enableVertexAttribArray(0);
     webGL.enableVertexAttribArray(1);
-    webGL.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    webGL.vertexAttribPointer(0, 4, WebGLRenderingContext.FLOAT, false, 28, 12);
-    webGL.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    webGL.vertexAttribPointer(1, 3, WebGLRenderingContext.FLOAT, false, 28, 0);
+    webGL.bindBuffer(RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    webGL.vertexAttribPointer(0, 4, RenderingContext.FLOAT, false, 28, 12);
+    webGL.bindBuffer(RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    webGL.vertexAttribPointer(1, 3, RenderingContext.FLOAT, false, 28, 0);
 
     webGL.useProgram(shaderProgram);
     var cameraTransformUniformIndex = webGL.getUniformLocation(shaderProgram,
@@ -275,7 +276,7 @@ class FpsControllerView {
     webGL.uniformMatrix4fv(cameraTransformUniformIndex,
                            false,
                            cameraTransform);
-    webGL.drawArrays(WebGLRenderingContext.LINES, 0, numVertices);
+    webGL.drawArrays(RenderingContext.LINES, 0, numVertices);
     webGL.flush();
   }
 }
