@@ -14,6 +14,7 @@ import 'package:vector_math/vector_math.dart';
 part 'fps_camera.dart';
 part 'fps_controller.dart';
 part 'quat.dart';
+part 'opengl.dart';
 
 FpsControllerView view;
 
@@ -43,7 +44,7 @@ class FpsControllerView {
     cameraTransform = new Float32List(16);
   }
 
-  void _generateLine(List<num> vertexBuffer, Vector3 b, Vector3 e, Vector4 color) {
+  void _generateLine(List<double> vertexBuffer, Vector3 b, Vector3 e, Vector4 color) {
     vertexBuffer.add(b.x);
     vertexBuffer.add(b.y);
     vertexBuffer.add(b.z);
@@ -60,7 +61,7 @@ class FpsControllerView {
     vertexBuffer.add(color.a);
   }
 
-  void _generateLines(List<num> vertexBuffer, Vector3 b,
+  void _generateLines(List<double> vertexBuffer, Vector3 b,
                       Vector3 e, Vector3 step, Vector4 color, int num) {
     Vector3 lineStart = new Vector3.copy(b);
     Vector3 lineEnd = new Vector3.copy(e);
@@ -73,7 +74,7 @@ class FpsControllerView {
 
   void _generateVertexBuffer() {
     vertexBuffer = webGL.createBuffer();
-    List<num> vertexBufferData = new List<num>();
+    List<double> vertexBufferData = new List<double>();
 
     var colors = {
       'red': new Vector4(1.0, 0.0, 0.0, 1.0),
@@ -227,8 +228,8 @@ class FpsControllerView {
       // We don't rotate the view if we don't own the mouse
       return;
     }
-    controller.accumDX += event.movementX;
-    controller.accumDY += event.movementY;
+    controller.accumDX += event.movement.x;
+    controller.accumDY += event.movement.y;
   }
 
   // Subscribe to input events
