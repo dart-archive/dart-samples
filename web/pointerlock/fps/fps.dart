@@ -7,8 +7,9 @@
 
 library fps;
 import 'dart:html';
+import 'dart:web_gl';
 import 'dart:math' as Math;
-import 'package:vector_math/vector_math_browser.dart';
+import 'package:vector_math/vector_math.dart';
 part 'fps_camera.dart';
 part 'fps_controller.dart';
 
