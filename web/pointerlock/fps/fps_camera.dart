@@ -32,14 +32,14 @@ class Camera {
     Vector3 z = new Vector3(0.0, 0.0, 1.0);
     Vector3 forward = frontDirection;
     forward.normalize();
-    return degrees(acos(forward.dot(z)));
+    return degrees(Math.acos(forward.dot(z)));
   }
 
   num get pitch {
     Vector3 y = new Vector3(0.0, 1.0, 0.0);
     Vector3 forward = frontDirection;
     forward.normalize();
-    return degrees(acos(forward.dot(y)));
+    return degrees(Math.acos(forward.dot(y)));
   }
 
   Matrix4 get projectionMatrix {

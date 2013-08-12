@@ -100,7 +100,7 @@ class MouseKeyboardCameraController {
       above = true;
     }
     num fDotUp = frontDirection.dot(upDirection);
-    num pitchAngle = acos(fDotUp);
+    num pitchAngle = Math.acos(fDotUp);
     num pitchDegrees = degrees(pitchAngle);
 
     const minPitchAngle = 0.785398163;
