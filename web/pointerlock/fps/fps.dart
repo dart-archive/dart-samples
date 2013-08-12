@@ -42,7 +42,7 @@ class FpsControllerView {
     cameraTransform = new Float32List(16);
   }
 
-  void _generateLine(List<num> vertexBuffer, vec3 b, vec3 e, vec4 color) {
+  void _generateLine(List<num> vertexBuffer, Vector3 b, Vector3 e, Vector4 color) {
     vertexBuffer.add(b.x);
     vertexBuffer.add(b.y);
     vertexBuffer.add(b.z);
@@ -59,10 +59,10 @@ class FpsControllerView {
     vertexBuffer.add(color.a);
   }
 
-  void _generateLines(List<num> vertexBuffer, vec3 b,
-                      vec3 e, vec3 step, vec4 color, int num) {
-    vec3 lineStart = new vec3.copy(b);
-    vec3 lineEnd = new vec3.copy(e);
+  void _generateLines(List<num> vertexBuffer, Vector3 b,
+                      Vector3 e, Vector3 step, Vector4 color, int num) {
+    Vector3 lineStart = new Vector3.copy(b);
+    Vector3 lineEnd = new Vector3.copy(e);
     for (int i = 0; i < num; i++) {
       _generateLine(vertexBuffer, lineStart, lineEnd, color);
       lineStart.add(step);
@@ -75,15 +75,15 @@ class FpsControllerView {
     List<num> vertexBufferData = new List<num>();
 
     var colors = {
-      'red': new vec4.raw(1.0, 0.0, 0.0, 1.0),
-      'green': new vec4.raw(0.0, 1.0, 0.0, 1.0),
-      'blue': new vec4.raw(0.0, 0.0, 1.0, 1.0)
+      'red': new Vector4(1.0, 0.0, 0.0, 1.0),
+      'green': new Vector4(0.0, 1.0, 0.0, 1.0),
+      'blue': new Vector4(0.0, 0.0, 1.0, 1.0)
     };
 
     // Bottom
-    vec3 b = new vec3.raw(0.0, 0.0, -20.0);
-    vec3 e = new vec3.raw(0.0, 0.0, 0.0);
-    vec3 s = new vec3.raw(1.0, 0.0, 0.0);
+    Vector3 b = new Vector3(0.0, 0.0, -20.0);
+    Vector3 e = new Vector3(0.0, 0.0, 0.0);
+    Vector3 s = new Vector3(1.0, 0.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
     b.setComponents(0.0, 0.0, 0.0);
     e.setComponents(20.0, 0.0, 0.0);
@@ -269,9 +269,9 @@ class FpsControllerView {
     var cameraTransformUniformIndex = webGL.getUniformLocation(shaderProgram,
                                                                'cameraTransform');
 
-    mat4 view = camera.lookAtMatrix;
-    mat4 projection = camera.projectionMatrix;
-    mat4 projectionView = projection * view;
+    Matrix4 view = camera.lookAtMatrix;
+    Matrix4 projection = camera.projectionMatrix;
+    Matrix4 projectionView = projection * view;
     projectionView.copyIntoArray(cameraTransform, 0);
     webGL.uniformMatrix4fv(cameraTransformUniformIndex,
                            false,
