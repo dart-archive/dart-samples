@@ -112,7 +112,7 @@ class FpsControllerView {
 
     numVertices = vertexBufferData.length~/7;
     webGL.bindBuffer(RenderingContext.ARRAY_BUFFER, vertexBuffer);
-    webGL.bufferData(RenderingContext.ARRAY_BUFFER,
+    webGL.bufferDataTyped(RenderingContext.ARRAY_BUFFER,
                      new Float32List.fromList(vertexBufferData),
                      RenderingContext.STATIC_DRAW);
   }
