@@ -22,8 +22,8 @@ class VideoExample {
   CanvasRenderingContext2D _ctxCopy, _ctxDraw;
   bool _animationRunning = false;
 
-  const _outPadding = 100;
-  const _slices = 4;
+  final _outPadding = 100;
+  final _slices = 4;
 
   VideoExample() {
     var inertia = -2.0;

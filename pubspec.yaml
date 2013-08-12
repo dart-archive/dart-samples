@@ -1,5 +1,9 @@
 name: dart_html5_samples
-
+version: 0.0.1-dev
+description: html5 rocks samples for dart
+homepage: https://github.com/dart-lang/dart-html5-samples
+environment:
+  sdk: '>=0.6.15'
 dependencies:
   browser: ">=0.3.2"
   vector_math: ">=0.9.2"

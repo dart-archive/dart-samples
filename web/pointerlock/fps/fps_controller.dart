@@ -47,7 +47,7 @@ class MouseKeyboardCameraController {
       return;
     }
     scale = scale * dt * floatVelocity;
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
+    Vector3 upDirection = new Vector3(0.0, 1.0, 0.0);
     upDirection.scale(scale);
     cam.lookAtPosition.add(upDirection);
     cam.eyePosition.add(upDirection);
@@ -59,10 +59,10 @@ class MouseKeyboardCameraController {
       return;
     }
     scale = scale * dt * strafeVelocity;
-    vec3 frontDirection = cam.frontDirection;
+    Vector3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
-    vec3 strafeDirection = frontDirection.cross(upDirection);
+    Vector3 upDirection = new Vector3(0.0, 1.0, 0.0);
+    Vector3 strafeDirection = frontDirection.cross(upDirection);
     strafeDirection.scale(scale);
     cam.lookAtPosition.add(strafeDirection);
     cam.eyePosition.add(strafeDirection);
@@ -75,7 +75,7 @@ class MouseKeyboardCameraController {
     }
     scale = scale * dt * forwardVelocity;
 
-    vec3 frontDirection = cam.frontDirection;
+    Vector3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
     frontDirection.scale(scale);
     cam.lookAtPosition.add(frontDirection);
@@ -83,10 +83,10 @@ class MouseKeyboardCameraController {
   }
 
   void _rotateView(num dt, Camera cam) {
-    vec3 frontDirection = cam.frontDirection;
+    Vector3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
-    vec3 upDirection = new vec3.raw(0.0, 1.0, 0.0);
-    vec3 strafeDirection = frontDirection.cross(upDirection);
+    Vector3 upDirection = new Vector3(0.0, 1.0, 0.0);
+    Vector3 strafeDirection = frontDirection.cross(upDirection);
     strafeDirection.normalize();
 
     num mouseYawDelta = accumDX / mouseSensitivity;
@@ -100,7 +100,7 @@ class MouseKeyboardCameraController {
       above = true;
     }
     num fDotUp = frontDirection.dot(upDirection);
-    num pitchAngle = acos(fDotUp);
+    num pitchAngle = Math.acos(fDotUp);
     num pitchDegrees = degrees(pitchAngle);
 
     const minPitchAngle = 0.785398163;
@@ -113,9 +113,9 @@ class MouseKeyboardCameraController {
     _rotateEyeAndLook(mouseYawDelta, upDirection, cam);
   }
 
-  void _rotateEyeAndLook(num delta_angle, vec3 axis, Camera cam) {
+  void _rotateEyeAndLook(num delta_angle, Vector3 axis, Camera cam) {
     quat q = new quat(axis, delta_angle);
-    vec3 frontDirection = cam.frontDirection;
+    Vector3 frontDirection = cam.frontDirection;
     frontDirection.normalize();
     q.rotate(frontDirection);
     frontDirection.normalize();

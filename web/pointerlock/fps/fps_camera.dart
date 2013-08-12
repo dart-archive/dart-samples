@@ -5,18 +5,18 @@
 part of fps;
 
 class Camera {
-  vec3 eyePosition;
-  vec3 upDirection;
-  vec3 lookAtPosition;
+  Vector3 eyePosition;
+  Vector3 upDirection;
+  Vector3 lookAtPosition;
   num zNear;
   num zFar;
   num aspectRatio;
   num fOV;
 
   Camera() {
-    eyePosition = new vec3.raw(0.0, 2.0, 0.0);
-    lookAtPosition = new vec3.raw(1.0, 2.0, -1.0);
-    upDirection = new vec3.raw(0.0, 1.0, 0.0);
+    eyePosition = new Vector3(0.0, 2.0, 0.0);
+    lookAtPosition = new Vector3(1.0, 2.0, -1.0);
+    upDirection = new Vector3(0.0, 1.0, 0.0);
 
     fOV = 0.785398163; // 90 degrees
     zNear = 1.0;
@@ -29,64 +29,64 @@ class Camera {
   }
 
   num get yaw {
-    vec3 z = new vec3(0.0, 0.0, 1.0);
-    vec3 forward = frontDirection;
+    Vector3 z = new Vector3(0.0, 0.0, 1.0);
+    Vector3 forward = frontDirection;
     forward.normalize();
-    return degrees(acos(forward.dot(z)));
+    return degrees(Math.acos(forward.dot(z)));
   }
 
   num get pitch {
-    vec3 y = new vec3(0.0, 1.0, 0.0);
-    vec3 forward = frontDirection;
+    Vector3 y = new Vector3(0.0, 1.0, 0.0);
+    Vector3 forward = frontDirection;
     forward.normalize();
-    return degrees(acos(forward.dot(y)));
+    return degrees(Math.acos(forward.dot(y)));
   }
 
-  mat4 get projectionMatrix {
+  Matrix4 get projectionMatrix {
     return makePerspective(fOV, aspectRatio, zNear, zFar);
   }
 
-  mat4 get lookAtMatrix {
+  Matrix4 get lookAtMatrix {
     return makeLookAt(eyePosition, lookAtPosition, upDirection);
   }
 
-  void copyProjectionMatrixIntoArray(Float32Array pm) {
-    mat4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
+  void copyProjectionMatrixIntoArray(Float32List pm) {
+    Matrix4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
     m.copyIntoArray(pm);
   }
 
-  void copyViewMatrixIntoArray(Float32Array vm) {
-    mat4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+  void copyViewMatrixIntoArray(Float32List vm) {
+    Matrix4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
     m.copyIntoArray(vm);
   }
 
-  void copyNormalMatrixIntoArray(Float32Array nm) {
-    mat4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+  void copyNormalMatrixIntoArray(Float32List nm) {
+    Matrix4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
     m.copyIntoArray(nm);
   }
 
-  void copyProjectionMatrix(mat4 pm) {
-    mat4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
+  void copyProjectionMatrix(Matrix4 pm) {
+    Matrix4 m = makePerspective(fOV, aspectRatio, zNear, zFar);
     m.copyInto(pm);
   }
 
-  void copyViewMatrix(mat4 vm) {
-    mat4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+  void copyViewMatrix(Matrix4 vm) {
+    Matrix4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
     m.copyInto(vm);
   }
 
-  void copyNormalMatrix(mat4 nm) {
-    mat4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+  void copyNormalMatrix(Matrix4 nm) {
+    Matrix4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
     m.copyInto(nm);
   }
 
-  void copyEyePosition(vec3 ep) {
+  void copyEyePosition(Vector3 ep) {
     eyePosition.copyInto(ep);
   }
 
-  void copyLookAtPosition(vec3 lap) {
+  void copyLookAtPosition(Vector3 lap) {
     lookAtPosition.copyInto(lap);
   }
 
-  vec3 get frontDirection => lookAtPosition - eyePosition;
+  Vector3 get frontDirection => lookAtPosition - eyePosition;
 }
