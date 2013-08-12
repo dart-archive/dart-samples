@@ -60,7 +60,7 @@ class Camera {
     m.copyIntoArray(vm);
   }
 
-  void copyNormalMatrixIntoArray(Float32Array nm) {
+  void copyNormalMatrixIntoArray(Float32List nm) {
     Matrix4 m = makeLookAt(eyePosition, lookAtPosition, upDirection);
     m.copyIntoArray(nm);
   }
