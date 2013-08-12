@@ -13,6 +13,7 @@ import 'dart:math' as Math;
 import 'package:vector_math/vector_math.dart';
 part 'fps_camera.dart';
 part 'fps_controller.dart';
+part 'quat.dart';
 
 FpsControllerView view;
 
