@@ -1,7 +1,6 @@
 library utils;
 import 'dart:html';
 import 'dart:typed_data';
-import 'dart:math' as Math;
 import 'dart:web_gl' as WebGL;
 
 WebGL.Program createProgram(WebGL.RenderingContext gl, [List<WebGL.Shader> shaders]) {
@@ -76,5 +75,5 @@ void setRectangle(gl, x, y, width, height) {
                   x1, y2,
                   x2, y1,
                   x2, y2];
-  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
+  gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
 }

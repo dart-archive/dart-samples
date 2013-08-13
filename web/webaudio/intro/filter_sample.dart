@@ -46,7 +46,7 @@ class BufferLoader {
 
   void _onLoad(HttpRequest request, String url, int index) {
     // Asynchronously decode the audio file data in request.response.
-    audioCtx.decodeAudioData(request.response, (AudioBuffer buffer) {
+    audioCtx.decodeAudioData(request.response).then((AudioBuffer buffer) {
       if (buffer == null) {
 
         // Don't use alert in real life ;)
@@ -75,7 +75,7 @@ class ApplicationContext {
   AudioContext audioCtx;
 
   // An object to track the buffers to load "{name: path}".
-  const buffersToLoad = const {
+  static const buffersToLoad = const {
     // There is also example.ogg and example.wav.
     "example": "sounds/example.ogg"
   };
@@ -102,9 +102,9 @@ class ApplicationContext {
 }
 
 class FilterSample {
-  const _FREQ = 5000;
-  const _FREQ_MUL = 7000;
-  const _QUAL_MUL = 30;
+  final _FREQ = 5000;
+  final _FREQ_MUL = 7000;
+  final _QUAL_MUL = 30;
   bool _playing = false;
   ApplicationContext appCtx;
   AudioBufferSourceNode _source;
@@ -139,8 +139,8 @@ class FilterSample {
     _filter.frequency.value = _FREQ;
 
     // Connect everything.
-    _source.connect(_filter, 0, 0);
-    _filter.connect(appCtx.audioCtx.destination, 0, 0);
+    _source.connectNode(_filter, 0, 0);
+    _filter.connectNode(appCtx.audioCtx.destination, 0, 0);
 
     // Play!
     _source.start(0);
@@ -163,11 +163,11 @@ class FilterSample {
     // Check if we want to enable the filter.
     if (checked) {
       // Connect through the filter.
-      _source.connect(_filter, 0, 0);
-      _filter.connect(appCtx.audioCtx.destination, 0, 0);
+      _source.connectNode(_filter, 0, 0);
+      _filter.connectNode(appCtx.audioCtx.destination, 0, 0);
     } else {
       // Otherwise, connect directly.
-      _source.connect(appCtx.audioCtx.destination, 0, 0);
+      _source.connectNode(appCtx.audioCtx.destination, 0, 0);
     }
   }
 

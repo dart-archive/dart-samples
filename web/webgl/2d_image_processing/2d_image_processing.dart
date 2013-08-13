@@ -38,7 +38,7 @@ void render(image) {
                   0.0,  1.0,
                   1.0,  0.0,
                   1.0,  1.0];
-  gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
+  gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER, new Float32List.fromList(vertices), WebGL.RenderingContext.STATIC_DRAW);
   gl.enableVertexAttribArray(texCoordLocation);
   gl.vertexAttribPointer(texCoordLocation, 2, WebGL.RenderingContext.FLOAT, false, 0, 0);
 
@@ -58,7 +58,7 @@ void render(image) {
 
   // Create a texture and put the image in it.
   var originalImageTexture = createAndSetupTexture();
-  gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, image);
+  gl.texImage2DImage(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, image);
 
   // Create 2 textures and attach them to framebuffers.
   var textures = [];
@@ -68,7 +68,7 @@ void render(image) {
     textures.add(texture);
 
     // make the texture the same size as the image
-    gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, image.width,
+    gl.texImage2DTyped(WebGL.RenderingContext.TEXTURE_2D, 0, WebGL.RenderingContext.RGBA, image.width,
       image.height, 0, WebGL.RenderingContext.RGBA, WebGL.RenderingContext.UNSIGNED_BYTE, null);
 
     // Create a framebuffer

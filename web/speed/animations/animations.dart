@@ -9,7 +9,7 @@
 import 'dart:html';
 
 class AnimationExample {
-  const _numMovers = 500;
+  final _numMovers = 500;
   List<Element> _movers;
   List<num> _moverTops;
   num _lastScrollY = 0;
