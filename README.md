@@ -1,10 +1,11 @@
-dart-html5-samples
-==================
+dart-samples
+============
 
-These are HTML5 samples written in
-[Dart](http://www.dartlang.org).
-Most of them were ported from
-[HTML5 Rocks](http://www.html5rocks.com/).
+These are code samples written in [Dart](http://www.dartlang.org).
+Most of them were ported from [HTML5 Rocks](http://www.html5rocks.com/).
+
+So far, the samples cover HTML5 topics. We want to expand the scope of the
+samples to cover other topics as well.
 
 Samples
 -------
@@ -52,7 +53,7 @@ help out, this would be a great way to contribute to the Dart project!
 * Fork the project on GitHub.
 * Add your sample.
 * Test your sample with both Dartium and dart2js.
-* Update the README with a link to your tutorial.
+* Update the README with a link to your sample.
 * Send us a pull request.
 
 If you’d like to chat more about this, feel free to send us email on the
