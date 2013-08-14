@@ -7,3 +7,12 @@
 
 # pub
 packages
+
+# polymer
+.buildlog
+out
+pubspec.lock
+
+#other
+.DS_Store
+.settings
