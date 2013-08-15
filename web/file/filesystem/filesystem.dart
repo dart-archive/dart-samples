@@ -6,7 +6,7 @@
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
 import 'dart:html';
-import 'package:dart_html5_samples/htmlescape.dart';
+import 'package:dart_samples/htmlescape.dart';
 
 class FileSystemExample {
   FileSystem _filesystem;
