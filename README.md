@@ -14,23 +14,23 @@ Samples
 
 Here are the samples we've created so far:
 
-* [A Beginner's Guide to Using the Application Cache](https://github.com/dart-lang/dart-html5-samples/tree/master/web/appcache/beginner)
-* [High DPI Canvas](https://github.com/dart-lang/dart-html5-samples/tree/master/web/canvas/hidpi)
-* [Image Filters with Canvas](https://github.com/dart-lang/dart-html5-samples/tree/master/web/canvas/imagefilters)
-* [Native HTML5 Drag and Drop](https://github.com/dart-lang/dart-html5-samples/tree/master/web/dnd/basics)
-* [Reading Files in JavaScript Using the File APIs](https://github.com/dart-lang/dart-html5-samples/tree/master/web/file/dndfiles)
-* [Exploring the FileSystem APIs](https://github.com/dart-lang/dart-html5-samples/tree/master/web/file/filesystem)
-* [Exploring the FileSystem APIs: Web-based Terminal](https://github.com/dart-lang/dart-html5-samples/tree/master/web/file/terminal)
-* [A Simple Trip Meter Using the Geolocation API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/geolocation/trip_meter)
-* [A Simple ToDo List Using HTML5 IndexedDB](https://github.com/dart-lang/dart-html5-samples/tree/master/web/indexeddb/todo)
-* [Local Storage Basics](https://github.com/dart-lang/dart-html5-samples/tree/master/web/localstorage/basics)
-* [Using the Notifications API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/notifications/quick)
-* [Pointer Lock And First Person Shooter Controls](https://github.com/dart-lang/dart-html5-samples/tree/master/web/pointerlock/fps)
-* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-html5-samples/tree/master/web/speed/animations)
-* [HTML5 Video](https://github.com/dart-lang/dart-html5-samples/tree/master/web/video/basics)
-* [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webaudio/intro)
-* [WebGL](https://github.com/dart-lang/dart-html5-samples/tree/master/web/webgl)
-* [WebSockets](https://github.com/dart-lang/dart-html5-samples/tree/master/web/websockets/basics)
+* [A Beginner's Guide to Using the Application Cache](https://github.com/dart-lang/dart-samples/tree/master/web/html5/appcache/beginner)
+* [High DPI Canvas](https://github.com/dart-lang/dart-samples/tree/master/web/html5/canvas/hidpi)
+* [Image Filters with Canvas](https://github.com/dart-lang/dart-samples/tree/master/web/html5/canvas/imagefilters)
+* [Native HTML5 Drag and Drop](https://github.com/dart-lang/dart-samples/tree/master/web/html5/dnd/basics)
+* [Reading Files in JavaScript Using the File APIs](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/dndfiles)
+* [Exploring the FileSystem APIs](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/filesystem)
+* [Exploring the FileSystem APIs: Web-based Terminal](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/terminal)
+* [A Simple Trip Meter Using the Geolocation API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/geolocation/trip_meter)
+* [A Simple ToDo List Using HTML5 IndexedDB](https://github.com/dart-lang/dart-samples/tree/master/web/html5/indexeddb/todo)
+* [Local Storage Basics](https://github.com/dart-lang/dart-samples/tree/master/web/html5/localstorage/basics)
+* [Using the Notifications API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/notifications/quick)
+* [Pointer Lock And First Person Shooter Controls](https://github.com/dart-lang/dart-samples/tree/master/web/html5/pointerlock/fps)
+* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-samples/tree/master/web/html5/speed/animations)
+* [HTML5 Video](https://github.com/dart-lang/dart-samples/tree/master/web/html5/video/basics)
+* [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/webaudio/intro)
+* [WebGL](https://github.com/dart-lang/dart-samples/tree/master/web/html5/webgl)
+* [WebSockets](https://github.com/dart-lang/dart-samples/tree/master/web/html5/websockets/basics)
 
 Setup
 -----
@@ -50,7 +50,7 @@ help out, this would be a great way to contribute to the Dart project!
 
 * Read the LICENSE file.
 * Sign the [Individual Contributor License Agreement](http://code.google.com/legal/individual-cla-v1.0.html).
-* Submit a bug in the [issue tracker](https://github.com/dart-lang/dart-html5-samples/issues) with the tutorial you plan on porting, so that others will know you are working on it.
+* Submit a bug in the [issue tracker](https://github.com/dart-lang/dart-samples/issues) with the tutorial you plan on porting, so that others will know you are working on it.
 * Take a look at the other examples to get a feel for how we’ve structured things.
 * Fork the project on GitHub.
 * Add your sample.
