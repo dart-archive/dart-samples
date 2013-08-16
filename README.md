@@ -1,6 +1,8 @@
 dart-samples
 ============
 
+[![Build Status](https://drone.io/github.com/dart-lang/dart-samples/status.png)](https://drone.io/github.com/dart-lang/dart-samples/latest)
+
 These are code samples written in [Dart](http://www.dartlang.org).
 Most of them were ported from [HTML5 Rocks](http://www.html5rocks.com/).
 
