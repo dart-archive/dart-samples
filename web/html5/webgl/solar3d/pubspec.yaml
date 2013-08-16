@@ -1,0 +1,8 @@
+name: solar3d
+version: 0.0.1
+author: John McCutchan <john@johnmccutchan.com>
+description: 3D Solar System Demo
+homepage: https://github.com/johnmccutchan/solar3d
+dependencies:
+  browser: any
+  vector_math: '>=0.9.5'

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<!-- Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+     for details. All rights reserved. Use of this source code is governed by a
+     BSD-style license that can be found in the LICENSE file. -->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Solar System Demo</title>
+    <link type="text/css" rel="stylesheet" href="solar.css">
+  </head>
+  <body>
+    <h1>Solar System 3D</h1>
+
+    <p>A 3D solar system visualization using WebGL.</p>
+
+    <div>
+      <canvas id="container"></canvas>
+    </div>
+    <footer>
+      <p id="summary">Click on the canvas to manipulate the simulation.<br>
+        Use the mouse to zoom the and scroll wheel to rotate the view.<br>
+        Key controls: <b>S</b>un, <b>J</b>upiter, <b>E</b>arth, and <b>F</b>ullscreen.
+      </p>
+      <p id="notes"> </p>
+    </footer>
+
+    <script type="application/dart" src="solar.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
