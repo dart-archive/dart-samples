@@ -12,6 +12,8 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:json' as json;
 import 'dart:math' as Math;
+import 'dart:web_gl' as WebGL;
+import 'dart:typed_data';
 
 import 'package:vector_math/vector_math.dart';
 
@@ -27,15 +29,15 @@ part 'skybox.dart';
 part 'orbit_path.dart';
 
 class Solar3DApplication {
-  WebGLRenderingContext glContext;
+  WebGL.RenderingContext glContext;
   CanvasElement canvas;
   PlanetShader planetShader;
   TextureManager textureManager;
   Math.Random random = new Math.Random();
   Camera camera = new Camera();
   Skybox skyBox;
-  num get width => canvas.width;
-  num get height => canvas.height;
+  int get width => canvas.width;
+  int get height => canvas.height;
   MouseSphereCameraController controller = new MouseSphereCameraController();
   SolarSystem solarSystem;
   OrbitPath orbitPath;
@@ -84,7 +86,7 @@ class Solar3DApplication {
   }
 
   Future loadTextures() {
-    List<Future> futures = new List<Future>();
+    var futures = new List<Future>();
     futures.add(textureManager.load('earth_diffuse.jpg'));
     futures.add(textureManager.load('sun_diffuse.jpg'));
     futures.add(textureManager.load('mars_diffuse.jpg'));
@@ -106,14 +108,14 @@ class Solar3DApplication {
     return Future.wait(futures);
   }
 
-  bool get _fullScreened => canvas == document.webkitFullscreenElement;
+  bool get _fullScreened => canvas == document.fullscreenElement;
 
   void clicked(Event event) {
     canvas.requestPointerLock();
   }
 
   /* Returns true if the pointer is owned by our canvas element */
-  bool get _pointerLocked => canvas == document.webkitPointerLockElement;
+  bool get _pointerLocked => canvas == document.pointerLockElement;
 
   void pointerLockChange(Event event) {
     // Check if we own the mouse.
@@ -122,19 +124,19 @@ class Solar3DApplication {
 
   void toggleFullscreen() {
     if (_fullScreened) {
-      document.webkitCancelFullScreen();
+      document.cancelFullScreen();
     } else {
       canvas.requestFullscreen();
     }
   }
 
-  const keyCodeLeft = 37;
-  const keyCodeRight = 39;
+  var keyCodeLeft = 37;
+  var keyCodeRight = 39;
 
-  const keyCodeE = 69;
-  const keyCodeF = 70;
-  const keyCodeJ = 74;
-  const keyCodeS = 83;
+  var keyCodeE = 69;
+  var keyCodeF = 70;
+  var keyCodeJ = 74;
+  var keyCodeS = 83;
 
   void keydown(KeyboardEvent event) {
     if (!ownMouse) {
@@ -208,10 +210,10 @@ class Solar3DApplication {
     document.onFullscreenChange.listen(fullscreenChange);
   }
 
-  num renderTime;
+  double renderTime;
 
   void update(double time) {
-    num t = new DateTime.now().millisecondsSinceEpoch;
+    var t = new DateTime.now().millisecondsSinceEpoch;
 
     if (renderTime != null) {
       showFps((1000 / (t - renderTime)).round());
@@ -222,15 +224,15 @@ class Solar3DApplication {
     glContext.viewport(0, 0, width, height);
     glContext.clearColor(0.0, 0.0, 0.0, 1.0);
     glContext.clearDepth(1.0);
-    glContext.clear(WebGLRenderingContext.COLOR_BUFFER_BIT |
-                    WebGLRenderingContext.DEPTH_BUFFER_BIT);
+    glContext.clear(WebGL.RenderingContext.COLOR_BUFFER_BIT |
+                    WebGL.RenderingContext.DEPTH_BUFFER_BIT);
 
     /* Render the sky box:
      * Disable face culling
      * Disable depth testing
      */
-    glContext.disable(WebGLRenderingContext.CULL_FACE);
-    glContext.disable(WebGLRenderingContext.DEPTH_TEST);
+    glContext.disable(WebGL.RenderingContext.CULL_FACE);
+    glContext.disable(WebGL.RenderingContext.DEPTH_TEST);
     textureManager.bind('Sky');
     skyBox.preRender();
     skyBox.render(camera);
@@ -238,8 +240,8 @@ class Solar3DApplication {
      * Enable face culling
      * Enable depth testing
      */
-    glContext.enable(WebGLRenderingContext.CULL_FACE);
-    glContext.enable(WebGLRenderingContext.DEPTH_TEST);
+    glContext.enable(WebGL.RenderingContext.CULL_FACE);
+    glContext.enable(WebGL.RenderingContext.DEPTH_TEST);
     solarSystem.draw(glContext, controller, camera, time);
     requestRedraw();
   }
@@ -320,7 +322,7 @@ class SolarSystem {
     planet = new PlanetaryBody(this, "Mercury",
                                "mercury_diffuse.jpg",
                                4.0, // Planet Size
-                               57, // Orbit distance
+                               57.0, // Orbit distance
                                0.241); // Orbit period
     planets.add(planet);
     sun.addPlanet(planet);
@@ -328,7 +330,7 @@ class SolarSystem {
     planet = new PlanetaryBody(this, "Venus",
                                "venus_diffuse.jpg",
                                8.0,
-                               100,
+                               100.0,
                                0.615);
     sun.addPlanet(planet);
     planets.add(planet);
@@ -397,7 +399,7 @@ class SolarSystem {
 
   double lastTime;
 
-  void draw(WebGLRenderingContext gl,
+  void draw(WebGL.RenderingContext gl,
             MouseSphereCameraController controller,
             Camera camera,
             double t) {
@@ -418,8 +420,8 @@ class SolarSystem {
     // Update the camera.
     controller.updateCamera(dt, camera);
     /* Construct the Projection View matrix */
-    mat4 projectionMatrix = camera.projectionMatrix;
-    mat4 viewMatrix = camera.lookAtMatrix;
+    var projectionMatrix = camera.projectionMatrix;
+    var viewMatrix = camera.lookAtMatrix;
     projectionMatrix.multiply(viewMatrix);
     application.planetShader.enable();
     application.planetShader.cameraTransform = projectionMatrix;
@@ -429,7 +431,7 @@ class SolarSystem {
     drawPlanets(gl);
   }
 
-  void drawPlanets(WebGLRenderingContext context) {
+  void drawPlanets(WebGL.RenderingContext context) {
     sun.draw(context, 0.0, 0.0);
   }
 }
@@ -443,42 +445,43 @@ class SolarSystem {
 class PlanetaryBody {
   final String name;
   final String texture;
-  final num orbitPeriod;
+  final double orbitPeriod;
   final SolarSystem solarSystem;
 
-  num height;
-  num bodySize;
-  num angle;
-  num orbitRadius;
-  num orbitSpeed;
-  vec3 position;
+  double height;
+  double bodySize;
+  double angle;
+  double orbitRadius;
+  double orbitSpeed;
+  Vector3 position;
 
   List<PlanetaryBody> planets;
 
   PlanetaryBody(this.solarSystem, this.name, this.texture, this.bodySize,
       [this.orbitRadius = 0.0, this.orbitPeriod = 0.0]) {
     planets = [];
-    angle = 0;
+    angle = 0.0;
     height = application.random.nextDouble();
     bodySize = solarSystem.globalScale*bodySize;
     orbitRadius = solarSystem.globalScale*orbitRadius;
     orbitSpeed = _calculateSpeed(orbitPeriod);
-    position = new vec3.zero();
+    position = new Vector3.zero();
   }
 
   void addPlanet(PlanetaryBody planet) {
     planets.add(planet);
   }
 
-  void draw(WebGLRenderingContext context, num x, num y) {
-    vec2 pos = _calculatePos(x, y);
+  void draw(WebGL.RenderingContext context, double x, double y) {
+    var pos = _calculatePos(x, y);
     drawSelf(context, pos.x, pos.y, x, y);
     drawChildren(context, pos.x, pos.y);
   }
 
-  void drawSelf(WebGLRenderingContext context, num x, num y, num px, num py) {
+  void drawSelf(WebGL.RenderingContext context, double x, double y, double px, double py) {
     application.textureManager.bind(texture);
-    mat4 T = new mat4.translationRaw(x.toDouble(), height, y.toDouble());
+    // TODO: Is this correct?
+    var T = new Matrix4.translationValues(x.toDouble(), height, y.toDouble());
     position.x = x.toDouble();
     position.y = height;
     position.z = y.toDouble();
@@ -491,17 +494,18 @@ class PlanetaryBody {
     SphereModel.render(context);
     application.orbitPath.preRender();
     application.orbitPath.render(orbitRadius,
-        new vec3.raw(px.toDouble(), height, py.toDouble()),
-        new vec4.raw(1.0, 1.0, 0.8, 1.0));
+        // TODO: John, is this correct?
+        new Vector3(px.toDouble(), height, py.toDouble()),
+        new Vector4(1.0, 1.0, 0.8, 1.0));
   }
 
-  void drawChildren(WebGLRenderingContext context, num x, num y) {
+  void drawChildren(WebGL.RenderingContext context, double x, double y) {
     for (var planet in planets) {
       planet.draw(context, x, y);
     }
   }
 
-  num _calculateSpeed(num period) {
+  double _calculateSpeed(double period) {
     if (period == 0.0) {
       return 0.0;
     } else {
@@ -509,13 +513,13 @@ class PlanetaryBody {
     }
   }
 
-  vec2 _calculatePos(num x, num y) {
+  Vector2 _calculatePos(double x, double y) {
     if (orbitSpeed == 0.0) {
-      return new vec2(x, y);
+      return new Vector2(x, y);
     } else {
-      num angle = application.renderTime * orbitSpeed;
+      double angle = application.renderTime * orbitSpeed;
       //
-      return new vec2(orbitRadius * Math.cos(angle) + x,
+      return new Vector2(orbitRadius * Math.cos(angle) + x,
                       orbitRadius * Math.sin(angle) + y);
     }
   }

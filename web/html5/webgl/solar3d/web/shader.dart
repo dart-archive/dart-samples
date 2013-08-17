@@ -7,27 +7,27 @@ part of solar3d;
 class Shader {
   final String vertexShaderSource;
   final String fragmentShaderSource;
-  WebGLShader vertexShader;
-  WebGLShader fragmentShader;
-  WebGLProgram program;
+  WebGL.Shader vertexShader;
+  WebGL.Shader fragmentShader;
+  WebGL.Program program;
 
   Shader(this.vertexShaderSource, this.fragmentShaderSource);
 
-  void compile(WebGLRenderingContext gl) {
-    vertexShader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
+  void compile(WebGL.RenderingContext gl) {
+    vertexShader = gl.createShader(WebGL.RenderingContext.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexShaderSource);
     gl.compileShader(vertexShader);
     // Print compile log
     printLog(gl.getShaderInfoLog(vertexShader));
 
-    fragmentShader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
+    fragmentShader = gl.createShader(WebGL.RenderingContext.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShader, fragmentShaderSource);
     gl.compileShader(fragmentShader);
     // Print compile log
     printLog(gl.getShaderInfoLog(fragmentShader));
   }
 
-  void link(WebGLRenderingContext gl) {
+  void link(WebGL.RenderingContext gl) {
     program = gl.createProgram();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
@@ -37,21 +37,22 @@ class Shader {
     dumpAttributes(gl);
   }
 
-  void dumpUniforms(WebGLRenderingContext gl) {
+  void dumpUniforms(WebGL.RenderingContext gl) {
+    // John: final var looks wrong. Leaving this as is.
     final int numUniforms = gl.getProgramParameter(program,
-                                 WebGLRenderingContext.ACTIVE_UNIFORMS);
+                                 WebGL.RenderingContext.ACTIVE_UNIFORMS);
     printLog('Dumping active uniforms:');
-    for (int i = 0; i < numUniforms; i++) {
+    for (var i = 0; i < numUniforms; i++) {
       var uniform = gl.getActiveUniform(program, i);
       printLog('[$i] - ${uniform.name}');
     }
   }
 
-  void dumpAttributes(WebGLRenderingContext gl) {
+  void dumpAttributes(WebGL.RenderingContext gl) {
     final int numAttributes = gl.getProgramParameter(program,
-                                WebGLRenderingContext.ACTIVE_ATTRIBUTES);
+                                WebGL.RenderingContext.ACTIVE_ATTRIBUTES);
     printLog('Dumping active attributes:');
-    for (int i = 0; i < numAttributes; i++) {
+    for (var i = 0; i < numAttributes; i++) {
       var attribute = gl.getActiveAttrib(program, i);
       printLog('[$i] - ${attribute.name}');
     }

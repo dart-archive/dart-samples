@@ -16,13 +16,14 @@ class MouseSphereCameraController {
   int accumDY = 0;
   int accumScroll = 0;
 
-  final vec3 _origin = new vec3.zero();
+  final Vector3 _origin = new Vector3.zero();
 
-  set origin(vec3 o) {
-    _origin.copyFrom(o);
+  set origin(Vector3 o) {
+    // John: is this correct?
+    _origin.setFrom(o);
   }
 
-  vec3 get origin {
+  Vector3 get origin {
     return _origin.clone();
   }
 
@@ -47,7 +48,7 @@ class MouseSphereCameraController {
   }
 
   void _zoomView(num seconds) {
-    double zoomValue = accumScroll.toDouble()*zoomVelocity*seconds;
+    var zoomValue = accumScroll.toDouble()*zoomVelocity*seconds;
     radius += zoomValue;
     if (radius < _minRadius) {
       radius = _minRadius;
@@ -55,8 +56,8 @@ class MouseSphereCameraController {
   }
 
   void _orbitView(num seconds) {
-    num mouseYawDelta = accumDX.toDouble() / mouseSensitivity;
-    num mousePitchDelta = accumDY.toDouble() / mouseSensitivity;
+    var mouseYawDelta = accumDX.toDouble() / mouseSensitivity;
+    var mousePitchDelta = accumDY.toDouble() / mouseSensitivity;
 
     const verticalAngleThreshold = 1.04719;
     sideAngle += mousePitchDelta;
@@ -70,13 +71,13 @@ class MouseSphereCameraController {
 
   void _updateCamera(Camera cam) {
     cam.lookAtPosition = origin;
-    double cosUpAngle = Math.cos(upAngle);
-    double sinUpAngle = Math.sin(upAngle);
-    double cosSideAngle = Math.cos(sideAngle);
-    double sinSideAngle = Math.sin(sideAngle);
-    double x = radius * sinSideAngle * cosUpAngle;
-    double y = radius * cosSideAngle;
-    double z = radius * sinSideAngle * sinUpAngle;
+    var cosUpAngle = Math.cos(upAngle);
+    var sinUpAngle = Math.sin(upAngle);
+    var cosSideAngle = Math.cos(sideAngle);
+    var sinSideAngle = Math.sin(sideAngle);
+    var x = radius * sinSideAngle * cosUpAngle;
+    var y = radius * cosSideAngle;
+    var z = radius * sinSideAngle * sinUpAngle;
     cam.eyePosition = cam.lookAtPosition + new vec3.raw(x,y,z);
   }
 }

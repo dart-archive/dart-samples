@@ -6,24 +6,24 @@ part of solar3d;
 
 class PlanetShader {
   Shader shader;
-  WebGLProgram get program => shader.program;
-  WebGLRenderingContext gl;
-  WebGLUniformLocation cameraTransformLocation;
-  WebGLUniformLocation objectTransformLocation;
-  WebGLUniformLocation viewTransformLocation;
-  WebGLUniformLocation objectScaleLocation;
-  WebGLUniformLocation planetIndexLocation;
-  Float32Array _cameraTransform;
-  Float32Array _objectTransform;
-  Float32Array _viewTransform;
-  Float32Array _objectScale;
+  WebGL.Program get program => shader.program;
+  WebGL.RenderingContext gl;
+  WebGL.UniformLocation cameraTransformLocation;
+  WebGL.UniformLocation objectTransformLocation;
+  WebGL.UniformLocation viewTransformLocation;
+  WebGL.UniformLocation objectScaleLocation;
+  WebGL.UniformLocation planetIndexLocation;
+  Float32List _cameraTransform;
+  Float32List _objectTransform;
+  Float32List _viewTransform;
+  Float32List _objectScale;
 
   PlanetShader(this.gl) {
     shader = new Shader(_planetVertexShader, _planetFragmentShader);
-    _cameraTransform = new Float32Array(16);
-    _objectTransform = new Float32Array(16);
-    _viewTransform = new Float32Array(16);
-    _objectScale = new Float32Array(4);
+    _cameraTransform = new Float32List(16);
+    _objectTransform = new Float32List(16);
+    _viewTransform = new Float32List(16);
+    _objectScale = new Float32List(4);
   }
 
   void prepare() {
@@ -43,12 +43,12 @@ class PlanetShader {
     gl.useProgram(program);
   }
 
-  set cameraTransform(mat4 m) {
+  set cameraTransform(Matrix4 m) {
     m.copyIntoArray(_cameraTransform);
     gl.uniformMatrix4fv(cameraTransformLocation, false, _cameraTransform);
   }
 
-  set objectTransform(mat4 m) {
+  set objectTransform(Matrix4 m) {
     m.copyIntoArray(_objectTransform);
     gl.uniformMatrix4fv(objectTransformLocation, false, _objectTransform);
   }
@@ -61,7 +61,7 @@ class PlanetShader {
     gl.uniform4fv(objectScaleLocation, _objectScale);
   }
 
-  set viewTransform(mat4 m) {
+  set viewTransform(Matrix4 m) {
     m.copyIntoArray(_viewTransform);
     gl.uniformMatrix4fv(viewTransformLocation, false, _viewTransform);
   }

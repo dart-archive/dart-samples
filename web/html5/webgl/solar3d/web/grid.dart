@@ -5,18 +5,18 @@
 part of solar3d;
 
 class Grid {
-  final WebGLRenderingContext gl;
-  WebGLBuffer vertexBuffer;
-  WebGLShader vertexShader;
-  WebGLShader fragmentShader;
-  WebGLProgram shaderProgram;
+  final WebGL.RenderingContext gl;
+  WebGL.Buffer vertexBuffer;
+  WebGL.Shader vertexShader;
+  WebGL.Shader fragmentShader;
+  WebGL.Program shaderProgram;
   int numVertices;
 
   Grid(this.gl) {
     _generateVertexBuffer();
 
-    vertexShader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
-    fragmentShader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
+    vertexShader = gl.createShader(WebGL.RenderingContext.VERTEX_SHADER);
+    fragmentShader = gl.createShader(WebGL.RenderingContext.FRAGMENT_SHADER);
     shaderProgram = gl.createProgram();
 
     gl.shaderSource(vertexShader, '''
@@ -47,7 +47,7 @@ class Grid {
     gl.linkProgram(shaderProgram);
   }
 
-  void _generateLine(List<num> vertexBuffer, vec3 b, vec3 e, vec4 color) {
+  void _generateLine(List<double> vertexBuffer, Vector3 b, Vector3 e, Vector4 color) {
     vertexBuffer.add(b.x);
     vertexBuffer.add(b.y);
     vertexBuffer.add(b.z);
@@ -64,10 +64,10 @@ class Grid {
     vertexBuffer.add(color.a);
   }
 
-  void _generateLines(List<num> vertexBuffer, vec3 b,
-                      vec3 e, vec3 step, vec4 color, int num) {
-    vec3 lineStart = new vec3.copy(b);
-    vec3 lineEnd = new vec3.copy(e);
+  void _generateLines(List<double> vertexBuffer, Vector3 b,
+                      Vector3 e, Vector3 step, Vector4 color, int num) {
+    var lineStart = new Vector3.copy(b);
+    var lineEnd = new Vector3.copy(e);
     for (int i = 0; i < num; i++) {
       _generateLine(vertexBuffer, lineStart, lineEnd, color);
       lineStart.add(step);
@@ -77,18 +77,18 @@ class Grid {
 
   void _generateVertexBuffer() {
     vertexBuffer = gl.createBuffer();
-    List<num> vertexBufferData = new List<num>();
+    List<double> vertexBufferData = new List<double>();
 
     var colors = {
-      'red': new vec4.raw(1.0, 0.0, 0.0, 1.0),
-      'green': new vec4.raw(0.0, 1.0, 0.0, 1.0),
-      'blue': new vec4.raw(0.0, 0.0, 1.0, 1.0)
+      'red': new Vector4(1.0, 0.0, 0.0, 1.0),
+      'green': new Vector4(0.0, 1.0, 0.0, 1.0),
+      'blue': new Vector4(0.0, 0.0, 1.0, 1.0)
     };
 
     // Bottom
-    vec3 b = new vec3.raw(0.0, 0.0, -20.0);
-    vec3 e = new vec3.raw(0.0, 0.0, 0.0);
-    vec3 s = new vec3.raw(1.0, 0.0, 0.0);
+    var b = new Vector3(0.0, 0.0, -20.0);
+    var e = new Vector3(0.0, 0.0, 0.0);
+    var s = new Vector3(1.0, 0.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
     b.setComponents(0.0, 0.0, 0.0);
     e.setComponents(20.0, 0.0, 0.0);
@@ -116,19 +116,20 @@ class Grid {
     _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
 
     numVertices = vertexBufferData.length~/7;
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER,
-                     new Float32Array.fromList(vertexBufferData),
-                     WebGLRenderingContext.STATIC_DRAW);
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    // John: this wants an int as the second arg
+    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
+                     new Float32List.fromList(vertexBufferData),
+                     WebGL.RenderingContext.STATIC_DRAW);
   }
 
-  void draw(Float32Array camera) {
+  void draw(Float32List camera) {
     gl.enableVertexAttribArray(0);
     gl.enableVertexAttribArray(1);
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.vertexAttribPointer(0, 4, WebGLRenderingContext.FLOAT, false, 28, 12);
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.vertexAttribPointer(1, 3, WebGLRenderingContext.FLOAT, false, 28, 0);
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    gl.vertexAttribPointer(0, 4, WebGL.RenderingContext.FLOAT, false, 28, 12);
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    gl.vertexAttribPointer(1, 3, WebGL.RenderingContext.FLOAT, false, 28, 0);
 
     gl.useProgram(shaderProgram);
     var cameraTransformUniformIndex = gl.getUniformLocation(shaderProgram,
@@ -137,7 +138,7 @@ class Grid {
     gl.uniformMatrix4fv(cameraTransformUniformIndex,
                            false,
                            camera);
-    gl.drawArrays(WebGLRenderingContext.LINES, 0, numVertices);
+    gl.drawArrays(WebGL.RenderingContext.LINES, 0, numVertices);
     gl.flush();
   }
 }

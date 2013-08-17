@@ -5,23 +5,23 @@
 part of solar3d;
 
 class Skybox {
-  final WebGLRenderingContext gl;
-  WebGLBuffer indexBuffer;
-  WebGLBuffer vertexBuffer;
-  WebGLShader vertexShader;
-  WebGLShader fragmentShader;
-  WebGLProgram program;
-  WebGLUniformLocation _cameraTransformLocation;
+  final WebGL.RenderingContext gl;
+  WebGL.Buffer indexBuffer;
+  WebGL.Buffer vertexBuffer;
+  WebGL.Shader vertexShader;
+  WebGL.Shader fragmentShader;
+  WebGL.Program program;
+  WebGL.UniformLocation _cameraTransformLocation;
 
   int _positionAttributeIndex;
   int _textureAttributeIndex;
   int _vertexCount;
   int _vertexStride;
 
-  Float32Array _cameraTransform;
+  Float32List _cameraTransform;
 
   void _setupBuffers() {
-    List<double> vertexPositions = const [
+    var vertexPositions = const [
       -1.0, -1.0, -1.0,
       -1.0,  1.0, -1.0,
       1.0,  1.0, -1.0,
@@ -52,7 +52,7 @@ class Skybox {
       1.0,  1.0,  1.0,
       1.0,  1.0, -1.0];
 
-    List<double> vertexTextureCoords = const [
+    var vertexTextureCoords = const [
       -1.0, -1.0, -1.0,
       -1.0,  1.0, -1.0,
       1.0,  1.0, -1.0,
@@ -83,7 +83,7 @@ class Skybox {
       1.0,  1.0,  1.0,
       1.0,  1.0, -1.0];
 
-    List<int> indices = const [
+    var indices = const [
       0,  1,  2, 0,  2,  3,
       4,  5,  6, 4,  6,  7,
       8,  9, 10, 8, 10, 11,
@@ -92,7 +92,7 @@ class Skybox {
       20, 21, 22, 20, 22, 23];
 
     assert(vertexPositions.length == vertexTextureCoords.length);
-    Float32Array vertexData = new Float32Array(vertexPositions.length*2);
+    var vertexData = new Float32List(vertexPositions.length*2);
     int writeCursor = 0;
     for (int i = 0; i < vertexPositions.length; i += 3) {
       vertexData[writeCursor++] = vertexPositions[i];
@@ -104,15 +104,16 @@ class Skybox {
     }
 
     vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER,
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
                   vertexData,
-                  WebGLRenderingContext.STATIC_DRAW);
+                  WebGL.RenderingContext.STATIC_DRAW);
     indexBuffer = gl.createBuffer();
-    gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER,
-                  new Uint16Array.fromList(indices),
-                  WebGLRenderingContext.STATIC_DRAW);
+    gl.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    // John: this wants an int as the second argument.
+    gl.bufferData(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
+                  new Uint16List.fromList(indices),
+                  WebGL.RenderingContext.STATIC_DRAW);
     _vertexCount = indices.length;
     _vertexStride = 4*6; // 6 floats per vertex
   }
@@ -147,11 +148,11 @@ class Skybox {
         gl_FragColor = vec4(color.xyz, 1.0);
       }
     ''';
-    vertexShader = gl.createShader(WebGLRenderingContext.VERTEX_SHADER);
+    vertexShader = gl.createShader(WebGL.RenderingContext.VERTEX_SHADER);
     gl.shaderSource(vertexShader, _vertexShader);
     gl.compileShader(vertexShader);
     printLog(gl.getShaderInfoLog(vertexShader));
-    fragmentShader = gl.createShader(WebGLRenderingContext.FRAGMENT_SHADER);
+    fragmentShader = gl.createShader(WebGL.RenderingContext.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShader, _fragmentShader);
     gl.compileShader(fragmentShader);
     printLog(gl.getShaderInfoLog(fragmentShader));
@@ -168,35 +169,36 @@ class Skybox {
   Skybox(this.gl) {
     _setupBuffers();
     _setupProgram();
-    _cameraTransform = new Float32Array(16);
+    _cameraTransform = new Float32List(16);
   }
 
   void preRender() {
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
     gl.enableVertexAttribArray(_positionAttributeIndex);
     gl.vertexAttribPointer(_positionAttributeIndex,
-                           3, WebGLRenderingContext.FLOAT, // 3 floats
+                           3, WebGL.RenderingContext.FLOAT, // 3 floats
                            false, _vertexStride,
                            0); // 0 offset
-    gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vertexBuffer);
+    gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
     gl.enableVertexAttribArray(_textureAttributeIndex);
     gl.vertexAttribPointer(_textureAttributeIndex,
-                           3, WebGLRenderingContext.FLOAT,
+                           3, WebGL.RenderingContext.FLOAT,
                            false, _vertexStride,
                            12);
   }
 
   void render(Camera camera) {
-    mat4 P = camera.projectionMatrix;
-    mat4 LA = makeLookAt(new vec3.zero(),
+    var P = camera.projectionMatrix;
+    // John: where is makeLookAt defined?
+    var LA = makeLookAt(new Vector3.zero(),
                          camera.frontDirection,
-                         new vec3(0.0, 1.0, 0.0));
+                         new Vector3(0.0, 1.0, 0.0));
     P.multiply(LA);
     P.copyIntoArray(_cameraTransform, 0);
     gl.useProgram(program);
     gl.uniformMatrix4fv(_cameraTransformLocation, false, _cameraTransform);
-    gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.drawElements(WebGLRenderingContext.TRIANGLES, _vertexCount,
-                    WebGLRenderingContext.UNSIGNED_SHORT, 0);
+    gl.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.drawElements(WebGL.RenderingContext.TRIANGLES, _vertexCount,
+                    WebGL.RenderingContext.UNSIGNED_SHORT, 0);
   }
 }
