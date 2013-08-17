@@ -6,12 +6,12 @@ part of solar3d;
 
 class Texture {
   final int bindingPoint;
-  WebGLTexture texture;
+  WebGL.Texture texture;
   Texture(this.bindingPoint);
 }
 
 class TextureManager {
-  final WebGLRenderingContext gl;
+  final WebGL.RenderingContext gl;
   final String baseURL;
 
   Map<String, Texture> textures;
@@ -22,7 +22,7 @@ class TextureManager {
 
   Texture make(String name) {
     // New texture.
-    Texture t = new Texture(WebGLRenderingContext.TEXTURE_2D);
+    Texture t = new Texture(WebGL.RenderingContext.TEXTURE_2D);
     t.texture = gl.createTexture();
     textures[name] = t;
     gl.bindTexture(t.bindingPoint, t.texture);
@@ -34,21 +34,21 @@ class TextureManager {
     if (t == null) {
       return;
     }
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, t.texture);
-    gl.texImage2D(WebGLRenderingContext.TEXTURE_2D,
+    gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, t.texture);
+    gl.texImage2D(WebGL.RenderingContext.TEXTURE_2D,
         0,
-        WebGLRenderingContext.RGBA,
-        WebGLRenderingContext.RGBA,
-        WebGLRenderingContext.UNSIGNED_BYTE,
+        WebGL.RenderingContext.RGBA,
+        WebGL.RenderingContext.RGBA,
+        WebGL.RenderingContext.UNSIGNED_BYTE,
         imgData);
-    gl.generateMipmap(WebGLRenderingContext.TEXTURE_2D);
+    gl.generateMipmap(WebGL.RenderingContext.TEXTURE_2D);
   }
 
   Future load(String name) {
     Texture t = textures[name];
     if (t == null) {
       // New texture.
-      t = new Texture(WebGLRenderingContext.TEXTURE_2D);
+      t = new Texture(WebGL.RenderingContext.TEXTURE_2D);
       t.texture = gl.createTexture();
       textures[name] = t;
     }
@@ -58,9 +58,9 @@ class TextureManager {
       gl.bindTexture(t.bindingPoint, t.texture);
       gl.texImage2D(t.bindingPoint,
                     0,
-                    WebGLRenderingContext.RGBA,
-                    WebGLRenderingContext.RGBA,
-                    WebGLRenderingContext.UNSIGNED_BYTE,
+                    WebGL.RenderingContext.RGBA,
+                    WebGL.RenderingContext.RGBA,
+                    WebGL.RenderingContext.UNSIGNED_BYTE,
                     img);
       gl.generateMipmap(t.bindingPoint);
       c.complete(img.src);
@@ -74,25 +74,25 @@ class TextureManager {
     Texture t = textures[name];
     if (t == null) {
       // New texture.
-      t = new Texture(WebGLRenderingContext.TEXTURE_CUBE_MAP);
+      t = new Texture(WebGL.RenderingContext.TEXTURE_CUBE_MAP);
       t.texture = gl.createTexture();
       gl.bindTexture(t.bindingPoint, t.texture);
       gl.texParameteri(t.bindingPoint,
-                       WebGLRenderingContext.TEXTURE_MIN_FILTER,
-                       WebGLRenderingContext.LINEAR);
+                       WebGL.RenderingContext.TEXTURE_MIN_FILTER,
+                       WebGL.RenderingContext.LINEAR);
       gl.texParameteri(t.bindingPoint,
-                       WebGLRenderingContext.TEXTURE_MAG_FILTER,
-                       WebGLRenderingContext.LINEAR);
+                       WebGL.RenderingContext.TEXTURE_MAG_FILTER,
+                       WebGL.RenderingContext.LINEAR);
       textures[name] = t;
     }
 
     List<int> sideTargets = [
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_POSITIVE_X,
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_X,
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_POSITIVE_Y,
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_POSITIVE_Z,
-      WebGLRenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_Z];
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_POSITIVE_X,
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_X,
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_POSITIVE_Y,
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_POSITIVE_Z,
+      WebGL.RenderingContext.TEXTURE_CUBE_MAP_NEGATIVE_Z];
 
     List<Future> futures = new List<Future>();
     for (int i = 0; i < sides.length; i++) {
@@ -100,14 +100,14 @@ class TextureManager {
       Completer c = new Completer();
       futures.add(c.future);
       img.onLoad.listen((_) {
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_CUBE_MAP, null);
+        gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, null);
+        gl.bindTexture(WebGL.RenderingContext.TEXTURE_CUBE_MAP, null);
         gl.bindTexture(t.bindingPoint, t.texture);
         gl.texImage2D(sideTargets[i],
                       0,
-                      WebGLRenderingContext.RGBA,
-                      WebGLRenderingContext.RGBA,
-                      WebGLRenderingContext.UNSIGNED_BYTE,
+                      WebGL.RenderingContext.RGBA,
+                      WebGL.RenderingContext.RGBA,
+                      WebGL.RenderingContext.UNSIGNED_BYTE,
                       img);
         c.complete(img.src);
       });
@@ -122,8 +122,8 @@ class TextureManager {
       print('Cannot find texture $name');
       return;
     }
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, null);
-    gl.bindTexture(WebGLRenderingContext.TEXTURE_CUBE_MAP, null);
+    gl.bindTexture(WebGL.RenderingContext.TEXTURE_2D, null);
+    gl.bindTexture(WebGL.RenderingContext.TEXTURE_CUBE_MAP, null);
     gl.bindTexture(t.bindingPoint, t.texture);
   }
 }
