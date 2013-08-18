@@ -2,30 +2,39 @@
 
 === Using typedef to declare a function signature
 
+
 ==== Problem
 
-You want to declare a custom function type and then check that functions of
-the matching type are used in your application.
+You want to ensure that a function with a specific signature is used in your
+application.
 
 ==== Solution
 
-Use a `typedef` to declare a function's signature and declare a custom function
-type. Here is an example:
+Use the `typedef` keyword to declare a custom function type. Then, specify the
+use of that function type in your application.
+
+==== Discussion
+
+To create a typedef, prefix a function signature with the `typedef` keyword.
+Here is an example:
 
 --------------------------------------------------------------------------------
 typedef void LogOutputFunc(String logData);
 --------------------------------------------------------------------------------
 
-This `typedef` declaration specifies that `LogOutputFunc` takes a String
-argument and returns void.  With the type definition in place, you can specify
-uses for a function that matches the signature of `LogOutputFunc`. Here is an
-example:
+The declaration above specifies that a function of the `LogOutputFunc` type
+returns void and takes a single String argument.  With the custom type
+definition in place, you can specify uses in your code for functions matching
+the signature of `LogOutputFunc`.
+
+Here is an example of class that uses a custom function type created using a
+typedef:
 
 --------------------------------------------------------------------------------
 typedef void LogOutputFunc(String logData);
 
 class Logger {
-  LogOutputFunc func;
+  LogOutputFunc func; // Must return void and take a single String argument.
   Logger(this.func);
 
   void log(String logData) {
@@ -33,6 +42,7 @@ class Logger {
   }
 }
 
+// Method that matches the function type created using a typedef.
 void timestampedPrint(String msg) => print('${new DateTime.now()}: $msg');
 
 void main() {
@@ -43,13 +53,15 @@ void main() {
 }
 --------------------------------------------------------------------------------
 
-The `Logger` class accepts a function as a field, and that function must match
-the signature of `LogOutputFunc`.  Two functions, `print()` and
-`timestampedPrint()` match that signature (both accept String arguments and
-return void) and can be used by the `Logger` class.
 
-A `typedef` is always used as a  top-level declaration. You cannot specify a
-`typedef` within a class or a function.
+The Logger class accepts a function as a field, and that function must match
+the signature of `LogOutputFunc`.  Two functions, the built in `print()`
+function and the `timestampedPrint()` function match that signature (both
+accept String a single String argument and both return void) and can be used
+by the `Logger` class.
+
+A `typedef` is always used as a  top-level library declaration. You cannot
+specify a `typedef` within a class or a function.
 
 
 === Defining a constructor with default parameters
@@ -60,8 +72,8 @@ You want to define a constructor that allows parameters with default values.
 
 ==== Solution
 
-In the constructor signature, wrap default positional parameters in a `[]`, and
-wrap default named parameters in a `{}`:
+In the constructor signature, wrap default positional parameters in `[]`, and
+wrap default named parameters in `{}`:
 
 Here is an example of a class with a constructor that takes positional
 parameters with default values:
@@ -73,7 +85,7 @@ class Point {
 }
 --------------------------------------------------------------------------------
 
-You can now call the constructor with zero, one, or two arguments;
+You can now call the constructor with zero, one, or two arguments:
 
 --------------------------------------------------------------------------------
 Point point = new Point();
@@ -106,11 +118,11 @@ Point point = new Point();
 point.x; // 0
 point.y; // 0
 
-point = new Point(x : 3);
+point = new Point(x: 3);
 point.x; // 3
 point.y; // 0
 
-point = new Point(x : 3, y : 4);
+point = new Point(x: 3, y: 4);
 point.x; // 3
 point.y; // 4
 --------------------------------------------------------------------------------
@@ -120,7 +132,7 @@ point.y; // 4
 
 ==== Problem
 
-You want to implement multiple constuctors for a class.
+You want to define multiple constuctors for a class.
 
 ==== Solution
 
@@ -129,7 +141,7 @@ Give these constructors descriptive names that make their purpose clear to
 users of your class.
 
 The example below shows a class with a standard constructor (with the same
-name as the class), and two named constructors:
+name as the class) and two named constructors:
 
 --------------------------------------------------------------------------------
 class Point {
@@ -152,7 +164,7 @@ class Point {
 }
 --------------------------------------------------------------------------------
 
-You can use named constructors with the new keyword:
+You can use named constructors with the `new` keyword:
 
 --------------------------------------------------------------------------------
 Point point = new Point.zero();
@@ -174,15 +186,13 @@ Assign value to the field marked final using an initializer list:
 --------------------------------------------------------------------------------
 class Book {
   final String ISBN;
-  Book(String ISBN) : ISBN = ISBN {}
+  Book(String ISBN): ISBN = ISBN {}
 }
 --------------------------------------------------------------------------------
 
 The initializer list runs before the body of the constructor.
 
-
-The following syntax provides a handy shortcut that you can use to initialize
-final fields:
+You can use the following syntax to set fields, even for final fields:
 
 --------------------------------------------------------------------------------
 class Book {
@@ -198,19 +208,19 @@ You cannot assign value to a final field within the body of the constructor.
 
 ==== Problem
 
-You want to define a constructor that generates a compile time constant.
+You want to define a constructor that generates a compile-time constant.
 
 ==== Solution
 
 Dart allows you to make a constructor const, but places the following
 restrictions:
 
-* A const constructor cannot have a body
+* A const constructor cannot have a body.
 * All the fields of the class must be declared final. This means that they
 get assigned values once, and cannot be changed after that.
-* The constructor initializer list must contain only compile time constants as
+* The constructor initializer list must contain only compile-time constants as
 values.
-* A const constructor must be explicitly prefixed with the `const` keyword/
+* A const constructor must be explicitly prefixed with the `const` keyword.
 
 Here is an example:
 
@@ -219,15 +229,14 @@ class Point {
   final int x;
   final int y;
   const Point(this.x, this.y);
-  const Point.zero() : x = 0, y = 0;
+  const Point.zero(): x = 0, y = 0;
 
-  // Non-const: initializer list has to contain non-constants.
+  // Non-const: initializer list contains non-constants.
   Point.fromOther(Point other): x = other.x, y = other.y;
 }
 --------------------------------------------------------------------------------
 
-There are restrictions on inovking a `const` constructor as well. In order to
-create a compile-time constant, you must replace the `new` with `const` in the
+Code that creates a compile-time constant uses `const` instead of `new` in the
 constructor invocation:
 
 --------------------------------------------------------------------------------
@@ -237,14 +246,14 @@ point0 == point1;          // true
 identical(point0, point1); // true
 --------------------------------------------------------------------------------
 
-There is no error if you use `new` instead of `const`, but the object created
-is not a compile-time constant. This means that if you wish, you can use a const
-constructor to create non-const objects.
+Using `new` instead of `const` creates a valid object, but that object is not
+a compile-time constant:
 
 --------------------------------------------------------------------------------
-Point point3 = new Point.zero();
-Point point4 = new Point(0, 0);
-point3 == point4; // false
+Point point3 = new Point.zero(); // not const
+Point point4 = new Point(0, 0);  // not const
+point3 == point4;                // false
+identical(point0, point1);       // false
 --------------------------------------------------------------------------------
 
 
@@ -252,17 +261,13 @@ point3 == point4; // false
 
 ==== Problem
 
-You have defined an abstract class that you want others to implement.  But
-sometimes a particular implementation of the class makes so much sense
-that you would like to provide that as a default. You want to know how to do
-that.
+You have defined an abstract class that you want others to implement, but
+you'd also like to provide a default implementation of the class.
 
 ==== Solution
 
-Use a factory constructor to give your abstract class a default
-implementation. A factory constructor is defined using the `factory` keyword
-and is responsible for creating and returning a valid object. Here is an
-example:
+Use a factory constructor to give your abstract class a default implementation.
+Define the factory constructor using the `factory` keyword. Here is an example:
 
 --------------------------------------------------------------------------------
 abstract class Book {
@@ -310,7 +315,7 @@ Use a factory constuctor that examines the contents of a cache for an object
 matching a description. If the matching object is found, the constructor returns
 that object. If it isn't found, the constructor creates a new object.
 
-Here is an example of class that implements a factory constructor:
+Here is an example of class that implements a caching factory constructor:
 
 --------------------------------------------------------------------------------
 class GamePiece {
@@ -320,28 +325,24 @@ class GamePiece {
 
   factory GamePiece(String pieceName) {
     GamePiece piece = _cache[pieceName];
-    if (piece != null) {
-      return piece;
-    } else {
+    if (piece == null) {
       piece = new GamePiece._create(pieceName);
       _cache[pieceName] = piece;
-      return piece;
     }
+    return piece;
   }
 }
 --------------------------------------------------------------------------------
-
-You can invoke a factory constructor like any other constructor:
-
-GamePiece piece1 = new GamePiece('monster');
-GamePiece piece2 = new GamePiece('monster');
 
 Calling this factory constructor with the same string argument returns the same
 object:
 
 --------------------------------------------------------------------------------
+GamePiece piece1 = new GamePiece('monster');
+GamePiece piece2 = new GamePiece('monster');
 identical(piece1, piece2); // true
 --------------------------------------------------------------------------------
+
 
 === Implementing a redirecting constructor
 
@@ -364,15 +365,15 @@ class Rectangle {
   Rectangle(this.length, this.width);
 
   // Redirecting constructors.
-  Rectangle.square(num side) : this(side, side);
-  Rectangle.defaultSize() : this(DEFAULT_SIZE, DEFAULT_SIZE);
+  Rectangle.square(num side): this(side, side);
+  Rectangle.defaultSize(): this(DEFAULT_SIZE, DEFAULT_SIZE);
 
   String toString() => '${this.length}, ${this.width}';
 }
 --------------------------------------------------------------------------------
 
-A redirecting constructor is an implementation detail, and you can use such a
-constructor like any other:
+A redirecting constructor is an implementation detail, and using one if just
+like using any other constructor:
 
 --------------------------------------------------------------------------------
 var rect = new Rectangle(3, 4);
@@ -390,7 +391,16 @@ defaultRect.toString(); // '4, 4'
 
 ==== Problem
 
-You defined a field in a class:
+You API has evolved and there's no reason to use a field from the original API.
+Yet, you don't want to break backwards compatibility. What should you do?
+
+==== Solution
+
+Replace the original field with a getter and setter.
+
+==== Discussion
+
+Consider the `osBoardLoaded` field that you defined in a class:
 
 --------------------------------------------------------------------------------
 class Game {
@@ -403,12 +413,12 @@ something else:
 
 --------------------------------------------------------------------------------
 class Game {
-  bool isBoardLoaded = false;
+  bool isBoardLoaded = false; // No longer needed.
   Board board;
 }
 
 class Board {
-  bool isLoaded = false;
+  bool isLoaded = false;     // Board has an isLoaded field now.
   bool hasAllPieces = true;
   // ...
 }
@@ -417,42 +427,39 @@ class Board {
 There is no longer any reason to use the original field:
 
 --------------------------------------------------------------------------------
-// The old way.
 game.isBoardLoaded;
-
-// The new way.
-game.board.isLoaded;     // false
-game.board.hasAllPieces; // true
 --------------------------------------------------------------------------------
 
-You don't want to remove the original field because a lot of existing code
-depends on it, and you don't want to break backwards compatibility.
+Instead, you can use `board`'s newly defined `isLoaded` field to check if the
+board is loaded:
 
-What should you do?
+--------------------------------------------------------------------------------
+game.board.isLoaded;
+--------------------------------------------------------------------------------
 
-==== Solution
+Defining a getter and a setter for `isBoardLoaded` alllows your API to
+continue supporting that field:
 
-Replace the original field with a getter and setter:
 
 --------------------------------------------------------------------------------
 class Game {
   Board board;
 
-  bool get isLoaded => board.isLoaded;
+  bool get isBoardLoaded => board.isLoaded;
 
-  void set isLoaded(bool isLoaded) {
+  void set isBoardLoaded(bool isLoaded) {
     board.isLoaded = isLoaded;
   }
 }
 --------------------------------------------------------------------------------
 
-This way, clients of your class will not be exposed to implementation changes,
-and they can continue to use your class as before:
+Clients of your class are not exposed to implementation changes, and they can
+continue to use your class as before:
 
 --------------------------------------------------------------------------------
 var game = new Game();
 game.board = new Board();
-game.isBoardLoaded; // false
+game.isBoardLoaded;
 --------------------------------------------------------------------------------
 
 
@@ -465,24 +472,33 @@ You want to extend a class and want to invoke the constructor of the superclass.
 ==== Solution
 
 Specify the superclass constructor right before the constructor body using the
-`super` keyword:
+`super` keyword.
+
+==== Disucssion
+
+Assume you have defined the following class:
 
 --------------------------------------------------------------------------------
 class Person {
   String name;
   Person(this.name);
 }
+--------------------------------------------------------------------------------
 
+You want to extend this class and want to invoke the constructor defined in
+the superclass. You can do so using the `super` keyword. Here is an example:
+
+--------------------------------------------------------------------------------
 class Employee extends Person {
   String employeeID;
 
-  Employee(name, employeeID) : super(name) {
+  Employee(name, employeeID): super(name) {
     this.employeeID = employeeID;
   }
 }
 --------------------------------------------------------------------------------
 
-You can call a named superclass constructor in the same way:
+If the superclass defines a named constructor, you can use `super` to it:
 
 --------------------------------------------------------------------------------
 class Item {
@@ -493,22 +509,27 @@ class Item {
 
 class Widget extends Item {
   String sku;
-  Widget(name, this.sku) : super.named(name);
+  Widget(name, this.sku): super.named(name);
 }
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------e
 
 
-=== Calling static members from a superclass
+=== Calling static members defined in a superclass
 
 ==== Problem
 
-You want to invoke a static member of a superclass, and using super results in
-an error.
+You want to invoke a static member that was defined in a class that your class
+directly or indirectly inherits from.
 
 ==== Solution
 
-Static members do not inherit in Dart. If you want to use them outside of
-their declaring class, you must prefix them with their class name:
+Prefix the static member with the name of the class where it was defined.
+Don't use `super`.
+
+==== Discussion
+
+Here is an example where a static method defined in a superclass is invoked in
+the class that extends it:
 
 --------------------------------------------------------------------------------
 abstract class Parent {
@@ -520,12 +541,14 @@ class Child extends Parent {
 }
 
 void main() {
-  Child child = new Child();
-  print(child.getTheAnswer());
+  print(new Child().getTheAnswer()); // 42
 }
 --------------------------------------------------------------------------------
 
-Don't do this:
+Since static members do not inherit in Dart, you canot use `super` to invoke a
+static member in the ancestral heirarchy of a class. The following code, where
+`Parent.getAnswer()` is changed to `super.getAnswer()`, generates a
+`NoSuchMethodError`:
 
 --------------------------------------------------------------------------------
 // DON'T DO THIS.
@@ -533,6 +556,10 @@ class Child extends Parent {
   String getTheAnswer() => "The answer is: ${super.theAnswer()}";
 }
 --------------------------------------------------------------------------------
+
+Using `super.theAnswer()` looks for an _instance_ method named `theAnswer()`,
+and
+in the ancestoral heirarchy of the
 
 
 === Handling calls to NoSuchMethod
@@ -589,7 +616,7 @@ obj[name] notation:
 import 'dart:json';
 
 void main() {
-  var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+  var jsonPerson = '{"name": "joe", "date": [2013, 3, 10]}';
   var person = parse(jsonPerson);
   print(person['name']);  // 'joe'
   print(person['date']);  // [2013, 3, 10]
@@ -671,7 +698,7 @@ positional and named arguments.
 You can use the class defined above in this manner:
 
 --------------------------------------------------------------------------------
-var jsonPerson = '{"name" : "joe", "date" : [2013, 3, 10]}';
+var jsonPerson = '{"name": "joe", "date": [2013, 3, 10]}';
 var person = new JsonWithAccessors(jsonPerson);
 person.name;          // 'joe'
 person.name = 'mark';
@@ -721,7 +748,6 @@ class Dog extends Animal {}
 new Dog() is Animal; // true
 new Dog() is Object; // true, Animal implicitly extends Object
 --------------------------------------------------------------------------------
-
 
 It is a common pattern to test the type of an object, and then use an
 expresson involving that object. For example:
