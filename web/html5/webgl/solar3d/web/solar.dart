@@ -480,7 +480,6 @@ class PlanetaryBody {
 
   void drawSelf(WebGL.RenderingContext context, double x, double y, double px, double py) {
     application.textureManager.bind(texture);
-    // TODO: Is this correct?
     var T = new Matrix4.translationValues(x.toDouble(), height, y.toDouble());
     position.x = x.toDouble();
     position.y = height;
@@ -494,7 +493,6 @@ class PlanetaryBody {
     SphereModel.render(context);
     application.orbitPath.preRender();
     application.orbitPath.render(orbitRadius,
-        // TODO: John, is this correct?
         new Vector3(px.toDouble(), height, py.toDouble()),
         new Vector4(1.0, 1.0, 0.8, 1.0));
   }

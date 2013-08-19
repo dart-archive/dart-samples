@@ -48,8 +48,7 @@ class Camera {
   }
 
   Matrix4 get lookAtMatrix {
-    // John: where does this come from? fps?
-    return makeLookAt(eyePosition, lookAtPosition, upDirection);
+    return makeViewMatrix(eyePosition, lookAtPosition, upDirection);
   }
 
   void copyProjectionMatrixIntoArray(Float32List pm) {
@@ -58,12 +57,12 @@ class Camera {
   }
 
   void copyViewMatrixIntoArray(Float32List vm) {
-    var m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+    var m = makeViewMatrix(eyePosition, lookAtPosition, upDirection);
     m.copyIntoArray(vm);
   }
 
   void copyNormalMatrixIntoArray(Float32List nm) {
-    var m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+    var m = makeViewMatrix(eyePosition, lookAtPosition, upDirection);
     m.copyIntoArray(nm);
   }
 
@@ -73,12 +72,12 @@ class Camera {
   }
 
   void copyViewMatrix(Matrix4 vm) {
-    var m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+    var m = makeViewMatrix(eyePosition, lookAtPosition, upDirection);
     m.copyInto(vm);
   }
 
   void copyNormalMatrix(Matrix4 nm) {
-    var m = makeLookAt(eyePosition, lookAtPosition, upDirection);
+    var m = makeViewMatrix(eyePosition, lookAtPosition, upDirection);
     m.copyInto(nm);
   }
 

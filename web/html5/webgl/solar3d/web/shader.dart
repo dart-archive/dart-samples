@@ -38,7 +38,6 @@ class Shader {
   }
 
   void dumpUniforms(WebGL.RenderingContext gl) {
-    // John: final var looks wrong. Leaving this as is.
     final int numUniforms = gl.getProgramParameter(program,
                                  WebGL.RenderingContext.ACTIVE_UNIFORMS);
     printLog('Dumping active uniforms:');

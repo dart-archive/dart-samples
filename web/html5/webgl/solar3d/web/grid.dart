@@ -117,8 +117,7 @@ class Grid {
 
     numVertices = vertexBufferData.length~/7;
     gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
-    // John: this wants an int as the second arg
-    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
+    gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
                      new Float32List.fromList(vertexBufferData),
                      WebGL.RenderingContext.STATIC_DRAW);
   }

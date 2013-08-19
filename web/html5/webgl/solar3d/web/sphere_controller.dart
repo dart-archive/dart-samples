@@ -19,7 +19,6 @@ class MouseSphereCameraController {
   final Vector3 _origin = new Vector3.zero();
 
   set origin(Vector3 o) {
-    // John: is this correct?
     _origin.setFrom(o);
   }
 
@@ -78,6 +77,6 @@ class MouseSphereCameraController {
     var x = radius * sinSideAngle * cosUpAngle;
     var y = radius * cosSideAngle;
     var z = radius * sinSideAngle * sinUpAngle;
-    cam.eyePosition = cam.lookAtPosition + new vec3.raw(x,y,z);
+    cam.eyePosition = cam.lookAtPosition + new Vector3(x,y,z);
   }
 }

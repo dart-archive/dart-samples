@@ -110,8 +110,7 @@ class Skybox {
                   WebGL.RenderingContext.STATIC_DRAW);
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    // John: this wants an int as the second argument.
-    gl.bufferData(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
+    gl.bufferDataTyped(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
                   new Uint16List.fromList(indices),
                   WebGL.RenderingContext.STATIC_DRAW);
     _vertexCount = indices.length;
@@ -189,8 +188,7 @@ class Skybox {
 
   void render(Camera camera) {
     var P = camera.projectionMatrix;
-    // John: where is makeLookAt defined?
-    var LA = makeLookAt(new Vector3.zero(),
+    var LA = makeViewMatrix(new Vector3.zero(),
                          camera.frontDirection,
                          new Vector3(0.0, 1.0, 0.0));
     P.multiply(LA);
