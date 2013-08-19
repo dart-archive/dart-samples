@@ -210,7 +210,7 @@ class Solar3DApplication {
     document.onFullscreenChange.listen(fullscreenChange);
   }
 
-  double renderTime;
+  num renderTime;
 
   void update(double time) {
     var t = new DateTime.now().millisecondsSinceEpoch;
@@ -253,7 +253,7 @@ class Solar3DApplication {
 
 Solar3DApplication application = new Solar3DApplication();
 
-double fpsAverage;
+num fpsAverage;
 
 final bool VERBOSE = false;
 

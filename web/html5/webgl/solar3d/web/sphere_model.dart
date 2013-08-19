@@ -24,7 +24,7 @@ class SphereModel {
     var indexArray = new Uint16List.fromList(indexList);
     // Upload index array to WebGL. index buffer
     // Usage tagged as static because it will never change.
-    gl.bufferData(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
+    gl.bufferDataTyped(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
                   indexArray,
                   WebGL.RenderingContext.STATIC_DRAW);
     _vertexCount = indexList.length;
@@ -37,7 +37,7 @@ class SphereModel {
     var vertexArray = new Float32List.fromList(vertexList);
     // Upload vertex array to WebGL. vertex buffer
     // Usage tagged as static because it will never change.
-    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
+    gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
                   vertexArray,
                   WebGL.RenderingContext.STATIC_DRAW);
   }

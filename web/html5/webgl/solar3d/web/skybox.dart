@@ -105,7 +105,7 @@ class Skybox {
 
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
+    gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
                   vertexData,
                   WebGL.RenderingContext.STATIC_DRAW);
     indexBuffer = gl.createBuffer();

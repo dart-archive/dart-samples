@@ -92,7 +92,7 @@ class OrbitPath {
     var vertexData = new Float32List.fromList(vertexPositions);
     _vertexBuffer = _gl.createBuffer();
     _gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, _vertexBuffer);
-    _gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
+    _gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
                    vertexData,
                    WebGL.RenderingContext.STATIC_DRAW);
     _vertexCount = vertexPositions.length ~/ 3;
