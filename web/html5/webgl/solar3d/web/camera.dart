@@ -18,7 +18,9 @@ class Camera {
     lookAtPosition = new Vector3(1.0, 2.0, -1.0);
     upDirection = new Vector3(0.0, 1.0, 0.0);
 
-    //fOV = 0.785398163; // 90 degrees
+    // Note: this was originally set to 0.785398163 (90 degrees).  Different
+    // settings of fOV produce different visual results. Neither number is
+    // incorrect.
     fOV = 0.35;
     zNear = 1.0;
     zFar = 1000.0;
