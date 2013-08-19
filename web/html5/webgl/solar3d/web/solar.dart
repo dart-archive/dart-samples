@@ -210,7 +210,7 @@ class Solar3DApplication {
     document.onFullscreenChange.listen(fullscreenChange);
   }
 
-  num renderTime;
+  double renderTime;
 
   void update(double time) {
     var t = new DateTime.now().millisecondsSinceEpoch;
@@ -219,7 +219,7 @@ class Solar3DApplication {
       showFps((1000 / (t - renderTime)).round());
     }
 
-    renderTime = t;
+    renderTime = t.toDouble();
 
     glContext.viewport(0, 0, width, height);
     glContext.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -253,16 +253,16 @@ class Solar3DApplication {
 
 Solar3DApplication application = new Solar3DApplication();
 
-num fpsAverage;
+double fpsAverage;
 
 final bool VERBOSE = false;
 
 /**
  * Display the animation's FPS in a div.
  */
-void showFps(num fps) {
+void showFps(int fps) {
   if (fpsAverage == null) {
-    fpsAverage = fps;
+    fpsAverage = fps.toDouble();
   }
 
   fpsAverage = fps * 0.05 + fpsAverage * 0.95;

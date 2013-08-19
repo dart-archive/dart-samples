@@ -53,7 +53,7 @@ class PlanetShader {
     gl.uniformMatrix4fv(objectTransformLocation, false, _objectTransform);
   }
 
-  set objectScale(num m) {
+  set objectScale(double m) {
     _objectScale[0] = m;
     _objectScale[1] = m;
     _objectScale[2] = m;

@@ -8,10 +8,10 @@ class Camera {
   Vector3 eyePosition;
   Vector3 upDirection;
   Vector3 lookAtPosition;
-  num zNear;
-  num zFar;
-  num aspectRatio;
-  num fOV;
+  double zNear;
+  double zFar;
+  double aspectRatio;
+  double fOV;
 
   Camera() {
     eyePosition = new Vector3(0.0, 2.0, 0.0);
@@ -29,14 +29,14 @@ class Camera {
     return '$eyePosition -> $lookAtPosition';
   }
 
-  num get yaw {
+  double get yaw {
     var z = new Vector3(0.0, 0.0, 1.0);
     var forward = frontDirection;
     forward.normalize();
     return degrees(Math.acos(forward.dot(z)));
   }
 
-  num get pitch {
+  double get pitch {
     var y = new Vector3(0.0, 1.0, 0.0);
     var forward = frontDirection;
     forward.normalize();
