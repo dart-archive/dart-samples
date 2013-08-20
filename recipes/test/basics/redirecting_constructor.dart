@@ -11,6 +11,15 @@ class Rectangle {
   String toString() => '${this.length}, ${this.width}';
 }
 
+class A {
+  int x;
+  A(x) {
+    this.x = x;
+    print('in A');
+  }
+}
+
+
 void main() {
   test('redirecting constructor', () {
     var rect = new Rectangle(3, 4);

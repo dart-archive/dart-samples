@@ -39,5 +39,9 @@ void main() {
     expect(mike.hashCode == michael.hashCode, isTrue);
     expect(identical(mike, michael), isFalse);
 
+    var mikey = mike;
+    expect(identical(mikey, mike), isTrue);
+    expect(mikey == mike, isTrue);
+
   });
 }

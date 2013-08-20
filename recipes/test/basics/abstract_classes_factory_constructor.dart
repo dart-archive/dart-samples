@@ -19,4 +19,7 @@ void main() {
       expect(book is _Book, isTrue);
     });
   });
+
+  var list = new List();
+  print(list.runtimeType);
 }

@@ -3,6 +3,16 @@ import 'dart:mirrors';
 import 'dart:json';
 
 
+class Book {
+  final String ISBN;
+  Book(String ISBN) : ISBN = ISBN {}
+}
+
+class Tool {
+  final String brand;
+  Tool([brand = 'Makita']) : brand = brand;
+}
+
 // Getters and Setters
 class Rectangle {
   num left;
@@ -52,6 +62,12 @@ class Point {
   Point([this.x = 0, this.y = 0]);
 }
 
+class Point2 {
+  double x = 0.0;
+  double y = 0.0;
+}
+
+
 class PointWithNamedDefaults {
   num x, y;
   PointWithNamedDefaults({this.x: 0, this.y: 0});
@@ -77,15 +93,16 @@ class PointWithNamedConstructor {
 // Examples for calling super.
 class Person {
   String name;
-  Person(this.name);
+  Person(this.name) {print('Person');}
 }
 
 class Employee extends Person {
   String employeeID;
 
-  Employee(name, employeeID) : super(name) {
-    this.employeeID = employeeID;
+  Employee(name, this.employeeID) : super(name) {
+    print('Employee');
   }
+
   String toString() => '$name, $employeeID';
 }
 
@@ -100,16 +117,6 @@ class Widget extends Item {
   Widget(name, this.sku) : super.named(name);
 }
 
-// Example for initializing final fields.
-class Book {
-  final String ISBN;
-  Book(this.ISBN);
-}
-
-class Tool {
-  final String brand;
-  Tool([brand = 'Makita']) : brand = brand;
-}
 
 // NoSuchMethod
 class JsonWithAccessors {
@@ -183,23 +190,18 @@ class GamePiece {
 
 void main() {
   group('named constructor', () {
-    test('', () {
+    test('identical pieces', () {
       GamePiece piece1 = new GamePiece('monster');
       GamePiece piece2 = new GamePiece('monster');
       expect(identical(piece1, piece2), isTrue);
     });
-  });
 
-//  class Book {
-//    final String ISBN;
-//    Book(String ISBN) : ISBN = ISBN {}
-//  }
-//
-//
-//  class Tool {
-//    final String brand;
-//    Tool([brand = 'Makita']) : brand = brand;
-//  }
+    test('different pieces', () {
+      GamePiece piece1 = new GamePiece('monster');
+      GamePiece piece2 = new GamePiece('angel');
+      expect(identical(piece1, piece2), isFalse);
+    });
+  });
 
   group('final field', () {
     test('', () {
@@ -235,6 +237,14 @@ void main() {
   });
 
   group('Point2', () {
+    test('', () {
+      Point2 point = new Point2();
+      expect(point.x, equals(0.0));
+      expect(point.y, equals(0.0));
+    });
+  });
+
+  group('PointWithNamedDefaults', () {
     test('default x and y', () {
       PointWithNamedDefaults point = new PointWithNamedDefaults();
       expect(point.x, equals(0));
