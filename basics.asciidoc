@@ -708,7 +708,7 @@ class Widget extends Item {
   String sku;
   Widget(name, this.sku): super.named(name);
 }
--------------------------------------------------------------------------------e
+--------------------------------------------------------------------------------
 
 
 === Calling static members defined in a superclass
