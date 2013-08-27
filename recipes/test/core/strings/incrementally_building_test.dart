@@ -2,12 +2,12 @@ library incrementally_building;
 
 import 'package:unittest/unittest.dart';
 
-var data = [{'scheme': 'https', 'domain': 'news.ycombinator.com'}, 
-            {'domain': 'www.google.com'}, 
+var data = [{'scheme': 'https', 'domain': 'news.ycombinator.com'},
+            {'domain': 'www.google.com'},
             {'domain': 'reddit.com', 'path': 'search', 'params': 'q=dart'}
             ];
 
-String assembleUrlsUsingStringBuffer(data) {
+String assembleUrisUsingStringBuffer(data) {
   StringBuffer sb = new StringBuffer();
   for (final item in data) {
     sb.write(item['scheme'] != null ? item['scheme']  : 'http');
@@ -24,28 +24,28 @@ String assembleUrlsUsingStringBuffer(data) {
   return sb.toString();
 }
 
-String assembleUrlsUsingConcatenation(data) {
-  var urls = '';
+String assembleUrisUsingConcatenation(data) {
+  var uris = '';
   for (final item in data) {
-    urls += item['scheme'] != null ? item['scheme']  : 'http';
-    urls += "://";
-    urls += item['domain'];
-    urls += '/';
-    urls += item['path'] != null ? item['path']  : '';
+    uris += item['scheme'] != null ? item['scheme']  : 'http';
+    uris += "://";
+    uris += item['domain'];
+    uris += '/';
+    uris += item['path'] != null ? item['path']  : '';
     if (item['params'] != null) {
-      urls += '?';
-      urls += item['params'];
+      uris += '?';
+      uris += item['params'];
     }
-    urls += '\n';
+    uris += '\n';
   }
-  return urls;
+  return uris;
 }
 
 void main() {
   group('incrementally building a string', () {
     group('using a StringBuffer', () {
       test('using write()', () {
-        expect(assembleUrlsUsingStringBuffer(data), equals('''https://news.ycombinator.com/
+        expect(assembleUrisUsingStringBuffer(data), equals('''https://news.ycombinator.com/
 http://www.google.com/
 http://reddit.com/search?q=dart
 '''));
@@ -58,10 +58,10 @@ http://reddit.com/search?q=dart
         expect(sb.toString(), equals('The Beatles:\nJohn, Paul, George, and Ringo!'));
       });
     });
-    
+
     group('using concatenation', () {
-      test('', () {  
-        expect(assembleUrlsUsingConcatenation(data), equals('''https://news.ycombinator.com/
+      test('', () {
+        expect(assembleUrisUsingConcatenation(data), equals('''https://news.ycombinator.com/
 http://www.google.com/
 http://reddit.com/search?q=dart
 '''));
