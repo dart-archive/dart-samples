@@ -18,6 +18,7 @@ import 'finding_regexp_matches_test.dart' as finding_regexp_matches_test;
 import 'substituting_strings_test.dart' as substituting_strings_test;
 import 'processing_a_string_one_character_test.dart' as processing_a_string_one_character_test;
 import 'handling_extended_characters_test.dart' as handling_extended_characters_test;
+import 'using_raw_strings_test.dart' as  using_raw_strings_test;
 
 void main() {  
   concatenating_strings_test.main();
@@ -36,4 +37,5 @@ void main() {
   finding_regexp_matches_test.main(); 
   substituting_strings_test.main();
   handling_extended_characters_test.main();
+  using_raw_strings_test.main();
 }

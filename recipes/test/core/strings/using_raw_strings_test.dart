@@ -2,23 +2,38 @@ library using_raw_strings_test;
 
 import 'package:unittest/unittest.dart';
 
+print(obj) => obj;
+
 void main() {
-  var x = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
-  var y = "\u0061sdf";
-  var z = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
-  print(x == z);
-  print(identical(x, z));
-  print("$x, $z");
-  return;
+  group("using raw string", () {
+    test('escaping special characters', () {
+      var subsetSymbol = '\u2282';
+      expect('A ⊂ B can be written as ' + r'A \u2282 B', equals(
+          'A ⊂ B can be written as A \\u2282 B'));
+
+      expect(print(r'Wile \E Coyote'), equals(r'Wile \E Coyote'));
+      
+      var superGenius = 'Wile Coyote';                                                     
+      expect(print(r'$superGenius and Road Runner'), equals(r'$superGenius and Road Runner'));               
+    });
+    
+    test('escaping interpolation', () {
+      expect('A ⊂ B can be written as ' + r'A $subsetSymbol B', equals(
+          'A ⊂ B can be written as A \$subsetSymbol B'));
+    });
+    
+    group('in a regExp', () {
+      var nums = '+10, 30, -4';
+      var regExp = new RegExp('(\\+|-)?\\d+');
+      var rawStringRegExp = new RegExp(r'(\+|-)?\d+');
+      
+      var matches = regExp.allMatches(nums);
+      expect(print(matches.map((match) => match.group(0)).toList()), 
+          equals(['+10', '30', '-4']));
   
-  var string = '+1,';
-  var r = r'(\+|-)?\d+';
-  var r2 = '(\+|-)?\d+';
-  print("r = $r");
-  print("r2 = $r2");
-  print('When properly escaped: ' r'(\\+|-)?\\d+');
-  var regExp = new RegExp(r);
-  
-  print(regExp.firstMatch(string).group(0));
-  print(3.0 == 3.0000);
+      matches = rawStringRegExp.allMatches(nums);
+      expect(print(matches.map((match) => match.group(0)).toList()), 
+          equals(['+10', '30', '-4']));
+    });
+  });
 }
