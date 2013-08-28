@@ -2,79 +2,50 @@
 :author: Shailen Tuli
 :encoding: UTF-8
 
-== Strings
 
-A Dart string is a sequence of UTF-16 code units, just like JavaScript.
+A Dart string is a sequence of UTF-16 code units.  This makes Dart strings
+compatible with Javascript.
 
 A string can be either single or multiline. Single line strings are written
 using matching single or double quotes, and mutliline strings are written using
 triple quotes. These are all valid Dart strings:
 
---------------------------------------------------------------------------------
-'You can use single quotes';
-"You can use double quotes";
-'Single quotes and "double" quotes';
+EXAMPLE
 
-'''This
-is a
-string''';
-
-"""
-And
-so is
-this""";
---------------------------------------------------------------------------------
+## Special characters and raw strings
+## Interpolation
 
 Most classes dealing with strings, like String, RegExp, and StringBuffer, are
 part of the dart:core library. This library is automatically available to any
-Dart program and does not need to be explicitly imported.  The String class
-provides constructors and members for creating strings and performing common
-string operations. The StringBuffer class provides a way for concatenating
-strings efficiently, and the RegExp class provides support for working with
-regular expressions.
+Dart program and does not have to be specifically imported.  The String class
+provides constructors and members for creating and operating on strings. The
+StringBuffer class provides a way for concatenating strings efficiently, and
+the RegExp class provides support for working with regular expressions.
 
 Dart strings are immutable. This means that once you create a string, you cannot
 change it. But you can always perform an operation on a string and assign the
-result to a new string:
+results to a new string:
 
---------------------------------------------------------------------------------
-var greeting = 'hello';
-var shouted =  greeting.toUpperCase();
-print(shouted); // prints 'HELLO'
---------------------------------------------------------------------------------
+EXAMPLE
 
 String literals are canonicalized in Dart. This is an optimization where two
 strings made of the same characters in the same order are not only equal, but
 the same object:
 
---------------------------------------------------------------------------------
-var opinion = 'Dart is fun!';
-var fact = 'Dart is fun!';
-fact == opinion;          // true
-identical(fact, opinion); // true (they are the same object)
---------------------------------------------------------------------------------
+EXAMPLE
 
 Dart strings support the full Unicode range. All encoding and decoding is done
-by the browser or dart:io library, so you don't have to deal with UTF-16,
-Latin 1, KOI-8 etc.
+by the browser or IO library, so you don't have to deal with UTF-16, Latin 1,
+KOI-8 etc.
 
-Most strings are stored as two-byte (16-bit) code sequences. Using two bytes
-covers the first 65,536 Unicode characters, and these include just about every
-alphabetic system in use in the world. Extended characters that require
-more than two bytes can be stored using a pair of strings. These are commonly
-referred to as a 'surrogate pair', and they have semantic meaning only when
-used together. The String class provides methods and properties to work
-with such extended characters.
 
-Dart has no char type, but an indexing operation on a string yields a
-one-character string:
 
---------------------------------------------------------------------------------
-'Dart'[0]; // 'D'
---------------------------------------------------------------------------------
 
-The String class cannot be extended or implemented.
+There is no char type in Dart, but an indexing operation on a string yields a
+one-character string.
 
+
+== Strings
 
 === Concatenating strings
 
