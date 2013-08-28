@@ -130,8 +130,7 @@ xref:string-interpolation[Interpolating expressions inside strings]
 
 If you want to incrementally build a longish string from its parts, a
 StringBuffer works more efficiently than string concatenation. See
-xref:string-buffer[Incrementally building a string efficiently using a
-StringBuffer].
+xref:string-buffer[Incrementally building a string efficiently using a StringBuffer].
 
 <<string-interpolation>>
 === Interpolating expressions inside strings
@@ -218,6 +217,7 @@ output:
 'Point: x: 3, y: 4'
 --------------------------------------------------------------------------------
 
+
 <<special-characters>>
 === Handling special characters within strings
 
@@ -290,6 +290,7 @@ If you escape a non-special character, the `\` is ignored:
 --------------------------------------------------------------------------------
 'Wile \E Coyote'; // 'Wile E Coyote'
 --------------------------------------------------------------------------------
+
 
 ====== Raw strings and special characters
 
@@ -514,6 +515,7 @@ chickenKebab.toUpperCase();  // 'चिकन कबाब'
 If a character's case does not change when using `toUpperCase()` and
 `toLowerCase()`, it is most likely because the character only has one form.
 
+
 <<extended-characters>>
 === Handling extended characters that are composed of multiple code units
 
@@ -616,6 +618,7 @@ See the
 xref:calculating-length[Calculating the length of a string] recipe for a
 discussion on how to calculate the length of a string that may contain extended
 characters.
+
 
 <<characters-and-numerical-codes>>
 === Converting between characters and numerical codes
@@ -1029,7 +1032,7 @@ If you want to replace just the first match, use `replaceFirst()`:
 
 --------------------------------------------------------------------------------
 '0.0001'.replaceFirst(new RegExp(r'0+'), ''); // '.0001'
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 The regular expression defined above matches one or more occurences of '0'.
 Using `replaceFirst()` replaces the leading '0' with an empty string.
