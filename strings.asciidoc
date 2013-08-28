@@ -610,7 +610,7 @@ units and members that expose them. Instead, work on rune boundaries when
 possible.
 
 See the
-xref:characters-and-numerical-codes[Converting between characters and numerical codes])
+xref:numerical-codes[Converting between characters and numerical codes])
 recipe for a discussion on how to convert between numerical codes and strings
 that may contain extended characters.
 
@@ -620,7 +620,7 @@ discussion on how to calculate the length of a string that may contain extended
 characters.
 
 
-<<characters-and-numerical-codes>>
+<<numerical-codes>>
 === Converting between characters and numerical codes
 
 ==== Problem
@@ -709,6 +709,7 @@ recommended.
 
 For a general discussion on working with extended characters, see
 xref:extended-characters[Handling extended characters that are composed of multiple code units].
+
 
 <<calculating-length>>
 === Calculating the length of a string
