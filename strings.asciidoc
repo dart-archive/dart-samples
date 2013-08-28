@@ -4,25 +4,26 @@
 
 == Strings
 
-A Dart string is a sequence of UTF-16 code units, just like JavaScript.
+A Dart string is a sequence of UTF-16 code units.
 
 A string can be either single or multiline. Single line strings are written
 using matching single or double quotes, and mutliline strings are written using
 triple quotes. These are all valid Dart strings:
 
 --------------------------------------------------------------------------------
-'You can use single quotes';
-"You can use double quotes";
-'Single quotes and "double" quotes';
+'Single quotes';
+"Double quotes";
+'Double quotes in "single" quotes';
+"Single quotes in 'double' quotes";
 
-'''This
-is a
+'''A
+multiline
 string''';
 
 """
-And
-so is
-this""";
+Another
+multiline
+string""";
 --------------------------------------------------------------------------------
 
 Most classes dealing with strings, like String, RegExp, and StringBuffer, are
@@ -49,9 +50,9 @@ the same object:
 
 --------------------------------------------------------------------------------
 var opinion = 'Dart is fun!';
-var fact = 'Dart is fun!';
-fact == opinion;          // true
-identical(fact, opinion); // true (they are the same object)
+var fact =    'Dart is fun!';
+fact == opinion;              // true
+identical(fact, opinion);     // true (they are the same object)
 --------------------------------------------------------------------------------
 
 Dart strings support the full Unicode range. All encoding and decoding is done
@@ -926,45 +927,48 @@ var regExp = new RegExp(r'(\+|-)?\d[a-z]');
 --------------------------------------------------------------------------------
 
 The regular expression constructed above matches any string that optionally
-begins with a '+' or a '-', and is then followed by exactly one digit and one
-lowercase letter.  Possible matches include '3x', '-4t', '+2y', etc.
+begins with a plus sign (+) or a minus sign (-), and is then followed by
+exactly one digit and then by one lowercase letter.  Possible matches include
+'3x', '-4t', '+2y', etc.
 
 The regular expression is constructed using a raw string (a string prefixed
-with an 'r'). It is common to use raw strings when constructing RegExp objects.
-Characters in a raw string are interpreted literally, with no string
-interpolation or escaping of characters (See
+with the letter 'r'). It is common to use raw strings when constructing RegExp
+objects.  Characters in a raw string are interpreted literally, and escaped
+special characters or the '$' symbol used in string interpolation have no
+special meaning (See
 xref:special-characters[Handling special characters within strings]).
 
-Using a raw string usually simplifies a regular expression. Here is what the
-code above would look like using a non-raw string:
+Using a raw string usually simplifies a regular expression. For example, the
+regular expression shown above would require several escape characters if coded
+using a non-raw string:
 
 --------------------------------------------------------------------------------
 var regExp = new RegExp('(\\+|-)?\\d[a-z]');
 --------------------------------------------------------------------------------
 
-Here is a quick explanation for the need for the all the '\' characters:
+Here is a quick explanation for all the backslashes in the regular expression:
 
-* The '\' immediately preceeding the '+' is needed because the '+' has special
-meaning in regular expressions, and we want to match a literal '+'.
-*The '\' preceeding the '\+' is needed because we want a literal '\' before the
-'+'.
-*The '\' before the 'd' is needed to make the regular expression match a digit
-('\d')
-*The '\' preceeding the '\d' is needed because we want a literal '\' before the
-'d'.
+* A '+' has a special meaning in regular expressions, and preceding it with '\'
+causes it to be interpreted as a literal.
+* The '\' is a special character in Dart strings, and is escaped using another
+'\'.
+* The '\d' makes the regular expression match a digit.
+* The '\' preceding the '\d' is escaped using another '\'.
 
-Using a raw string obviates the need to esacpe the '\' in '\+' and '\d'.
+Using a raw string obviates the need to escape the '\' in '\+' and '\d'.
 
-Here is an example using the regular expression we defined:
+The code below uses the regular expression defined above
+with the stringMatch() method to get a matching substring from
+within a longer string:
 
 --------------------------------------------------------------------------------
-var str = "+3y";
-regExp = new RegExp(r'(\+|-)?\d[a-z]');
-regExp.stringMatch(str)); // '+3y'
+var str = '-3 * -y = +3y';
+var regExp = new RegExp(r'(\+|-)?\d[a-z]');
+regExp.stringMatch(str); // Matches '+3y'.
 --------------------------------------------------------------------------------
 
-The RegExp class provides several methods to get any matches found for a
-regular expression in a string.
+The RegExp class provides several methods to get matches found for a regular
+expression.
 
 To get all matches of a regular expression, use `allMAtches()`:
 
