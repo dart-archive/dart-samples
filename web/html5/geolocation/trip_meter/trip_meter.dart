@@ -5,11 +5,6 @@
 // This is a port of "A Simple Trip Meter Using the Geolocation API" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/geolocation/trip_meter/
 
-// TODO(shailen): window.navigator.geolocation.watchPosition raises an exception
-//                in Chromium. No exception is raised when running the script in
-//                Chrome or Safari.
-// See: http://code.google.com/p/dart/issues/detail?id=5548
-
 import 'dart:html';
 import 'dart:math';
 
