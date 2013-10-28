@@ -23,7 +23,7 @@ num calculateDistance(num lat1, num lon1, num lat2, num lon2) {
 
   // a is the square of half the chord length between the points.
   var a = pow(sin(latDiff / 2), 2) +
-          pow(cos(lat1), 2) *
+          cos(lat1) * cos (lat2) *
           pow(sin(lonDiff / 2), 2);
 
   var angularDistance = 2 * atan2(sqrt(a), sqrt(1 - a));
