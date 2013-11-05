@@ -6,7 +6,6 @@ import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
 import 'package:html5lib/parser.dart' show parse;
-import 'package:html5lib/dom.dart';
 
 Iterable<String> getHtmlPaths() {
   return new Directory('web').listSync(recursive: true, followLinks: false)
@@ -38,8 +37,9 @@ List<String> getDartPaths(htmlPaths) {
   return paths;
 }
 
-void main() {
+void main(List<String> args) {
   var paths = getDartPaths(getHtmlPaths());
+  print(paths);
   addTask('analyze_libs', createAnalyzerTask(paths));
-  runHop();
+  runHop(args);
 }
