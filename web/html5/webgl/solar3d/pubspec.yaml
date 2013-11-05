@@ -1,0 +1,5 @@
+name: solar3d
+description: 3D Solar System visualization using WebGL.
+dependencies:
+  browser: any
+  vector_math: '>=0.9.5'
