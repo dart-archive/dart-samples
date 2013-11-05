@@ -44,7 +44,7 @@ class Monitoring {
     _reader.onAbort.listen((e) => window.alert('File read cancelled.'));
     _reader.onLoadStart.listen((e) => _progressBar.classes.add('loading'));
     _reader.onLoad.listen((e) => _setProgress(100));
-    _reader.readAsBinaryString(file);
+    _reader.readAsText(file);
   }
 
   void _onCancel() {

@@ -6,7 +6,6 @@
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
 import 'dart:html';
-import 'dart:math';
 
 class Slicing {
   InputElement _fileInput;
@@ -55,7 +54,7 @@ class Slicing {
           'Read bytes ${start + 1} - ${end + 1} of ${file.size}.';
     });
     var slice = file.slice(start, end);
-    reader.readAsBinaryString(slice);
+    reader.readAsDataUrl(slice);
   }
 }
 
