@@ -1,3 +1,5 @@
+## Working with RequestAnimationFrame
+
 A port of the example used in the
 [Leaner, Meaner, Faster Animations with requestAnimationFrame](http://www.html5rocks.com/en/tutorials/speed/animations/)
 article by Paul Lewis, originally published on HTML5Rocks.

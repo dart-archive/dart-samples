@@ -1,3 +1,5 @@
+## Simple Todo App using IndexedDB
+
 A port of the Todo example used in the
 [A Simple TODO list using HTML5 IndexedDB](http://www.html5rocks.com/en/tutorials/file/filesystem/)
 article by Paul Kinlan, originally published on HTML5Rocks.

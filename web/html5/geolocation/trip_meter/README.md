@@ -1,3 +1,5 @@
+## Trip Meter: A Basic Geolocaton Example
+
 A port of the Geolocation example used in the
 [A Simple Trip Meter Using the Geolocation API] (http://www.html5rocks.com/en/tutorials/geolocation/trip_meter/)
 article by Michael Mahemoff, originally published on HTML5Rocks.

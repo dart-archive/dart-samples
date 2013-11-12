@@ -1,5 +1,4 @@
-3D Solar System Simulation
-==========================
+## 3D Solar System Simulation
 
 A 3D solar system visualization using WebGL.
 

@@ -1,3 +1,5 @@
+## LocalStorage Demo
+
 A basic example showing the use of LocalStorage for persistence.
 
 LocalStorage is a simple key/value storage interface for Strings.

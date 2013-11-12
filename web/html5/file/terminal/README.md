@@ -1,3 +1,5 @@
+## A Terminal Emulator that uses the FileSystem APIs
+
 A port of the Terminal example used in the
 [Exploring the FileSystem APIs](http://www.html5rocks.com/en/tutorials/file/filesystem/)
 article by Eric Bidelman, originally published on HTML5Rocks.

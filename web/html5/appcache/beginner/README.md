@@ -1,3 +1,5 @@
+## AppCache Demo
+
 A simple example to show the use of the Application Cache interface.
 
 For a thorough exploration of this topic, read
