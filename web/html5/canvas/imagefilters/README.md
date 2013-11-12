@@ -1,4 +1,4 @@
-## Image Filters
+## Using Image Filters with Canvas
 
 A port of the examples used in the
 [Image Filters with Canvas](http://www.html5rocks.com/en/tutorials/canvas/imagefilters/)

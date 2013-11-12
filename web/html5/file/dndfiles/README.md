@@ -1,4 +1,4 @@
-## Using the File APIs
+## Using the File API
 
 A Dart port of the Files API examples used in the
 [Reading files in JavaScript using the File APIs](http://www.html5rocks.com/en/tutorials/file/dndfiles/)
