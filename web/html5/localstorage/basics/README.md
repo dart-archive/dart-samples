@@ -1,4 +1,4 @@
-## LocalStorage Demo
+## LocalStorage 101
 
 A basic example showing the use of LocalStorage for persistence.
 

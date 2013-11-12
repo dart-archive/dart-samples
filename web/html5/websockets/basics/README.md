@@ -1,9 +1,9 @@
-## Introducing WebSockets
+## WebSockets 101
 
 A simple example of using WebSockets for communication.
 
 You can learn about the basics of WebSockets by reading the
-[Introducing WebSockets: Bringing Sockets to the Web](http://www.html5rocks.com/en/tutorials/file/filesystem/)
+[Introducing WebSockets: Bringing Sockets to the Web](http://www.html5rocks.com/en/tutorials/websockets/basics/)
 article on HTML5Rocks.
 
 WebSocket is a protocol providing full-duplex communications channels over a
