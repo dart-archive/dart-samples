@@ -12,9 +12,9 @@ class Point implements Comparable {
   num x;
   num y;
   Point(this.x, this.y);
- 
-  String toString() => 'Point: x = $x, y = $y';  
- 
+
+  String toString() => 'Point: x = $x, y = $y';
+
   // Sort in dictionary order (one of several arbitrary ways to sort a list
   // of Points).
   int compareTo(other) {
@@ -35,6 +35,37 @@ class Point implements Comparable {
 }
 
 void main() {
+
+  group("appending items to a names", () {
+    print(obj) => obj;
+    test('using add', () {
+      var names = ['Seth', 'Timothy', 'John'];
+      names.add('Kathy');
+      names.add('Mary');
+      expect(print(names), equals(['Seth', 'Timothy', 'John', 'Kathy', 'Mary']));
+    });
+
+    test('using addAll', () {
+      var names = ['Seth', 'Timothy', 'John'];
+      names.addAll(['Kathy', 'Mary']);
+      expect(print(names), equals(['Seth', 'Timothy', 'John', 'Kathy', 'Mary']));
+    });
+
+    test('using length', () {
+      var names = ['Seth', 'Timothy', 'John'];
+      var moreNames = ['Kathy', 'Mary'];
+
+      var namesLen = names.length;
+      names.length += 2;
+      expect(print(names), equals(['Seth', 'Timothy', 'John', null, null]));
+
+      for (var i = 0; i < moreNames.length; i++) {
+        names[i + namesLen] = moreNames[i];
+      }
+      expect(print(names), equals(['Seth', 'Timothy', 'John', 'Kathy', 'Mary']));
+    });
+  });
+
   group("a fixed-width list", () {
     var fixed = new List(10);
 
@@ -42,28 +73,24 @@ void main() {
       expect(() => fixed.add(2), throwsUnsupportedError);
     });
 
-    test("should be filled with the fill value", () {
-      expect(fixed.every((item) => item == 0), isTrue);
-    });
-
     test("should permit the changing of the fill value", () {
       fixed[0] = 4;
       expect(fixed.every((item) => item == 0), isFalse);
     });
   });
-  
+
   group("const list", () {
     const List<String> vowels = const ['A', 'E', 'I', 'O', 'U'];
 
     test("size cannot be changed", () {
-      expect(() => vowels.add('Y'), throwsUnsupportedError);      
+      expect(() => vowels.add('Y'), throwsUnsupportedError);
     });
-    
+
     test("item cannot be changed", () {
-      expect(() => vowels[0] = 'a', throwsUnsupportedError);     
+      expect(() => vowels[0] = 'a', throwsUnsupportedError);
     });
   });
-  
+
   group("creating a list from another list", () {
     group("when the other is a const list", () {
       const List<String> vowels = const ['A', 'E', 'I', 'O', 'U'];
@@ -80,7 +107,7 @@ void main() {
       });
     });
   });
-  
+
   group("changing the size of a list", () {
     var myList;
 
@@ -93,13 +120,8 @@ void main() {
       expect(myList, equals([1, 2]));
     });
 
-    test('by lengthening the list', () {
-      myList.length += 5;
-      expect(myList.getRange(5, 4).every((item) => item == null), isTrue);
-    });
-
     test('is not possible with a fixed length list', () {
-      var fixed = new List.fixedLength(10, fill: 0);
+      var fixed = new List(10);
       expect(() => fixed.length = 2, throwsUnsupportedError);
     });
 
@@ -108,7 +130,7 @@ void main() {
       expect(() => vowels.length = 2, throwsUnsupportedError);
     });
   });
-  
+
   group("iterating over the items in a list", () {
     List<int> nums = [0, 1, 2, 3, 5];
 
@@ -119,7 +141,7 @@ void main() {
       }
       expect(items, equals(nums));
     });
-    
+
     test("using a for-in", () {
       List items = [];
       for (var item in nums) {
@@ -127,17 +149,17 @@ void main() {
       }
       expect(items, equals(nums));
     });
-    
+
     test("using an iterator", () {
       List items = [];
       Iterator iter = nums.iterator;
-      
+
       while(iter.moveNext()) {
         items.add(iter.current);
       }
       expect(items, equals(nums));
     });
-    
+
     test("using ForEach()", () {
       List items = [];
       nums.forEach((fib) {
@@ -146,14 +168,14 @@ void main() {
       expect(items, equals([0, 1, 0, 1, 1]));
     });
   });
-  
+
   group("iterating over a part of a list", () {
     var beatles = ['John', 'Paul', 'George', 'Ringo'];
-    
+
     test("skipping over some elements", () {
       expect(beatles.skip(2).toList(), equals(['George', 'Ringo']));
     });
-    
+
     test("taking only some elements", () {
       expect(beatles.take(2).toList(), equals(['John', 'Paul']));
     });
@@ -165,36 +187,36 @@ void main() {
       expect(veggies.takeWhile((v) => v != "peas").toList(),
           equals(["cabbage", "carrots", "onions"]));
     });
-    
+
     test("drop while", () {
       expect(veggies.skipWhile((v) => v.length != 4).toList(),
         equals(["peas", "kale", "peppers"]));
     });
   });
-  
-  group("appending items to a list", () {    
+
+  group("appending items to a list", () {
     test("adding a single element", () {
       var myList = [];
       myList.add(3);
       expect(myList, equals([3]));
     });
-    
+
     test("adding several elements", () {
       var myList = [0, 1, 2];
       myList.addAll([4, 5, 6]);
       expect(myList, equals([0, 1, 2, 4, 5, 6]));
     });
-    
+
     test("with a fixed-width list", () {
-      var fixed = new List.fixedLength(3, fill: 4);
+      var fixed = new List.filled(3, 4);
       expect(() => fixed.add(5), throwsUnsupportedError);
     });
   });
-  
+
   group("inserting items in a list", () {
-    
+
   });
-  
+
   group("removing from the list based on the value of items", () {
     group("remove()", () {
       test('', () {
@@ -203,43 +225,15 @@ void main() {
         expect(list, equals([3, 2, 4, 5, 2, 3, 1]));
       });
     });
-    
-    group("removeAll()", () {
-      test("removeAll with 1 item", () {
-        var list = [1, 3, 2, 4, 5, 2, 3, 1];
-        list.removeAll([1]);
-        expect(list, equals([3, 2, 4, 5, 2, 3]));
-      });
-    
-      test("removeAll with several item", () {
-        var list = [1, 3, 2, 4, 5, 2, 3, 1];
-        list.removeAll([1, 2]);
-        expect(list, equals([3, 4, 5, 3]));
-      });
-    });
-    
-    group("retainAll()", () {
-      test("retainAll with 1 item", () {
-        var list = [1, 3, 2, 4, 5, 2, 3, 1];
-        list.retainAll([1]);
-        expect(list, equals([1, 1]));
-      });
-    
-      test("retainAll with several item", () {
-        var list = [1, 3, 2, 4, 5, 2, 3, 1];
-        list.retainAll([1, 2]);
-        expect(list, equals([1, 2, 2, 1]));
-      });
-    });
-    
+
     group("removing from the list based on position of items", () {
       var list = [1, 2, 3, 5, 8, 13, 21];
       list.removeRange(1, 4);
-      
+
       test("at a particular position", () {
-        expect(list, equals([1, 13, 21]));
+        expect(list, equals([1, 8, 13, 21]));
       });
-      
+
       test("in a particular range", () {
         var list = [1, 3, 2, 4, 5, 2, 3, 1];
         list.removeAt(4);
@@ -255,62 +249,62 @@ void main() {
         list = list.where((item) => item % 2 != 0).toList();
         expect(list, equals([1, 3, 5, 13, 21]));
       });
-      
-      test("using removeMatching()", () {
+
+      test("using removeWhere()", () {
         var list = [1, 2, 3, 5, 8, 13, 21];
-        list.removeMatching((item) => item % 2 == 0);
+        list.removeWhere((item) => item % 2 == 0);
         expect(list, equals([1, 3, 5, 13, 21]));
       });
     });
-    
+
     group("retain elements", () {
       test("using filter", () {
         var list = [1, 2, 3, 5, 8, 13, 21];
         list = list.where((item) => item % 2 == 0).toList();
         expect(list, equals([2, 8]));
       });
-      
-      test("using retainMatching()", () {
+
+      test("using retainWhere()", () {
         var list = [1, 2, 3, 5, 8, 13, 21];
-        list.retainMatching((item) => item % 2 == 0);
+        list.retainWhere((item) => item % 2 == 0);
         expect(list, equals([2, 8]));
       });
     });
   });
-   
+
   group("removing all elements", () {
     test('using clear()', () {
       var list = [1, 2, 3, 4];
       list.clear();
-      expect(list, equals([])); 
+      expect(list, equals([]));
     });
-    
+
     test('using length = 0', () {
       var list = [1, 2, 3, 4];
       list.length = 0;
-      expect(list, equals([])); 
+      expect(list, equals([]));
     });
   });
-  
+
   group("finding if a list contains an item", () {
     var list = [1, 2, 3, 4];
-    
+
     test("using contains()", () {
       expect(list.contains(2), isTrue);
       expect(list.contains(5), isFalse);
     });
-    
+
     test("using indexOf()", () {
       expect(list.indexOf(2) != -1, isTrue);
       expect(list.indexOf(5) == -1, isTrue);
-    });    
+    });
   });
-  
+
   group("finding the position of an element in a list", () {
     // list.indexOf(element, start); // -1 if not found
     // list.lastIndexOf(element, start);
   });
-  
+
   group("converting a list to a string", () {
     test("with a null element", () {
       var listWithNull = [3, 4, null, 6];  // "34null6"
@@ -325,45 +319,45 @@ void main() {
       expect(list.join(' '), equals('3 4 Point: x = 3, y = 4 6'));
     });
   });
-  
+
   group("comparing lists for equality of content", () {});
-  
+
   group("sorting lists", () {
     test("a default ascending sort", () {
       var list = [1, -4, 2];
       list.sort();
       expect(list, equals([-4, 1, 2]));
     });
-    
+
     test("an ascending sort with compareTo()", () {
       var list = [1, -4, 2];
       list.sort((a, b) => a.compareTo(b));
       expect(list, equals([-4, 1, 2]));
     });
-    
+
     test("a descending sort with compareTo()", () {
       var list = [1, -4, 2];
       list.sort((a, b) => b.compareTo(a));
-      
+
       expect(list, equals([2, 1, -4]));
     });
-    
+
     group("custom sort with user defined class", () {
       // Message when compareTo() is not defined:
       //   Caught Class 'Point' has no instance method 'compareTo'.
-      
+
       test("without compareTo", () {
         var list = [new LackingPoint(3, 4), new LackingPoint(3, 5)];
-        expect(() => list.sort(), throws); 
+        expect(() => list.sort(), throws);
       });
-      
+
       test("where a.x == b.x", () {
         var list = [new Point(3, 5), new Point(3, 4)];
         list.sort();
         expect(list.first.x, equals(3));
         expect(list.first.y, equals(4));
       });
-      
+
       test("where a.x < b.x", () {
         var list = [new Point(4, 4), new Point(3, 4)];
         list.sort();
@@ -371,5 +365,103 @@ void main() {
         expect(list.first.y, equals(4));
       });
     });
+  });
+
+  group('fixedList width and const lists', () {
+    print(obj) => obj;
+
+    group('fixedList width list', () {
+      var fixedList = new List(3);
+      var growable = new List();
+
+      test("should not be extensible", () {
+        expect(() => fixedList.add(2), throwsUnsupportedError);
+        expect(() => fixedList.removeLast(), throwsUnsupportedError);
+        expect(() => fixedList.length = 10, throwsUnsupportedError);
+      });
+      test("should permit the changing of values", () {
+        fixedList[0] = 'red';
+        fixedList[1] = 'green';
+        fixedList[2] = 'blue';
+        expect(print(fixedList), equals(['red', 'green', 'blue']));
+      });
+    });
+
+    group('creating const lists', () {
+      const List<String> vowels = const ['A', 'E', 'I', 'O', 'U'];
+
+      test("size cannot be changed", () {
+        expect(() => vowels.add('Y'), throwsUnsupportedError);
+      });
+
+      test("content cannot be changed", () {
+        expect(() => vowels[0] = 'a', throwsUnsupportedError);
+      });
+    });
+  });
+
+  group('filledList', () {
+    test("using filler", () {
+      var filledList = new List.filled(3, 'X');
+      expect(filledList.every((item) => item == 'X'), isTrue);
+      expect(() => filledList.add('Y'), throwsUnsupportedError);
+    });
+
+    test("using generate", () {
+      var arr = [1, 2, 3];
+      List<List<String>> grid = new List.generate(3, (_) {
+        var temp = arr;
+        arr = arr.map((item) => item += 3).toList();
+        return temp;
+      });
+      expect(grid, equals([[1, 2, 3], [4, 5, 6], [7, 8, 9]]));
+    });
+  });
+
+
+
+  group("creating a list from another list", () {
+    print(obj) => obj;
+    const List<String> vowels1 = const ['A', 'E', 'I', 'O', 'U'];
+    var fruit1 = ['orange', 'banana', 'mango'];
+
+    group("creating a fixed width list", () {
+      var vowelsFixed = new List.from(vowels1, growable: false);
+      var fruitFixed = new List.from(fruit1, growable: false);
+
+      test("does not allow elements to be added", () {
+        expect(() => vowelsFixed.add('Y'), throwsUnsupportedError);
+        expect(() => vowelsFixed.add('Y'), throwsUnsupportedError);
+      });
+
+      test("allows elements to be modified", () {
+        vowelsFixed[0] = 'Y';
+        expect(vowelsFixed[0], equals('Y'));
+      });
+    });
+
+    group("creating a growable list", () {
+      var vowels2 = new List.from(vowels1);
+      var fruit2 = new List.from(fruit1);
+
+      test("allows elements to be added", () {
+        vowels2.add('Y');
+        expect(print(vowels2), equals(['A', 'E', 'I', 'O', 'U', 'Y']));
+      });
+
+      test("allows elements to be modified", () {
+        vowels2[0] = 'Y';
+        expect(print(vowels2[0]), equals('Y'));
+      });
+    });
+
+  });
+
+  group("common reference", () {
+    var fruit1 = ['orange', 'banana', 'mango'];
+    var fruit2 = fruit1;
+    fruit1.add('kiwi');
+    expect(fruit1, equals(fruit2));
+
   });
 }
