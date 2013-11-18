@@ -1,9 +1,9 @@
 import 'dart:html';
 
 void main() {
-  
+
   var data = [
-    {'src': 'http://www.google.com/logos/2013/parents_day_2013-1508005-hp.jpg', 
+    {'src': 'http://www.google.com/logos/2013/parents_day_2013-1508005-hp.jpg',
       'alt': "Parent's Day",
       'caption': "Parent's Day"},
     {'src': 'http://www.google.com/logos/2013/new_years_day_2013-983008-hp.jpg',
@@ -14,13 +14,13 @@ void main() {
      'caption': 'Zamboni'}
   ];
 
-  AnchorElement link = query('a');
-  
-  link.onClick.listen((event) { 
+  AnchorElement link = querySelector('a');
+
+  link.onClick.listen((event) {
     event.preventDefault();
-    var content = document.query('#myTemplate').content;
-    ImageElement img = content.query('img');
-    DivElement div = content.query('div');
+    var content = (querySelector('#myTemplate') as TemplateElement).content;
+    ImageElement img = content.querySelector('img');
+    DivElement div = content.querySelector('div');
 
     for (Map item in data) {
       img.src = item['src'];

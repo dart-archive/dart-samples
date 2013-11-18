@@ -13,20 +13,20 @@
         </ul>
       </li>
       <li>Item 3</li>
-    </ul>    
- 
-  <body>   
+    </ul>
+
+  <body>
     <p id="text"></p>
     <script type="application/dart">
-      
+
       import 'dart:html';
-      
-      void main() {    
-        Element element = query('li ul');
-        Element first = element.query('.first');
-        first.style.color = 'red';  
+
+      void main() {
+        Element element = querySelector('li ul');
+        Element first = element.querySelector('.first');
+        first.style.color = 'red';
       }
-      
+
     </script>
     <script src="packages/browser/dart.js"></script>
   </body>

@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 
 <html>
-  <body>   
-  
+  <body>
+
     <h1 class='myClass'></h1>
-    
+
     <p id="myId"></p>
-    
+
     <div class="myClass"></div>
-    
+
     <p class='class1 class2'></p>
-    
+
     <p class='class1'></p>
-    
+
     <script type="application/dart">
       import 'dart:html';
-      
+
       void main() {
-      
+
         // You can query by ID.
-        Element element = query('#myId');
+        Element element = querySelector('#myId');
         element.innerHtml = 'You can query by ID';
-        
+
         // You can query by class.
-        element = query('.myClass');
+        element = querySelector('.myClass');
         element.innerHtml = 'You can query by class';
-        
+
         // You can query by tag name.
-        element = query('div');
+        element = querySelector('div');
         element.innerHtml = 'You can query by element type';
-        
+
         // You can find multiple matches using queryAll.
-        List<Element> elements = queryAll('.myClass');
+        List<Element> elements = querySelectorAll('.myClass');
         elements.forEach((el) => el.style.textDecoration = 'underline');
-        
+
         // 'Or' matchers: an element matching *either* selector.
-        elements = queryAll('#myId, div');
+        elements = querySelectorAll('#myId, div');
         assert(elements.length == 2);
-        
+
         // 'And' matchers: an element matching *both* selectors.
-        elements = queryAll('#myId div');
+        elements = querySelectorAll('#myId div');
         assert(elements.length == 0);
-        
+
         // An element having *both* classes.
-        elements = queryAll('.class1.class2');
-        assert(elements.length == 1); 
-       } 
+        elements = querySelectorAll('.class1.class2');
+        assert(elements.length == 1);
+       }
     </script>
     <script src="packages/browser/dart.js"></script>
   </body>

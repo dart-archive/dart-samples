@@ -2,7 +2,7 @@
 
 <html>
   <body>
-    <h1>Breakfast</h1> 
+    <h1>Breakfast</h1>
     <ul>
       <li id='first' class='must-have'>Milk</li>
       <li class='must-have'>Cereal
@@ -12,43 +12,43 @@
         </ul>
       </li>
       <li>Juice</li>
-    </ul>    
-    
+    </ul>
+
     <script type="application/dart">
-      
+
       import 'dart:html';
-      
+
       void main() {
-    
+
         // Find by id.
-        Element element = query('#first');
+        Element element = querySelector('#first');
         assert(element.id == 'first');
         assert(element.text == 'Milk');
-        
+
         // Find by class.
-        List<Element> elements = queryAll('.must-have');
+        List<Element> elements = querySelectorAll('.must-have');
         assert(elements.length == 2);
-        
+
         // Find by ID and class.
-        elements = queryAll('#first, .must-have');
+        elements = querySelectorAll('#first, .must-have');
         assert(elements.length == 2);
-        
+
         // Find by tag.
-        elements = queryAll('li');
+        elements = querySelectorAll('li');
         assert(elements.length == 5);
-        
+
         // Use hierarchical selectors.
-        elements = queryAll('li > ul > li');
+        elements = querySelectorAll('li > ul > li');
         assert(elements.first.text == "Bran Flakes");
-        
+
         // Use pseudo-elements.
-        element = query('li:nth-child(1)');
+        element = querySelector('li:nth-child(1)');
         assert(element.text == 'Milk');
-        
+
         // Find by attribute.
-        elements = queryAll('[href *= Nut]');
+        elements = querySelectorAll('[href *= Nut]');
         assert(elements.length == 1);
-      
+
       }
     </script>
     <script src="packages/browser/dart.js"></script>

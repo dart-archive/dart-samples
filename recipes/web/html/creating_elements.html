@@ -2,47 +2,47 @@
 
 <html>
   <div class='container'></div>
-  <body>  
+  <body>
     <script type="application/dart">
-      
+
       import 'dart:html';
-      
+
       void main() {
-             
-        // Using typed constructors.        
+
+        // Using typed constructors.
         AnchorElement anchor = new AnchorElement();
         anchor.href = 'http://dartlang.org';
         assert(anchor.outerHtml == '<a href="http://dartlang.org"></a>');
-        
+
         LabelElement label = new LabelElement();
         label.htmlFor = 'color';
         label.text = 'Color';
         assert(label.outerHtml == '<label for="color">Color</label>');
-        
+
         FormElement form = new FormElement();
         form.method = 'PUT';
-        assert(form.outerHtml == '<form method="PUT"></form>');            
-              
-             
+        assert(form.outerHtml == '<form method="PUT"></form>');
+
+
         // Using the Element.tag() constructor
         LIElement item = new Element.tag('li');
         assert(item.tagName == 'LI');
-        
+
         item.text = 'learn Dart';
         assert(item.outerHtml == '<li>learn Dart</li>');
-        
-        // Using an invalid tag. 
+
+        // Using an invalid tag.
         var newElement = new Element.tag('bogusTag');
-        assert(newElement is UnknownElement);        
+        assert(newElement is UnknownElement);
         assert(Element.isTagSupported('bogusTag') == false);
 
 
         // Using the Element.html() constructor.
         DivElement div = new Element.html('<div>I love Strawberries.</div>') ;
         assert(div is DivElement);
-        
+
         // Using another element's outerHtml.
-        var containerDiv = query('div.container');
+        var containerDiv = querySelector('div.container');
         var newDiv = new Element.html(containerDiv.outerHtml);
         assert(newDiv is DivElement);
         assert(newDiv.text == containerDiv.text);
