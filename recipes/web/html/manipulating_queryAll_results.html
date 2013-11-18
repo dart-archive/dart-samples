@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+  <body>   
+    <ol>
+      <li>Google</li>
+      <li>StackOverflow</li>
+      <li>Reddit</li>
+      <li>Github</li>
+    </ol>
+     
+    <script type="application/dart">
+      import 'dart:html';
+      
+      void doSomethingWith(element) {}
+      
+      void main() {
+        List<Element> elements = queryAll('li');
+
+        // Index.
+        assert(elements[2].text == 'Reddit');
+        assert(elements.last.text == 'Github');
+        assert(elements.first.text == 'Google');
+  
+        // Iterate.
+        for (var element in elements) {
+           doSomethingWith(element);
+        }
+        
+        Iterable sites = elements.map((site) => site.text);
+        assert(sites.join(', ') == "Google, StackOverflow, Reddit, Github");
+        
+        sites = elements.where((site) => site.text.length != 6);
+        assert(sites.first.text == "StackOverflow");
+                
+        // Sublist.
+        var sublist = elements.sublist(1, 3);
+        assert(sublist.first.text == 'StackOverflow');
+        assert(sublist.last.text == 'Reddit');
+        
+        // Call predicates.
+        assert(elements.any((element) => element.text.length == 6));
+        assert(elements.every((element) => element.text.length == 6) == false);
+        
+        // Search.
+        assert(elements.lastWhere((element) => element.text.length == 6).text == 'Github'); 
+        
+        // The list of results is readonly.
+        try {
+          elements.length = 2;
+        } catch(e) {
+          assert(e.message == 'Cannot resize immutable List.');
+        }  
+      }
+      
+    </script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
