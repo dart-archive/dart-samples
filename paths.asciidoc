@@ -1,0 +1,202 @@
+=== Parsing Paths
+
+==== Problem
+
+You want to parse a path into its components.
+
+==== Solution
+
+Use the `segments()` method to split a path into its components:
+
+--------------------------------------------------------------------------------
+new Path('/usr/local/bin/').segments(); // ['usr', 'local', 'bin']
+new Path('../../file.txt').segments(); //  ['..', '..', 'file.txt']
+--------------------------------------------------------------------------------
+
+The `segments()` method splits the path on `/` characters, ignoring leading or
+trailing '/' characters.
+
+Use the the `directoryPath` field to get a path up to the last '/'. The final
+'/' and the segment following it is dropped by `directoryPath`:
+
+--------------------------------------------------------------------------------
+new Path('/path/to/file.txt').directoryPath.segments(); // ['path', 'to']
+new Path('../img/logo.png').directoryPath.segments();   // ['..', 'img']
+--------------------------------------------------------------------------------
+
+If there is no '/' in the Path, `directoryPath` returns an empty string:
+
+--------------------------------------------------------------------------------
+new Path('book.txt').directoryPath.segments(); // ['']
+--------------------------------------------------------------------------------
+
+If the only '/' in this Path is the first character, `directoryPath` returns
+'/':
+
+--------------------------------------------------------------------------------
+new Path('/src').directoryPath.toString(); // '/'
+new Path('/').directoryPath.toString();    // '/'
+--------------------------------------------------------------------------------
+
+To get just the path after the last '/', use the `filename` field. This returns
+the entire path if it contains no '/', and it returns an empty string if the
+path ends with a '/':
+
+--------------------------------------------------------------------------------
+new Path('imgs/logo.png').filename; // 'logo.png'
+new Path('logo.png').filename;      // 'logo.png'
+new Path('/usr/local/').filename;   // ''
+--------------------------------------------------------------------------------
+
+Use the `extension` field to get the part of the filename after the last '.':
+
+--------------------------------------------------------------------------------
+new Path('imgs/logo.png').extension; // 'png'
+--------------------------------------------------------------------------------
+
+To get just the filename, use the `filenameWithoutExtension` field:
+
+--------------------------------------------------------------------------------
+new Path('/c:/docs/book.txt').filenameWithoutExtension; // 'book'
+--------------------------------------------------------------------------------
+
+=== Appending a segment to a path
+
+==== Problem
+
+You want to add a segment to an existing path and create a new path.
+
+==== Solution
+
+Use the `append()` method with the segment to be added as an argument:
+
+--------------------------------------------------------------------------------
+Path path = existingPath.append(segment);
+--------------------------------------------------------------------------------
+
+Using `append()` adds a '/' between the path and the new segment if the
+path does not already end in a '/':
+
+--------------------------------------------------------------------------------
+Path path = new Path('/usr/shailen/workspace');
+path = path.append('dart/web');
+path.toString(); // '/usr/shailen/workspace/dart/web'
+--------------------------------------------------------------------------------
+
+The new segment can contain '/'s. Watch out, though: the path returned is not
+canonicalized, and if the segment you are appending starts with a '/', you can
+end up with repeated '/'s:
+
+--------------------------------------------------------------------------------
+Path path = new Path('/usr/shailen/workspace');
+path = path.append('/dart/web');
+path.toString(); // '/usr/shailen/workspace//dart/web'
+--------------------------------------------------------------------------------
+
+It is a good idea to always canonicalize the new path:
+
+--------------------------------------------------------------------------------
+Path path = new Path('/usr/shailen/workspace/');
+path = path.append('/dart/web').canonicalize();
+path.toString(); // '/usr/shailen/workspace/dart/web'
+--------------------------------------------------------------------------------
+
+
+=== Joining paths
+
+=== Problem
+
+You want to join two paths to create a new path.
+
+=== Solution
+
+Invoke the `join()` method on an existing path, passing it a relative path as
+an argument. Using `join()` returns a new path:
+
+--------------------------------------------------------------------------------
+Path path = new Path('/Users/shailen').join(new Path('dart/projects'));
+path.toString(); // '/Users/shailen/dart/projects'
+--------------------------------------------------------------------------------
+
+// Canonicalizes the resulting joined path using canonicalize
+// and removing consecutive '/'s.
+
+The `join()` method interprets '.' and '..' as directory traversal commands:
+
+--------------------------------------------------------------------------------
+Path path = new Path('../../apps').join(new Path('dart/mobile'));
+path.toString(); // '../../apps/dart/mobile'
+
+path = new Path('Users/shailen/docs').join(new Path('../../john'));
+path.toString(); // 'Users/john'
+--------------------------------------------------------------------------------
+
+If `join()` is passed an absolute path as an argument, it throws an
+ArgumentError:
+
+--------------------------------------------------------------------------------
+try {
+  new Path('Users/shailen/').join(new Path('/docs'));
+} catch(e) {
+  print(e);
+}
+
+// Illegal argument(s): Path.join called with absolute Path as argument.
+--------------------------------------------------------------------------------
+
+Using `join()` does not drop the last segment of the original path. This
+means that unless you are careful, you can end up with paths like this one:
+
+--------------------------------------------------------------------------------
+Path path = new Path('Users/shailen/books.txt').join(new Path('todos.txt'));
+path.toString(); // 'Users/shailen/books.txt/todos.txt'
+--------------------------------------------------------------------------------
+
+To avoid paths like the one above, join the new path to the directory part of
+the original path:
+
+--------------------------------------------------------------------------------
+Path path = new Path('Users/shailen/books.txt').directoryPath.join(
+    new Path('todos.txt'));
+path.toString(); // 'Users/shailen/todos.txt'
+--------------------------------------------------------------------------------
+
+
+=== Calculating relative paths
+
+==== Problem
+
+You want to calculate the relative path between two paths.
+
+==== Solution
+
+Call the `relativePath()` method on a path, passing it another path as an
+argument.  Using `relativePath()` returns a new path.
+
+You can use relative paths:
+
+--------------------------------------------------------------------------------
+Path path1 = new Path('docs/book.html');
+Path path2 = new Path('articles/list');
+path1.relativeTo(path2).toString(); // '../../docs/book.html'
+path2.relativeTo(path1).toString(); // '../../articles/list'
+--------------------------------------------------------------------------------
+
+And you can use absolute paths:
+
+--------------------------------------------------------------------------------
+Path path1 = new Path('/etc/local');
+Path path2 = new Path('/etc/ssh');
+path1.relativeTo(path2).toString(); // '../local'
+path2.relativeTo(path1).toString(); // '../ssh'
+--------------------------------------------------------------------------------
+
+But mixing relative and absolute paths generates an error:
+
+--------------------------------------------------------------------------------
+Path path1 = new Path('docs/cookbook');
+Path path2 = new Path('/etc/ssh');
+path1.relativeTo(path2).toString(); // ArgumentError
+--------------------------------------------------------------------------------
+
+
