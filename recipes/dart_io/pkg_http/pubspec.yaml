@@ -1,0 +1,7 @@
+name:  dart_io_examples
+description: Examples that show the use of the dart:io library
+  and the http, http_server, and route packages.
+
+dependencies:
+  http: any
+  crypto: any
