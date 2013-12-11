@@ -8,10 +8,10 @@ void main() {
     print(response.headers.keys);
 
     // Get header values.
-    print(response.headers['access-control-allow-origin']);
-    print(response.headers['content-type']);
-    print(response.headers['date']);
-    print(response.headers['content-length']);
-    print(response.headers['connection']);
+    print("access-control-allow-origin' = ${response.headers['access-control-allow-origin']}");
+    print("content-type = ${response.headers['content-type']}");
+    print("date = ${response.headers['date']}");
+    print("content-length = ${response.headers['content-length']}");
+    print("connection = ${response.headers['connection']}");
   });
 }
