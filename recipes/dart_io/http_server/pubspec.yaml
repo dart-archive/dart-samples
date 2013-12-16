@@ -1,0 +1,6 @@
+name: pkg_http_server_examples
+description: Examples that show the use of the http_server, and route packages.
+dependencies:
+  crypto: any
+  http_server: any
+  route: any
