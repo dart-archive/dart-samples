@@ -4,22 +4,14 @@
 
 library simple_http_server;
 
-import 'dart:async';
 import 'dart:io';
 import 'package:http_server/http_server.dart' show VirtualDirectory;
 
-VirtualDirectory virDir;
-
-void directoryHandler(dir, request) {
-  var indexUri = new Uri.file(dir.path).resolve('index.html');
-  print('indexUri = $indexUri');
-  virDir.serveFile(new File(indexUri.toFilePath()), request);
-}
+final MY_HTTP_ROOT_PATH = Platform.script.resolve('web').toFilePath();
 
 void main() {
-  virDir = new VirtualDirectory(Platform.script.resolve('../web').toFilePath())
-    ..allowDirectoryListing = true
-    ..directoryHandler = directoryHandler;
+  var virDir = new VirtualDirectory(MY_HTTP_ROOT_PATH);
+  virDir.allowDirectoryListing = true;
 
   HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
     server.listen((request) {

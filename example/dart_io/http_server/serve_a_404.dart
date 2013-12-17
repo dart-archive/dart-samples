@@ -15,7 +15,7 @@ void errorPageHandler(HttpRequest request) {
 }
 
 void main() {
-  var buildPath = Platform.script.resolve('../web').toFilePath();
+  var buildPath = Platform.script.resolve('./web').toFilePath();
 
   var virDir = new http_server.VirtualDirectory(buildPath)
     ..allowDirectoryListing = true

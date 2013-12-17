@@ -1,0 +1,8 @@
+name: dart_code_snippets
+description: Examples that teach the use of Dart through short, directed code snippets.
+dependencies:
+  crypto: any
+  http: any
+  http_server: any
+  route: any
+  unittest: any

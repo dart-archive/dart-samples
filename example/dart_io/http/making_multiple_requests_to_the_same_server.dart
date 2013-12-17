@@ -11,12 +11,12 @@ printResponseBody(response) {
 }
 
 void main() {
-   var url = 'http://httpbin.org';
+   var url = 'http://www.google.com/';
    var client = new http.Client();
-   client.get('${url}/foo')
+   client.get('${url}/search')
        .then((response) {
          printResponseBody(response);
-         return client.get('${url}/bar');
+         return client.get('${url}/doodles');
         })
        .then(printResponseBody)
 
