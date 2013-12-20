@@ -1,3 +1,7 @@
+/// Use the `Client` class in the http Pub package for making multiple requests
+/// to the same server. Using `Client` keeps keep a persistent connection open
+/// to the server and is better than making multiple single requests.
+
 import 'package:http/http.dart' as http;
 
 printResponseBody(response) {

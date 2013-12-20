@@ -1,4 +1,4 @@
-# Dart Code Snippets
+# Dart By Example
 
 Short snippets of code to help you become productive with Dart.
 
@@ -11,23 +11,21 @@ Short snippets of code to help you become productive with Dart.
   * [Finding the object's type](example/dart_io/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
   * [Finding the object's parent](example/dart_io/files_directories_and_symlinks/getting_the_parent_directory.dart)
 * Files
-    * [Creating](blob/master/example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
-    * Reading
-        * [As a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
-        * [As lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
-        * [As bytes](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_bytes.dart)
-        * [Using a stream](example/dart_io/files_directories_and_symlinks/files/reading_a_file_using_a_stream.dart)
-        * [And handling errors](example/dart_io/files_directories_and_symlinks/files/handling_errors_when_reading_a_file.dart)
-    * Writing
-        * [A string to a file](example/dart_io/files_directories_and_symlinks/files/writing_a_string_to_a_file.dart)
-        * [Bytes to a file](example/dart_io/files_directories_and_symlinks/files/writing_bytes_to_a_file.dart)
-        * [Using a stream](example/dart_io/files_directories_and_symlinks/files/writing_to_a_file_using_a_stream.dart)
+    * [Creating a file](blob/master/example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
+    * [Reading a file as a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
+    * [Reading a file as lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
+    * [Reading a file as bytes](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_bytes.dart)
+    * [Using a stream to read a file](example/dart_io/files_directories_and_symlinks/files/reading_a_file_using_a_stream.dart)
+    * [Handling errors when reading a file](example/dart_io/files_directories_and_symlinks/files/handling_errors_when_reading_a_file.dart)
+    * [Writing a string to a file](example/dart_io/files_directories_and_symlinks/files/writing_a_string_to_a_file.dart)
+    * [Writing bytes to a file](example/dart_io/files_directories_and_symlinks/files/writing_bytes_to_a_file.dart)
+    * [Using a stream to write to a file](example/dart_io/files_directories_and_symlinks/files/writing_to_a_file_using_a_stream.dart)
 * Directories
-    * [Creating](example/dart_io/files_directories_and_symlinks/directories/creating_a_directory.dart)
+    * [Creating a directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_directory.dart)
     * [Creating a temp directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_temporary_directory.dart)
     * [Listing the contents of a directory](example/dart_io/files_directories_and_symlinks/directories/listing_the_contents_of_a_directory.dart)
 * Symlinks
-    * [Creating](example/dart_io/files_directories_and_symlinks/symlinks/creating_a_symlink.dart)
+    * [Creating a symlink](example/dart_io/files_directories_and_symlinks/symlinks/creating_a_symlink.dart)
     * [Checking if a path represents a symlink](example/dart_io/files_directories_and_symlinks/symlinks/checking_if_a_path_represents_a_symlink.dart)
     * [Getting the target of a symlink](example/dart_io/files_directories_and_symlinks/symlinks/getting_the_target_of_a_link.dart)
 
@@ -36,14 +34,14 @@ Short snippets of code to help you become productive with Dart.
 * [Making a POST request](example/dart_io/http/making_a_post_request.dart)
 * [Adding custom headers to a request](example/dart_io/http/adding_custom_headers.dart)
 * [Making multiple requests to the same server](example/dart_io/http/making_multiple_requests_to_the_same_server.dart)
-* [Handling request errors](example/dart_io/http/handling_an_httprequest_error.dart)
+* [Handling errors when making a request](example/dart_io/http/handling_an_httprequest_error.dart)
 * [Getting the response body as a string](example/dart_io/http/reading_the_response_body.dart)
-* [Getting the response content in binary format](example/dart_io/http/getting_response_content_in_binary_format.dart)
+* [Getting the response content in binary format](example/dart_io/http/getting_the_response_content_in_binary_format.dart)
 * [Getting the response headers](example/dart_io/http/getting_the_response_headers.dart)
 
 ### HTTP server
-* [Setting up a dead-simple server](example/dart_io/http_server/hello_world.dart)
-* [Listing directory contents](example/dart_io/http_server/allow_directory_listing.dart)
-* [Serving index.html by default](example/dart_io/http_server/serve_index_html.dart)
-* [Serving a 404](example/dart_io/http_server/serve_a_404.dart)
-* [Routing requests](example/dart_io/http_server/set_up_routing.dart)
+* [Implementing a dead-simple HTTP server](example/dart_io/implementing_a_dead_simple_http_server.dart)
+* [Listing directory contents](example/dart_io/http_server/listing_directory_contents.dart)
+* [Serving index.html](example/dart_io/http_server/serving_index_html.dart)
+* [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
+* [Routing requests based on URL patterns](example/dart_io/http_server/routing_requests_based_on_url_patterns.dart)

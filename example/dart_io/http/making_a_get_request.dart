@@ -1,3 +1,5 @@
+/// Use the http package `get()` function to make a GET request.
+
 import 'package:http/http.dart' as http;
 
 void main() {

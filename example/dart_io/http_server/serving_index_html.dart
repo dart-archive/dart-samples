@@ -2,6 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Use the http Pub package, and create a VirtualDirectory to serve the
+/// request. Register a callback for handling errors using the `errorHandler`
+/// property.
+
 library simple_http_server;
 
 import 'dart:async';

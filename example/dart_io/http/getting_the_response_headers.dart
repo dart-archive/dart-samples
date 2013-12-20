@@ -1,3 +1,7 @@
+/// Use the `headers` field of the Response object to get a headers Map.
+/// The map keys are the header fields, and the map values are the values of
+/// those fields.
+
 import 'package:http/http.dart' as http;
 
 void main() {
