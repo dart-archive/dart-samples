@@ -11,7 +11,7 @@ Short snippets of code to help you become productive with Dart.
   * [Finding the object's type](example/dart_io/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
   * [Finding the object's parent](example/dart_io/files_directories_and_symlinks/getting_the_parent_directory.dart)
 * Files
-    * [Creating a file](blob/master/example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
+    * [Creating a file](example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
     * [Reading a file as a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
     * [Reading a file as lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
     * [Reading a file as bytes](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_bytes.dart)
@@ -40,7 +40,7 @@ Short snippets of code to help you become productive with Dart.
 * [Getting the response headers](example/dart_io/http/getting_the_response_headers.dart)
 
 ### HTTP server
-* [Implementing a dead-simple HTTP server](example/dart_io/implementing_a_dead_simple_http_server.dart)
+* [Implementing a dead-simple HTTP server](example/dart_io/http_server/implementing_a_dead_simple_http_server.dart)
 * [Listing directory contents](example/dart_io/http_server/listing_directory_contents.dart)
 * [Serving index.html](example/dart_io/http_server/serving_index_html.dart)
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
