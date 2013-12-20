@@ -1,3 +1,5 @@
+/// Use the http package `post()` function to make a POST request.
+
 import 'package:http/http.dart' as http;
 
 void main() {
