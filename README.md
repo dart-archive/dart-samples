@@ -35,6 +35,7 @@ Short snippets of code to help you become productive with Dart.
 * [Adding custom headers to a request](example/dart_io/http/adding_custom_headers.dart)
 * [Making multiple requests to the same server](example/dart_io/http/making_multiple_requests_to_the_same_server.dart)
 * [Handling errors when making a request](example/dart_io/http/handling_an_httprequest_error.dart)
+* [Getting redirection history](example/dart_io/http/getting_redirection_history.dart)
 * [Getting the response body as a string](example/dart_io/http/reading_the_response_body.dart)
 * [Getting the response content in binary format](example/dart_io/http/getting_the_response_content_in_binary_format.dart)
 * [Getting the response headers](example/dart_io/http/getting_the_response_headers.dart)
