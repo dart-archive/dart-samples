@@ -46,3 +46,15 @@ Short snippets of code to help you become productive with Dart.
 * [Serving index.html](example/dart_io/http_server/serving_index_html.dart)
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
 * [Routing requests based on URL patterns](example/dart_io/http_server/routing_requests_based_on_url_patterns.dart)
+
+### Interacting with processes
+* [Running a process](example/dart_io/interacting_with_processes/running_a_process.dart)
+* [Obtaining the exit code when running a process](example/dart_io/interacting_with_processes/obtaining_the_exit_code_when_running_a_process.dart)
+
+### Working with paths
+* [Joining paths](example/dart_io/paths/joining_paths.dart)
+* [Parsing a path into components](example/dart_io/paths/parsing_a_path_into_components.dart)
+* [Calculating relative paths](example/dart_io/paths/calculating_relative_paths.dart)
+* [Converting between a URI and a path](example/dart_io/paths/converting_between_a_uri_and_a_path.dart)
+* [Getting information about a file path](example/dart_io/paths/getting_information_about_a_file_path.dart)
+* [Getting the path separator for the current platform](example/dart_io/paths/getting_the_path_separator_for_the_current_platform.dart)
