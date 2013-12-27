@@ -47,6 +47,11 @@ Short snippets of code to help you become productive with Dart.
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
 * [Routing requests based on URL patterns](example/dart_io/http_server/routing_requests_based_on_url_patterns.dart)
 
+### Getting information about the operating system and hardware
+* [Getting environment variables](example/dart_io/platform/getting_environment_variables.dart)
+* [Identifying the operating system](example/dart_io/platform/identifying_the_operating_system.dart)
+* [Getting information about the script being run](example/dart_io/platform/getting_information_about_the_script_being_run.dart)
+
 ### Interacting with processes
 * [Running a process](example/dart_io/interacting_with_processes/running_a_process.dart)
 * [Obtaining the exit code when running a process](example/dart_io/interacting_with_processes/obtaining_the_exit_code_when_running_a_process.dart)
