@@ -1,3 +1,7 @@
+// Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 /// Use the `list()` method to list a directory's contents.  The method recurses
 /// into subdirectories if the `recursive` argument is `true` (default is
 /// `false`). It does not follow symlinks if the `followLinks` argument is

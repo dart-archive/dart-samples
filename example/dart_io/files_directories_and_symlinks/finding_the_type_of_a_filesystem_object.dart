@@ -1,3 +1,7 @@
+// Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 /// Use the `FileSystemEntity.type()` method to get the type of a file system
 /// object. This method is inherited by File, Directory, and Link.
 

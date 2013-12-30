@@ -2,15 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Create a new socket connection using `Socket.connect()`. Send data over the
-/// socket using the Socket `write()` method.
-///
+/// Make a WebSocket connection using `WebSocket.connect()`, and send data
+/// over that connection using the WebSocket `add()` method.
 
 import 'dart:io';
 
 main() {
-  Socket.connect('127.0.0.1', 4041).then((socket) {
-    print(socket.runtimeType);
-    socket.write('Hello, World!');
+  WebSocket.connect('ws://127.0.0.1:4040/ws').then((socket) {
+    socket.add('Hello, World!');
   });
 }

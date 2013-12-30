@@ -10,7 +10,6 @@ Short snippets of code to help you become productive with Dart.
 * [Renaming a file, directory, or symlink](example/dart_io/files_directories_and_symlinks/renaming_a_file_directory_or_symlink.dart)
 * [Finding the type of a filesystem object](example/dart_io/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
 * [Getting the parent directory](example/dart_io/files_directories_and_symlinks/getting_the_parent_directory.dart)
-
 * [Creating a file](example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
 * [Reading a file as a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
 * [Reading a file as lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
@@ -20,11 +19,9 @@ Short snippets of code to help you become productive with Dart.
 * [Writing a string to a file](example/dart_io/files_directories_and_symlinks/files/writing_a_string_to_a_file.dart)
 * [Writing bytes to a file](example/dart_io/files_directories_and_symlinks/files/writing_bytes_to_a_file.dart)
 * [Using a stream to write to a file](example/dart_io/files_directories_and_symlinks/files/writing_to_a_file_using_a_stream.dart)
-
 * [Creating a directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_directory.dart)
 * [Creating a temp directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_temporary_directory.dart)
 * [Listing the contents of a directory](example/dart_io/files_directories_and_symlinks/directories/listing_the_contents_of_a_directory.dart)
-
 * [Creating a symlink](example/dart_io/files_directories_and_symlinks/symlinks/creating_a_symlink.dart)
 * [Checking if a path represents a symlink](example/dart_io/files_directories_and_symlinks/symlinks/checking_if_a_path_represents_a_symlink.dart)
 * [Getting the target of a symlink](example/dart_io/files_directories_and_symlinks/symlinks/getting_the_target_of_a_link.dart)
@@ -46,6 +43,14 @@ Short snippets of code to help you become productive with Dart.
 * [Serving index.html](example/dart_io/http_server/serving_index_html.dart)
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
 * [Routing requests based on URL patterns](example/dart_io/http_server/routing_requests_based_on_url_patterns.dart)
+
+### Sockets
+* [Using serversockets server](example/dart_io/sockets/using_serversockets_server.dart)
+* [Using serversockets client](example/dart_io/sockets/using_serversockets_client.dart)
+
+### Websockets
+* [Using websockets server](example/dart_io/websockets/using_websockets_server.dart)
+* [Using websockets client](example/dart_io/websockets/using_websockets_client.dart)
 
 ### OS and hardware information
 * [Getting environment variables](example/dart_io/platform/getting_environment_variables.dart)
