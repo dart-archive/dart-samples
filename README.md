@@ -2,6 +2,8 @@
 
 Short snippets of code to help you become productive with Dart.
 
+See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/master/example).
+
 ##  Dart I/O and command-line apps
 * [Introduction](example/dart_io/introduction.md)
 

@@ -26,8 +26,8 @@ printExample(List<String> lines) {
 const fileHeader = '''
 ---
 layout: default
-title: "Dart by Example"
-description: "Short snippets of code to help you become productive with Dart."
+header:
+  css: ["index.css"]
 has-permalinks: true
 ---
 
