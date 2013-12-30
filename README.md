@@ -3,31 +3,31 @@
 Short snippets of code to help you become productive with Dart.
 
 ##  Dart I/O and command-line apps
+* [Introduction](example/dart_io/introduction.md)
 
 ### Files, directories, and symlinks
-* Methods and properties common to file system objects
-  * [Deleting an object](example/dart_io/files_directories_and_symlinks/deleting_a_file_directory_or_symlink.dart)
-  * [Renaming an object](example/dart_io/files_directories_and_symlinks/renaming_a_file_directory_or_link.dart)
-  * [Finding the object's type](example/dart_io/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
-  * [Finding the object's parent](example/dart_io/files_directories_and_symlinks/getting_the_parent_directory.dart)
-* Files
-    * [Creating a file](example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
-    * [Reading a file as a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
-    * [Reading a file as lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
-    * [Reading a file as bytes](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_bytes.dart)
-    * [Using a stream to read a file](example/dart_io/files_directories_and_symlinks/files/reading_a_file_using_a_stream.dart)
-    * [Handling errors when reading a file](example/dart_io/files_directories_and_symlinks/files/handling_errors_when_reading_a_file.dart)
-    * [Writing a string to a file](example/dart_io/files_directories_and_symlinks/files/writing_a_string_to_a_file.dart)
-    * [Writing bytes to a file](example/dart_io/files_directories_and_symlinks/files/writing_bytes_to_a_file.dart)
-    * [Using a stream to write to a file](example/dart_io/files_directories_and_symlinks/files/writing_to_a_file_using_a_stream.dart)
-* Directories
-    * [Creating a directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_directory.dart)
-    * [Creating a temp directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_temporary_directory.dart)
-    * [Listing the contents of a directory](example/dart_io/files_directories_and_symlinks/directories/listing_the_contents_of_a_directory.dart)
-* Symlinks
-    * [Creating a symlink](example/dart_io/files_directories_and_symlinks/symlinks/creating_a_symlink.dart)
-    * [Checking if a path represents a symlink](example/dart_io/files_directories_and_symlinks/symlinks/checking_if_a_path_represents_a_symlink.dart)
-    * [Getting the target of a symlink](example/dart_io/files_directories_and_symlinks/symlinks/getting_the_target_of_a_link.dart)
+* [Deleting a file, directory, or symlink](example/dart_io/files_directories_and_symlinks/deleting_a_file_directory_or_symlink.dart)
+* [Renaming a file, directory, or symlink](example/dart_io/files_directories_and_symlinks/renaming_a_file_directory_or_symlink.dart)
+* [Finding the type of a filesystem object](example/dart_io/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
+* [Getting the parent directory](example/dart_io/files_directories_and_symlinks/getting_the_parent_directory.dart)
+
+* [Creating a file](example/dart_io/files_directories_and_symlinks/files/creating_a_file.dart)
+* [Reading a file as a string](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_a_string.dart)
+* [Reading a file as lines](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_lines.dart)
+* [Reading a file as bytes](example/dart_io/files_directories_and_symlinks/files/reading_a_file_as_bytes.dart)
+* [Using a stream to read a file](example/dart_io/files_directories_and_symlinks/files/reading_a_file_using_a_stream.dart)
+* [Handling errors when reading a file](example/dart_io/files_directories_and_symlinks/files/handling_errors_when_reading_a_file.dart)
+* [Writing a string to a file](example/dart_io/files_directories_and_symlinks/files/writing_a_string_to_a_file.dart)
+* [Writing bytes to a file](example/dart_io/files_directories_and_symlinks/files/writing_bytes_to_a_file.dart)
+* [Using a stream to write to a file](example/dart_io/files_directories_and_symlinks/files/writing_to_a_file_using_a_stream.dart)
+
+* [Creating a directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_directory.dart)
+* [Creating a temp directory](example/dart_io/files_directories_and_symlinks/directories/creating_a_temporary_directory.dart)
+* [Listing the contents of a directory](example/dart_io/files_directories_and_symlinks/directories/listing_the_contents_of_a_directory.dart)
+
+* [Creating a symlink](example/dart_io/files_directories_and_symlinks/symlinks/creating_a_symlink.dart)
+* [Checking if a path represents a symlink](example/dart_io/files_directories_and_symlinks/symlinks/checking_if_a_path_represents_a_symlink.dart)
+* [Getting the target of a symlink](example/dart_io/files_directories_and_symlinks/symlinks/getting_the_target_of_a_link.dart)
 
 ### HTTP requests and responses
 * [Making a GET request](example/dart_io/http/making_a_get_request.dart)
@@ -47,7 +47,7 @@ Short snippets of code to help you become productive with Dart.
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
 * [Routing requests based on URL patterns](example/dart_io/http_server/routing_requests_based_on_url_patterns.dart)
 
-### Getting information about the operating system and hardware
+### OS and hardware information
 * [Getting environment variables](example/dart_io/platform/getting_environment_variables.dart)
 * [Identifying the operating system](example/dart_io/platform/identifying_the_operating_system.dart)
 * [Getting information about the script being run](example/dart_io/platform/getting_information_about_the_script_being_run.dart)
@@ -63,3 +63,6 @@ Short snippets of code to help you become productive with Dart.
 * [Converting between a URI and a path](example/dart_io/paths/converting_between_a_uri_and_a_path.dart)
 * [Getting information about a file path](example/dart_io/paths/getting_information_about_a_file_path.dart)
 * [Getting the path separator for the current platform](example/dart_io/paths/getting_the_path_separator_for_the_current_platform.dart)
+
+###  Other resources
+* [Other resources](example/dart_io/other_resources.md)

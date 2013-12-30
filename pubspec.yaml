@@ -1,4 +1,4 @@
-name: dart_code_snippets
+name: dart_by_example
 description: Examples that teach the use of Dart through short, directed code snippets.
 dependencies:
   crypto: any

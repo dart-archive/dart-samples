@@ -7,7 +7,7 @@ FAILURES=0
 
 echo "Running dartanalyzer on *.dart files"
 
-for file in `find . -name *dart`
+for file in `find . -name "*dart"`
   do
     echo $file
     results=`dartanalyzer $file 2>&1`
