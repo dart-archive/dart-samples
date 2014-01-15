@@ -1,6 +1,7 @@
 name: dart_by_example
 description: Examples that teach the use of Dart through short, directed code snippets.
 dependencies:
+  angular: any
   crypto: any
   http: any
   http_server: any
