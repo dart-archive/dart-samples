@@ -9,7 +9,7 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 ### Basics
 * [Setting up a controller](example/angular/basics/setting_up_a_controller)
 * [Using multiple controllers](example/angular/basics/using_multiple_controllers)
-* [Conditionally displaying content](example/angular/files/conditionally_displaying_content)
+* [Conditionally displaying content](example/angular/basics/conditionally_displaying_content)
 * [Conditionally switching between DOM element](example/angular/basics/conditionally_switch_between_dom_elements)
 * [Displaying items in a list](example/angular/basics/displaying_items_in_a_list)
 * [Setting element classes using a string](example/angular/basics/setting_element_classes_using_a_string)
@@ -28,11 +28,11 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Creating a component that allows only select child tags](example/angular/components/creating_a_component_that_allows_only_select_child_tags)
 
 ### Forms
-* [Binding to a boolean using a checkbox](example/angular/components/binding_to_a_boolean_using_a_checkbox)
-* [Selecting an item from a dropdown](example/angular/components/selecting_an_item_from_a_dropdown)
-* [Binding to text fields](example/angular/components/binding_to_text_fields)
-* [Selecting a radio button](example/angular/components/selecting_a_radio_button)
-* [Selecting multiple checkboxes](example/angular/components/selecting_multiple_checkboxes)
+* [Binding to a boolean using a checkbox](example/angular/forms/binding_to_a_boolean_using_a_checkbox)
+* [Selecting an item from a dropdown](example/angular/forms/selecting_an_item_from_a_dropdown)
+* [Binding to text fields](example/angular/forms/binding_to_text_fields)
+* [Selecting a radio button](example/angular/forms/selecting_a_radio_button)
+* [Selecting multiple checkboxes](example/angular/forms/selecting_multiple_checkboxes)
 
 ##  Dart I/O and command-line apps
 * [Introduction](example/dart_io/introduction.md)
