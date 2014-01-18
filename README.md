@@ -4,6 +4,36 @@ Short snippets of code to help you become productive with Dart.
 
 See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/master/example).
 
+## Angular Dart
+
+### Basics
+* [Setting up a controller](example/angular/basics/setting_up_a_controller)
+* [Using multiple controllers](example/angular/basics/using_multiple_controllers)
+* [Conditionally displaying content](example/angular/files/conditionally_displaying_content)
+* [Conditionally switching between DOM element](example/angular/basics/conditionally_switch_between_dom_elements)
+* [Displaying items in a list](example/angular/basics/displaying_items_in_a_list)
+* [Setting element classes using a string](example/angular/basics/setting_element_classes_using_a_string)
+* [Setting element classes using a list](example/angular/basics/setting_element_classes_using_a_list)
+* [Setting element classes using a map](example/angular/basics/setting_element_classes_using_a_map)
+
+### Components
+* [Creating a simple component](example/angular/components/creating_a_simple_component)
+* [Applying outside styles to a component](example/angular/components/applying_outside_styles_in_a_component)
+* [Adding an element into the Shadow DOM](example/angular/components/adding_an_element_into_the_shadow_dom)
+* [Binding an attribute to a string](example/angular/components/binding_an_attribute_to_a_string)
+* [Creating a one-way binding](example/angular/components/creating_a_one_way_binding)
+* [Creating a one-way one-time binding](example/angular/components/creating_a_one_way_one_time_binding)
+* [Creating a two-way binding](example/angular/components/creating_a_two_way_binding)
+* [Creating a component that allows child tags](example/angular/components/creating_a_component_that_allows_child_tags)
+* [Creating a component that allows only select child tags](example/angular/components/creating_a_component_that_allows_only_select_child_tags)
+
+### Forms
+* [Binding to a boolean using a checkbox](example/angular/components/binding_to_a_boolean_using_a_checkbox)
+* [Selecting an item from a dropdown](example/angular/components/selecting_an_item_from_a_dropdown)
+* [Binding to text fields](example/angular/components/binding_to_text_fields)
+* [Selecting a radio button](example/angular/components/selecting_a_radio_button)
+* [Selecting multiple checkboxes](example/angular/components/selecting_multiple_checkboxes)
+
 ##  Dart I/O and command-line apps
 * [Introduction](example/dart_io/introduction.md)
 

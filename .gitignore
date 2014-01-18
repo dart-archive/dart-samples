@@ -1,4 +1,4 @@
 packages
 .buildlog
 pubspec.lock
-DS_Store
+.DS_Store
