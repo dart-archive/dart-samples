@@ -27,7 +27,8 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Creating a component that allows child tags](example/angular/components/creating_a_component_that_allows_child_tags)
 * [Creating a component that allows only select child tags](example/angular/components/creating_a_component_that_allows_only_select_child_tags)
 * [Creating a component that can be used as table row &lt;tr&gt; ](example/angular/components/component_as_table_row)
-* [A list component that creates it's items dynamically from data](example/angular/components/list_component_generating_items_from_data)
+* [A list component that creates its items dynamically from data](example/angular/components/list_component_generating_items_from_data)
+* [A component that repeats over its child nodes](example/angular/components/component_that_repeats_its_children)
 
 ### Forms
 * [Binding to a boolean using a checkbox](example/angular/forms/binding_to_a_boolean_using_a_checkbox)
