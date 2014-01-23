@@ -45,6 +45,13 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Setting up a default view](example/angular/routing/setting_up_a_default_view)
 * [Redirecting to a new route](example/angular/routing/redirecting_to_a_new_route)
 
+### Filters
+* [Using a Polymer element with an Angular controller](example/angular/filters/getting_a_part_of_a_list)
+* [Using a Polymer element with an Angular controller](example/angular/filters/truncating_string_values)
+
+### Using Polymer elements
+* [Using a Polymer element with an Angular controller](example/angular/using_polymer_elements/using_a_polymer_element_with_an_angular_controller)
+
 ##  Dart I/O and command-line apps
 * [Introduction](example/dart_io/introduction.md)
 
