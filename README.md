@@ -34,6 +34,14 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Selecting a radio button](example/angular/forms/selecting_a_radio_button)
 * [Selecting multiple checkboxes](example/angular/forms/selecting_multiple_checkboxes)
 
+### Routing
+* [Accessing route params within components](example/angular/routing/accessing_route_params_within_components)
+* [Nesting routes](example/angular/routing/nesting_routes)
+* [Setting up a default view](example/angular/routing/setting_up_a_default_view)
+* [Accessing router in the controller](example/angular/routing/accessing_router_in_controller)
+* [Redirecting to a new route](example/angular/routing/redirecting_to_a_new_route)
+* [Setting up simple routing](example/angular/routing/setting_up_simple_routing)
+
 ##  Dart I/O and command-line apps
 * [Introduction](example/dart_io/introduction.md)
 
