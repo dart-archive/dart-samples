@@ -46,8 +46,13 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Redirecting to a new route](example/angular/routing/redirecting_to_a_new_route)
 
 ### Filters
-* [Using a Polymer element with an Angular controller](example/angular/filters/getting_a_part_of_a_list)
-* [Using a Polymer element with an Angular controller](example/angular/filters/truncating_string_values)
+* [Shortening a list](example/angular/filters/shortening_a_list)
+* [Shortening a string](example/angular/filters/shortening_a_string)
+* [Filtering list contents based on a string match](example/angular/filters/filtering_list_contents_based_on_a_string_match)
+* [Ordering list contents](example/angular/filters/ordering_list_contents)
+* [Filtering list contents using a function](example/angular/filters/filtering_list_contents_using_a_function)
+* [Ordering list contents by field](example/angular/filters/ordering_list_contents_by_field)
+* [Ordering list contents in reverse order](example/angular/filters/ordering_list_contents_in_reverse_order)
 
 ### Using Polymer elements
 * [Using a Polymer element with an Angular controller](example/angular/using_polymer_elements/using_a_polymer_element_with_an_angular_controller)
