@@ -8,7 +8,7 @@ import 'package:angular/angular.dart';
 
 @NgController(
     selector: '[controller-one]',
-    publishAs: 'ctrl1'
+    publishAs: 'ctrl'
 )
 class ControllerOne {
   String text = "Foo";
