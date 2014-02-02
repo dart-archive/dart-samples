@@ -10,14 +10,14 @@ import 'package:angular/angular.dart';
   publishAs: 'ctrl'
 )
 class MyController {
-  List<String> fruits = [
+  List<Map> fruits = <Map>[
     {'name': 'apple', 'selected': true},
     {'name': 'banana', 'selected': true},
     {'name': 'kiwi', 'selected': false}
   ];
 
-  List<String> get selectedFruits {
-    return fruits.where((fruit) => fruit['selected']).toList();
+  List<Map> get selectedFruits {
+    return fruits.where((Map fruit) => fruit['selected']).toList();
   }
 }
 
