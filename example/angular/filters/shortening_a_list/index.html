@@ -13,9 +13,8 @@ BSD-style license that can be found in the LICENSE file.
     <div class="well">
       <div my-controller>
         <!--
-          Prints the first three letters of each day followed by a period ('.'). 
-          Changing the value to -3 prints the *last* three letters ('day') for
-          each day.
+          Prints the first three days of the week.  Changing the limit 
+          value to -3 will print the *last* three days of the week.
         -->
         <div ng-repeat="item in ctrl.weekDays | limitTo: 3">
           {{item}}
