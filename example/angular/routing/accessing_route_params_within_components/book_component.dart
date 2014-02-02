@@ -13,7 +13,7 @@ import 'book.dart' show Book;
     publishAs: 'cmp'
 )
 class BookComponent {
-  @NgTwoWay('book-map')
+  @NgOneWay('book-map')
   Map<String, Book> bookMap;
   String _bookId;
 
