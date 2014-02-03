@@ -1,6 +1,8 @@
 library main;
 
-@MirrorsUsed(override: '*')
+@MirrorsUsed(
+    targets: const [MyAppModule, RowController, MyTrComponent],
+    override: '*')
 import 'dart:mirrors';
 
 import 'dart:html';
@@ -72,10 +74,6 @@ class MyAppModule extends Module {
   }
 }
 
-
-@MirrorsUsed(
-    targets: const [MyAppModule, RowController, MyTrComponent],
-    override: '*')
 void main() {
   ngBootstrap(module: new MyAppModule());
 }

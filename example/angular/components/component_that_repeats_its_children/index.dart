@@ -1,6 +1,8 @@
 library main;
 
-@MirrorsUsed(override: '*')
+@MirrorsUsed(
+    targets: const [MyComponent, NgBindNodesDirective],
+    override: '*')
 import 'dart:mirrors';
 
 import 'dart:html' as dom;
@@ -62,9 +64,6 @@ class MyComponent extends NgShadowRootAware {
   }
 }
 
-@MirrorsUsed(
-    targets: const [MyComponent, NgBindNodesDirective],
-    override: '*')
 class MyAppModule extends Module {
   MyAppModule() {
     type(MyComponent);
