@@ -1,5 +1,7 @@
 library main;
 
+@MirrorsUsed(override: '*')
+import 'dart:mirrors';
 import 'package:angular/angular.dart';
 import 'package:di/di.dart';
 
@@ -22,13 +24,16 @@ class MyComponent {
   }
 }
 
-
 class MyAppModule extends Module {
   MyAppModule() {
     type(MyComponent);
   }
 }
 
+// Temporary, please follow https://github.com/angular/angular.dart/issues/476
+@MirrorsUsed(
+  targets: const ['my_component'],
+  override: '*')
 void main() {
   ngBootstrap(module: new MyAppModule());
 }
