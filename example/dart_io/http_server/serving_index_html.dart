@@ -1,4 +1,4 @@
-// Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2013-2014, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -8,7 +8,6 @@
 
 library simple_http_server;
 
-import 'dart:async';
 import 'dart:io';
 import 'package:http_server/http_server.dart' show VirtualDirectory;
 
@@ -20,7 +19,7 @@ void directoryHandler(dir, request) {
 }
 
 void main() {
-  virDir = new VirtualDirectory(Platform.script.resolve('./web').toFilePath())
+  virDir = new VirtualDirectory(Platform.script.resolve('web').toFilePath())
     ..allowDirectoryListing = true
     ..directoryHandler = directoryHandler;
 
