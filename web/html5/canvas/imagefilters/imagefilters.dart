@@ -197,37 +197,37 @@ void main() {
                       0, 0, 0,
                       1, 2, 1];
 
-  var img = query('.orig');
+  var img = querySelector('.orig');
   window.onLoad.listen((e) => populateImages(img));
 
   // Click listener for grayscale.
-  query('[name = "grayscale"]').onClick.listen(
+  querySelector('[name = "grayscale"]').onClick.listen(
       (e) => toggleFilter('grayscale',
           () => new Filters(img).grayscale()));
   // Click listener for brightness.
-  query('[name = "brightness"]').onClick.listen(
+  querySelector('[name = "brightness"]').onClick.listen(
       (e) => toggleFilter('brightness',
           () => new Filters(img).brightness(brightAdj)));
   // Click listener for threshold.
-  query('[name = "threshold"]').onClick.listen(
+  querySelector('[name = "threshold"]').onClick.listen(
       (e) => toggleFilter('threshold',
           () => new Filters(img).threshold(thresholdVal)));
   // Click listener for sharpen.
-  query('[name = "sharpen"]').onClick.listen(
+  querySelector('[name = "sharpen"]').onClick.listen(
       (e) => toggleFilter('sharpen',
           () => new Filters(img).convolve(sharpenMask)));
   // Click listener for blur.
-  query('[name = "blur"]').onClick.listen(
+  querySelector('[name = "blur"]').onClick.listen(
       (e) => toggleFilter('blur',
           () => new Filters(img).convolve(blurMask)));
   // Click listener for sobel.
-  query('[name = "sobel"]').onClick.listen(
+  querySelector('[name = "sobel"]').onClick.listen(
       (e) => toggleFilter('sobel',
           () => new Filters(img).sobel(hSobelMask, vSobelMask)));
   // Click listener for custom.
-  query('[name = "custom"]').onClick.listen(
+  querySelector('[name = "custom"]').onClick.listen(
       (e) => toggleFilter('custom', () {
-        var matrix = query('#customMatrix').queryAll('input');
+        var matrix = querySelector('#customMatrix').querySelectorAll('input');
         var mask = new List();
         for (var i = 0; i < matrix.length; i++) {
           mask.add(double.parse(matrix[i].value));
@@ -238,7 +238,7 @@ void main() {
 
 // Add copies of the original image to each canvas element.
 void populateImages(ImageElement img) {
-  var canvases = queryAll('canvas');
+  var canvases = querySelectorAll('canvas');
   for(var i = 0; i < canvases.length; i++) {
     var canvas = canvases[i];
     canvas.parent.insertBefore(img.clone(true), canvas);
@@ -248,17 +248,17 @@ void populateImages(ImageElement img) {
 
 // Put the filtered image back to its original (unfiltered) condition.
 void restoreContent(String id) {
-  var canvas = query('#$id');
+  var canvas = querySelector('#$id');
   canvas.classes.remove('show');
   canvas.classes.add('hide');
   canvas.previousElementSibling.classes.remove('hide');
   canvas.previousElementSibling.classes.add('show');
-  canvas.parent.query('button').text = 'apply $id filter';
+  canvas.parent.querySelector('button').text = 'apply $id filter';
 }
 
 // Show the filtered image.
 void filterImage(String id, ImageData pixels) {
-  CanvasElement canvas = query('#$id');
+  CanvasElement canvas = querySelector('#$id');
   canvas.width = pixels.width;
   canvas.height = pixels.height;
   canvas.getContext('2d') as CanvasRenderingContext2D
@@ -267,13 +267,13 @@ void filterImage(String id, ImageData pixels) {
   canvas.previousElementSibling.classes.add('hide');
   canvas.classes.remove('hide');
   canvas.classes.add('show');
-  canvas.parent.query('button').text = 'remove $id filter';
+  canvas.parent.querySelector('button').text = 'remove $id filter';
 }
 
 // Handle applying the filter to the image.
 typedef ImageData ApplyFilter();
 void toggleFilter(String id, ApplyFilter filter) {
-  if (query('#$id').previousElementSibling.classes.contains('hide')) {
+  if (querySelector('#$id').previousElementSibling.classes.contains('hide')) {
     restoreContent(id);
   } else {
     filterImage(id, filter());
