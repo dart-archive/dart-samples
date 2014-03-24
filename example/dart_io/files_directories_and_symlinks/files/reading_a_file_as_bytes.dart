@@ -4,7 +4,6 @@
 
 /// Use the File `readAsBytes()` method to read file contents as bytes.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
