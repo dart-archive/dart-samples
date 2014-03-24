@@ -8,11 +8,11 @@
   override: '*')
 import 'dart:mirrors';
 import 'package:angular/angular.dart';
-import 'my_router.dart' show MyRouteInitializer;
+import 'my_router.dart' show myRouteInitializer;
 
 class MyAppModule extends Module {
   MyAppModule() {
-    type(RouteInitializer, implementedBy: MyRouteInitializer);
+    value(RouteInitializerFn, myRouteInitializer);
     factory(NgRoutingUsePushState,
         (_) => new NgRoutingUsePushState.value(false));
   }
