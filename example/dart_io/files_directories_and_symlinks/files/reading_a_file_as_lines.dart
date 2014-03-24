@@ -4,7 +4,6 @@
 
 /// Use the File `readAsLines()` method to read file contents as lines.
 
-import 'dart:async';
 import 'dart:io';
 
 void main() {
