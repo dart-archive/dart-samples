@@ -15,8 +15,7 @@ class Item {
 }
 
 @NgDirective(
-  selector: '[ng-bind-nodes]',
-  publishAs: 'ctrlx' // conflicts with my-component
+  selector: '[ng-bind-nodes]'
 )
 class NgBindNodesDirective {
   dom.Element _element;
@@ -24,8 +23,9 @@ class NgBindNodesDirective {
   Scope _scope;
   Compiler _compile;
   Injector _injector;
+  DirectiveMap _directiveMap;
 
-  NgBindNodesDirective(this._element, this._myComponent, this._scope, this._compile, this._injector);
+  NgBindNodesDirective(this._element, this._myComponent, this._scope, this._compile, this._injector, this._directiveMap);
 
   @NgOneWay('ng-bind-nodes') set nodes(var nodes) {
     print(nodes);
@@ -37,7 +37,7 @@ class NgBindNodesDirective {
       _element.nodes.add(node.clone(true));
     });
 
-    BlockFactory template = _compile(_element.nodes);
+    BlockFactory template = _compile(_element.nodes, _directiveMap);
     Block block = template(_injector, _element.nodes);
   }
 }
