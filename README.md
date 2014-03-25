@@ -93,7 +93,7 @@ See the [source on Github](https://github.com/dart-lang/dart_by_example/tree/mas
 * [Getting the response headers](example/dart_io/http/getting_the_response_headers.dart)
 
 ### HTTP server
-* [Implementing a dead-simple HTTP server](example/dart_io/http_server/implementing_a_dead_simple_http_server.dart)
+* [Implementing a 'Hello world' HTTP server](example/dart_io/http_server/implementing_a_hello_world_http_server.dart)
 * [Listing directory contents](example/dart_io/http_server/listing_directory_contents.dart)
 * [Serving index.html](example/dart_io/http_server/serving_index_html.dart)
 * [Serving a 404](example/dart_io/http_server/serving_a_404.dart)
