@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:path/path.dart' as PATH;
 
+// text.gsub /\[([^\]]+)\]\(([^)]+)\)/, '<a href="\2">\1</a>'
+
 printExample(List<String> lines) {
-  var i;
-  for (i = 0; i < lines.length; i++) {
+  var i = 0;
+  for (; i < lines.length; i++) {
     var line = lines[i].trim();
     // Get the first non-empty, non-comment line.
     if (line.startsWith('//') || (line.isEmpty)) {
@@ -29,7 +31,6 @@ header:
 has-permalinks: true
 ---
 
-{% include docs_toc.html %}
 ''';
 
 void main() {
@@ -58,6 +59,12 @@ void main() {
     } else {
       // Print non-link lines from the README.
       print(line);
+      // Title line.
+      if (line.startsWith('## ')) {
+        print('{:.no_toc}');
+        print('');
+        print ('{% include default_toc.html %}');
+      }
     }
   }
 }

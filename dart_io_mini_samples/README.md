@@ -1,9 +1,9 @@
-##  Dart I/O and Command Line Apps
+## Dart I/O and Command Line Apps
 
 * [Introduction](example/introduction.md)
 
 ### Files, directories, and symlinks
-* [Deleting a file, directory, or * symlink](example/files_directories_and_symlinks/deleting_a_file_directory_or_symlink.dart)
+* [Deleting a file, directory, or symlink](example/files_directories_and_symlinks/deleting_a_file_directory_or_symlink.dart)
 * [Renaming a file, directory, or symlink](example/files_directories_and_symlinks/renaming_a_file_directory_or_symlink.dart)
 * [Finding the type of a filesystem object](example/files_directories_and_symlinks/finding_the_type_of_a_filesystem_object.dart)
 * [Getting the parent directory](example/files_directories_and_symlinks/getting_the_parent_directory.dart)
