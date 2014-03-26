@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:path/path.dart' as PATH;
 
-// text.gsub /\[([^\]]+)\]\(([^)]+)\)/, '<a href="\2">\1</a>'
-
 printExample(List<String> lines) {
-  var i = 0;
-  for (; i < lines.length; i++) {
+  var i;
+  for (i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
     // Get the first non-empty, non-comment line.
     if (line.startsWith('//') || (line.isEmpty)) {
@@ -18,7 +16,7 @@ printExample(List<String> lines) {
   }
   print('');
   print('{% prettify dart %}');
-  print(lines.getRange(i, lines.length - 1).join('\n'));
+  print(lines.getRange(i, lines.length).join('\n'));
   print('{% endprettify %}');
   print('');
 }
