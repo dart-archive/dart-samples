@@ -1,6 +1,4 @@
 # Dart Editor
-.children
-.project
 *.dart.js
 *.dart.js.map
 *.dart.js.deps
@@ -8,11 +6,7 @@
 # pub
 packages
 
-# polymer
-.buildlog
-out
-pubspec.lock
-
 #other
-.DS_Store
 .settings
+.buildlog
+.DS_Store
