@@ -1,9 +1,5 @@
-dart-samples
-============
+## Dart HTML5 Samples
 
-[![Build Status](https://drone.io/github.com/dart-lang/dart-samples/status.png)](https://drone.io/github.com/dart-lang/dart-samples/latest)
-
-These are code samples written in [Dart](http://www.dartlang.org).
 Most of them were ported from [HTML5 Rocks](http://www.html5rocks.com/).
 
 So far, the samples cover HTML5 topics. We want to expand the scope of the
@@ -14,23 +10,23 @@ Samples
 
 Here are the samples we've created so far:
 
-* [A Beginner's Guide to Using the Application Cache](https://github.com/dart-lang/dart-samples/tree/master/web/html5/appcache/beginner)
-* [High DPI Canvas](https://github.com/dart-lang/dart-samples/tree/master/web/html5/canvas/hidpi)
-* [Image Filters with Canvas](https://github.com/dart-lang/dart-samples/tree/master/web/html5/canvas/imagefilters)
-* [Native HTML5 Drag and Drop](https://github.com/dart-lang/dart-samples/tree/master/web/html5/dnd/basics)
-* [Reading Files in JavaScript Using the File APIs](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/dndfiles)
-* [Exploring the FileSystem APIs](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/filesystem)
-* [Exploring the FileSystem APIs: Web-based Terminal](https://github.com/dart-lang/dart-samples/tree/master/web/html5/file/terminal)
-* [A Simple Trip Meter Using the Geolocation API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/geolocation/trip_meter)
-* [A Simple ToDo List Using HTML5 IndexedDB](https://github.com/dart-lang/dart-samples/tree/master/web/html5/indexeddb/todo)
-* [Local Storage Basics](https://github.com/dart-lang/dart-samples/tree/master/web/html5/localstorage/basics)
-* [Using the Notifications API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/notifications/quick)
-* [Pointer Lock And First Person Shooter Controls](https://github.com/dart-lang/dart-samples/tree/master/web/html5/pointerlock/fps)
-* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-samples/tree/master/web/html5/speed/animations)
-* [HTML5 Video](https://github.com/dart-lang/dart-samples/tree/master/web/html5/video/basics)
-* [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-samples/tree/master/web/html5/webaudio/intro)
-* [WebGL](https://github.com/dart-lang/dart-samples/tree/master/web/html5/webgl)
-* [WebSockets](https://github.com/dart-lang/dart-samples/tree/master/web/html5/websockets/basics)
+* [A Beginner's Guide to Using the Application Cache](https://github.com/dart-lang/dart-samples/tree/master/html5/web/appcache/beginner)
+* [High DPI Canvas](https://github.com/dart-lang/dart-samples/tree/master/html5/web/canvas/hidpi)
+* [Image Filters with Canvas](https://github.com/dart-lang/dart-samples/tree/master/html5/web/canvas/imagefilters)
+* [Native HTML5 Drag and Drop](https://github.com/dart-lang/dart-samples/tree/master/html5/web/dnd/basics)
+* [Reading Files in JavaScript Using the File APIs](https://github.com/dart-lang/dart-samples/tree/master/html5/web/file/dndfiles)
+* [Exploring the FileSystem APIs](https://github.com/dart-lang/dart-samples/tree/master/html5/web/file/filesystem)
+* [Exploring the FileSystem APIs: Web-based Terminal](https://github.com/dart-lang/dart-samples/tree/master/html5/web/file/terminal)
+* [A Simple Trip Meter Using the Geolocation API](https://github.com/dart-lang/dart-samples/tree/master/html5/web/geolocation/trip_meter)
+* [A Simple ToDo List Using HTML5 IndexedDB](https://github.com/dart-lang/dart-samples/tree/master/html5/web/indexeddb/todo)
+* [Local Storage Basics](https://github.com/dart-lang/dart-samples/tree/master/html5/web/localstorage/basics)
+* [Using the Notifications API](https://github.com/dart-lang/dart-samples/tree/master/html5/web/notifications/quick)
+* [Pointer Lock And First Person Shooter Controls](https://github.com/dart-lang/dart-samples/tree/master/html5/web/pointerlock/fps)
+* [Leaner, Meaner, Faster Animations with requestAnimationFrame](https://github.com/dart-lang/dart-samples/tree/master/html5/web/speed/animations)
+* [HTML5 Video](https://github.com/dart-lang/dart-samples/tree/master/html5/web/video/basics)
+* [Getting Started with the Web Audio API](https://github.com/dart-lang/dart-samples/tree/master/html5/web/webaudio/intro)
+* [WebGL](https://github.com/dart-lang/dart-samples/tree/master/html5/web/webgl)
+* [WebSockets](https://github.com/dart-lang/dart-samples/tree/master/html5/web/websockets/basics)
 
 Setup
 -----

@@ -1,4 +1,5 @@
-##  Dart I/O and command-line apps
+##  Dart I/O and Command Line Apps
+
 * [Introduction](example/introduction.md)
 
 ### Files, directories, and symlinks

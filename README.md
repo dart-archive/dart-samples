@@ -1,7 +1,7 @@
-# Dart samples
+# Dart Samples
 
-Note: The Angulardart examples have been moved to
-[https://github.com/shailen/angulardart-samples](https://github.com/shailen/angulardart-samples).
+[![Build Status](https://drone.io/github.com/dart-lang/dart-samples/status.png)](https://drone.io/github.com/dart-lang/dart-samples/latest)
+
 
 ##  Contents
 * [HTML5 samples](html5/README.md)
