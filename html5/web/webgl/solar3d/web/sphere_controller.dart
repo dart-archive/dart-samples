@@ -12,9 +12,9 @@ class MouseSphereCameraController {
   double sideAngle = 0.0;
   double radius = 200.0;
 
-  int accumDX = 0;
-  int accumDY = 0;
-  int accumScroll = 0;
+  num accumDX = 0;
+  num accumDY = 0;
+  num accumScroll = 0;
 
   final Vector3 _origin = new Vector3.zero();
 
