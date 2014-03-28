@@ -28,9 +28,9 @@ class VideoExample {
   VideoExample() {
     var inertia = -2.0;
 
-    _videoDom = query('#video-canvas-fancy');
-    _canvasCopy = query('#canvas-copy-fancy');
-    _canvasDraw = query('#canvas-draw-fancy');
+    _videoDom = querySelector('#video-canvas-fancy');
+    _canvasCopy = querySelector('#canvas-copy-fancy');
+    _canvasDraw = querySelector('#canvas-draw-fancy');
     _offsets = <num>[];
     _inertias = <num>[];
 

@@ -36,18 +36,18 @@ void main(){
   window.navigator.geolocation.getCurrentPosition()
   .then((Geoposition position) {
     startPosition = position;
-    query("#start-lat").text = "${startPosition.coords.latitude}";
-    query("#start-lon").text = "${startPosition.coords.longitude}";
+    querySelector("#start-lat").text = "${startPosition.coords.latitude}";
+    querySelector("#start-lon").text = "${startPosition.coords.longitude}";
   }, onError: (error) => alertError(error));
 
   window.navigator.geolocation.watchPosition().listen((Geoposition position) {
-    query("#current-lat").text = "${position.coords.latitude}";
-    query("#current-lon").text = "${position.coords.longitude}";
+    querySelector("#current-lat").text = "${position.coords.latitude}";
+    querySelector("#current-lon").text = "${position.coords.longitude}";
     num distance = calculateDistance(
         startPosition.coords.latitude,
         startPosition.coords.longitude,
         position.coords.latitude,
         position.coords.longitude);
-    query("#distance").text = "$distance";
+    querySelector("#distance").text = "$distance";
   }, onError: (error) => alertError(error));
 }

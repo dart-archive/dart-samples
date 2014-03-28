@@ -19,9 +19,9 @@ class TodoList {
   Element _todoItems;
 
   TodoList() {
-    _todoItems = query('#todo-items');
-    _input = query('#todo');
-    query('input#submit').onClick.listen((e) => _onAddTodo());
+    _todoItems = querySelector('#todo-items');
+    _input = querySelector('#todo');
+    querySelector('input#submit').onClick.listen((e) => _onAddTodo());
   }
 
   Future open() {

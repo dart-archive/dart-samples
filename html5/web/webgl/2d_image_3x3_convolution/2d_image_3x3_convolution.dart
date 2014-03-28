@@ -4,13 +4,13 @@ import 'dart:web_gl' as WebGL;
 import '../utils/webgl_utils.dart';
 
 void main() {
-  ImageElement image = query('#photo');
+  ImageElement image = querySelector('#photo');
   render(image);
 }
 
 void render(image) {
   // Get a WebGL context
-  var canvas = query("canvas");
+  var canvas = querySelector("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");
@@ -181,7 +181,7 @@ void render(image) {
 
   // Setup UI to pick kernels.
   var initialSelection = 'emboss';
-  var ui = query('#ui');
+  var ui = querySelector('#ui');
   SelectElement select = new Element.tag('select');
   kernels.forEach((name, value) {
     OptionElement option = new Element.tag('option');

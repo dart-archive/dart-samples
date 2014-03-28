@@ -12,7 +12,7 @@ class Basics {
   Element _dragSourceEl;
 
   void start() {
-    var cols = document.queryAll('#columns .column');
+    var cols = document.querySelectorAll('#columns .column');
     for (var col in cols) {
       col.onDragStart.listen(_onDragStart);
       col.onDragEnd.listen(_onDragEnd);
@@ -34,7 +34,7 @@ class Basics {
   void _onDragEnd(MouseEvent event) {
     Element dragTarget = event.target;
     dragTarget.classes.remove('moving');
-    var cols = document.queryAll('#columns .column');
+    var cols = document.querySelectorAll('#columns .column');
     for (var col in cols) {
       col.classes.remove('over');
     }

@@ -21,11 +21,12 @@ class Terminal {
   List<String> history = [];
   int historyPosition = 0;
   Map<String, Function> cmds;
+  HtmlEscape sanitizer = new HtmlEscape();
 
   Terminal(this.cmdLineContainer, this.outputContainer, this.cmdLineInput) {
-    cmdLine = document.query(cmdLineContainer);
-    output = document.query(outputContainer);
-    input = document.query(cmdLineInput);
+    cmdLine = document.querySelector(cmdLineContainer);
+    output = document.querySelector(outputContainer);
+    input = document.querySelector(cmdLineInput);
 
     // Always force text cursor to end of input line.
     window.onClick.listen((event) => cmdLine.focus());
@@ -91,7 +92,7 @@ class Terminal {
       DivElement line = input.parent.parent.clone(true);
       line.attributes.remove('id');
       line.classes.add('line');
-      InputElement cmdInput = line.query(cmdLineInput);
+      InputElement cmdInput = line.querySelector(cmdLineInput);
       cmdInput.attributes.remove('id');
       cmdInput.autofocus = false;
       cmdInput.readOnly = true;
@@ -104,7 +105,7 @@ class Terminal {
       String cmd = "";
       if (!cmdline.isEmpty) {
         cmdline.trim();
-        args = htmlEscape(cmdline).split(' ');
+        args = sanitizer.convert(cmdline).split(' ');
         cmd = args[0];
         args.removeRange(0, 1);
       }
@@ -113,7 +114,7 @@ class Terminal {
       if (cmds[cmd] is Function) {
         cmds[cmd](cmd, args);
       } else {
-        writeOutput('${htmlEscape(cmd)}: command not found');
+        writeOutput('${sanitizer.convert(cmd)}: command not found');
       }
 
       window.scrollTo(0, window.innerHeight);
@@ -140,7 +141,7 @@ class Terminal {
       'who': whoCommand
     };
 
-    writeOutput('<div>Welcome to ${htmlEscape(document.title)}! (v$version)</div>');
+    writeOutput('<div>Welcome to ${sanitizer.convert(document.title)}! (v$version)</div>');
     writeOutput(new DateTime.now().toLocal().toString());
     writeOutput('<p>Documentation: type "help"</p>');
     window.requestFileSystem(size, persistent: persistent)
@@ -148,7 +149,7 @@ class Terminal {
   }
 
   void filesystemNotInitialized(String cmd, List<String> args) {
-    writeOutput('<div>${htmlEscape(cmd)}: not available since filesystem was not initialized</div>');
+    writeOutput('<div>${sanitizer.convert(cmd)}: not available since filesystem was not initialized</div>');
   }
 
   void filesystemCallback(FileSystem filesystem) {
@@ -209,19 +210,19 @@ class Terminal {
         msg = 'FileError = ${error.code}: Error not handled';
         break;
     };
-    writeOutput('<div>Error: ${htmlEscape(msg)}</div>');
+    writeOutput('<div>Error: ${sanitizer.convert(msg)}</div>');
   }
 
   void invalidOpForEntryType(FileError error, String cmd, String dest) {
     switch (error.code) {
       case FileError.NOT_FOUND_ERR:
-        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: No such file or directory<br>');
+        writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(dest)}: No such file or directory<br>');
         break;
       case FileError.INVALID_STATE_ERR:
-        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: Not a directory<br>');
+        writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(dest)}: Not a directory<br>');
         break;
       case FileError.INVALID_MODIFICATION_ERR:
-        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dest)}: File already exists<br>');
+        writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(dest)}: File already exists<br>');
         break;
       default:
         errorHandler(error);
@@ -260,9 +261,9 @@ class Terminal {
       }, onError: errorHandler);
     }, onError: (error) {
       if (error.code == FileError.INVALID_STATE_ERR) {
-        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}): is a directory<br>');
+        writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(path)}): is a directory<br>');
       } else if (error.code == FileError.NOT_FOUND_ERR) {
-        writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
+        writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(path)}: No such file or directory<br>');
       } else {
         errorHandler(error);
       }
@@ -289,9 +290,9 @@ class Terminal {
   void catCommand(String cmd, List<String> args) {
     if (args.length >= 1) {
       var fileName = args[0];
-      read(cmd, fileName, (result) => writeOutput('<pre>${htmlEscape(result)}</pre>'));
+      read(cmd, fileName, (result) => writeOutput('<pre>${sanitizer.convert(result)}</pre>'));
     } else {
-      writeOutput('usage: ${htmlEscape(cmd)} filename');
+      writeOutput('usage: ${sanitizer.convert(cmd)} filename');
     }
   }
 
@@ -304,7 +305,7 @@ class Terminal {
     cwd.getDirectory(dest)
     .then((DirectoryEntry dirEntry) {
       cwd = dirEntry;
-      writeOutput('<div>${htmlEscape(dirEntry.fullPath)}</div>');
+      writeOutput('<div>${sanitizer.convert(dirEntry.fullPath)}</div>');
     }, onError: (FileError error) {
       invalidOpForEntryType(error, cmd, dest);
     });
@@ -338,7 +339,7 @@ class Terminal {
         StringBuffer html = formatColumns(entry);
         entry.forEach((file) {
           var fileType = file.isDirectory ? 'folder' : 'file';
-          var span = '<span class="$fileType">${htmlEscape(file.name)}</span><br>';
+          var span = '<span class="$fileType">${sanitizer.convert(file.name)}</span><br>';
           html.write(span);
         });
 
@@ -406,7 +407,7 @@ class Terminal {
     }
 
     if (args.length == 0) {
-      writeOutput('usage: ${htmlEscape(cmd)} [-p] directory<br>');
+      writeOutput('usage: ${sanitizer.convert(cmd)} [-p] directory<br>');
       return;
     }
 
@@ -438,8 +439,8 @@ class Terminal {
 
   void updateFilename(String cmd, List<String> args, Function action) {
     if (args.length != 2) {
-      writeOutput('usage: ${htmlEscape(cmd)} source target<br>'
-                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${htmlEscape(cmd)}'
+      writeOutput('usage: ${sanitizer.convert(cmd)} source target<br>'
+                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${sanitizer.convert(cmd)}'
                   ' source directory/');
       return;
     }
@@ -500,7 +501,7 @@ class Terminal {
   void openCommand(String cmd, List<String> args) {
     //var fileName = Strings.join(args, ' ').trim();
     if (args.length == 0) {
-      writeOutput('usage: ${htmlEscape(cmd)} [filenames]');
+      writeOutput('usage: ${sanitizer.convert(cmd)} [filenames]');
       return;
     }
 
@@ -515,7 +516,7 @@ class Terminal {
 
     cwd.getFile(path).then(successCallback, onError: (error) {
           if (error.code == FileError.NOT_FOUND_ERR) {
-            writeOutput('${htmlEscape(cmd)}: ${htmlEscape(path)}: No such file or directory<br>');
+            writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(path)}: No such file or directory<br>');
           } else {
             errorHandler(error);
           }
@@ -523,7 +524,7 @@ class Terminal {
   }
 
   void pwdCommand(String cmd, List<String> args) {
-    writeOutput(htmlEscape(cwd.fullPath));
+    writeOutput(sanitizer.convert(cwd.fullPath));
   }
 
   void rmCommand(String cmd, List<String> args) {
@@ -551,7 +552,7 @@ class Terminal {
               .then((DirectoryEntry dirEntry) => dirEntry.removeRecursively().then((_) {}, onError: errorHandler),
                   onError: errorHandler);
             } else if (error.code == FileError.INVALID_STATE_ERR) {
-              writeOutput('${htmlEscape(cmd)}: ${htmlEscape(fileName)}: is a directory<br>');
+              writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(fileName)}: is a directory<br>');
             } else {
               errorHandler(error);
             }
@@ -565,7 +566,7 @@ class Terminal {
       .then((dirEntry) {
             dirEntry.remove().then((_) {}, onError: (error) {
               if (error.code == FileError.INVALID_MODIFICATION_ERR) {
-                writeOutput('${htmlEscape(cmd)}: ${htmlEscape(dirName)}: Directory not empty<br>');
+                writeOutput('${sanitizer.convert(cmd)}: ${sanitizer.convert(dirName)}: Directory not empty<br>');
               } else {
                 errorHandler(error);
               }
@@ -578,7 +579,7 @@ class Terminal {
   void themeCommand(String cmd, List<String> args) {
     var theme = args.join(' ').trim();
     if (theme.isEmpty) {
-      writeOutput('usage: ${htmlEscape(cmd)} ${htmlEscape(themes.toString())}');
+      writeOutput('usage: ${sanitizer.convert(cmd)} ${sanitizer.convert(themes.toString())}');
     } else {
       if (themes.contains(theme)) {
         setTheme(theme);
@@ -589,7 +590,7 @@ class Terminal {
   }
 
   void whoCommand(String cmd, List<String> args) {
-    writeOutput('${htmlEscape(document.title)}'
+    writeOutput('${sanitizer.convert(document.title)}'
                 ' - By:  Eric Bidelman &lt;ericbidelman@chromium.org&gt;,'
                 ' Adam Singer &lt;financeCoding@gmail.com&gt;');
   }

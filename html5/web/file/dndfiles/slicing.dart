@@ -13,16 +13,16 @@ class Slicing {
   Element _byteRange;
 
   Slicing() {
-    _content = query('#byte-content');
-    _byteRange = query('#byte-range');
+    _content = querySelector('#byte-content');
+    _byteRange = querySelector('#byte-range');
 
-    _fileInput = query('#files');
+    _fileInput = querySelector('#files');
     _fileInput.onChange.listen((e) {
       _content.text = '';
       _byteRange.text = '';
     });
 
-    var buttons = query('#read-bytes-buttons');
+    var buttons = querySelector('#read-bytes-buttons');
     buttons.onClick.listen(_onClick);
   }
 

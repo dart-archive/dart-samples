@@ -111,18 +111,18 @@ class FilterSample {
   BiquadFilterNode _filter;
 
   FilterSample(this.appCtx) {
-    query("#play-pause-button").onClick.listen((Event e) {
+    querySelector("#play-pause-button").onClick.listen((Event e) {
       _toggle();
     });
-    query("#enable-filter-checkbox").onChange.listen((Event e) {
+    querySelector("#enable-filter-checkbox").onChange.listen((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
-    query("#frequency-range").onChange.listen((Event e) {
+    querySelector("#frequency-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
     });
-    query("#quality-range").onChange.listen((Event e) {
+    querySelector("#quality-range").onChange.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
     });

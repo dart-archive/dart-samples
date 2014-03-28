@@ -49,7 +49,7 @@ class Solar3DApplication {
   }
 
   void startup(String canvasId) {
-    canvas = query(canvasId);
+    canvas = querySelector(canvasId);
     glContext = canvas.getContext('experimental-webgl');
     if (glContext == null) {
       canvas.parent.text = ">>> Browser does not support WebGL <<<";
@@ -265,7 +265,7 @@ void showFps(int fps) {
 
   fpsAverage = fps * 0.05 + fpsAverage * 0.95;
 
-  query("#notes").text = "${fpsAverage.round()} fps";
+  querySelector("#notes").text = "${fpsAverage.round()} fps";
 }
 
 /**

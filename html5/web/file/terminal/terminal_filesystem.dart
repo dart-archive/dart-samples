@@ -6,8 +6,10 @@
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
 library terminal_filesystem;
+
+import 'dart:convert' show HtmlEscape;
 import 'dart:html';
-import 'package:dart_samples/htmlescape.dart';
+
 part 'terminal.dart';
 
 class TerminalFilesystem {

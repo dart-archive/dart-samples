@@ -5,22 +5,24 @@
 // This is a port of "Reading Files in JavaScript Using the File APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/dndfiles/
 
+import 'dart:convert' show HtmlEscape;
 import 'dart:html';
-import 'package:dart_samples/htmlescape.dart';
+
 
 class DndFiles {
   FormElement _readForm;
   InputElement _fileInput;
   Element _dropZone;
   OutputElement _output;
+  HtmlEscape sanitizer = new HtmlEscape();
 
   DndFiles() {
-    _output = document.query('#list');
-    _readForm = document.query('#read');
-    _fileInput = document.query('#files');
+    _output = document.querySelector('#list');
+    _readForm = document.querySelector('#read');
+    _fileInput = document.querySelector('#files');
     _fileInput.onChange.listen((e) => _onFileInputChange());
 
-    _dropZone = document.query('#drop-zone');
+    _dropZone = document.querySelector('#drop-zone');
     _dropZone.onDragOver.listen(_onDragOver);
     _dropZone.onDragEnter.listen((e) => _dropZone.classes.add('hover'));
     _dropZone.onDragLeave.listen((e) => _dropZone.classes.remove('hover'));
@@ -58,7 +60,7 @@ class DndFiles {
         reader.onLoad.listen((e) {
           var thumbnail = new ImageElement(src: reader.result);
           thumbnail.classes.add('thumb');
-          thumbnail.title = htmlEscape(file.name);
+          thumbnail.title = sanitizer.convert(file.name);
           thumbHolder.nodes.add(thumbnail);
         });
         reader.readAsDataUrl(file);
@@ -68,9 +70,9 @@ class DndFiles {
       // For all file types, display some properties.
       var properties = new Element.tag('span');
       properties.innerHtml = (new StringBuffer('<strong>')
-          ..write(htmlEscape(file.name))
+          ..write(sanitizer.convert(file.name))
           ..write('</strong> (')
-          ..write(file.type != null ? htmlEscape(file.type) : 'n/a')
+          ..write(file.type != null ? sanitizer.convert(file.type) : 'n/a')
           ..write(') ')
           ..write(file.size)
           ..write(' bytes')

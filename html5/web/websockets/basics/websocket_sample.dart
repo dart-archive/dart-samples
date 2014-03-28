@@ -14,7 +14,7 @@ import 'dart:async';
 WebSocket ws;
 
 outputMsg(String msg) {
-  var output = query('#output');
+  var output = querySelector('#output');
   var text = msg;
   if (!output.text.isEmpty) {
     text = "${output.text}\n${text}";

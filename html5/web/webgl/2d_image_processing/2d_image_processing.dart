@@ -6,13 +6,13 @@ import '../utils/webgl_utils.dart';
 List neffects = new List();
 
 void main() {
-  ImageElement image = query('#photo');
+  ImageElement image = querySelector('#photo');
   render(image);
 }
 
 void render(image) {
   // Get a WebGL context
-  var canvas = query("canvas");
+  var canvas = querySelector("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");
@@ -226,7 +226,7 @@ void render(image) {
                ];
 
   // Setup a UI
-  var ui = document.query('#ui');
+  var ui = document.querySelector('#ui');
   var table = new Element.tag('table');
   var tbody = new Element.tag('tbody');
 

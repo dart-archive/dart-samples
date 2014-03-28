@@ -18,7 +18,7 @@ List<String> getDartPaths(htmlPaths) {
   for (var htmlPath in htmlPaths) {
     var file = new File(htmlPath).readAsStringSync();
     var contents = parse(file);
-    var scripts = contents.body.queryAll("script");
+    var scripts = contents.body.querySelectorAll("script");
     if (!scripts.isEmpty) {
       for(var script in scripts) {
         if (script.attributes['type'] == 'application/dart') {

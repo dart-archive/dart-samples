@@ -42,7 +42,7 @@ void drawImage(CanvasElement canvas, ImageElement image,
 }
 
 void main() {
-  CanvasElement canvas = query("#canvas");
-  ImageElement pic = query("#pic");
+  CanvasElement canvas = querySelector("#canvas");
+  ImageElement pic = querySelector("#pic");
   drawImage(canvas, pic, desX: 10, desY: 10, desW: 300, desH: 90);
 }

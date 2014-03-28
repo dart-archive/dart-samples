@@ -5,15 +5,16 @@
 // This is a port of "Exploring the FileSystem APIs" to Dart.
 // See: http://www.html5rocks.com/en/tutorials/file/filesystem/
 
+import 'dart:convert' show HtmlEscape;
 import 'dart:html';
-import 'package:dart_samples/htmlescape.dart';
 
 class FileSystemExample {
   FileSystem _filesystem;
   Element _fileList;
+  HtmlEscape sanitizer = new HtmlEscape();
 
   FileSystemExample() {
-    _fileList = query('#example-list-fs-ul');
+    _fileList = querySelector('#example-list-fs-ul');
 
     window.requestFileSystem(1024 * 1024, persistent: false)
     .then(_requestFileSystemCallback, onError: _handleError);
@@ -21,9 +22,9 @@ class FileSystemExample {
 
   void _requestFileSystemCallback(FileSystem filesystem) {
     _filesystem = filesystem;
-    query('#add-button').onClick.listen((e) => _addFiles());
-    query('#list-button').onClick.listen((e) => _listFiles());
-    query('#remove-button').onClick.listen((e) => _removeFiles());
+    querySelector('#add-button').onClick.listen((e) => _addFiles());
+    querySelector('#list-button').onClick.listen((e) => _listFiles());
+    querySelector('#remove-button').onClick.listen((e) => _removeFiles());
   }
 
   void _handleError(FileError e) {
@@ -48,7 +49,7 @@ class FileSystemExample {
         msg = 'Unknown Error';
         break;
     }
-    query("#example-list-fs-ul").text = "Error: $msg";
+    querySelector("#example-list-fs-ul").text = "Error: $msg";
   }
 
   void _addFiles() {
@@ -72,7 +73,8 @@ class FileSystemExample {
         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                                       '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
         var li = new Element.tag("li");
-        li.innerHtml = "$img<span>${htmlEscape(entry.name)}</span>";
+
+        li.innerHtml = "$img<span>${sanitizer.convert(entry.name)}</span>";
         fragment.nodes.add(li);
       });
       _fileList.nodes.add(fragment);

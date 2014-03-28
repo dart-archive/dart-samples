@@ -39,7 +39,7 @@ class FpsControllerView {
   FpsControllerView(this.elementId) {
     camera = new Camera();
     controller = new MouseKeyboardCameraController();
-    canvas = query(elementId);
+    canvas = querySelector(elementId);
     ownMouse = false;
     cameraTransform = new Float32List(16);
   }

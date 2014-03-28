@@ -4,7 +4,7 @@ import 'dart:web_gl' as WebGL;
 import '../utils/webgl_utils.dart';
 
 void main() {
-  var canvas = query("canvas");
+  var canvas = querySelector("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");

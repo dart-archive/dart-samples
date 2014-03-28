@@ -5,13 +5,13 @@ import '../utils/webgl_utils.dart';
 
 //http://www.cake23.de/traveling-wavefronts-lit-up.html
 void main() {
-  ImageElement image = query('#photo');
+  ImageElement image = querySelector('#photo');
   render(image);
 }
 
 void render(image) {
   // Get a WebGL context
-  var canvas = query("canvas");
+  var canvas = querySelector("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");

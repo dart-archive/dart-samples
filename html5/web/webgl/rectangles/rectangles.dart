@@ -7,7 +7,7 @@ import '../utils/webgl_utils.dart';
 void main() {
   Random random = new Random();
   // Get a WebGL context
-  var canvas = query("canvas");
+  var canvas = querySelector("canvas");
   var gl = getWebGLContext(canvas);
   if (canvas is! CanvasElement || gl is! WebGL.RenderingContext) {
     print("Failed to load canvas");

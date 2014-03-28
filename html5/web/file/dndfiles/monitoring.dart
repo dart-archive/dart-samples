@@ -15,10 +15,10 @@ class Monitoring {
   FileReader _reader;
 
   Monitoring() {
-    _progressBar = query('#progress-bar');
-    _fileInput = document.query('#files');
+    _progressBar = querySelector('#progress-bar');
+    _fileInput = document.querySelector('#files');
     _fileInput.onChange.listen((e) => _onFilesSelected());
-    var cancelButton = query('#cancel-read');
+    var cancelButton = querySelector('#cancel-read');
     cancelButton.onClick.listen((e) => _onCancel());
   }
 
