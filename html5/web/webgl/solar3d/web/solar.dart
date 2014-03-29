@@ -122,7 +122,7 @@ class Solar3DApplication {
 
   void toggleFullscreen() {
     if (_fullScreened) {
-      document.cancelFullScreen();
+      document.exitFullscreen();
     } else {
       canvas.requestFullscreen();
     }
