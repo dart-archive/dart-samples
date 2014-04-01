@@ -122,7 +122,7 @@ class Solar3DApplication {
 
   void toggleFullscreen() {
     if (_fullScreened) {
-      document.cancelFullScreen();
+      document.exitFullscreen();
     } else {
       canvas.requestFullscreen();
     }
@@ -185,8 +185,8 @@ class Solar3DApplication {
     if (event is WheelEvent) {
       WheelEvent e = event;
       controller.mouseSensitivity = 720.0;
-      controller.accumDX -= e.deltaX;
-      controller.accumDY += e.deltaY;
+      controller.accumDX -= e.deltaX.round();
+      controller.accumDY += e.deltaY.round();
     }
     event.preventDefault();
   }
