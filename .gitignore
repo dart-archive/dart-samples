@@ -5,6 +5,7 @@
 
 # pub
 packages
+build
 
 #other
 .settings

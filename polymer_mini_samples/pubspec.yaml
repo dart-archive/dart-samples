@@ -1,0 +1,16 @@
+name: polymer_mini_samples
+description: Short Polymer examples
+dependencies:
+  polymer: ">=0.10.0-pre.9 <0.11.0"
+transformers:
+- polymer:
+    entry_points:
+      - web/binding_data/index.html
+      - web/binding_to_a_style_value/index.html
+      - web/creating_an_element/index.html
+      - web/creating_an_element_using_noscript/index.html
+      - web/waiting_until_an_element_is_ready/index.html
+dev_dependencies:
+  unittest: ">=0.10.0 <0.11.0"
+environment:
+  sdk: ">=1.2.0 <2.0.0"
