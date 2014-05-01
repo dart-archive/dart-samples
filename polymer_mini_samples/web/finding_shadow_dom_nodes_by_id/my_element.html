@@ -1,0 +1,12 @@
+<polymer-element name="my-element">
+  <template>
+    <p>
+    This is a <strong>{{owner}}</strong>'s editable-color-picker.
+    He likes the color <b style="color: {{color}}">{{color}}</b>.
+    </p>
+    <button on-click="{{setFocus}}">Set focus to text input</button>
+    <input id="nameInput" value="{{owner}}"
+           placeholder="Your name here...">
+  </template>
+  <script type="application/dart;component=1" src="my_element.dart"></script>
+</polymer-element>

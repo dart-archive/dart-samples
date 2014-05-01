@@ -10,6 +10,9 @@ transformers:
       - web/creating_an_element/index.html
       - web/creating_an_element_using_noscript/index.html
       - web/waiting_until_an_element_is_ready/index.html
+      - web/publishing_properties/index.html
+      - web/finding_shadow_dom_nodes_by_id/index.html
+      - web/binding_with_built_in_elements/index.html
 dev_dependencies:
   unittest: ">=0.10.0 <0.11.0"
 environment:
