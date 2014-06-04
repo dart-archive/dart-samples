@@ -6,6 +6,5 @@ dependencies:
   firebase: any
   http: any
   http_server: any
-  polymer: any
   route: any
   unittest: any

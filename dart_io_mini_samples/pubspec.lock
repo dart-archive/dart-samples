@@ -4,27 +4,19 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.12.2"
+    version: "0.11.10"
   angular:
     description: angular
     source: hosted
-    version: "0.9.10"
+    version: "0.9.9"
   args:
     description: args
     source: hosted
     version: "0.9.0"
-  barback:
-    description: barback
-    source: hosted
-    version: "0.11.1"
   browser:
     description: browser
     source: hosted
     version: "0.9.1"
-  code_transformers:
-    description: code_transformers
-    source: hosted
-    version: "0.0.1-dev.2"
   collection:
     description: collection
     source: hosted
@@ -33,18 +25,10 @@ packages:
     description: crypto
     source: hosted
     version: "0.9.0"
-  csslib:
-    description: csslib
-    source: hosted
-    version: "0.9.2"
-  custom_element:
-    description: custom_element
-    source: hosted
-    version: "0.10.0"
   di:
     description: di
     source: hosted
-    version: "0.0.34"
+    version: "0.0.33"
   firebase:
     description: firebase
     source: hosted
@@ -53,10 +37,6 @@ packages:
     description: html5lib
     source: hosted
     version: "0.9.2"
-  html_import:
-    description: html_import
-    source: hosted
-    version: "0.9.0"
   http:
     description: http
     source: hosted
@@ -89,14 +69,6 @@ packages:
     description: mock
     source: hosted
     version: "0.10.0"
-  mutation_observer:
-    description: mutation_observer
-    source: hosted
-    version: "0.9.0"
-  observe:
-    description: observe
-    source: hosted
-    version: "0.10.0-pre.0"
   path:
     description: path
     source: hosted
@@ -105,14 +77,6 @@ packages:
     description: perf_api
     source: hosted
     version: "0.0.8"
-  polymer:
-    description: polymer
-    source: hosted
-    version: "0.8.10+4"
-  polymer_expressions:
-    description: polymer_expressions
-    source: hosted
-    version: "0.9.1"
   route:
     description: route
     source: hosted
@@ -125,10 +89,6 @@ packages:
     description: shadow_dom
     source: hosted
     version: "0.9.2"
-  smoke:
-    description: smoke
-    source: hosted
-    version: "0.1.0-pre.1"
   source_maps:
     description: source_maps
     source: hosted
@@ -137,10 +97,6 @@ packages:
     description: stack_trace
     source: hosted
     version: "0.9.3"
-  template_binding:
-    description: template_binding
-    source: hosted
-    version: "0.9.1"
   unittest:
     description: unittest
     source: hosted
@@ -151,9 +107,5 @@ packages:
     version: "0.9.2+1"
   utf:
     description: utf
-    source: hosted
-    version: "0.9.0"
-  yaml:
-    description: yaml
     source: hosted
     version: "0.9.0"
