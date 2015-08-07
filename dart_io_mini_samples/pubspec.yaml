@@ -1,11 +1,8 @@
 name: dart_by_example
 description: Examples that teach the use of Dart through short, directed code snippets.
 dependencies:
-  angular: any
   crypto: any
-  firebase: any
   http: any
   http_server: any
-  polymer: any
+  path: any
   route: any
-  unittest: any
