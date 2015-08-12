@@ -10,14 +10,13 @@ import 'package:path/path.dart' as path;
 
 import 'dart:io';
 
-void main() {
+void main() async {
   // Create dir/ and dir/file.txt in the system temp directory.
-  new File('${Directory.systemTemp.path}/dir/myFile.txt').create(recursive: true)
-    // The created file is returned as a Future.
-    .then((file) {
-      print(path.basename(file.path)); // Prints 'file.txt'.
-      print(path.dirname(file.path));  // Prints path ending with 'dir'.
-      print(path.basenameWithoutExtension(file.path)); // Prints 'myFile'.
-      print(path.extension(file.path)); // Prints '.txt'.
-  });
+  var file = await new File('${Directory.systemTemp.path}/dir/myFile.txt').create(recursive: true);
+
+  print(path.basename(file.path)); // Prints 'file.txt'.
+  print(path.dirname(file.path));  // Prints path ending with 'dir'.
+  print(path.basenameWithoutExtension(file.path)); // Prints 'myFile'.
+  print(path.extension(file.path)); // Prints '.txt'.
+
 }

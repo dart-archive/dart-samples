@@ -9,10 +9,9 @@ void main() {
 
   // List the contents of the system temp directory.
   systemTempDir.list(recursive: true, followLinks: false)
-    .listen((FileSystemEntity entity) {
+    .listen((FileSystemEntity entity) async {
       // Print the path only if it represents a symlink.
-      FileSystemEntity.isLink(entity.path).then((isLink) {
-        if (isLink) print(entity.path);
-      });
+      var isLink = await FileSystemEntity.isLink(entity.path);
+      if (isLink) print(entity.path);
     });
 }

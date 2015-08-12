@@ -6,8 +6,7 @@
 
 import 'dart:io';
 
-void main() {
-  new File('file.txt').readAsLines().then((List<String> lines) {
-    // Do something with lines.
-  });
+void main() async {
+  List<String> lines = await new File('file.txt').readAsLines();
+  lines.forEach((String line) => print(line));
 }

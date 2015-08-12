@@ -6,8 +6,7 @@
 
 import 'dart:io';
 
-void main() {
-  new File('file.txt').readAsString().then((String contents) {
-    // Do something with the file contents.
-  });
+main() async {
+  var contents = await new File('file.txt').readAsString();
+  print(contents);
 }

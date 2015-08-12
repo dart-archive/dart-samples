@@ -13,19 +13,18 @@ import 'package:http_server/http_server.dart' show VirtualDirectory;
 
 VirtualDirectory virDir;
 
-void directoryHandler(dir, request) {
+directoryHandler(dir, request) {
   var indexUri = new Uri.file(dir.path).resolve('index.html');
   virDir.serveFile(new File(indexUri.toFilePath()), request);
 }
 
-void main() {
+main() async {
   virDir = new VirtualDirectory(Platform.script.resolve('web').toFilePath())
     ..allowDirectoryListing = true
     ..directoryHandler = directoryHandler;
 
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
-    server.listen((request) {
-      virDir.serveRequest(request);
-    });
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+  server.listen((request) {
+    virDir.serveRequest(request);
   });
 }

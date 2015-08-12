@@ -7,6 +7,6 @@
 
 import 'package:http/http.dart' as http;
 
-void main() {
-  http.read("http://www.google.com/").then(print);
+main() async {
+  print(await http.read("http://www.google.com/"));
 }

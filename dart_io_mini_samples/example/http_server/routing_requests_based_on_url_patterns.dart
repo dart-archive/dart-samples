@@ -35,12 +35,11 @@ serveNotFound(req) {
   req.response.close();
 }
 
-void main() {
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
-    var router = new Router(server)
-      // Associate callbacks with URLs.
-      ..serve(postsUrl, method: 'GET').listen(servePosts)
-      ..serve(postUrl, method: 'GET').listen(servePost)
-      ..defaultStream.listen(serveNotFound);
-  });
+void main() async {
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+  var router = new Router(server)
+  // Associate callbacks with URLs.
+  ..serve(postsUrl, method: 'GET').listen(servePosts)
+  ..serve(postUrl, method: 'GET').listen(servePost)
+  ..defaultStream.listen(serveNotFound);
 }

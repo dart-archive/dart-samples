@@ -4,34 +4,37 @@ import "package:lazyloader/breakfast.dart" deferred as breakfast;
 import "package:lazyloader/lunch.dart"     deferred as lunch;
 import "package:lazyloader/dinner.dart"    deferred as dinner;
 
-main() {
+main() async {
   querySelector('#show-breakfast').onClick.listen((_) {
-    breakfast.loadLibrary().then(onBreakfastLoaded);
+    await breakfast.loadLibrary();
+    onBreakfastLoaded();
   });
   querySelector('#show-lunch').onClick.listen((_) {
-    lunch.loadLibrary().then(onLunchLoaded);
+    await lunch.loadLibrary();
+    onLunchLoaded();
   });
   querySelector('#show-dinner').onClick.listen((_) {
-    dinner.loadLibrary().then(onDinnerLoaded);
+    await dinner.loadLibrary();
+    onDinnerLoaded();
   });
 }
 
-void onBreakfastLoaded(e) {
+onBreakfastLoaded() {
   print('breakfast loaded');
   changeMenu(breakfast.menu);
 }
 
-void onLunchLoaded(e) {
+onLunchLoaded() {
   print('lunch loaded');
   changeMenu(lunch.menu);
 }
 
-void onDinnerLoaded(e) {
+onDinnerLoaded() {
   print('dinner loaded');
   changeMenu(dinner.menu);
 }
 
-void changeMenu(String menu) {
+changeMenu(String menu) {
   var el = querySelector("#text_id");
   el.text = menu;
 }
