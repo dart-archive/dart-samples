@@ -9,7 +9,7 @@
 import 'dart:io' show Platform;
 import 'package:path/path.dart' as path;
 
-void main() {
+main() {
   // Prints  '\' on Windows and '/' on other platforms.
   print(Platform.pathSeparator);
 

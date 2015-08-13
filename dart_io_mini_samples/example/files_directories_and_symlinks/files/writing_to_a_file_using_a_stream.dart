@@ -9,7 +9,7 @@
 
 import 'dart:io';
 
-void main() {
+main() {
   var file = new File('file.txt');
   var sink = file.openWrite();
   sink.write('FILE ACCESSED ${new DateTime.now()}\n');

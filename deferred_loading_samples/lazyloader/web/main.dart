@@ -4,16 +4,16 @@ import "package:lazyloader/breakfast.dart" deferred as breakfast;
 import "package:lazyloader/lunch.dart"     deferred as lunch;
 import "package:lazyloader/dinner.dart"    deferred as dinner;
 
-main() async {
-  querySelector('#show-breakfast').onClick.listen((_) {
+main() {
+  querySelector('#show-breakfast').onClick.listen((_) async {
     await breakfast.loadLibrary();
     onBreakfastLoaded();
   });
-  querySelector('#show-lunch').onClick.listen((_) {
+  querySelector('#show-lunch').onClick.listen((_) async {
     await lunch.loadLibrary();
     onLunchLoaded();
   });
-  querySelector('#show-dinner').onClick.listen((_) {
+  querySelector('#show-dinner').onClick.listen((_) async {
     await dinner.loadLibrary();
     onDinnerLoaded();
   });

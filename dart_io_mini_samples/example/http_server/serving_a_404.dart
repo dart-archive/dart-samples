@@ -23,9 +23,5 @@ main() async {
     ..errorPageHandler = errorPageHandler;
 
   var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
-  server.listen((request) {
-    virDir.serveRequest(request);
-  });
+  await for (var request in server) virDir.serveRequest(request);
 }
-
-

@@ -6,7 +6,7 @@
 
 import 'package:http/http.dart' as http;
 
-void main() async {
+main() async {
   var url = 'http://httpbin.org/post';
   var response = await http.post(url, body: 'name=doodle&color=blue');
   print("Response status: ${response.statusCode}");

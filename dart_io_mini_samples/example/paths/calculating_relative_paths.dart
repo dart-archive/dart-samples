@@ -10,7 +10,7 @@
 import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
 
-void main() {
+main() {
   // The path from the current directory to the system temp directory.
   print(path.relative(Directory.systemTemp.path));
 

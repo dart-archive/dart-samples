@@ -7,7 +7,7 @@
 
 import 'dart:io' show Platform;
 
-void main() {
+main() {
   // Get the URI of the script being run.
   var uri = Platform.script;
   print(uri); // Prints something like '/Users/shailentuli/workspace/...'.

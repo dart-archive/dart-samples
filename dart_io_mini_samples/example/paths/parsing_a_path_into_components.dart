@@ -7,7 +7,7 @@
 
 import 'package:path/path.dart' as path;
 
-void main() {
+main() {
   print(path.split('/Users/shailen')); // Prints ['/', 'Users', 'shailen'].
 
   // Windows example.

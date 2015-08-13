@@ -8,7 +8,7 @@
 
 import 'dart:io';
 
-void main() async {
+main() async {
   var directory = await Directory.systemTemp.createTemp('my_temp_dir');
   print(directory.path);
 }

@@ -8,7 +8,7 @@
 
 import 'dart:io';
 
-void main() async {
+main() async {
   // Get the system temp directory.
   var systemTempDir = Directory.systemTemp;
 

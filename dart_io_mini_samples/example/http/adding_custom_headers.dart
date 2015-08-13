@@ -8,7 +8,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-void main() async {
+main() async {
   var url = 'https://api.github.com/users/dart-lang/repos';
   var response = await http.get(url, headers : {'User-Agent':'Dart/1.0 (My Dart client)'});
 

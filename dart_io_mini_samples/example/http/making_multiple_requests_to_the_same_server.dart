@@ -18,7 +18,7 @@ printResponseBody(response) {
   print('...\n');
 }
 
-void main() async {
+main() async {
   var url = 'http://www.google.com/';
   var client = new http.Client();
   var response = await client.get('${url}/search');

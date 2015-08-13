@@ -10,7 +10,7 @@ import 'package:path/path.dart' as path;
 
 import 'dart:io';
 
-void main() async {
+main() async {
   // Create dir/ and dir/file.txt in the system temp directory.
   var file = await new File('${Directory.systemTemp.path}/dir/myFile.txt').create(recursive: true);
 

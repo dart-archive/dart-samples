@@ -33,7 +33,7 @@ has-permalinks: true
 
 ''';
 
-void main() {
+main() {
   print(fileHeader);
 
   // RegExp to match a markdown link such as [Google](http://google.com)

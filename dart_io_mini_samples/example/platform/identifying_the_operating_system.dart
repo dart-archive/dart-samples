@@ -8,7 +8,7 @@
 
 import 'dart:io' show Platform, stdout;
 
-void main() {
+main() {
   // Get the operating system as a string.
   String os = Platform.operatingSystem;
 

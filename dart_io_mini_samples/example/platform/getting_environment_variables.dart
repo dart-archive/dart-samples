@@ -6,7 +6,7 @@
 
 import 'dart:io' show Platform;
 
-void main() {
+main() {
   Map<String, String> envVars = Platform.environment;
   print(envVars['PATH']);
 }

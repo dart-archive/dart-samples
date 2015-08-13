@@ -13,19 +13,21 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 
-main() {
+main() async {
   final file = new File('file.txt');
   Stream<List<int>> inputStream = file.openRead();
 
-  inputStream
+  Stream<String> lines = inputStream
     // Decode to UTF8.
     .transform(UTF8.decoder)
     // Convert stream to individual lines.
-    .transform(new LineSplitter())
-    // Process results.
-    .listen((String line) {
-        print('$line: ${line.length} bytes');
-      },
-      onDone: () { print('File is now closed.'); },
-      onError: (e) { print(e.toString()); });
+    .transform(new LineSplitter());
+
+  try {
+    await for (String line in lines) print('$line: ${line.length} bytes');
+  } catch(e) {
+    print(e.toString());
+  }
+
+  print('File is now closed.');
 }

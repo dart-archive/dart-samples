@@ -8,7 +8,7 @@
 
 import 'dart:io';
 
-void main() async {
+main() async {
   // Creates dir/ and dir/subdir/.
   var directory = await new Directory('dir/subdir');
   print(directory.path);

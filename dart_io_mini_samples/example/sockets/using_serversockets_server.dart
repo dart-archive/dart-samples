@@ -11,7 +11,5 @@ import 'dart:convert';
 main() async {
   var serverSocket = await ServerSocket.bind('127.0.0.1', 4041);
   print('connected');
-  serverSocket.listen((socket) {
-  	socket.transform(UTF8.decoder).listen(print);
-  });
+  await for (var socket in serverSocket) socket.transform(UTF8.decoder).listen(print);
 }

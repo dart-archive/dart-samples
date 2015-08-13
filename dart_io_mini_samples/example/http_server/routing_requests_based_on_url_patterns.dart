@@ -35,7 +35,7 @@ serveNotFound(req) {
   req.response.close();
 }
 
-void main() async {
+main() async {
   var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
   var router = new Router(server)
   // Associate callbacks with URLs.

@@ -15,13 +15,13 @@ handleMsg(msg) {
 main() {
   runZoned(() async {
     var server = await HttpServer.bind('127.0.0.1', 4040);
-    server.listen((HttpRequest req) {
+    await for (HttpRequest req in server) {
       if (req.uri.path == '/ws') {
         // Upgrade a HttpRequest to a WebSocket connection. 
         var socket = await WebSocketTransformer.upgrade(req);
         socket.listen(handleMsg);
       }
-    });
+    }
   },
   onError: (e) => print("An error occurred."));
 }

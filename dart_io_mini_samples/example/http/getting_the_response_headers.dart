@@ -8,7 +8,7 @@
 
 import 'package:http/http.dart' as http;
 
-void main() async {
+main() async {
   var url = 'http://httpbin.org/';
   var response = await http.get(url);
 
