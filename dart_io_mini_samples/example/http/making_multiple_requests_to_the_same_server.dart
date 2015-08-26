@@ -21,9 +21,13 @@ printResponseBody(response) {
 main() async {
   var url = 'http://www.google.com/';
   var client = new http.Client();
-  var response = await client.get('${url}/search');
-  printResponseBody(response);
-  response = await client.get('${url}/doodles');
-  printResponseBody(response);
-  client.close();
+  try {
+    var response = await client.get('${url}/search');
+    printResponseBody(response);
+    response = await client.get('${url}/doodles');
+    printResponseBody(response);
+    client.close();
+  } catch (e) {
+    client.close();
+  }
 }

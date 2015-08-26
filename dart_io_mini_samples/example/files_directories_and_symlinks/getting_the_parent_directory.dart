@@ -11,7 +11,8 @@ import 'dart:async'; // Import not needed but added here to explicitly assign ty
 
 main() async {
   // List the contents of the system temp directory.
-  Stream<FileSystemEntity> entityList = Directory.systemTemp.list(recursive: true, followLinks: false);
+  Stream<FileSystemEntity> entityList =
+      Directory.systemTemp.list(recursive: true, followLinks: false);
 
   await for (FileSystemEntity entity in entityList) print(entity.parent.path);
 }

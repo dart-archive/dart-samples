@@ -16,6 +16,7 @@ main() async {
 
   // List directory contents, recursing into sub-directories, but not following
   // symbolic links.
-  Stream<FileSystemEntity> entityList = systemTempDir.list(recursive: true, followLinks: false);
+  Stream<FileSystemEntity> entityList =
+      systemTempDir.list(recursive: true, followLinks: false);
   await for (FileSystemEntity entity in entityList) print(entity.path);
 }

@@ -17,10 +17,10 @@ main() async {
 
   // Prints path ending with `foo.txt`.
   print('The path is ${file.path}');
-  
+
   // Rename the file.
   await file.rename('${systemTempDir.path}/bar.txt');
-  
+
   // Prints path ending with `bar.txt`.
   print('The path is ${file.path}');
 }

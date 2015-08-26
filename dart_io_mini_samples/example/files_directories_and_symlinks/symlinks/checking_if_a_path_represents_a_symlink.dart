@@ -9,10 +9,11 @@ main() async {
   var systemTempDir = Directory.systemTemp;
 
   // List the contents of the system temp directory.
-  Stream<FileSystemEntity> entityList = systemTempDir.list(recursive: true, followLinks: false); 
+  Stream<FileSystemEntity> entityList =
+      systemTempDir.list(recursive: true, followLinks: false);
   await for (FileSystemEntity entity in entityList) {
-  	// Print the path only if it represents a symlink.
-   	var isLink = await FileSystemEntity.isLink(entity.path);
-  	if (isLink) print(entity.path);
+    // Print the path only if it represents a symlink.
+    var isLink = await FileSystemEntity.isLink(entity.path);
+    if (isLink) print(entity.path);
   }
 }

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// An HTTP request may return a response, or it may generate an error. 
+/// An HTTP request may return a response, or it may generate an error.
 import 'package:http/http.dart' as http;
 
 handleSuccess(http.Response response) {
@@ -17,10 +17,9 @@ handleFailure(error) {
 
 main() async {
   try {
-  	var response = await http.get("http://some_bogus_website.org");
-  	handleSuccess(response);
-  }
-  catch(e) {
-  	handleFailure(e);
+    var response = await http.get("http://some_bogus_website.org");
+    handleSuccess(response);
+  } catch (e) {
+    handleFailure(e);
   }
 }

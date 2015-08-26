@@ -18,14 +18,14 @@ main() async {
   Stream<List<int>> inputStream = file.openRead();
 
   Stream<String> lines = inputStream
-    // Decode to UTF8.
-    .transform(UTF8.decoder)
-    // Convert stream to individual lines.
-    .transform(new LineSplitter());
+      // Decode to UTF8.
+      .transform(UTF8.decoder)
+      // Convert stream to individual lines.
+      .transform(new LineSplitter());
 
   try {
     await for (String line in lines) print('$line: ${line.length} bytes');
-  } catch(e) {
+  } catch (e) {
     print(e.toString());
   }
 

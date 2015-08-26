@@ -1,8 +1,8 @@
 import 'dart:html';
 
 import "package:lazyloader/breakfast.dart" deferred as breakfast;
-import "package:lazyloader/lunch.dart"     deferred as lunch;
-import "package:lazyloader/dinner.dart"    deferred as dinner;
+import "package:lazyloader/lunch.dart" deferred as lunch;
+import "package:lazyloader/dinner.dart" deferred as dinner;
 
 main() {
   querySelector('#show-breakfast').onClick.listen((_) async {

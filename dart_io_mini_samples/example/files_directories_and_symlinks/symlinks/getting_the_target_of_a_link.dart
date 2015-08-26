@@ -18,7 +18,7 @@ main() async {
     print(link.path);
     var targetPath = await link.target();
     print(targetPath);
-  } catch(e) {
+  } catch (e) {
     print(e.message);
   }
 }

@@ -10,6 +10,6 @@ import 'dart:io';
 
 main() async {
   // Creates dir/ and dir/subdir/.
-  var directory = await new Directory('dir/subdir');
+  var directory = await new Directory('dir/subdir').create(recursive: true);
   print(directory.path);
 }

@@ -4,16 +4,13 @@
 
 import 'dart:io';
 
-void handleError(e) {
-  print('There was a ${e.runtimeType} error');
-  print(e.message);
-}
-
 main() async {
   final filename = 'non_existent_file.txt';
   try {
     var file = await new File(filename).readAsString();
-  } catch(e) {
-    handleError(e);    
+    print(file);
+  } catch (e) {
+    print('There was a ${e.runtimeType} error');
+    print('Could not read $filename');
   }
 }

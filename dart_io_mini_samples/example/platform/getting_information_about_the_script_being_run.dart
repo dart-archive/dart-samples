@@ -14,5 +14,6 @@ main() {
 
   // Convert the URI to a path.
   var path = uri.toFilePath();
-  print(path); // Prints something like 'file:///Users/shailentuli/workspace/...'.
+  print(
+      path); // Prints something like 'file:///Users/shailentuli/workspace/...'.
 }
