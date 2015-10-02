@@ -8,18 +8,19 @@
 
 import 'dart:io';
 
-void main() {
+main() async {
   // Get the system temp directory.
   var systemTempDir = Directory.systemTemp;
 
   // Create a file.
-  new File('${systemTempDir.path}/foo.txt').create()
-    .then((file) {
-      print('The path is ${file.path}'); // Prints path ending with `foo.txt`.
-      // Rename the file.
-      return file.rename('${systemTempDir.path}/bar.txt');
-    })
-    .then((file) {
-      print('The path is ${file.path}'); // Prints path ending with `bar.txt`.
-    });
+  var file = await new File('${systemTempDir.path}/foo.txt').create();
+
+  // Prints path ending with `foo.txt`.
+  print('The path is ${file.path}');
+
+  // Rename the file.
+  await file.rename('${systemTempDir.path}/bar.txt');
+
+  // Prints path ending with `bar.txt`.
+  print('The path is ${file.path}');
 }

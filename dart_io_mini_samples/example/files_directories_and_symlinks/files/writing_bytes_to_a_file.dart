@@ -7,16 +7,15 @@
 import 'dart:io';
 import 'dart:convert';
 
-void main() {
+main() async {
   final string = 'Dart!';
+
   // Encode to UTF8.
   var encodedData = UTF8.encode(string);
+  var file = await new File('file.txt');
+  file.writeAsBytes(encodedData);
+  var data = await file.readAsBytes();
 
-  new File('file.txt')
-    .writeAsBytes(encodedData)
-    .then((file) => file.readAsBytes())
-    .then((data) {
-      // Decode to a string, and print.
-      print(UTF8.decode(data)); // Prints 'Dart!'.
-  });
+  // Decode to a string, and print.
+  print(UTF8.decode(data)); // Prints 'Dart!'.
 }

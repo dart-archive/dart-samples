@@ -8,11 +8,8 @@
 
 import 'dart:io';
 
-void main() {
+main() async {
   // Creates dir/ and dir/subdir/.
-  new Directory('dir/subdir').create(recursive: true)
-    // The created directory is returned as a Future.
-    .then((Directory directory) {
-      print(directory.path);
-  });
+  var directory = await new Directory('dir/subdir').create(recursive: true);
+  print(directory.path);
 }

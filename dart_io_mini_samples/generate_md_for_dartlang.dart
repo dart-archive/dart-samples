@@ -33,13 +33,13 @@ has-permalinks: true
 
 ''';
 
-void main() {
+main() {
   print(fileHeader);
 
   // RegExp to match a markdown link such as [Google](http://google.com)
   var regExp = new RegExp(r'\[([^\]]+)\]\(([^)]+)\)');
   var readme = new File('README.md').readAsLinesSync();
-  for(var line in readme) {
+  for (var line in readme) {
     line = line.trim();
     if (line.startsWith("*")) {
       if (regExp.hasMatch(line)) {
@@ -63,7 +63,7 @@ void main() {
       if (line.startsWith('## ')) {
         print('{:.no_toc}');
         print('');
-        print ('{% include default_toc.html %}');
+        print('{% include default_toc.html %}');
       }
     }
   }

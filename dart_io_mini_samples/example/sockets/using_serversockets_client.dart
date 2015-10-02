@@ -8,9 +8,8 @@
 
 import 'dart:io';
 
-main() {
-  Socket.connect('127.0.0.1', 4041).then((socket) {
-    print(socket.runtimeType);
-    socket.write('Hello, World!');
-  });
+main() async {
+  var socket = await Socket.connect('127.0.0.1', 4041);
+  print(socket.runtimeType);
+  socket.write('Hello, World!');
 }

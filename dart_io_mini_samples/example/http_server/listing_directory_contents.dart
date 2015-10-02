@@ -12,14 +12,11 @@ library simple_http_server;
 import 'dart:io';
 import 'package:http_server/http_server.dart' show VirtualDirectory;
 
-void main() {
+main() async {
   final MY_HTTP_ROOT_PATH = Platform.script.resolve('web').toFilePath();
   final virDir = new VirtualDirectory(MY_HTTP_ROOT_PATH)
     ..allowDirectoryListing = true;
 
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
-    server.listen((request) {
-      virDir.serveRequest(request);
-    });
-  });
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+  await for (var request in server) virDir.serveRequest(request);
 }

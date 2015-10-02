@@ -18,16 +18,16 @@ printResponseBody(response) {
   print('...\n');
 }
 
-void main() {
-   var url = 'http://www.google.com/';
-   var client = new http.Client();
-   client.get('${url}/search')
-       .then((response) {
-         printResponseBody(response);
-         return client.get('${url}/doodles');
-        })
-       .then(printResponseBody)
-
-       // Close the connection when done.
-       .whenComplete(client.close);
+main() async {
+  var url = 'http://www.google.com/';
+  var client = new http.Client();
+  try {
+    var response = await client.get('${url}/search');
+    printResponseBody(response);
+    response = await client.get('${url}/doodles');
+    printResponseBody(response);
+    client.close();
+  } catch (e) {
+    client.close();
+  }
 }

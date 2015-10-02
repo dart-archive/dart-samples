@@ -7,12 +7,12 @@
 /// and Link.
 
 import 'dart:io';
+import 'dart:async'; // Import not needed but added here to explicitly assign type for clarity below.
 
-void main() {
+main() async {
   // List the contents of the system temp directory.
-  Directory.systemTemp.list(recursive: true, followLinks: false)
-    .listen((FileSystemEntity entity) {
-      // Print the path of the parent of each file, directory, and symlink.
-      print(entity.parent.path);
-    });
+  Stream<FileSystemEntity> entityList =
+      Directory.systemTemp.list(recursive: true, followLinks: false);
+
+  await for (FileSystemEntity entity in entityList) print(entity.parent.path);
 }

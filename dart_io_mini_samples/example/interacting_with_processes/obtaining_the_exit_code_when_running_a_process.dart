@@ -9,11 +9,9 @@
 
 import 'dart:io';
 
-main() {
-  Process.start('ls', ['-l']).then((process) {
-    // Get the exit code from the new process.
-    process.exitCode.then((exitCode) {
-      print('exit code: $exitCode'); // Prints 'exit code: 1'.
-    });
-  });
+main() async {
+  var process = await Process.start('ls', ['-l']);
+  // Get the exit code from the new process.
+  var exitCode = await process.exitCode;
+  print('exit code: $exitCode');
 }

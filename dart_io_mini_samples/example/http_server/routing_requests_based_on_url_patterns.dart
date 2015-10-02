@@ -14,7 +14,6 @@ final postsUrl = new UrlPattern(r'/posts\/?');
 // Pattern for a single post('/post/24', for example).
 final postUrl = new UrlPattern(r'/post/(\d+)\/?');
 
-
 // Callback for all posts (plural).
 servePosts(req) {
   req.response.write("All blog posts");
@@ -35,12 +34,11 @@ serveNotFound(req) {
   req.response.close();
 }
 
-void main() {
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
-    var router = new Router(server)
-      // Associate callbacks with URLs.
-      ..serve(postsUrl, method: 'GET').listen(servePosts)
-      ..serve(postUrl, method: 'GET').listen(servePost)
-      ..defaultStream.listen(serveNotFound);
-  });
+main() async {
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+  var router = new Router(server)
+    // Associate callbacks with URLs.
+    ..serve(postsUrl, method: 'GET').listen(servePosts)
+    ..serve(postUrl, method: 'GET').listen(servePost)
+    ..defaultStream.listen(serveNotFound);
 }

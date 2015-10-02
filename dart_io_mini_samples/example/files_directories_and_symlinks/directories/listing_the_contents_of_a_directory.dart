@@ -8,15 +8,15 @@
 /// `false` (default is `true`).
 
 import 'dart:io';
+import 'dart:async'; // Import not needed but added here to explicitly assign type for clarity below.
 
-void main() {
+main() async {
   // Get the system temp directory.
   var systemTempDir = Directory.systemTemp;
 
   // List directory contents, recursing into sub-directories, but not following
   // symbolic links.
-  systemTempDir.list(recursive: true, followLinks: false)
-    .listen((FileSystemEntity entity) {
-      print(entity.path);
-    });
+  Stream<FileSystemEntity> entityList =
+      systemTempDir.list(recursive: true, followLinks: false);
+  await for (FileSystemEntity entity in entityList) print(entity.path);
 }

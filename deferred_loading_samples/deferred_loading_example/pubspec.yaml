@@ -1,2 +1,2 @@
-name: test
+name: deferred_loading_example
 description: A sample web application that loads a library lazily.

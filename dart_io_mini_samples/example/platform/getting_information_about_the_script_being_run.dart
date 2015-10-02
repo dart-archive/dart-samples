@@ -7,12 +7,13 @@
 
 import 'dart:io' show Platform;
 
-void main() {
+main() {
   // Get the URI of the script being run.
   var uri = Platform.script;
   print(uri); // Prints something like '/Users/shailentuli/workspace/...'.
 
   // Convert the URI to a path.
   var path = uri.toFilePath();
-  print(path); // Prints something like 'file:///Users/shailentuli/workspace/...'.
+  print(
+      path); // Prints something like 'file:///Users/shailentuli/workspace/...'.
 }

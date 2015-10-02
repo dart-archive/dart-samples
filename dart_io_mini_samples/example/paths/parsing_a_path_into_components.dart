@@ -7,9 +7,10 @@
 
 import 'package:path/path.dart' as path;
 
-void main() {
+main() {
   print(path.split('/Users/shailen')); // Prints ['/', 'Users', 'shailen'].
 
   // Windows example.
-  print(path.split(r'C:\tempdir\tmp.txt')); // Prints [r'C:\', 'tempdir', 'tmp.txt'])
+  print(path
+      .split(r'C:\tempdir\tmp.txt')); // Prints [r'C:\', 'tempdir', 'tmp.txt'])
 }

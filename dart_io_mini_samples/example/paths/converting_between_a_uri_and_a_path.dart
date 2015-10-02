@@ -7,7 +7,7 @@
 
 import 'package:path/path.dart' as path;
 
-void main() {
+main() {
   var uri = path.toUri('http://dartlang.org/samples');
   print(path.fromUri(uri)); // Prints 'http:/dartlang.org/samples'.
 }

@@ -7,8 +7,7 @@
 
 import 'dart:io';
 
-main() {
-  WebSocket.connect('ws://127.0.0.1:4040/ws').then((socket) {
-    socket.add('Hello, World!');
-  });
+main() async {
+  var socket = await WebSocket.connect('ws://127.0.0.1:4040/ws');
+  socket.add('Hello, World!');
 }

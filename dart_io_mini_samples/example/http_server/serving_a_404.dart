@@ -8,25 +8,20 @@
 import 'dart:io';
 import 'package:http_server/http_server.dart' as http_server;
 
-void errorPageHandler(HttpRequest request) {
+errorPageHandler(HttpRequest request) {
   request.response
-      ..statusCode = HttpStatus.NOT_FOUND
-      ..write('Not found')
-      ..close();
+    ..statusCode = HttpStatus.NOT_FOUND
+    ..write('Not found')
+    ..close();
 }
 
-void main() {
+main() async {
   var buildPath = Platform.script.resolve('web').toFilePath();
 
   var virDir = new http_server.VirtualDirectory(buildPath)
     ..allowDirectoryListing = true
     ..errorPageHandler = errorPageHandler;
 
-  HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080).then((server) {
-    server.listen((request) {
-      virDir.serveRequest(request);
-    });
-  });
+  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+  await for (var request in server) virDir.serveRequest(request);
 }
-
-

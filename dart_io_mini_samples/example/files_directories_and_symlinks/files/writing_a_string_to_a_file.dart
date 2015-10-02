@@ -7,10 +7,8 @@
 
 import 'dart:io';
 
-void main() {
+main() async {
   final filename = 'file.txt';
-  new File(filename).writeAsString('some content')
-    .then((File file) {
-      // Do something with the file.
-    });
+  var file = await new File(filename).writeAsString('some content');
+  print("Content written to $file");
 }
