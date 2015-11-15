@@ -114,7 +114,7 @@ class FilterSample {
     querySelector("#play-pause-button").onClick.listen((Event e) {
       _toggle();
     });
-    querySelector("#enable-filter-checkbox").onInput.listen((Event e) {
+    querySelector("#enable-filter-checkbox").onChange.listen((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
