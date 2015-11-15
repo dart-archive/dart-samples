@@ -114,15 +114,15 @@ class FilterSample {
     querySelector("#play-pause-button").onClick.listen((Event e) {
       _toggle();
     });
-    querySelector("#enable-filter-checkbox").onChange.listen((Event e) {
+    querySelector("#enable-filter-checkbox").onInput.listen((Event e) {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
-    querySelector("#frequency-range").onChange.listen((Event e) {
+    querySelector("#frequency-range").onInput.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
     });
-    querySelector("#quality-range").onChange.listen((Event e) {
+    querySelector("#quality-range").onInput.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
     });

@@ -1,10 +1,14 @@
+# JetBrains
+.idea/
 # Dart Editor
 *.dart.js
 *.dart.js.map
 *.dart.js.deps
 
 # pub
+.pub
 packages
+.packages
 build
 
 #other
