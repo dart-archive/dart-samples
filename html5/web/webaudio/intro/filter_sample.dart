@@ -118,11 +118,11 @@ class FilterSample {
       bool checked = (e.currentTarget as InputElement).checked;
       _toggleFilter(checked);
     });
-    querySelector("#frequency-range").onChange.listen((Event e) {
+    querySelector("#frequency-range").onInput.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeFrequency(value);
     });
-    querySelector("#quality-range").onChange.listen((Event e) {
+    querySelector("#quality-range").onInput.listen((Event e) {
       num value = double.parse((e.currentTarget as InputElement).value);
       _changeQuality(value);
     });
