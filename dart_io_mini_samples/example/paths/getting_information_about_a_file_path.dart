@@ -19,5 +19,4 @@ main() async {
   print(path.dirname(file.path)); // Prints path ending with 'dir'.
   print(path.basenameWithoutExtension(file.path)); // Prints 'myFile'.
   print(path.extension(file.path)); // Prints '.txt'.
-
 }

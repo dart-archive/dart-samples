@@ -8,7 +8,6 @@
 import 'dart:io';
 
 main() async {
-
   // Create a temporary directory.
   var dir = await Directory.systemTemp.createTemp('my_temp_dir');
 
