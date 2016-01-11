@@ -26,8 +26,7 @@ main() async {
     printResponseBody(response);
     response = await client.get('${url}/doodles');
     printResponseBody(response);
-    client.close();
-  } catch (e) {
+  } finally {
     client.close();
   }
 }
