@@ -1,6 +1,3 @@
-## Writing code for the Dart VM
-
-### Dart I/O and Command Line Apps
 
 * [Introduction](example/introduction.md)
 
