@@ -1,3 +1,9 @@
+//
+// Run "dart generate_md_for_dartlang.dart > index.md".
+// Copy that file to /dart-vm/dart-by-example in the www repo.
+// This file uses fodder from README.md and example/* to generate
+// the final page.
+//
 import 'dart:io';
 import 'package:path/path.dart' as PATH;
 
@@ -26,9 +32,13 @@ printExample(List<String> lines) {
 const fileHeader = '''
 ---
 layout: default
+title: "Cookbook: Dart by Example"
+short-title: "Cookbook"
+permalink: /dart-vm/dart-by-example
+description: "A cookbook, or set of examples, showing idiomatic Dart code."
+
 header:
   css: ["index.css"]
-has-permalinks: true
 ---
 
 ''';
@@ -49,7 +59,7 @@ main() {
         var file = new File(abspath);
 
         if (PATH.extension(abspath) != '.md') {
-          print('#### ${match.group(1)}');
+          print('### ${match.group(1)}');
           print('');
           printExample(file.readAsLinesSync());
         } else {
@@ -59,12 +69,6 @@ main() {
     } else {
       // Print non-link lines from the README.
       print(line);
-      // Title line.
-      if (line.startsWith('## ')) {
-        print('{:.no_toc}');
-        print('');
-        print('{% include default_toc.html %}');
-      }
     }
   }
 }
