@@ -18,6 +18,8 @@ main() {
     stdout.writeln('a Mac');
   } else if (Platform.isAndroid) {
     stdout.writeln('an Android device');
+  } else if (Platform.isIOS) {
+    stdout.writeln('an iOS device');
   } else if (Platform.isLinux) {
     stdout.writeln('Linux');
   } else if (Platform.isWindows) {

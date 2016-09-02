@@ -41,3 +41,5 @@ packages:
     description: stack_trace
     source: hosted
     version: "0.9.3"
+sdks:
+  dart: ">=1.1.0 <2.0.0"

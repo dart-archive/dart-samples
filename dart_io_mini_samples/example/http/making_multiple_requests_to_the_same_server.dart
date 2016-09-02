@@ -22,9 +22,9 @@ main() async {
   var url = 'http://www.google.com/';
   var client = new http.Client();
   try {
-    var response = await client.get('${url}/search');
+    var response = await client.get('$url/search');
     printResponseBody(response);
-    response = await client.get('${url}/doodles');
+    response = await client.get('$url/doodles');
     printResponseBody(response);
   } finally {
     client.close();
