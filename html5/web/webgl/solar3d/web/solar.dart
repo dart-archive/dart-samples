@@ -211,7 +211,7 @@ class Solar3DApplication {
 
   double renderTime;
 
-  void update(double time) {
+  void update(num time) {
     var t = new DateTime.now().millisecondsSinceEpoch;
 
     if (renderTime != null) {
@@ -241,7 +241,7 @@ class Solar3DApplication {
      */
     glContext.enable(WebGL.RenderingContext.CULL_FACE);
     glContext.enable(WebGL.RenderingContext.DEPTH_TEST);
-    solarSystem.draw(glContext, controller, camera, time);
+    solarSystem.draw(glContext, controller, camera, time.toDouble());
     requestRedraw();
   }
 
