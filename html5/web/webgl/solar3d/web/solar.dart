@@ -45,7 +45,8 @@ class Solar3DApplication {
 
   String getBaseUrl() {
     var location = window.location.href;
-    return "${location.substring(0, location.length - "solar.html".length)}";
+    RegExp regExp = new RegExp("(.*)solar\.html");
+    return regExp.firstMatch(location).group(1);
   }
 
   void startup(String canvasId) {
