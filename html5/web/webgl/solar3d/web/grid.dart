@@ -90,34 +90,34 @@ class Grid {
     var e = new Vector3(0.0, 0.0, 0.0);
     var s = new Vector3(1.0, 0.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
-    b.setComponents(0.0, 0.0, 0.0);
-    e.setComponents(20.0, 0.0, 0.0);
-    s.setComponents(0.0, 0.0, -1.0);
+    b.setValues(0.0, 0.0, 0.0);
+    e.setValues(20.0, 0.0, 0.0);
+    s.setValues(0.0, 0.0, -1.0);
     _generateLines(vertexBufferData, b, e, s, colors['green'], 21);
 
     // Side
-    b.setComponents(20.0, 0.0, 0.0);
-    e.setComponents(20.0, 20.0, 0.0);
-    s.setComponents(0.0, 0.0, -1.0);
+    b.setValues(20.0, 0.0, 0.0);
+    e.setValues(20.0, 20.0, 0.0);
+    s.setValues(0.0, 0.0, -1.0);
     _generateLines(vertexBufferData, b, e, s, colors['blue'], 21);
-    b.setComponents(20.0, 0.0, 0.0);
-    e.setComponents(20.0, 0.0, -20.0);
-    s.setComponents(0.0, 1.0, 0.0);
+    b.setValues(20.0, 0.0, 0.0);
+    e.setValues(20.0, 0.0, -20.0);
+    s.setValues(0.0, 1.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['blue'], 21);
 
     // Side
-    b.setComponents(0.0, 0.0, -20.0);
-    e.setComponents(0.0, 20.0, -20.0);
-    s.setComponents(1.0, 0.0, 0.0);
+    b.setValues(0.0, 0.0, -20.0);
+    e.setValues(0.0, 20.0, -20.0);
+    s.setValues(1.0, 0.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
-    b.setComponents(0.0, 0.0, -20.0);
-    e.setComponents(20.0, 0.0, -20.0);
-    s.setComponents(0.0, 1.0, 0.0);
+    b.setValues(0.0, 0.0, -20.0);
+    e.setValues(20.0, 0.0, -20.0);
+    s.setValues(0.0, 1.0, 0.0);
     _generateLines(vertexBufferData, b, e, s, colors['red'], 21);
 
     numVertices = vertexBufferData.length~/7;
     gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
+    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
                      new Float32List.fromList(vertexBufferData),
                      WebGL.RenderingContext.STATIC_DRAW);
   }

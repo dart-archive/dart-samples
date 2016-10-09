@@ -105,12 +105,12 @@ class Skybox {
 
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(WebGL.RenderingContext.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferDataTyped(WebGL.RenderingContext.ARRAY_BUFFER,
+    gl.bufferData(WebGL.RenderingContext.ARRAY_BUFFER,
                   vertexData,
                   WebGL.RenderingContext.STATIC_DRAW);
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferDataTyped(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
+    gl.bufferData(WebGL.RenderingContext.ELEMENT_ARRAY_BUFFER,
                   new Uint16List.fromList(indices),
                   WebGL.RenderingContext.STATIC_DRAW);
     _vertexCount = indices.length;
