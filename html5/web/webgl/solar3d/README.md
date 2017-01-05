@@ -2,12 +2,6 @@
 
 A 3D solar system visualization using WebGL.
 
-You can open the example in Dart Editor and run it by clicking
-`web/solar.dart`.
-Or, you can try this
-[live demo](http://www.dartlang.org/samples/solar3d/).
-
-
 The `solar.dart` file is the main entry point to the Dart code. This file
 contains the `library solar3d` declaration.  It also contains the following
 declarations listing the other files that make up the the `solar3d`

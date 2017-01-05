@@ -8,7 +8,4 @@ The examples show how to select a file using a form input, or using drag and
 drop. See how you can slice a file in separate byte range
 chunks for efficient uploading, and monitor progress while uploading a file.
 
-You can try this
-[live demo](http://www.dartlang.org/samples/dndfiles/).
-
 Please report any [bugs or feature requests](http://dartbug.com/new).

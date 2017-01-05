@@ -12,8 +12,4 @@ operations such as `cd`, `mkdir`, `rm`, `open`, and `cat` using the FileSystem
 API.  To add content, open the app, then drag and drop files from your
 desktop onto the terminal window.
 
-You can open the example in Dart Editor and run it by clicking `index.html`.
-Or, you can try this
-[live demo](http://www.dartlang.org/samples/terminal/).
-
 Please report any [bugs or feature requests](http://dartbug.com/new).

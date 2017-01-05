@@ -13,10 +13,6 @@ animations. Here is a summary of the article contents:
 parameter
 * Only call RAF when you have visual updates to do
 
-You can open the example in Dart Editor and run it by clicking `index.html`.
-Or, you can try this
-[live demo](http://www.dartlang.org/samples/raf/).
-
 Use the up and down keys to activate the animation. The up key moves the
 circles from right to left, and the down key moves them from left to right.
 
