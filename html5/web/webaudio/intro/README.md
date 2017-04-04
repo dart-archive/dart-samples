@@ -9,10 +9,6 @@ applications. The API lets you use functionality found in modern game audio
 engines and mixing, processing, and filtering tasks found in modern desktop
 audio production applications.
 
-You can open the example in Dart Editor and run it by clicking `index.html`.
-Or, you can try this
-[live demo](http://www.dartlang.org/samples/webaudio/).
-
 The example lets you enable and disable a lowpass filter via a checkbox,
 as well as tweak the frequency and quality values with a slider.
 
