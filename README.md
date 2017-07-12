@@ -1,8 +1,3 @@
-# Dart Samples
-
-[![Build Status](https://drone.io/github.com/dart-lang/dart-samples/status.png)](https://drone.io/github.com/dart-lang/dart-samples/latest)
-
-
 ##  Contents
 * [HTML5 samples](html5/README.md)
 * [Dart I/O mini samples](dart_io_mini_samples/README.md)
