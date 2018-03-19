@@ -19,8 +19,8 @@ main() async {
   print('The path is ${file.path}');
 
   // Rename the file.
-  await file.rename('${systemTempDir.path}/bar.txt');
+  var newFile = await file.rename('${systemTempDir.path}/bar.txt');
 
   // Prints path ending with `bar.txt`.
-  print('The path is ${file.path}');
+  print('The path is ${newFile.path}');
 }
