@@ -1,4 +1,3 @@
-
 * [Introduction](example/introduction.md)
 
 ## Files, directories, and symlinks
