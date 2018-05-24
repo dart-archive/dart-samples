@@ -5,11 +5,12 @@
 *.dart.js.map
 *.dart.js.deps
 
-# pub
+# Files and directories created by pub
 .pub
 packages
 .packages
 build
+.dart_tool
 
 #other
 .settings
