@@ -9,7 +9,7 @@ import 'package:path/path.dart' as PATH;
 
 // text.gsub /\[([^\]]+)\]\(([^)]+)\)/, '<a href="\2">\1</a>'
 
-printExample(List<String> lines) {
+void printExample(List<String> lines) {
   var i = 0;
   for (; i < lines.length; i++) {
     var line = lines[i].trim();
@@ -43,7 +43,7 @@ header:
 
 ''';
 
-main() {
+void main() {
   print(fileHeader);
 
   // RegExp to match a markdown link such as [Google](http://google.com)
