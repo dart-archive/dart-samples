@@ -10,7 +10,7 @@
 packages
 .packages
 build
-.dart_tool
+.dart_tool/
 
 #other
 .settings
