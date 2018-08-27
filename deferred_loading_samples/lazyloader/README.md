@@ -4,6 +4,5 @@ The breakfast.dart, lunch.dart, and dinner.dart libraries (in /lib)
 are loaded lazily, when the user clicks the **Breakfast menu**,
 **Lunch menu**, or **Dinner menu** buttons in the browser, respectively.
 
-For more information, see
-[Dart Deferred Loading](/docs/spec/deferred-loading.html).
-
+For more information, see the language tour's
+[deferred loading section](https://www.dartlang.org/guides/language/language-tour#lazily-loading-a-library).
